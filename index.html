@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="สั่งของ">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>รายการสั่งของ</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3; --surface: #ffffff; --surface2: #f0efe9;
+    --border: #e4e1d8; --accent: #2563eb; --green: #16865a;
+    --green-bg: #d1f5e5; --yellow: #b45309; --yellow-bg: #fde9b8;
+    --red: #c0392b; --red-bg: #fad7d5; --text: #181714;
+    --text2: #6b6660; --text3: #aeaaa2;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+    --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    min-height: 100vh; padding-bottom: 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 20px; height: 52px;
+    position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
+  }
+  .header-inner {
+    max-width: 640px; margin: 0 auto; height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-title { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-tag {
+    font-size: 11px; color: var(--text3);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 5px; padding: 3px 8px; font-weight: 500;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 18px 16px; }
+  .stats {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 8px; margin-bottom: 18px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 10px; box-shadow: var(--shadow-sm);
+  }
+  .stat-num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 3px; letter-spacing: -1px; }
+  .stat-label { font-size: 11px; color: var(--text3); font-weight: 500; }
+  .stat-card.s-total .stat-num { color: var(--accent); }
+  .stat-card.s-order .stat-num { color: var(--yellow); }
+  .stat-card.s-done  .stat-num { color: var(--green); }
+  .form-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);
+  }
+  .form-card-title {
+    font-size: 11px; font-weight: 700; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 12px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 72px 72px; gap: 8px; margin-bottom: 8px; }
+  .f-label { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 3px; }
+  input, select {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 9px 10px; color: var(--text);
+    font-family: 'IBM Plex Sans Thai', sans-serif; font-size: 14px;
+    width: 100%; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.09);
+    background: var(--surface);
+  }
+  input::placeholder { color: var(--text3); font-size: 13px; }
+  .status-row { margin-bottom: 10px; }
+  .btn-add {
+    width: 100%; background: var(--accent); border: none;
+    border-radius: 9px; padding: 11px; color: white;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(37,99,235,0.2);
+  }
+  .btn-add:active { background: #1d4ed8; transform: scale(0.99); }
+  .filter-row {
+    display: flex; gap: 6px; margin-bottom: 12px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0; background: var(--surface);
+    border: 1.5px solid var(--border); border-radius: 7px;
+    padding: 5px 12px; font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 12px; font-weight: 600; color: var(--text2); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .items-list { display: flex; flex-direction: column; gap: 7px; }
+  .item-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 11px; overflow: hidden;
+    box-shadow: var(--shadow-sm); animation: fadeUp 0.18s ease;
+  }
+  .item-card.done-item { opacity: 0.45; }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(-4px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .item-bar { display: flex; }
+  .item-bar-stripe { width: 4px; flex-shrink: 0; }
+  .stripe-ยังไม่สั่ง { background: var(--red); }
+  .stripe-สั่งแล้ว  { background: var(--yellow); }
+  .stripe-ได้รับแล้ว { background: var(--green); }
+  .item-inner { flex: 1; padding: 13px 13px 13px 11px; }
+  .item-top {
+    display: grid; grid-template-columns: 24px 1fr auto;
+    gap: 10px; align-items: center;
+  }
+  .item-seq {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--text3); flex-shrink: 0;
+  }
+  .item-name { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+  .item-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .qty-block {
+    display: flex; align-items: baseline; gap: 2px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 3px 9px;
+  }
+  .qty-full-block { background: var(--green-bg) !important; border-color: #8ed9b8 !important; }
+  .qty-got { font-size: 16px; font-weight: 800; line-height: 1; }
+  .qty-sep { font-size: 11px; color: var(--text3); font-weight: 400; margin: 0 1px; }
+  .qty-need { font-size: 11px; font-weight: 500; color: var(--text3); }
+  .qty-zero    .qty-got { color: var(--text3); }
+  .qty-partial .qty-got { color: var(--yellow); }
+  .qty-full    .qty-got { color: var(--green); }
+  .badge {
+    font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: 6px;
+  }
+  .b-ยังไม่สั่ง { background: var(--red-bg); color: var(--red); }
+  .b-สั่งแล้ว  { background: var(--yellow-bg); color: var(--yellow); }
+  .b-ได้รับแล้ว { background: var(--green-bg); color: var(--green); }
+  .item-actions { display: flex; gap: 4px; }
+  .btn-act {
+    width: 30px; height: 30px; border-radius: 7px;
+    border: 1.5px solid var(--border); background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-act:active { transform: scale(0.88); }
+  .btn-act.checked { background: var(--green-bg); border-color: #8ed9b8; }
+  .divider { height: 1px; background: var(--border); margin: 11px 0; }
+  .edit-panel { display: none; flex-direction: column; gap: 8px; }
+  .edit-panel.open { display: flex; }
+  .edit-grid { display: grid; grid-template-columns: 1fr 64px 64px; gap: 8px; }
+  .edit-bottom { display: flex; gap: 8px; align-items: flex-end; }
+  .edit-bottom .f-wrap { flex: 1; }
+  .btn-save {
+    background: var(--accent); border: none; border-radius: 8px;
+    padding: 9px 14px; color: white;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .empty-state { text-align: center; padding: 52px 20px; color: var(--text3); }
+  .empty-text { font-size: 13px; font-weight: 500; margin-top: 10px; }
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: #18171e; border-radius: 9px; padding: 9px 16px;
+    font-size: 13px; color: white; font-weight: 500;
+    opacity: 0; transition: all 0.22s;
+    z-index: 999; white-space: nowrap; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="app-title">รายการสั่งของ</span>
+    <span class="header-tag">💾 บันทึกแล้ว</span>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat-card s-total">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">ทั้งหมด</div>
+    </div>
+    <div class="stat-card s-order">
+      <div class="stat-num" id="statOrdering">0</div>
+      <div class="stat-label">สั่งแล้ว</div>
+    </div>
+    <div class="stat-card s-done">
+      <div class="stat-num" id="statDone">0</div>
+      <div class="stat-label">ได้รับแล้ว</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-title">เพิ่มรายการใหม่</div>
+    <div class="form-row">
+      <div><div class="f-label">รายการ</div><input type="text" id="inpName" placeholder="ชื่อสินค้า / รายการ" /></div>
+      <div><div class="f-label">ต้องการ</div><input type="number" id="inpNeed" placeholder="0" min="1" inputmode="numeric" /></div>
+      <div><div class="f-label">ได้แล้ว</div><input type="number" id="inpGot" placeholder="0" min="0" inputmode="numeric" /></div>
+    </div>
+    <div class="status-row">
+      <div class="f-label" style="margin-bottom:3px">สถานะ (อัตโนมัติตามจำนวน)</div>
+      <select id="inpStatus">
+        <option value="auto">— เลือกอัตโนมัติ —</option>
+        <option value="ยังไม่สั่ง">ยังไม่สั่ง</option>
+        <option value="สั่งแล้ว">สั่งแล้ว</option>
+        <option value="ได้รับแล้ว">ได้รับแล้ว</option>
+      </select>
+    </div>
+    <button class="btn-add" onclick="addItem()">เพิ่มรายการ</button>
+  </div>
+
+  <div class="filter-row">
+    <div class="chip active" onclick="setFilter(this,'all')">ทั้งหมด</div>
+    <div class="chip" onclick="setFilter(this,'ยังไม่สั่ง')">ยังไม่สั่ง</div>
+    <div class="chip" onclick="setFilter(this,'สั่งแล้ว')">สั่งแล้ว</div>
+    <div class="chip" onclick="setFilter(this,'ได้รับแล้ว')">ได้รับแล้ว</div>
+  </div>
+
+  <div class="items-list" id="itemsList"></div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<svg style="display:none">
+  <symbol id="ico-check" viewBox="0 0 16 16" fill="none">
+    <polyline points="3,8 6.5,11.5 13,5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="ico-edit" viewBox="0 0 16 16" fill="none">
+    <path d="M11 2.5a1.5 1.5 0 0 1 2.121 2.121L5.5 12.243 2 13.5l1.257-3.5L11 2.5z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="ico-trash" viewBox="0 0 16 16" fill="none">
+    <path d="M2.5 4.5h11M6 4.5V3h4v1.5M6.5 7v5M9.5 7v5M3.5 4.5l.75 8.25a.75.75 0 0 0 .75.75h6a.75.75 0 0 0 .75-.75l.75-8.25" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<script>
+  let items = JSON.parse(localStorage.getItem('orderItemsV3') || '[]');
+  let filter = 'all';
+
+  function save() { localStorage.setItem('orderItemsV3', JSON.stringify(items)); }
+
+  function autoStatus(need, got) {
+    if (got >= need && need > 0) return 'ได้รับแล้ว';
+    if (got > 0) return 'สั่งแล้ว';
+    return 'ยังไม่สั่ง';
+  }
+  function qtyClass(got, need) {
+    if (got === 0) return 'qty-zero';
+    if (got >= need) return 'qty-full';
+    return 'qty-partial';
+  }
+
+  function addItem() {
+    const name   = document.getElementById('inpName').value.trim();
+    const need   = parseInt(document.getElementById('inpNeed').value) || 1;
+    const got    = parseInt(document.getElementById('inpGot').value)  || 0;
+    const raw    = document.getElementById('inpStatus').value;
+    const status = raw === 'auto' ? autoStatus(need, got) : raw;
+    if (!name) { toast('กรอกชื่อรายการด้วยนะ'); return; }
+    items.push({ id: Date.now(), name, need, got, status });
+    save(); render();
+    document.getElementById('inpName').value  = '';
+    document.getElementById('inpNeed').value  = '';
+    document.getElementById('inpGot').value   = '';
+    document.getElementById('inpStatus').value = 'auto';
+    toast('เพิ่มรายการแล้ว');
+  }
+
+  function deleteItem(id) {
+    items = items.filter(i => i.id !== id);
+    save(); render(); toast('ลบรายการแล้ว');
+  }
+
+  function toggleCheck(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    if (item.status === 'ได้รับแล้ว') {
+      item.got = 0; item.status = 'ยังไม่สั่ง';
+    } else {
+      item.got = item.need; item.status = 'ได้รับแล้ว';
+    }
+    save(); render();
+    toast(item.status === 'ได้รับแล้ว' ? '✅ ครบแล้ว!' : 'ยกเลิกรับของ');
+  }
+
+  function openEdit(id) {
+    const el = document.getElementById('ep-' + id);
+    if (!el) return;
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.edit-panel.open').forEach(r => r.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+
+  function saveEdit(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    item.name   = document.getElementById('en-'   + id).value.trim() || item.name;
+    item.need   = parseInt(document.getElementById('ened-' + id).value) || 1;
+    item.got    = parseInt(document.getElementById('egot-' + id).value) || 0;
+    item.status = autoStatus(item.need, item.got);
+    save(); render(); toast('บันทึกแล้ว');
+  }
+
+  function setFilter(el, f) {
+    document.querySelectorAll('.chip').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    filter = f; render();
+  }
+
+  function icon(id, color) {
+    return `<svg width="14" height="14" fill="none" style="stroke:${color}"><use href="#${id}"/></svg>`;
+  }
+
+  function render() {
+    const list  = document.getElementById('itemsList');
+    const shown = filter === 'all' ? items : items.filter(i => i.status === filter);
+    document.getElementById('statTotal').textContent    = items.length;
+    document.getElementById('statOrdering').textContent = items.filter(i => i.status === 'สั่งแล้ว').length;
+    document.getElementById('statDone').textContent     = items.filter(i => i.status === 'ได้รับแล้ว').length;
+    if (shown.length === 0) {
+      list.innerHTML = `<div class="empty-state">
+        <svg width="36" height="36" fill="none" stroke="#ccc" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <div class="empty-text">ยังไม่มีรายการ</div>
+      </div>`;
+      return;
+    }
+    list.innerHTML = shown.map((item, idx) => {
+      const received = item.status === 'ได้รับแล้ว';
+      const qc = qtyClass(item.got, item.need);
+      const qtyBlockClass = `qty-block ${qc}${qc === 'qty-full' ? ' qty-full-block' : ''}`;
+      return `
+      <div class="item-card ${received ? 'done-item' : ''}">
+        <div class="item-bar">
+          <div class="item-bar-stripe stripe-${item.status}"></div>
+          <div class="item-inner">
+            <div class="item-top">
+              <div class="item-seq">${idx + 1}</div>
+              <div>
+                <div class="item-name">${esc(item.name)}</div>
+                <div class="item-meta">
+                  <div class="${qtyBlockClass}">
+                    <span class="qty-got">${item.got}</span>
+                    <span class="qty-sep">/</span>
+                    <span class="qty-need">${item.need}</span>
+                  </div>
+                  <span class="badge b-${item.status}">${item.status}</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="btn-act ${received?'checked':''}" onclick="toggleCheck(${item.id})">
+                  ${icon('ico-check', received ? 'var(--green)' : 'var(--text3)')}
+                </button>
+                <button class="btn-act" onclick="openEdit(${item.id})">
+                  ${icon('ico-edit','var(--text2)')}
+                </button>
+                <button class="btn-act" onclick="deleteItem(${item.id})">
+                  ${icon('ico-trash','var(--red)')}
+                </button>
+              </div>
+            </div>
+            <div class="edit-panel" id="ep-${item.id}">
+              <div class="divider"></div>
+              <div class="edit-grid">
+                <div><div class="f-label">ชื่อรายการ</div><input id="en-${item.id}" value="${esc(item.name)}"/></div>
+                <div><div class="f-label">ต้องการ</div><input id="ened-${item.id}" type="number" value="${item.need}" min="1" inputmode="numeric"/></div>
+                <div><div class="f-label">ได้แล้ว</div><input id="egot-${item.id}" type="number" value="${item.got}" min="0" inputmode="numeric"/></div>
+              </div>
+              <div class="edit-bottom">
+                <div class="f-wrap">
+                  <div class="f-label" style="color:var(--green)">✓ สถานะอัปเดตอัตโนมัติ</div>
+                </div>
+                <button class="btn-save" onclick="saveEdit(${item.id})">บันทึก</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  document.getElementById('inpName').addEventListener('keydown', e => { if (e.key==='Enter') addItem(); });
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  render();
+</script>
+</body>
+</html>
