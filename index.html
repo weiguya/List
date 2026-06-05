@@ -317,7 +317,8 @@
     item.name   = document.getElementById('en-'   + id).value.trim() || item.name;
     item.need   = parseInt(document.getElementById('ened-' + id).value) || 1;
     item.got    = parseInt(document.getElementById('egot-' + id).value) || 0;
-    item.status = autoStatus(item.need, item.got);
+    const stVal = document.getElementById('est-' + id).value;
+    item.status = stVal === 'auto' ? autoStatus(item.need, item.got) : stVal;
     save(); render(); toast('บันทึกแล้ว');
   }
 
@@ -389,7 +390,13 @@
               </div>
               <div class="edit-bottom">
                 <div class="f-wrap">
-                  <div class="f-label" style="color:var(--green)">✓ สถานะอัปเดตอัตโนมัติ</div>
+                  <div class="f-label">สถานะ</div>
+                  <select id="est-${item.id}">
+                    <option value="auto" ${autoStatus(item.need,item.got)===item.status?'selected':''}>— อัตโนมัติ —</option>
+                    <option value="ยังไม่สั่ง" ${item.status==='ยังไม่สั่ง'?'selected':''}>ยังไม่สั่ง</option>
+                    <option value="สั่งแล้ว" ${item.status==='สั่งแล้ว'?'selected':''}>สั่งแล้ว</option>
+                    <option value="ได้รับแล้ว" ${item.status==='ได้รับแล้ว'?'selected':''}>ได้รับแล้ว</option>
+                  </select>
                 </div>
                 <button class="btn-save" onclick="saveEdit(${item.id})">บันทึก</button>
               </div>
