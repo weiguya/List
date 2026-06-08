@@ -171,8 +171,10 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 /* SIDEBAR SUBMENU */
 .sidebar-sub{display:none;padding-left:0;background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .sidebar-sub.open{display:block;}
-.sidebar-sub .sidebar-item{font-size:13px;padding:10px 16px 10px 48px;color:var(--text2);}
+.sidebar-sub .sidebar-item{font-size:13px;padding:10px 16px 10px 52px;color:var(--text2);position:relative;}
+.sidebar-sub .sidebar-item::before{content:'';position:absolute;left:28px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--border);}
 .sidebar-sub .sidebar-item.active{color:var(--accent);background:var(--blue-soft);}
+.sidebar-sub .sidebar-item.active::before{background:var(--accent);}
 .sidebar-sub-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;}
 .sidebar-sub-toggle .s-arrow{font-size:11px;transition:transform 0.2s;color:rgba(255,255,255,0.7);}
 .sidebar-sub-toggle.open .s-arrow{transform:rotate(90deg);}
@@ -742,7 +744,7 @@ function getBuyTypes() {
 }
 
 // ============ UTILS ============
-const fmt = n => '฿'+Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt = n => '฿'+Math.round(Number(n||0)).toLocaleString('th-TH');
 const today = () => new Date().toISOString().slice(0,10);
 const thisMonth = () => new Date().toISOString().slice(0,7);
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
@@ -795,9 +797,6 @@ function toggleReportSubmenu(btn) {
   } else {
     sub.classList.add('open');
     toggle.classList.add('open');
-    // go to first sub if no sub active
-    const anyActive = sub.querySelector('.sidebar-item.active');
-    if(!anyActive) goReportTab('rep-income', document.getElementById('nav-rep-income'));
   }
 }
 
@@ -919,7 +918,7 @@ function buildBuyTypeSelect() {
 function calcBuyTotal() {
   const q = parseFloat(document.getElementById('buy-qty').value)||0;
   const u = parseFloat(document.getElementById('buy-unit-price').value)||0;
-  document.getElementById('buy-total-display').textContent = '฿'+(q*u).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('buy-total-display').textContent = '฿'+(q*u).toLocaleString('th-TH');
 }
 
 function confirmBuy() {
@@ -964,7 +963,7 @@ function renderBuyList() {
     <div class="list-item">
       <div style="flex:1">
         <div class="item-name">${i.name}</div>
-        <div class="item-meta">${typeMap[i.type]||i.type} · ${i.qty||1}×฿${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})} · ${i.date}${i.supplier?' · '+i.supplier:''}</div>
+        <div class="item-meta">${typeMap[i.type]||i.type} · ${i.qty||1}×฿${Math.round(Number(i.unitPrice||i.price)).toLocaleString('th-TH')} · ${i.date}${i.supplier?' · '+i.supplier:''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:4px">
         <span class="item-amount yellow">${fmt(i.price)}</span>
@@ -985,12 +984,12 @@ function calcSaleTotal() {
   const q=parseFloat(document.getElementById('sale-qty').value)||0;
   const u=parseFloat(document.getElementById('sale-unit-price').value)||0;
   const t=q*u;
-  document.getElementById('sale-total-display').textContent='฿'+t.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
-  if(t>0) document.getElementById('sale-amount').value=t.toFixed(2);
+  document.getElementById('sale-total-display').textContent='฿'+t.toLocaleString('th-TH');
+  if(t>0) document.getElementById('sale-amount').value=Math.round(t);
 }
 function onSaleAmountDirect() {
   const v=parseFloat(document.getElementById('sale-amount').value)||0;
-  document.getElementById('sale-total-display').textContent='฿'+v.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('sale-total-display').textContent='฿'+v.toLocaleString('th-TH');
 }
 function confirmSale() {
   const qty=parseFloat(document.getElementById('sale-qty').value)||0;
@@ -1023,7 +1022,7 @@ function renderSaleList() {
   const el=document.getElementById('sale-list');
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">💰</div>ยังไม่มียอดขาย</div>';return;}
   el.innerHTML=list.map(i=>{
-    const detail=i.qty&&i.unitPrice?`${i.qty}×฿${Number(i.unitPrice).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'';
+    const detail=i.qty&&i.unitPrice?`${i.qty}×฿${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'';
     return`<div class="list-item">
       <div style="flex:1">
         <div class="item-name">${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}</div>
@@ -1475,7 +1474,7 @@ function renderRepIncome() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×฿${Number(i.unitPrice).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.amount,color:'green'}));
+  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×฿${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green'}));
   if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากหนี้',label:i.source||'เงินกู้',detail:'',amount:i.amount,color:'blue'}));
   if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue'}));
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
@@ -1567,7 +1566,7 @@ function renderTimeline() {
   if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,amount:i.amount}));
   if(chk('tl-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💵 รับทุน',label:i.note||'เงินทุน',amount:i.amount}));
   if(chk('tl-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'🏦 รับกู้',label:i.source||'เงินกู้',amount:i.amount}));
-  if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),amount:i.price}));
+  if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'💸 ซื้อของ',label:i.name,amount:i.price}));
   if(chk('tl-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'👷 ค่าแรง',label:i.name,amount:i.amount}));
   if(chk('tl-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',amount:i.amount}));
   if(chk('tl-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',amount:i.amount}));
@@ -1576,8 +1575,6 @@ function renderTimeline() {
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   let running=0;
   items.forEach(i=>{ running+=(i.kind==='in'?i.amount:-i.amount); i.balance=running; });
-  // reverse เพื่อแสดงใหม่→เก่า
-  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
 
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
 
