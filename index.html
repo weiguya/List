@@ -398,9 +398,13 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div class="form-group">
     <label>ชื่อสินค้า</label>
-    <input type="text" id="buy-name-select" list="buy-name-datalist" placeholder="พิมพ์หรือเลือกจากรายการ"
+    <select id="buy-name-select" style="display:none;width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;"></select>
+    <input type="text" id="buy-name-input" placeholder="พิมพ์ชื่อสินค้า"
       style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
     <datalist id="buy-name-datalist"></datalist>
+    <div id="buy-name-empty-msg" style="display:none;margin-top:8px;background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);">
+      ⚠️ ยังไม่มีสินค้าในประเภทนี้ — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting('set-itemnames')">ไปตั้งค่าก่อน</span>
+    </div>
   </div>
   <div class="form-group">
     <label>ร้าน/ซัพพลายเออร์</label>
@@ -720,14 +724,45 @@ function saveItemNames(obj){ localStorage.setItem(KEY.itemNames,JSON.stringify(o
 function getItemNamesForType(typeId){
   const all=getItemNames(); return all[typeId]||[];
 }
+// ประเภทที่บังคับเลือกจาก list (ไม่ให้พิมพ์เอง)
+const FORCED_SELECT_TYPES = ['material','supply'];
+
 function buildItemNameSelect(typeId){
-  const dl=document.getElementById('buy-name-datalist');
-  if(!dl) return;
+  const selEl=document.getElementById('buy-name-select');
+  const inpEl=document.getElementById('buy-name-input');
+  const emptyMsg=document.getElementById('buy-name-empty-msg');
+  const confirmBtn=document.querySelector('#page-buy .btn-primary');
+  if(!selEl||!inpEl) return;
+
   const names=getItemNamesForType(typeId);
-  dl.innerHTML=names.map(n=>`<option value="${n}">`).join('');
-  // clear input when type changes
-  const inp=document.getElementById('buy-name-select');
-  if(inp) inp.value='';
+  const isForced=FORCED_SELECT_TYPES.includes(typeId);
+
+  if(isForced){
+    // แสดง select ซ่อน input
+    inpEl.style.display='none';
+    selEl.style.display='block';
+    if(names.length){
+      selEl.innerHTML='<option value="">-- เลือกสินค้า --</option>'+names.map(n=>`<option value="${n}">${n}</option>`).join('');
+      selEl.disabled=false;
+      emptyMsg.style.display='none';
+      if(confirmBtn) confirmBtn.disabled=false;
+    } else {
+      selEl.innerHTML='<option value="">ยังไม่มีสินค้าในประเภทนี้</option>';
+      selEl.disabled=true;
+      emptyMsg.style.display='block';
+      if(confirmBtn) confirmBtn.disabled=true;
+    }
+  } else {
+    // แสดง input ซ่อน select
+    selEl.style.display='none';
+    inpEl.style.display='block';
+    inpEl.value='';
+    emptyMsg.style.display='none';
+    if(confirmBtn) confirmBtn.disabled=false;
+    // ใส่ datalist สำหรับ hint
+    const dl=document.getElementById('buy-name-datalist');
+    if(dl) dl.innerHTML=names.map(n=>`<option value="${n}">`).join('');
+  }
 }
 function onBuyTypeChange(){
   const typeId=document.getElementById('buy-type').value;
@@ -912,6 +947,7 @@ function buildBuyTypeSelect() {
   sel.innerHTML = types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
   const fsel = document.getElementById('buy-filter-type');
   fsel.innerHTML = '<option value="">ทุกประเภท</option>' + types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  if(sel.value) buildItemNameSelect(sel.value);
 }
 
 // ============ BUY ============
@@ -921,9 +957,25 @@ function calcBuyTotal() {
   document.getElementById('buy-total-display').textContent = '฿'+(q*u).toLocaleString('th-TH');
 }
 
+function getBuyNameValue() {
+  const type = document.getElementById('buy-type').value;
+  if(FORCED_SELECT_TYPES.includes(type)){
+    return document.getElementById('buy-name-select').value.trim();
+  } else {
+    return document.getElementById('buy-name-input').value.trim();
+  }
+}
+function clearBuyNameField() {
+  const type = document.getElementById('buy-type').value;
+  if(FORCED_SELECT_TYPES.includes(type)){
+    document.getElementById('buy-name-select').value='';
+  } else {
+    document.getElementById('buy-name-input').value='';
+  }
+}
 function confirmBuy() {
   const type = document.getElementById('buy-type').value;
-  const name = document.getElementById('buy-name-select').value.trim();
+  const name = getBuyNameValue();
   const supplier = (document.getElementById('buy-supplier')||{value:''}).value.trim();
   const qty = parseFloat(document.getElementById('buy-qty').value)||1;
   const unitPrice = parseFloat(document.getElementById('buy-unit-price').value);
@@ -934,15 +986,16 @@ function confirmBuy() {
   const typeLabel = (types.find(t=>t.id===type)||{}).label||type;
   showConfirm('🛒 ยืนยันการซื้อของ',[
     ['ประเภท',typeLabel],['ชื่อสินค้า',name],['ร้าน/ซัพ',supplier||'—'],
-    ['จำนวน × ราคา',`${qty} × ฿${unitPrice.toLocaleString('th-TH',{minimumFractionDigits:2})}`],
+    ['จำนวน × ราคา',`${qty} × ฿${unitPrice.toLocaleString('th-TH')}`],
     ['ราคารวม',fmt(price)],['วันที่',date],
   ],()=>{
     const list = DB.get(KEY.buy);
     list.push({id:uid(),type,name,supplier,qty,unitPrice,price,date,ts:Date.now()});
     DB.set(KEY.buy,list);
     localStorage.setItem('last_buy_date',date);
-    ['buy-name','buy-supplier','buy-qty','buy-unit-price'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('buy-total-display').textContent='฿0.00';
+    clearBuyNameField();
+    ['buy-supplier','buy-qty','buy-unit-price'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('buy-total-display').textContent='฿0';
     renderBuyList(); updateDashboard();
   });
 }
