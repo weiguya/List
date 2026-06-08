@@ -252,32 +252,41 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
 <!-- PAGE: DASHBOARD -->
 <div class="page active" id="page-home">
+  <!-- Dashboard period tabs -->
+  <div class="tab-bar" style="margin-bottom:12px;">
+    <button class="tab-btn active" id="dash-tab-day" onclick="dashTab('day',this)">วันนี้</button>
+    <button class="tab-btn" id="dash-tab-week" onclick="dashTab('week',this)">สัปดาห์นี้</button>
+    <button class="tab-btn" id="dash-tab-month" onclick="dashTab('month',this)">เดือนนี้</button>
+  </div>
+  <div id="dash-period-label" style="font-size:11px;color:var(--text2);margin-bottom:10px;text-align:center;"></div>
+
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="label">💰 ยอดขายวันนี้</div>
-      <div class="value green" id="d-sale">฿0</div>
+      <div class="label" id="d-sale-label">💰 ยอดขายวันนี้</div>
+      <div class="value green" id="d-sale">0</div>
     </div>
-    <div class="stat-card">
-      <div class="label">📈 กำไรเดือนนี้</div>
-      <div class="value" id="d-profit">฿0</div>
+    <div class="stat-card" id="d-profit-card" onclick="openProfitMonthPicker()" style="cursor:pointer;">
+      <div class="label" id="d-profit-label" style="display:flex;align-items:center;gap:4px;">📈 กำไร <span id="d-profit-month-tag" style="font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;"></span></div>
+      <div class="value" id="d-profit">0</div>
       <div style="font-size:10px;color:var(--text2);margin-top:3px;" id="d-profit-formula">—</div>
     </div>
     <div class="stat-card">
-      <div class="label">🛒 ซื้อของวันนี้</div>
-      <div class="value yellow" id="d-buy">฿0</div>
+      <div class="label" id="d-buy-label">🛒 ซื้อของวันนี้</div>
+      <div class="value yellow" id="d-buy">0</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" style="cursor:pointer;" onclick="goPage('page-income',document.getElementById('nav-page-income'));setTimeout(()=>{document.querySelector('#page-income .tab-btn:nth-child(2)')?.click()},100);">
       <div class="label">🏦 เงินกู้คงเหลือ</div>
-      <div class="value red" id="d-loan">฿0</div>
+      <div class="value red" id="d-loan">0</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;">เงินต้น: <span id="d-loan-principal" class="blue">0</span></div>
     </div>
     <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;">
       <div class="label" style="color:rgba(255,255,255,0.75);">💳 เงินคงเหลือในบัญชีจริง</div>
-      <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;">฿0</div>
+      <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;">0</div>
       <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้</div>
     </div>
     <div class="stat-card full">
       <div class="label">💵 เงินทุนที่ใส่เข้ามา</div>
-      <div class="value blue" id="d-capital">฿0</div>
+      <div class="value blue" id="d-capital">0</div>
     </div>
   </div>
 
@@ -291,20 +300,17 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <h3>📊 เปรียบเทียบเดือนนี้</h3>
     <div id="chartBars"></div>
   </div>
+</div>
 
-  <div class="nav-grid">
-    <div class="nav-card" onclick="goPage('page-income',document.getElementById('nav-page-income'))">
-      <div class="nav-icon">💚</div><div class="nav-title">รายรับ</div><div class="nav-sub">ยอดขาย · รับทุน · รับหนี้</div>
+<!-- PROFIT MONTH PICKER MODAL -->
+<div class="modal-overlay" id="profit-month-modal">
+  <div class="modal">
+    <div class="modal-title"><span>📅 เลือกเดือนที่ดูกำไร</span><button class="modal-close" onclick="document.getElementById('profit-month-modal').classList.remove('open')">✕</button></div>
+    <div class="form-group">
+      <label>เดือน</label>
+      <input type="month" id="profit-month-picker" onchange="setProfitMonth(this.value)">
     </div>
-    <div class="nav-card" onclick="goPage('page-buy',document.getElementById('nav-page-buy'))">
-      <div class="nav-icon">💸</div><div class="nav-title">รายจ่าย</div><div class="nav-sub">บันทึกค่าใช้จ่าย</div>
-    </div>
-    <div class="nav-card" onclick="goPage('page-finance',document.getElementById('nav-page-finance'))">
-      <div class="nav-icon">💳</div><div class="nav-title">การเงิน</div><div class="nav-sub">ทุน · กู้ · ค่าแรง</div>
-    </div>
-    <div class="nav-card" onclick="goPage('page-report',document.getElementById('nav-page-report'))">
-      <div class="nav-icon">📊</div><div class="nav-title">รายงาน</div><div class="nav-sub">สรุปรายรับ-จ่าย</div>
-    </div>
+    <button class="btn btn-outline btn-sm" onclick="setProfitMonth(null)" style="margin-top:8px;">↩ กลับเดือนปัจจุบัน</button>
   </div>
 </div>
 
@@ -333,7 +339,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
     <div class="form-group">
       <label>ยอดขายรวม (บาท)</label>
-      <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--green);" id="sale-total-display">฿0.00</div>
+      <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--green);" id="sale-total-display">0</div>
     </div>
     <div class="form-group" style="margin-top:-6px">
       <label style="font-size:11px;">หรือกรอกยอดรวมตรงๆ ได้เลย</label>
@@ -371,9 +377,9 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="divider"></div>
     <div class="loan-box">
       <div style="font-size:13px;color:var(--text2);margin-bottom:6px;">สถานะเงินกู้</div>
-      <div class="report-row"><span class="r-label">กู้มาทั้งหมด</span><span class="blue" id="loan-total">฿0</span></div>
-      <div class="report-row"><span class="r-label">จ่ายคืนแล้ว</span><span class="green" id="loan-paid">฿0</span></div>
-      <div class="report-row"><span class="r-label">คงเหลือต้องจ่าย</span><span class="red" id="loan-remain">฿0</span></div>
+      <div class="report-row"><span class="r-label">กู้มาทั้งหมด</span><span class="blue" id="loan-total">0</span></div>
+      <div class="report-row"><span class="r-label">จ่ายคืนแล้ว</span><span class="green" id="loan-paid">0</span></div>
+      <div class="report-row"><span class="r-label">คงเหลือต้องจ่าย</span><span class="red" id="loan-remain">0</span></div>
       <div class="loan-progress"><div class="bar-track"><div class="bar-fill" id="loan-bar" style="width:0%;background:var(--green)"></div></div></div>
     </div>
     <div id="loan-list"></div>
@@ -418,7 +424,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div class="form-group">
     <label>ราคารวม</label>
-    <div style="background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--accent);" id="buy-total-display">฿0.00</div>
+    <div style="background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--accent);" id="buy-total-display">0</div>
   </div>
   <div class="form-group"><label>วันที่</label><input type="date" id="buy-date"></div>
   <button class="btn btn-primary" onclick="confirmBuy()">+ บันทึก</button>
@@ -434,16 +440,99 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="page" id="page-finance">
   <div class="section-title">💳 การเงิน</div>
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="finTab(this,'fin-wage')">👷 ค่าแรง</button>
-    <button class="tab-btn" onclick="finTab(this,'fin-other')">🏠 ค่าเช่า</button>
+    <button class="tab-btn active" id="fin-tab-emp" onclick="finTab(this,'fin-emp')">👷 ค่าแรง</button>
+    <button class="tab-btn" id="fin-tab-admin" onclick="finTab(this,'fin-admin')">👔 ผู้บริหาร</button>
+    <button class="tab-btn" id="fin-tab-other" onclick="finTab(this,'fin-other')">🏠 ค่าเช่า</button>
   </div>
-  <div id="fin-wage" class="fin-section">
-    <div class="form-group"><label>ชื่อพนักงาน</label><input type="text" id="wage-name" placeholder="เช่น น้องใหม่"></div>
-    <div class="form-group"><label>จำนวนเงิน (บาท/วัน)</label><input type="number" id="wage-amount" placeholder="0.00" step="0.01"></div>
-    <div class="form-group"><label>วันที่</label><input type="date" id="wage-date"></div>
-    <button class="btn btn-primary" onclick="addWage()">+ บันทึกค่าแรง</button>
-    <div class="divider"></div><div id="wage-list"></div>
+
+  <!-- TAB: ค่าแรงพนักงาน (ระบบใหม่) -->
+  <div id="fin-emp" class="fin-section">
+    <!-- เลือกพนักงาน -->
+    <div class="form-group">
+      <label>เลือกพนักงาน</label>
+      <select id="emp-wage-select" onchange="renderEmpWageCal()">
+        <option value="">-- เลือกพนักงาน --</option>
+      </select>
+    </div>
+    <div id="emp-wage-rate-display" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--text2);">
+      ค่าแรง: <span id="emp-wage-rate-val" style="font-weight:700;color:var(--accent);"></span> / วัน
+    </div>
+
+    <!-- ปฏิทินเลือกวัน -->
+    <div id="emp-wage-cal-wrap" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <button onclick="empCalPrevMonth()" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;">‹</button>
+        <div style="font-size:14px;font-weight:600;" id="emp-cal-title"></div>
+        <button onclick="empCalNextMonth()" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;">›</button>
+      </div>
+      <div id="emp-wage-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px;"></div>
+
+      <!-- สรุปที่เลือก -->
+      <div id="emp-wage-summary" style="display:none;background:var(--green-soft);border:1px solid var(--green);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">วันที่เลือก</div>
+        <div id="emp-wage-sel-days" style="font-size:13px;font-weight:600;color:var(--green);"></div>
+        <div style="margin-top:6px;font-size:14px;font-weight:700;color:var(--green);">รวม: <span id="emp-wage-total"></span></div>
+      </div>
+
+      <!-- คำเตือนวันที่จ่ายแล้ว -->
+      <div id="emp-wage-warn" style="display:none;background:var(--red-soft);border:1px solid var(--red);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--red);">
+        ⚠️ <span id="emp-wage-warn-text"></span>
+      </div>
+
+      <button class="btn btn-green" id="emp-wage-pay-btn" onclick="payEmpWage()" style="display:none;">✅ อนุมัติจ่ายค่าแรง</button>
+    </div>
+
+    <div class="divider"></div>
+    <!-- สรุปการจ่ายล่าสุด -->
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">ประวัติการจ่ายค่าแรง</div>
+    <div id="emp-wage-history"></div>
   </div>
+
+  <!-- TAB: ผู้บริหาร (ย้ายมาจาก settings) -->
+  <div id="fin-admin" class="fin-section" style="display:none">
+    <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:var(--text2);border:1px solid var(--border);">
+      💡 เลือกช่วงวันที่ → ระบบคำนวณ % จากยอดขายในช่วงนั้นให้อัตโนมัติ
+    </div>
+    <!-- เลือกผู้บริหาร -->
+    <div class="form-group">
+      <label>เลือกผู้บริหาร</label>
+      <select id="admin-pay-select" onchange="calcAdminPay()">
+        <option value="">-- เลือกผู้บริหาร --</option>
+      </select>
+    </div>
+    <!-- เลือกช่วงวันที่ -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="admin-pay-from" onchange="calcAdminPay()"></div>
+      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="admin-pay-to" onchange="calcAdminPay()"></div>
+    </div>
+    <!-- แสดงผลคำนวณ -->
+    <div id="admin-pay-calc" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
+        <span style="color:var(--text2);">ยอดขายในช่วง</span>
+        <span style="font-weight:600;" id="admin-pay-sale-sum"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
+        <span style="color:var(--text2);">% ค่าคอม</span>
+        <span style="font-weight:600;" id="admin-pay-pct"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;border-top:1px solid var(--border);padding-top:8px;">
+        <span>ค่าคอมที่จะจ่าย</span>
+        <span class="green" id="admin-pay-amount"></span>
+      </div>
+    </div>
+    <!-- คำเตือน -->
+    <div id="admin-pay-warn" style="display:none;background:var(--red-soft);border:1px solid var(--red);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--red);">
+      🚫 <span id="admin-pay-warn-text"></span>
+    </div>
+
+    <button class="btn btn-green" id="admin-pay-btn" onclick="payAdminCom()" style="display:none;">✅ อนุมัติจ่ายค่าคอม</button>
+    <div class="divider"></div>
+    <!-- ปฏิทินประวัติจ่าย -->
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">ประวัติการจ่ายค่าคอม</div>
+    <div id="admin-pay-history"></div>
+  </div>
+
+  <!-- TAB: ค่าเช่า -->
   <div id="fin-other" class="fin-section" style="display:none">
     <div class="form-group"><label>ค่าเช่า (บาท)</label><input type="number" id="rent-amount" placeholder="0.00" step="0.01"></div>
     <div class="form-group"><label>วันที่จ่าย</label><input type="date" id="rent-date"></div>
@@ -541,7 +630,12 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div onclick="goSubSetting('set-admin')" class="set-menu-item">
     <span class="smi-ico">👔</span>
-    <div class="smi-body"><div class="smi-title">ค่าคอมผู้บริหาร</div><div class="smi-sub">ตั้ง % ค่าคอมและอนุมัติจ่าย</div></div>
+    <div class="smi-body"><div class="smi-title">ค่าคอมผู้บริหาร</div><div class="smi-sub">ตั้ง % ค่าคอม</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-employees')" class="set-menu-item">
+    <span class="smi-ico">👷</span>
+    <div class="smi-body"><div class="smi-title">พนักงาน / ค่าแรงรายวัน</div><div class="smi-sub">เพิ่มพนักงานและตั้งค่าแรง/วัน</div></div>
     <span class="smi-arrow">›</span>
   </div>
   <div onclick="goSubSetting('set-backup')" class="set-menu-item">
@@ -637,6 +731,24 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
+<!-- SUB: พนักงาน -->
+<div class="page" id="set-employees">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ พนักงาน / ค่าแรงรายวัน</div>
+  <div class="set-section">
+    <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border);">
+      💡 เพิ่มพนักงานและตั้งค่าแรงรายวัน เพื่อใช้จ่ายค่าแรงในหน้าการเงิน
+    </div>
+    <div id="emp-list-set"></div>
+    <div class="divider"></div>
+    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มพนักงานใหม่</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <input type="text" id="new-emp-name" placeholder="ชื่อพนักงาน" style="flex:1;min-width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <input type="number" id="new-emp-rate" placeholder="บาท/วัน" step="0.01" min="0" style="width:110px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+    </div>
+    <button onclick="addEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มพนักงาน</button>
+  </div>
+</div>
+
 <!-- SUB: สำรองข้อมูล -->
 <div class="page" id="set-backup">
   <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ สำรองข้อมูล</div>
@@ -681,7 +793,8 @@ const KEY = {
   loan:'shop_loan', loanpay:'shop_loanpay', wage:'shop_wage',
   rent:'shop_rent', admin:'shop_admin',
   saleCats:'shop_sale_cats', buyTypes:'shop_buy_types',
-  suppliers:'shop_suppliers', profitCfg:'shop_profit_cfg', itemNames:'shop_item_names'
+  suppliers:'shop_suppliers', profitCfg:'shop_profit_cfg', itemNames:'shop_item_names',
+  employees:'shop_employees', adminpay:'shop_adminpay', empwagepay:'shop_empwagepay'
 };
 
 // ============ SETTINGS DATA ============
@@ -779,7 +892,7 @@ function getBuyTypes() {
 }
 
 // ============ UTILS ============
-const fmt = n => '฿'+Math.round(Number(n||0)).toLocaleString('th-TH');
+const fmt = n => Math.round(Number(n||0)).toLocaleString('th-TH');
 const today = () => new Date().toISOString().slice(0,10);
 const thisMonth = () => new Date().toISOString().slice(0,7);
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
@@ -800,7 +913,7 @@ const PAGE_TITLES = {
   'page-finance':'💳 การเงิน','page-settings':'⚙️ ตั้งค่า',
   'page-rep-income':'💚 รายงานรายรับ','page-rep-expense':'💸 รายงานรายจ่าย','page-rep-movement':'📋 การเคลื่อนไหว',
   'set-salecats':'🥩 หมวดหมู่ยอดขาย','set-suppliers':'🏪 ซัพพลายเออร์','set-buytypes':'🛒 ประเภทการซื้อ',
-  'set-itemnames':'📦 ชื่อสินค้า','set-profit':'📈 การคำนวณกำไร','set-admin':'👔 ค่าคอมผู้บริหาร','set-backup':'💾 สำรองข้อมูล'
+  'set-itemnames':'📦 ชื่อสินค้า','set-profit':'📈 การคำนวณกำไร','set-admin':'👔 ค่าคอมผู้บริหาร','set-employees':'👷 พนักงาน','set-backup':'💾 สำรองข้อมูล'
 };
 
 function goPage(id, navBtn) {
@@ -814,12 +927,13 @@ function goPage(id, navBtn) {
   if(id==='page-buy') { buildBuyTypeSelect(); buildSupplierDatalist(); renderBuyList(); const ld=localStorage.getItem('last_buy_date'); if(ld) document.getElementById('buy-date').value=ld; }
   if(id==='page-income') { buildSaleMeatBtns(); renderSaleList(); renderCapList(); renderLoanStatus(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; }
   if(id==='page-sale') { buildSaleMeatBtns(); renderSaleList(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; }
-  if(id==='page-finance') { renderCapList(); renderLoanStatus(); renderWageList(); renderRentList(); }
+  if(id==='page-finance') { buildEmpWageSelect(); buildAdminPaySelect(); renderEmpWageHistory(); renderAdminPayHistory(); }
   if(id==='page-settings') renderSettingsMenu();
+  if(id==='set-employees') renderEmployeeList();
   if(id==='page-rep-income') { initRepDates(); renderRepIncome(); }
   if(id==='page-rep-expense') { initRepDates(); renderRepExpense(); }
   if(id==='page-rep-movement') { initRepDates(); renderTimeline(); }
-  if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-profit','set-admin','set-backup'].includes(id)) renderSubSetting(id);
+  if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-profit','set-admin','set-employees','set-backup'].includes(id)) renderSubSetting(id);
 }
 
 function toggleReportSubmenu(btn) {
@@ -866,6 +980,8 @@ function finTab(btn,id) {
   document.getElementById(id).style.display='block';
   btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  if(id==='fin-emp'){buildEmpWageSelect();renderEmpWageHistory();}
+  if(id==='fin-admin'){buildAdminPaySelect();renderAdminPayHistory();}
 }
 function incomeTab(btn,id) {
   document.querySelectorAll('#page-income .inc-section').forEach(s=>s.style.display='none');
@@ -954,7 +1070,7 @@ function buildBuyTypeSelect() {
 function calcBuyTotal() {
   const q = parseFloat(document.getElementById('buy-qty').value)||0;
   const u = parseFloat(document.getElementById('buy-unit-price').value)||0;
-  document.getElementById('buy-total-display').textContent = '฿'+(q*u).toLocaleString('th-TH');
+  document.getElementById('buy-total-display').textContent = (q*u).toLocaleString('th-TH');
 }
 
 function getBuyNameValue() {
@@ -986,7 +1102,7 @@ function confirmBuy() {
   const typeLabel = (types.find(t=>t.id===type)||{}).label||type;
   showConfirm('🛒 ยืนยันการซื้อของ',[
     ['ประเภท',typeLabel],['ชื่อสินค้า',name],['ร้าน/ซัพ',supplier||'—'],
-    ['จำนวน × ราคา',`${qty} × ฿${unitPrice.toLocaleString('th-TH')}`],
+    ['จำนวน × ราคา',`${qty} × ${unitPrice.toLocaleString('th-TH')}`],
     ['ราคารวม',fmt(price)],['วันที่',date],
   ],()=>{
     const list = DB.get(KEY.buy);
@@ -995,7 +1111,7 @@ function confirmBuy() {
     localStorage.setItem('last_buy_date',date);
     clearBuyNameField();
     ['buy-supplier','buy-qty','buy-unit-price'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-    document.getElementById('buy-total-display').textContent='฿0';
+    document.getElementById('buy-total-display').textContent='0';
     renderBuyList(); updateDashboard();
   });
 }
@@ -1016,7 +1132,7 @@ function renderBuyList() {
     <div class="list-item">
       <div style="flex:1">
         <div class="item-name">${i.name}</div>
-        <div class="item-meta">${typeMap[i.type]||i.type} · ${i.qty||1}×฿${Math.round(Number(i.unitPrice||i.price)).toLocaleString('th-TH')} · ${i.date}${i.supplier?' · '+i.supplier:''}</div>
+        <div class="item-meta">${typeMap[i.type]||i.type} · ${i.qty||1}×${Math.round(Number(i.unitPrice||i.price)).toLocaleString('th-TH')} · ${i.date}${i.supplier?' · '+i.supplier:''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:4px">
         <span class="item-amount yellow">${fmt(i.price)}</span>
@@ -1037,12 +1153,12 @@ function calcSaleTotal() {
   const q=parseFloat(document.getElementById('sale-qty').value)||0;
   const u=parseFloat(document.getElementById('sale-unit-price').value)||0;
   const t=q*u;
-  document.getElementById('sale-total-display').textContent='฿'+t.toLocaleString('th-TH');
+  document.getElementById('sale-total-display').textContent=t.toLocaleString('th-TH');
   if(t>0) document.getElementById('sale-amount').value=Math.round(t);
 }
 function onSaleAmountDirect() {
   const v=parseFloat(document.getElementById('sale-amount').value)||0;
-  document.getElementById('sale-total-display').textContent='฿'+v.toLocaleString('th-TH');
+  document.getElementById('sale-total-display').textContent=v.toLocaleString('th-TH');
 }
 function confirmSale() {
   const qty=parseFloat(document.getElementById('sale-qty').value)||0;
@@ -1053,7 +1169,7 @@ function confirmSale() {
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
   showConfirm('💰 ยืนยันยอดขาย',[
     ['ประเภท',getMeatEmoji(_selectedMeat,0)+' '+_selectedMeat],
-    ['จำนวน × ราคา',qty&&unitPrice?`${qty} × ฿${unitPrice.toLocaleString('th-TH',{minimumFractionDigits:2})}`:'—'],
+    ['จำนวน × ราคา',qty&&unitPrice?`${qty} × ${unitPrice.toLocaleString('th-TH',{minimumFractionDigits:2})}`:'—'],
     ['ยอดรวม',fmt(amount)],['วันที่',date],['หมายเหตุ',note||'—'],
   ],()=>{
     const list=DB.get(KEY.sale);
@@ -1061,7 +1177,7 @@ function confirmSale() {
     DB.set(KEY.sale,list);
     localStorage.setItem('last_sale_date',date);
     ['sale-amount','sale-qty','sale-unit-price','sale-note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('sale-total-display').textContent='฿0.00';
+    document.getElementById('sale-total-display').textContent='0';
     renderSaleList(); updateDashboard();
   });
 }
@@ -1075,7 +1191,7 @@ function renderSaleList() {
   const el=document.getElementById('sale-list');
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">💰</div>ยังไม่มียอดขาย</div>';return;}
   el.innerHTML=list.map(i=>{
-    const detail=i.qty&&i.unitPrice?`${i.qty}×฿${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'';
+    const detail=i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'';
     return`<div class="list-item">
       <div style="flex:1">
         <div class="item-name">${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}</div>
@@ -1155,19 +1271,13 @@ function renderLoanStatus() {
     </div></div>`).join('');
 }
 
-// ============ WAGE ============
-function addWage() {
-  const name=document.getElementById('wage-name').value.trim();
-  const amount=parseFloat(document.getElementById('wage-amount').value);
-  const date=document.getElementById('wage-date').value;
-  if(!name||!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.wage); list.push({id:uid(),name,amount,date,ts:Date.now()}); DB.set(KEY.wage,list);
-  document.getElementById('wage-name').value=''; document.getElementById('wage-amount').value='';
-  renderWageList(); updateDashboard();
-}
+// ============ WAGE (legacy stubs - ระบบใหม่ใช้ payEmpWage แทน) ============
+function addWage() { /* ใช้ payEmpWage() ผ่านหน้าการเงินแทน */ }
 function renderWageList() {
-  let list=DB.get(KEY.wage).sort((a,b)=>b.date.localeCompare(a.date));
+  // wage-list อยู่ใน page-income (ถ้ามี) - safe null check
   const el=document.getElementById('wage-list');
+  if(!el) return;
+  let list=DB.get(KEY.wage).sort((a,b)=>b.date.localeCompare(a.date));
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">👷</div>ยังไม่มีรายการค่าแรง</div>';return;}
   el.innerHTML=list.map(i=>`<div class="list-item">
     <div><div class="item-name">${i.name}</div><div class="item-meta">${i.date}</div></div>
@@ -1254,6 +1364,7 @@ function renderSubSetting(id) {
   else if(id==='set-itemnames') { populateSetItemTypeSelect(); renderItemNamesList(); }
   else if(id==='set-profit') renderProfitCfgUI();
   else if(id==='set-admin') renderAdminCards();
+  else if(id==='set-employees') renderEmployeeList();
 }
 
 function renderProfitCfgUI() {
@@ -1384,7 +1495,7 @@ function renderAdminCards() {
           <div style="font-size:16px;font-weight:600;color:var(--green);">${fmt(com)}</div>
           <div style="font-size:10px;color:var(--text2);">จากยอดขาย ${fmt(monthSale)} × ${a.pct||0}%</div>
         </div>
-        <button class="payout-btn" onclick="payoutAdmin(${i},${com})">✅ อนุมัติจ่าย</button>
+        <button class="payout-btn" onclick="payoutAdmin(${i},${com})" style="background:var(--accent);">→ ไปหน้าการเงิน</button>
       </div>
     </div>`}).join('');
 }
@@ -1412,20 +1523,336 @@ function saveAdminSettings() {
 }
 
 function payoutAdmin(idx,com) {
+  // Legacy function - redirect to finance page
+  goPage('page-finance',document.getElementById('nav-page-finance'));
+  setTimeout(()=>{
+    const btn=document.getElementById('fin-tab-admin');
+    if(btn) finTab(btn,'fin-admin');
+  },200);
+}
+
+// ============ EMPLOYEES ============
+function getEmployees() {
+  const s=localStorage.getItem(KEY.employees);
+  return s?JSON.parse(s):[];
+}
+function saveEmployees(arr){ localStorage.setItem(KEY.employees,JSON.stringify(arr)); }
+
+function addEmployee() {
+  const name=document.getElementById('new-emp-name')?.value.trim();
+  const rate=parseFloat(document.getElementById('new-emp-rate')?.value)||0;
+  if(!name||!rate) return alert('กรุณากรอกชื่อและค่าแรง/วัน');
+  const emps=getEmployees();
+  if(emps.find(e=>e.name===name)) return alert('มีพนักงานชื่อนี้แล้ว');
+  emps.push({id:uid(),name,rate});
+  saveEmployees(emps);
+  document.getElementById('new-emp-name').value='';
+  document.getElementById('new-emp-rate').value='';
+  renderEmployeeList();
+  buildEmpWageSelect();
+}
+
+function delEmployee(id) {
+  if(!confirm('ลบพนักงานนี้?')) return;
+  saveEmployees(getEmployees().filter(e=>e.id!==id));
+  renderEmployeeList();
+  buildEmpWageSelect();
+}
+
+function renderEmployeeList() {
+  const el=document.getElementById('emp-list-set');
+  if(!el) return;
+  const emps=getEmployees();
+  if(!emps.length){el.innerHTML='<div style="font-size:12px;color:var(--text2);">ยังไม่มีพนักงาน</div>';return;}
+  el.innerHTML=emps.map(e=>`
+    <div class="list-item" style="margin-bottom:8px;">
+      <div style="flex:1">
+        <div class="item-name">👷 ${e.name}</div>
+        <div class="item-meta">ค่าแรง ${fmt(e.rate)} / วัน</div>
+      </div>
+      <button class="item-del" onclick="delEmployee('${e.id}')">✕</button>
+    </div>`).join('');
+}
+
+function buildEmpWageSelect() {
+  const sel=document.getElementById('emp-wage-select');
+  if(!sel) return;
+  const emps=getEmployees();
+  sel.innerHTML='<option value="">-- เลือกพนักงาน --</option>'
+    +emps.map(e=>`<option value="${e.id}">${e.name} (${fmt(e.rate)}/วัน)</option>`).join('');
+}
+
+// ============ EMPLOYEE WAGE CALENDAR ============
+let _empCalYear=new Date().getFullYear(), _empCalMonth=new Date().getMonth();
+let _empSelDays=new Set();
+
+function renderEmpWageCal() {
+  const empId=document.getElementById('emp-wage-select')?.value;
+  const wrap=document.getElementById('emp-wage-cal-wrap');
+  const rateDisplay=document.getElementById('emp-wage-rate-display');
+  if(!empId){wrap.style.display='none';rateDisplay.style.display='none';return;}
+  const emp=getEmployees().find(e=>e.id===empId);
+  if(!emp) return;
+  rateDisplay.style.display='block';
+  document.getElementById('emp-wage-rate-val').textContent=fmt(emp.rate);
+  wrap.style.display='block';
+  _empSelDays=new Set();
+  _empCalYear=new Date().getFullYear();
+  _empCalMonth=new Date().getMonth();
+  drawEmpCal();
+  renderEmpWageHistory();
+}
+
+function getEmpPaidDays(empId) {
+  // returns Set of 'YYYY-MM-DD' strings already paid for this employee
+  const pays=DB.get(KEY.empwagepay).filter(p=>p.empId===empId);
+  const days=new Set();
+  pays.forEach(p=>{ if(p.days) p.days.forEach(d=>days.add(d)); });
+  return days;
+}
+
+function drawEmpCal() {
+  const empId=document.getElementById('emp-wage-select')?.value;
+  const paidDays=empId?getEmpPaidDays(empId):new Set();
+  const y=_empCalYear, m=_empCalMonth;
+  const title=new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  document.getElementById('emp-cal-title').textContent=title;
+  const firstDay=new Date(y,m,1).getDay(); // 0=Sun
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const todayStr=today();
+  let html='';
+  // header อาทิตย์-เสาร์
+  ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d=>{
+    html+=`<div style="text-align:center;font-size:10px;font-weight:600;color:var(--text2);padding:3px 0;">${d}</div>`;
+  });
+  // blank cells
+  for(let i=0;i<firstDay;i++) html+=`<div></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isPaid=paidDays.has(ds);
+    const isSel=_empSelDays.has(ds);
+    const isToday=ds===todayStr;
+    const isFuture=ds>todayStr;
+    let bg='var(--card2)', color='var(--text)', border='1px solid var(--border)', cursor='pointer', opacity='1';
+    if(isPaid){bg='var(--green-soft)';color='var(--green)';border='1px solid var(--green)';cursor='not-allowed';}
+    else if(isFuture){opacity='0.4';cursor='not-allowed';}
+    else if(isSel){bg='var(--accent)';color='#fff';border='1px solid var(--accent)';}
+    else if(isToday){border='2px solid var(--accent)';}
+    const clickable=!isPaid&&!isFuture;
+    html+=`<div onclick="${clickable?`toggleEmpDay('${ds}')`:''}" style="text-align:center;padding:6px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:12px;font-weight:${isSel||isPaid?600:400};opacity:${opacity};position:relative;">
+      ${d}${isPaid?'<div style="font-size:7px;line-height:1;margin-top:1px;">✓</div>':''}
+    </div>`;
+  }
+  document.getElementById('emp-wage-cal').innerHTML=html;
+  updateEmpWageSummary();
+}
+
+function toggleEmpDay(ds) {
+  if(_empSelDays.has(ds)) _empSelDays.delete(ds);
+  else _empSelDays.add(ds);
+  drawEmpCal();
+}
+
+function empCalPrevMonth() {
+  _empCalMonth--;
+  if(_empCalMonth<0){_empCalMonth=11;_empCalYear--;}
+  drawEmpCal();
+}
+function empCalNextMonth() {
+  _empCalMonth++;
+  if(_empCalMonth>11){_empCalMonth=0;_empCalYear++;}
+  drawEmpCal();
+}
+
+function updateEmpWageSummary() {
+  const empId=document.getElementById('emp-wage-select')?.value;
+  const emp=getEmployees().find(e=>e.id===empId);
+  const summary=document.getElementById('emp-wage-summary');
+  const payBtn=document.getElementById('emp-wage-pay-btn');
+  const warn=document.getElementById('emp-wage-warn');
+  if(!emp||_empSelDays.size===0){
+    if(summary) summary.style.display='none';
+    if(payBtn) payBtn.style.display='none';
+    if(warn) warn.style.display='none';
+    return;
+  }
+  const days=Array.from(_empSelDays).sort();
+  const total=days.length*emp.rate;
+  if(summary){
+    summary.style.display='block';
+    document.getElementById('emp-wage-sel-days').textContent=`${days.map(d=>d.slice(5).replace('-','/')).join(', ')} (${days.length} วัน)`;
+    document.getElementById('emp-wage-total').textContent=fmt(total);
+  }
+  if(warn) warn.style.display='none';
+  if(payBtn) payBtn.style.display='block';
+}
+
+function payEmpWage() {
+  const empId=document.getElementById('emp-wage-select')?.value;
+  const emp=getEmployees().find(e=>e.id===empId);
+  if(!emp||_empSelDays.size===0) return alert('เลือกวันที่ก่อน');
+  const days=Array.from(_empSelDays).sort();
+  const total=days.length*emp.rate;
+  showConfirm('✅ ยืนยันจ่ายค่าแรง',[
+    ['พนักงาน',emp.name],
+    ['จำนวนวัน',`${days.length} วัน`],
+    ['วันที่',`${days[0].slice(5).replace('-','/')} – ${days[days.length-1].slice(5).replace('-','/')}`],
+    ['ค่าแรง/วัน',fmt(emp.rate)],
+    ['รวม',fmt(total)],
+  ],()=>{
+    // บันทึก empwagepay
+    const pays=DB.get(KEY.empwagepay);
+    pays.push({id:uid(),empId,empName:emp.name,days,total,paidDate:today(),ts:Date.now()});
+    DB.set(KEY.empwagepay,pays);
+    // บันทึกลง wage (รายงาน)
+    const wages=DB.get(KEY.wage);
+    wages.push({id:uid(),name:`👷 ${emp.name} (ค่าแรง ${days[0].slice(5).replace('-','/')}–${days[days.length-1].slice(5).replace('-','/')})`,amount:total,date:today(),ts:Date.now()});
+    DB.set(KEY.wage,wages);
+    _empSelDays=new Set();
+    drawEmpCal();
+    renderEmpWageHistory();
+    updateDashboard();
+    alert(`จ่ายค่าแรง ${emp.name} ${fmt(total)} แล้ว ✓`);
+  });
+}
+
+function renderEmpWageHistory() {
+  const empId=document.getElementById('emp-wage-select')?.value;
+  const el=document.getElementById('emp-wage-history');
+  if(!el) return;
+  let pays=DB.get(KEY.empwagepay);
+  if(empId) pays=pays.filter(p=>p.empId===empId);
+  pays.sort((a,b)=>b.paidDate.localeCompare(a.paidDate));
+  if(!pays.length){el.innerHTML='<div class="empty"><div class="empty-icon">👷</div>ยังไม่มีประวัติ</div>';return;}
+  el.innerHTML=pays.slice(0,20).map(p=>`
+    <div class="list-item">
+      <div style="flex:1">
+        <div class="item-name">👷 ${p.empName}</div>
+        <div class="item-meta">${p.days.length} วัน · ${p.paidDate}</div>
+      </div>
+      <span class="item-amount yellow">${fmt(p.total)}</span>
+    </div>`).join('');
+}
+
+// ============ ADMIN PAYMENT (new - in การเงิน) ============
+function buildAdminPaySelect() {
+  const sel=document.getElementById('admin-pay-select');
+  if(!sel) return;
+  const admins=getAdmins();
+  sel.innerHTML='<option value="">-- เลือกผู้บริหาร --</option>'
+    +admins.map((a,i)=>`<option value="${i}">${a.name||'ผู้บริหาร '+(i+1)} (${a.pct||0}%)</option>`).join('');
+}
+
+function calcAdminPay() {
+  const idx=parseInt(document.getElementById('admin-pay-select')?.value);
+  const from=document.getElementById('admin-pay-from')?.value;
+  const to=document.getElementById('admin-pay-to')?.value;
+  const calcEl=document.getElementById('admin-pay-calc');
+  const warnEl=document.getElementById('admin-pay-warn');
+  const payBtn=document.getElementById('admin-pay-btn');
+  if(isNaN(idx)||!from||!to){
+    if(calcEl)calcEl.style.display='none';
+    if(warnEl)warnEl.style.display='none';
+    if(payBtn)payBtn.style.display='none';
+    return;
+  }
   const admins=getAdmins();
   const a=admins[idx];
-  const name=document.getElementById('adm-name-'+idx)?.value.trim()||a.name;
-  const amount=parseFloat(document.getElementById('adm-pct-'+idx)?.value||a.pct)/100*DB.get(KEY.sale).filter(i=>i.date.slice(0,7)===thisMonth()).reduce((s,i)=>s+i.amount,0);
+  if(!a){return;}
+  const saleSum=DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).reduce((s,i)=>s+i.amount,0);
+  const pct=a.pct||0;
+  const amount=saleSum*pct/100;
+  // ตรวจซ้ำ
+  const existing=DB.get(KEY.adminpay).find(p=>p.adminIdx===idx&&p.from===from&&p.to===to);
+  if(existing){
+    if(warnEl){warnEl.style.display='block';document.getElementById('admin-pay-warn-text').textContent=`ช่วงวันที่ ${from} – ${to} จ่ายให้ ${a.name||'ผู้บริหาร '+(idx+1)} ไปแล้วเมื่อ ${existing.paidDate}`;}
+    if(calcEl)calcEl.style.display='none';
+    if(payBtn)payBtn.style.display='none';
+    return;
+  }
+  if(warnEl)warnEl.style.display='none';
+  if(calcEl){
+    calcEl.style.display='block';
+    document.getElementById('admin-pay-sale-sum').textContent=fmt(saleSum);
+    document.getElementById('admin-pay-pct').textContent=pct+'%';
+    document.getElementById('admin-pay-amount').textContent=fmt(amount);
+  }
+  if(payBtn)payBtn.style.display=amount>0?'block':'none';
+}
+
+function payAdminCom() {
+  const idx=parseInt(document.getElementById('admin-pay-select')?.value);
+  const from=document.getElementById('admin-pay-from')?.value;
+  const to=document.getElementById('admin-pay-to')?.value;
+  if(isNaN(idx)||!from||!to) return;
+  const admins=getAdmins();
+  const a=admins[idx];
+  const saleSum=DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).reduce((s,i)=>s+i.amount,0);
+  const amount=saleSum*(a.pct||0)/100;
   if(!amount) return alert('ยอดค่าคอมเป็น 0');
-  showConfirm('✅ อนุมัติจ่ายค่าคอม',[
-    ['ผู้รับ',name],['จำนวน',fmt(amount)],['เดือน',thisMonth()],['บันทึกเป็น','ค่าแรงผู้บริหาร'],
+  showConfirm('✅ ยืนยันจ่ายค่าคอมผู้บริหาร',[
+    ['ผู้รับ',a.name||'ผู้บริหาร '+(idx+1)],
+    ['ช่วงวันที่',`${from} – ${to}`],
+    ['ยอดขายในช่วง',fmt(saleSum)],
+    ['%',`${a.pct||0}%`],
+    ['ค่าคอม',fmt(amount)],
   ],()=>{
-    const list=DB.get(KEY.wage);
-    list.push({id:uid(),name:`👔 ${name} (ค่าคอม ${thisMonth()})`,amount,date:today()});
-    DB.set(KEY.wage,list);
-    alert(`จ่ายค่าคอม ${name} ${fmt(amount)} แล้ว ✓`);
+    // บันทึก adminpay
+    const pays=DB.get(KEY.adminpay);
+    pays.push({id:uid(),adminIdx:idx,adminName:a.name,from,to,saleSum,pct:a.pct,amount,paidDate:today(),ts:Date.now()});
+    DB.set(KEY.adminpay,pays);
+    // บันทึกลง wage (รายงาน)
+    const wages=DB.get(KEY.wage);
+    wages.push({id:uid(),name:`👔 ${a.name||'ผู้บริหาร '+(idx+1)} (ค่าคอม ${from.slice(5).replace('-','/')}–${to.slice(5).replace('-','/')})`,amount,date:today(),ts:Date.now()});
+    DB.set(KEY.wage,wages);
+    // reset UI
+    document.getElementById('admin-pay-select').value='';
+    document.getElementById('admin-pay-from').value='';
+    document.getElementById('admin-pay-to').value='';
+    document.getElementById('admin-pay-calc').style.display='none';
+    document.getElementById('admin-pay-btn').style.display='none';
+    renderAdminPayHistory();
     updateDashboard();
+    alert(`จ่ายค่าคอม ${a.name||'ผู้บริหาร '+(idx+1)} ${fmt(amount)} แล้ว ✓`);
   });
+}
+
+function renderAdminPayHistory() {
+  const el=document.getElementById('admin-pay-history');
+  if(!el) return;
+  const pays=DB.get(KEY.adminpay).sort((a,b)=>b.paidDate.localeCompare(a.paidDate));
+  if(!pays.length){el.innerHTML='<div class="empty"><div class="empty-icon">👔</div>ยังไม่มีประวัติ</div>';return;}
+  el.innerHTML=pays.slice(0,20).map(p=>`
+    <div class="list-item">
+      <div style="flex:1">
+        <div class="item-name">👔 ${p.adminName||'ผู้บริหาร'}</div>
+        <div class="item-meta">${p.from.slice(5).replace('-','/')}–${p.to.slice(5).replace('-','/')} · จ่ายวันที่ ${p.paidDate}</div>
+      </div>
+      <span class="item-amount green">${fmt(p.amount)}</span>
+    </div>`).join('');
+}
+
+// ============ DASHBOARD TABS ============
+let _dashPeriod='day';
+let _profitViewMonth=null; // null = thisMonth()
+
+function dashTab(period, btn) {
+  _dashPeriod=period;
+  document.querySelectorAll('#page-home .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateDashboard();
+}
+
+function openProfitMonthPicker() {
+  const m=_profitViewMonth||thisMonth();
+  document.getElementById('profit-month-picker').value=m;
+  document.getElementById('profit-month-modal').classList.add('open');
+}
+
+function setProfitMonth(m) {
+  _profitViewMonth=m;
+  document.getElementById('profit-month-modal').classList.remove('open');
+  updateDashboard();
 }
 
 // ============ EXPORT ============
@@ -1527,7 +1954,7 @@ function renderRepIncome() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×฿${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green'}));
+  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green'}));
   if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากหนี้',label:i.source||'เงินกู้',detail:'',amount:i.amount,color:'blue'}));
   if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue'}));
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
@@ -1571,7 +1998,7 @@ function renderRepExpense() {
   const types=getBuyTypes();
   const typeMap=Object.fromEntries(types.map(t=>[t.id,t.label]));
   let items=[];
-  if(chkRe('re-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:typeMap[i.type]||'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),detail:i.qty?`${i.qty}×฿${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.price}));
+  if(chkRe('re-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:typeMap[i.type]||'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),detail:i.qty?`${i.qty}×${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.price}));
   if(chkRe('re-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'👷 ค่าแรง',label:i.name,detail:'',amount:i.amount}));
   if(chkRe('re-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount}));
   if(chkRe('re-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',detail:'',amount:i.amount}));
@@ -1674,27 +2101,60 @@ function renderTimeline() {
 }
 
 // ============ DASHBOARD ============
+function getWeekRange() {
+  // จันทร์ถึงอาทิตย์ของสัปดาห์นี้
+  const d=new Date();
+  const day=d.getDay(); // 0=Sun
+  const mon=new Date(d); mon.setDate(d.getDate()-(day===0?6:day-1));
+  const sun=new Date(mon); sun.setDate(mon.getDate()+6);
+  return {wFrom:mon.toISOString().slice(0,10), wTo:sun.toISOString().slice(0,10)};
+}
+
 function updateDashboard() {
-  const td=today(),tm=thisMonth();
+  const td=today(), tm=thisMonth();
+  const profitMonth=_profitViewMonth||tm;
   const sales=DB.get(KEY.sale);
-  const todaySale=sales.filter(i=>i.date===td).reduce((s,i)=>s+i.amount,0);
-  const monthSale=sales.filter(i=>i.date.slice(0,7)===tm).reduce((s,i)=>s+i.amount,0);
   const buys=DB.get(KEY.buy);
-  const todayBuy=buys.filter(i=>i.date===td).reduce((s,i)=>s+i.price,0);
-  const monthBuy=buys.filter(i=>i.date.slice(0,7)===tm).reduce((s,i)=>s+i.price,0);
-  const monthWage=DB.get(KEY.wage).filter(i=>i.date.slice(0,7)===tm).reduce((s,i)=>s+i.amount,0);
-  const monthRent=DB.get(KEY.rent).filter(i=>i.date.slice(0,7)===tm).reduce((s,i)=>s+i.amount,0);
-  const monthLoanPay=DB.get(KEY.loanpay).filter(i=>i.date.slice(0,7)===tm).reduce((s,i)=>s+i.amount,0);
+  const period=_dashPeriod||'day';
+
+  // คำนวณตาม period
+  let periodFrom, periodTo, periodLabel, saleLabel, buyLabel;
+  if(period==='day'){
+    periodFrom=periodTo=td;
+    saleLabel='💰 ยอดขายวันนี้'; buyLabel='🛒 ซื้อของวันนี้';
+    const d=new Date();
+    periodLabel=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  } else if(period==='week'){
+    const wr=getWeekRange();
+    periodFrom=wr.wFrom; periodTo=wr.wTo;
+    saleLabel='💰 ยอดขายสัปดาห์นี้'; buyLabel='🛒 ซื้อของสัปดาห์นี้';
+    periodLabel=`${periodFrom.slice(5).replace('-','/')} – ${periodTo.slice(5).replace('-','/')}`;
+  } else {
+    periodFrom=tm+'-01';
+    const lastDay=new Date(new Date(tm).getFullYear(),new Date(tm).getMonth()+1,0).getDate();
+    periodTo=tm+'-'+String(lastDay).padStart(2,'0');
+    saleLabel='💰 ยอดขายเดือนนี้'; buyLabel='🛒 ซื้อของเดือนนี้';
+    periodLabel=new Date(tm+'-01').toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  }
+
+  const periodSale=sales.filter(i=>i.date>=periodFrom&&i.date<=periodTo).reduce((s,i)=>s+i.amount,0);
+  const periodBuy=buys.filter(i=>i.date>=periodFrom&&i.date<=periodTo).reduce((s,i)=>s+i.price,0);
+
+  // กำไร - ใช้ profitMonth (อาจต่างจาก period)
+  const pmSale=sales.filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
+  const monthWage=DB.get(KEY.wage).filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
+  const monthRent=DB.get(KEY.rent).filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
+  const monthLoanPay=DB.get(KEY.loanpay).filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
   const admins=getAdmins();
-  const adminCom=admins.reduce((s,a)=>s+monthSale*(a.pct||0)/100,0);
-  // คำนวณกำไรตาม profitCfg ที่ตั้งไว้
+  const adminCom=admins.reduce((s,a)=>s+pmSale*(a.pct||0)/100,0);
   const pcfg=getProfitCfg();
-  const monthBuyDeduct=buys.filter(i=>i.date.slice(0,7)===tm&&pcfg.buyTypeIds.includes(i.type)).reduce((s,i)=>s+i.price,0);
-  const monthProfit=monthSale - monthBuyDeduct
+  const pmBuyDeduct=buys.filter(i=>i.date.slice(0,7)===profitMonth&&pcfg.buyTypeIds.includes(i.type)).reduce((s,i)=>s+i.price,0);
+  const monthProfit=pmSale - pmBuyDeduct
     - (pcfg.wage?monthWage:0)
     - (pcfg.rent?monthRent:0)
     - (pcfg.loanpay?monthLoanPay:0)
     - (pcfg.admincom?adminCom:0);
+
   const loanTotal=DB.get(KEY.loan).reduce((s,i)=>s+i.amount,0);
   const loanPaid=DB.get(KEY.loanpay).reduce((s,i)=>s+i.amount,0);
   const loanRemain=loanTotal-loanPaid;
@@ -1704,6 +2164,22 @@ function updateDashboard() {
   const totalWageAll=DB.get(KEY.wage).reduce((s,i)=>s+i.amount,0);
   const totalRentAll=DB.get(KEY.rent).reduce((s,i)=>s+i.amount,0);
   const cashBal=capitalTotal+loanTotal+totalSaleAll-totalBuyAll-totalWageAll-totalRentAll-loanPaid;
+
+  // อัปเดต labels ตาม period
+  const saleLabelEl=document.getElementById('d-sale-label');
+  if(saleLabelEl) saleLabelEl.textContent=saleLabel;
+  const buyLabelEl=document.getElementById('d-buy-label');
+  if(buyLabelEl) buyLabelEl.textContent=buyLabel;
+  const periodLabelEl=document.getElementById('dash-period-label');
+  if(periodLabelEl) periodLabelEl.textContent=periodLabel;
+
+  // อัปเดต profit month tag
+  const pmTag=document.getElementById('d-profit-month-tag');
+  if(pmTag){
+    const pmDate=new Date(profitMonth+'-01');
+    const pmLabel=pmDate.toLocaleDateString('th-TH',{month:'short',year:'2-digit'});
+    pmTag.textContent=pmLabel;
+  }
 
   // สูตร hint สำหรับ d-profit
   const allBuyTypes=getBuyTypes();
@@ -1715,8 +2191,12 @@ function updateDashboard() {
   const formulaEl=document.getElementById('d-profit-formula');
   if(formulaEl) formulaEl.textContent='หัก: '+deductLabels.join(', ');
 
-  ac('d-sale',todaySale,'green'); ac('d-profit',monthProfit,monthProfit>=0?'green':'red');
-  ac('d-buy',todayBuy,'yellow'); ac('d-loan',loanRemain,'red');
+  // เงินกู้ - แสดงเงินต้นด้วย
+  const loanPrincipalEl=document.getElementById('d-loan-principal');
+  if(loanPrincipalEl) loanPrincipalEl.textContent=fmt(loanTotal);
+
+  ac('d-sale',periodSale,'green'); ac('d-profit',monthProfit,monthProfit>=0?'green':'red');
+  ac('d-buy',periodBuy,'yellow'); ac('d-loan',loanRemain,'red');
   ac('d-capital',capitalTotal,'blue'); ac('d-cashbal',cashBal,cashBal>=0?'':'red');
 
   // 7-day chart
@@ -1725,16 +2205,20 @@ function updateDashboard() {
   const maxD=Math.max(...days7.map(d=>d.v),1);
   document.getElementById('chart7day').innerHTML=days7.map(d=>`
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;">
-      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.v>0?fmt(d.v).replace('฿',''):'—'}</div>
+      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.v>0?fmt(d.v):'—'}</div>
       <div style="width:100%;background:${d.ds===td?'var(--green)':'var(--accent)'};border-radius:4px 4px 0 0;opacity:${d.ds===td?1:0.65};height:${Math.max(d.v/maxD*70,d.v>0?5:2)}px;transition:height 0.8s ease;"></div>
     </div>`).join('');
   document.getElementById('chart7day-labels').innerHTML=days7.map(d=>`
     <div style="flex:1;text-align:center;font-size:10px;color:${d.ds===td?'var(--accent)':'var(--text2)'};font-weight:${d.ds===td?600:400}">${d.lbl}</div>`).join('');
 
-  // bar chart
-  const maxV=Math.max(monthSale,monthBuy,monthWage,monthRent,1);
+  // bar chart — ใช้ค่าของ profitMonth เสมอ (pmSale, pmBuyDeduct ถูก declare แล้ว)
+  // monthWage/monthRent/monthLoanPay ถูก declare ด้านบนแล้ว (filter by profitMonth)
+  // periodSale/periodBuy ใช้สำหรับ period tab เท่านั้น
+  const barSale = pmSale;
+  const barBuy  = buys.filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.price,0);
+  const maxV=Math.max(barSale,barBuy,monthWage,monthRent,monthLoanPay,1);
   document.getElementById('chartBars').innerHTML=[
-    {l:'💰 ยอดขาย',v:monthSale,c:'var(--green)'},{l:'🛒 ค่าของ',v:monthBuy,c:'var(--yellow)'},
+    {l:'💰 ยอดขาย',v:barSale,c:'var(--green)'},{l:'🛒 ค่าของ',v:barBuy,c:'var(--yellow)'},
     {l:'👷 ค่าแรง',v:monthWage,c:'var(--accent)'},{l:'🏠 ค่าเช่า',v:monthRent,c:'var(--purple)'},
     {l:'🏦 จ่ายกู้',v:monthLoanPay,c:'var(--red)'},
   ].map(b=>`<div class="bar-row">
