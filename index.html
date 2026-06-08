@@ -160,6 +160,22 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .tag-add{display:flex;gap:8px;}
 .tag-add input{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);}
 .tag-add button{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;}
+/* SETTINGS MENU LIST */
+.set-menu-item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:background 0.15s;}
+.set-menu-item:active{background:var(--blue-soft);}
+.set-menu-item .smi-ico{font-size:22px;width:32px;text-align:center;}
+.set-menu-item .smi-body{flex:1;}
+.set-menu-item .smi-title{font-size:14px;font-weight:600;color:var(--text);}
+.set-menu-item .smi-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.set-menu-item .smi-arrow{color:var(--text2);font-size:16px;}
+/* SIDEBAR SUBMENU */
+.sidebar-sub{display:none;padding-left:0;background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.sidebar-sub.open{display:block;}
+.sidebar-sub .sidebar-item{font-size:13px;padding:10px 16px 10px 48px;color:var(--text2);}
+.sidebar-sub .sidebar-item.active{color:var(--accent);background:var(--blue-soft);}
+.sidebar-sub-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.sidebar-sub-toggle .s-arrow{font-size:11px;transition:transform 0.2s;color:rgba(255,255,255,0.7);}
+.sidebar-sub-toggle.open .s-arrow{transform:rotate(90deg);}
 .admin-card{background:var(--blue-soft);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
 .admin-card .admin-label{font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;}
 .admin-payout-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
@@ -202,9 +218,15 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </button>
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">วิเคราะห์</div>
-    <button class="sidebar-item" id="nav-page-report" onclick="goPage('page-report',this)">
-      <span class="s-ico">📊</span>รายงาน
+    <button class="sidebar-item" id="nav-page-report" onclick="toggleReportSubmenu(this)">
+      <span class="s-ico">📊</span>
+      <span class="sidebar-sub-toggle" id="report-sub-toggle">รายงาน <span class="s-arrow">▶</span></span>
     </button>
+    <div class="sidebar-sub" id="sidebar-sub-report">
+      <button class="sidebar-item" id="nav-rep-income" onclick="goReportTab('rep-income',this)">💚 รายรับ</button>
+      <button class="sidebar-item" id="nav-rep-expense" onclick="goReportTab('rep-expense',this)">💸 รายจ่าย</button>
+      <button class="sidebar-item" id="nav-rep-movement" onclick="goReportTab('rep-movement',this)">📋 เคลื่อนไหว</button>
+    </div>
     <div class="sidebar-divider"></div>
     <button class="sidebar-item" id="nav-page-settings" onclick="goPage('page-settings',this)">
       <span class="s-ico">⚙️</span>ตั้งค่า
@@ -374,9 +396,9 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div class="form-group">
     <label>ชื่อสินค้า</label>
-    <select id="buy-name-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;">
-      <option value="">-- เลือกประเภทก่อน --</option>
-    </select>
+    <input type="text" id="buy-name-select" list="buy-name-datalist" placeholder="พิมพ์หรือเลือกจากรายการ"
+      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
+    <datalist id="buy-name-datalist"></datalist>
   </div>
   <div class="form-group">
     <label>ร้าน/ซัพพลายเออร์</label>
@@ -425,113 +447,160 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
-<!-- PAGE: รายงาน -->
-<div class="page" id="page-report">
-  <div class="section-title">📊 รายงาน</div>
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="repMainTab(this,'rep-income')">💚 รายรับ</button>
-    <button class="tab-btn" onclick="repMainTab(this,'rep-expense')">💸 รายจ่าย</button>
-    <button class="tab-btn" onclick="repMainTab(this,'rep-movement')">📋 การเคลื่อนไหว</button>
+<!-- PAGE: รายงาน รายรับ -->
+<div class="page" id="page-rep-income">
+  <div class="section-title">💚 รายงานรายรับ</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="ri-from" onchange="renderRepIncome()"></div>
+    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="ri-to" onchange="renderRepIncome()"></div>
   </div>
-
-  <!-- รายรับ -->
-  <div id="rep-income" class="rep-section">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="ri-from" onchange="renderRepIncome()"></div>
-      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="ri-to" onchange="renderRepIncome()"></div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">แสดงประเภท</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <label class="chk-label"><input type="checkbox" id="ri-c-sale" checked onchange="renderRepIncome()"> 💰 ยอดขาย</label>
+      <label class="chk-label"><input type="checkbox" id="ri-c-loan" checked onchange="renderRepIncome()"> 🏦 รับจากหนี้</label>
+      <label class="chk-label"><input type="checkbox" id="ri-c-capital" checked onchange="renderRepIncome()"> 💵 รับจากทุน</label>
     </div>
-    <div id="rep-income-output"></div>
   </div>
+  <div id="rep-income-output"></div>
+</div>
 
-  <!-- รายจ่าย -->
-  <div id="rep-expense" class="rep-section" style="display:none">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="re-from" onchange="renderRepExpense()"></div>
-      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="re-to" onchange="renderRepExpense()"></div>
-    </div>
-    <div id="rep-expense-output"></div>
+<!-- PAGE: รายงาน รายจ่าย -->
+<div class="page" id="page-rep-expense">
+  <div class="section-title">💸 รายงานรายจ่าย</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="re-from" onchange="renderRepExpense()"></div>
+    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="re-to" onchange="renderRepExpense()"></div>
   </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">แสดงประเภท</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <label class="chk-label"><input type="checkbox" id="re-c-buy" checked onchange="renderRepExpense()"> 💸 ซื้อของ</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-wage" checked onchange="renderRepExpense()"> 👷 ค่าแรง</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-rent" checked onchange="renderRepExpense()"> 🏠 ค่าเช่า</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-loanpay" checked onchange="renderRepExpense()"> 🏦 จ่ายหนี้</label>
+    </div>
+  </div>
+  <div id="rep-expense-output"></div>
+</div>
 
-  <!-- การเคลื่อนไหว -->
-  <div id="rep-movement" class="rep-section" style="display:none">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="tl-from" onchange="renderTimeline()"></div>
-      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="tl-to" onchange="renderTimeline()"></div>
+<!-- PAGE: รายงาน เคลื่อนไหว -->
+<div class="page" id="page-rep-movement">
+  <div class="section-title">📋 การเคลื่อนไหว</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="tl-from" onchange="renderTimeline()"></div>
+    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="tl-to" onchange="renderTimeline()"></div>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <label class="chk-label"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> 💰 ยอดขาย</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> 💵 รับทุน</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-loan" checked onchange="renderTimeline()"> 🏦 รับกู้</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-buy" checked onchange="renderTimeline()"> 💸 ซื้อของ</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-wage" checked onchange="renderTimeline()"> 👷 ค่าแรง</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-rent" checked onchange="renderTimeline()"> 🏠 ค่าเช่า</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> 🏦 จ่ายหนี้</label>
     </div>
-    <!-- filter checkboxes -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px;">
-      <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">รายรับที่แสดง</div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
-        <label class="chk-label"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> 💰 ยอดขาย</label>
-        <label class="chk-label"><input type="checkbox" id="tl-c-loan" checked onchange="renderTimeline()"> 🏦 รับกู้</label>
-        <label class="chk-label"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> 💵 รับทุน</label>
-      </div>
-      <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">รายจ่ายที่แสดง</div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;">
-        <label class="chk-label"><input type="checkbox" id="tl-c-buy" checked onchange="renderTimeline()"> 💸 ซื้อของ</label>
-        <label class="chk-label"><input type="checkbox" id="tl-c-wage" checked onchange="renderTimeline()"> 👷 ค่าแรง</label>
-        <label class="chk-label"><input type="checkbox" id="tl-c-rent" checked onchange="renderTimeline()"> 🏠 ค่าเช่า</label>
-        <label class="chk-label"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> 🏦 จ่ายหนี้</label>
-      </div>
-    </div>
-    <div id="timeline-output"></div>
+  </div>
+  <div id="timeline-output"></div>
+</div>
+
+<!-- PAGE: ตั้งค่า (menu) -->
+<div class="page" id="page-settings">
+  <div class="section-title">⚙️ ตั้งค่า</div>
+  <div onclick="goSubSetting('set-salecats')" class="set-menu-item">
+    <span class="smi-ico">🥩</span>
+    <div class="smi-body"><div class="smi-title">หมวดหมู่ยอดขาย</div><div class="smi-sub">จัดการประเภทเนื้อสัตว์ / สินค้าขาย</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-suppliers')" class="set-menu-item">
+    <span class="smi-ico">🏪</span>
+    <div class="smi-body"><div class="smi-title">ซัพพลายเออร์ / ร้านค้า</div><div class="smi-sub">เพิ่ม/ลบแหล่งซื้อสินค้า</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-buytypes')" class="set-menu-item">
+    <span class="smi-ico">🛒</span>
+    <div class="smi-body"><div class="smi-title">ประเภทการซื้อ</div><div class="smi-sub">วัตถุดิบ, สิ้นเปลือง, อุปกรณ์ ฯลฯ</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-itemnames')" class="set-menu-item">
+    <span class="smi-ico">📦</span>
+    <div class="smi-body"><div class="smi-title">ชื่อสินค้า</div><div class="smi-sub">เพิ่มชื่อสินค้าพร้อมเลือกประเภท</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-profit')" class="set-menu-item">
+    <span class="smi-ico">📈</span>
+    <div class="smi-body"><div class="smi-title">การคำนวณกำไร</div><div class="smi-sub">เลือกรายจ่ายที่หักจากยอดขาย</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-admin')" class="set-menu-item">
+    <span class="smi-ico">👔</span>
+    <div class="smi-body"><div class="smi-title">ค่าคอมผู้บริหาร</div><div class="smi-sub">ตั้ง % ค่าคอมและอนุมัติจ่าย</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
+  <div onclick="goSubSetting('set-backup')" class="set-menu-item">
+    <span class="smi-ico">💾</span>
+    <div class="smi-body"><div class="smi-title">สำรองข้อมูล</div><div class="smi-sub">Export ข้อมูลทั้งหมดเป็นไฟล์</div></div>
+    <span class="smi-arrow">›</span>
   </div>
 </div>
 
-<!-- PAGE: ตั้งค่า -->
-<div class="page" id="page-settings">
-  <div class="section-title">⚙️ ตั้งค่า</div>
-
-  <!-- หมวดยอดขาย -->
+<!-- SUB: หมวดยอดขาย -->
+<div class="page" id="set-salecats">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ หมวดหมู่ยอดขาย</div>
   <div class="set-section">
-    <h3>🥩 หมวดหมู่ยอดขาย</h3>
     <div class="tag-list" id="sale-cats-list"></div>
     <div class="tag-add">
       <input type="text" id="new-sale-cat" placeholder="เพิ่มหมวดใหม่ เช่น หมูกระทะ">
       <button onclick="addSaleCat()">+ เพิ่ม</button>
     </div>
   </div>
+</div>
 
-  <!-- ซัพพลายเออร์ -->
+<!-- SUB: ซัพพลายเออร์ -->
+<div class="page" id="set-suppliers">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ ซัพพลายเออร์</div>
   <div class="set-section">
-    <h3>🏪 ซัพพลายเออร์ / ร้านค้า</h3>
     <div class="tag-list" id="suppliers-list"></div>
     <div class="tag-add">
       <input type="text" id="new-supplier" placeholder="เพิ่มร้านค้า เช่น ตลาดไท">
       <button onclick="addSupplierFromSettings()">+ เพิ่ม</button>
     </div>
   </div>
+</div>
 
-  <!-- ประเภทการซื้อ -->
+<!-- SUB: ประเภทการซื้อ -->
+<div class="page" id="set-buytypes">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ ประเภทการซื้อ</div>
   <div class="set-section">
-    <h3>🛒 ประเภทการซื้อของ</h3>
     <div class="tag-list" id="buy-types-list"></div>
     <div class="tag-add">
       <input type="text" id="new-buy-type-name" placeholder="ชื่อประเภท เช่น บรรจุภัณฑ์">
       <button onclick="addBuyType()">+ เพิ่ม</button>
     </div>
   </div>
+</div>
 
-  <!-- ชื่อสินค้าตามประเภท -->
+<!-- SUB: ชื่อสินค้า -->
+<div class="page" id="set-itemnames">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ ชื่อสินค้า</div>
   <div class="set-section">
-    <h3>📦 ชื่อสินค้าตามประเภท</h3>
     <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border);">
-      💡 เพิ่มชื่อสินค้าแต่ละประเภทที่นี่ จะแสดงใน dropdown เมื่อบันทึกรายจ่าย
+      💡 พิมพ์ชื่อสินค้า แล้วเลือกประเภท กด + เพิ่ม
     </div>
-    <div class="form-group">
-      <label>เลือกประเภท</label>
-      <select id="set-item-type" onchange="renderItemNamesList()" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;"></select>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+      <input type="text" id="new-item-name" placeholder="ชื่อสินค้า เช่น แป้ง, ไม้จิ้ม" style="flex:1;min-width:130px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <select id="set-item-type" onchange="renderItemNamesList()" style="flex:0 0 auto;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;"></select>
+      <button onclick="addItemName()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;">+ เพิ่ม</button>
     </div>
     <div class="tag-list" id="item-names-list"></div>
-    <div class="tag-add">
-      <input type="text" id="new-item-name" placeholder="เช่น หมูสามชั้น, ถ่าน, ไม้เสียบ">
-      <button onclick="addItemName()">+ เพิ่ม</button>
-    </div>
   </div>
+</div>
 
-  <!-- การคำนวณกำไร -->
+<!-- SUB: การคำนวณกำไร -->
+<div class="page" id="set-profit">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ การคำนวณกำไร</div>
   <div class="set-section">
-    <h3>📈 การคำนวณกำไร</h3>
     <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border);">
       💡 เลือกว่าจะหักอะไรออกจากยอดขาย ก่อนแสดงกำไรในหน้า Dashboard
     </div>
@@ -539,29 +608,19 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div id="profit-buytypes-checks" style="margin-bottom:14px;"></div>
     <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">รายจ่ายอื่นที่หักจากกำไร</div>
     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
-      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" id="pcfg-wage" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
-        <span>👷 ค่าแรง</span>
-      </label>
-      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" id="pcfg-rent" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
-        <span>🏠 ค่าเช่า</span>
-      </label>
-      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" id="pcfg-loanpay" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
-        <span>🏦 จ่ายคืนเงินกู้</span>
-      </label>
-      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" id="pcfg-admincom" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">
-        <span>👔 ค่าคอมผู้บริหาร</span>
-      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;"><input type="checkbox" id="pcfg-wage" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;"><span>👷 ค่าแรง</span></label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;"><input type="checkbox" id="pcfg-rent" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;"><span>🏠 ค่าเช่า</span></label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;"><input type="checkbox" id="pcfg-loanpay" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;"><span>🏦 จ่ายคืนเงินกู้</span></label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;"><input type="checkbox" id="pcfg-admincom" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;"><span>👔 ค่าคอมผู้บริหาร</span></label>
     </div>
     <button class="btn btn-primary" onclick="saveProfitCfgFromUI()">💾 บันทึกการตั้งค่ากำไร</button>
   </div>
+</div>
 
-  <!-- ค่าคอมผู้บริหาร -->
+<!-- SUB: ค่าคอมผู้บริหาร -->
+<div class="page" id="set-admin">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ ค่าคอมผู้บริหาร</div>
   <div class="set-section">
-    <h3>👔 ค่าคอมผู้บริหาร</h3>
     <div style="background:var(--blue-soft);border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--text2);border:1px solid var(--border);">
       💡 ระบบคำนวณค่าคอมจาก % ยอดขายแต่ละเดือนให้อัตโนมัติ กดอนุมัติจ่ายได้ทันที
     </div>
@@ -570,11 +629,13 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="divider"></div>
     <button class="btn btn-primary" onclick="saveAdminSettings()">💾 บันทึกการตั้งค่าค่าคอม</button>
   </div>
+</div>
 
-  <!-- ข้อมูล / Backup -->
+<!-- SUB: สำรองข้อมูล -->
+<div class="page" id="set-backup">
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ สำรองข้อมูล</div>
   <div class="set-section">
-    <h3>💾 สำรองข้อมูล</h3>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">ข้อมูลทั้งหมดเก็บอยู่ในเครื่องของคุณ ถ้าล้างแคชเบราว์เซอร์หรือเปลี่ยนเครื่อง ข้อมูลจะหาย — กด Export เพื่อบันทึกไฟล์สำรองเอาไว้ก่อน</p>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">ข้อมูลทั้งหมดเก็บอยู่ในเครื่องของคุณ ถ้าล้างแคชหรือเปลี่ยนเครื่อง ข้อมูลจะหาย — กด Export เพื่อบันทึกไฟล์สำรองก่อน</p>
     <button class="export-btn" onclick="exportData()">📥 Export ข้อมูลทั้งหมด (บันทึกเป็นไฟล์)</button>
     <div style="font-size:11px;color:var(--text2);">ไฟล์ที่ได้สามารถส่งให้ตัวเองทาง Line หรือเก็บใน Google Drive ได้เลย</div>
   </div>
@@ -658,12 +719,13 @@ function getItemNamesForType(typeId){
   const all=getItemNames(); return all[typeId]||[];
 }
 function buildItemNameSelect(typeId){
-  const sel=document.getElementById('buy-name-select');
-  if(!sel) return;
+  const dl=document.getElementById('buy-name-datalist');
+  if(!dl) return;
   const names=getItemNamesForType(typeId);
-  sel.innerHTML=names.length
-    ?'<option value="">-- เลือกสินค้า --</option>'+names.map(n=>`<option value="${n}">${n}</option>`).join('')
-    :'<option value="">-- ไม่มีรายการ (เพิ่มในตั้งค่า) --</option>';
+  dl.innerHTML=names.map(n=>`<option value="${n}">`).join('');
+  // clear input when type changes
+  const inp=document.getElementById('buy-name-select');
+  if(inp) inp.value='';
 }
 function onBuyTypeChange(){
   const typeId=document.getElementById('buy-type').value;
@@ -697,8 +759,11 @@ function closeSidebar() {
 
 // ============ NAVIGATION ============
 const PAGE_TITLES = {
-  'page-home':'🏪 Dashboard','page-sale':'💰 ยอดขาย','page-buy':'💸 รายจ่าย', 'page-income':'💚 รายรับ',
-  'page-finance':'💳 การเงิน','page-report':'📊 รายงาน','page-settings':'⚙️ ตั้งค่า'
+  'page-home':'🏪 Dashboard','page-sale':'💰 ยอดขาย','page-buy':'💸 รายจ่าย','page-income':'💚 รายรับ',
+  'page-finance':'💳 การเงิน','page-settings':'⚙️ ตั้งค่า',
+  'page-rep-income':'💚 รายงานรายรับ','page-rep-expense':'💸 รายงานรายจ่าย','page-rep-movement':'📋 การเคลื่อนไหว',
+  'set-salecats':'🥩 หมวดหมู่ยอดขาย','set-suppliers':'🏪 ซัพพลายเออร์','set-buytypes':'🛒 ประเภทการซื้อ',
+  'set-itemnames':'📦 ชื่อสินค้า','set-profit':'📈 การคำนวณกำไร','set-admin':'👔 ค่าคอมผู้บริหาร','set-backup':'💾 สำรองข้อมูล'
 };
 
 function goPage(id, navBtn) {
@@ -713,8 +778,53 @@ function goPage(id, navBtn) {
   if(id==='page-income') { buildSaleMeatBtns(); renderSaleList(); renderCapList(); renderLoanStatus(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; }
   if(id==='page-sale') { buildSaleMeatBtns(); renderSaleList(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; }
   if(id==='page-finance') { renderCapList(); renderLoanStatus(); renderWageList(); renderRentList(); }
-  if(id==='page-report') renderReport();
-  if(id==='page-settings') renderSettings();
+  if(id==='page-settings') renderSettingsMenu();
+  if(id==='page-rep-income') { initRepDates(); renderRepIncome(); }
+  if(id==='page-rep-expense') { initRepDates(); renderRepExpense(); }
+  if(id==='page-rep-movement') { initRepDates(); renderTimeline(); }
+  if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-profit','set-admin','set-backup'].includes(id)) renderSubSetting(id);
+}
+
+function toggleReportSubmenu(btn) {
+  const sub = document.getElementById('sidebar-sub-report');
+  const toggle = document.getElementById('report-sub-toggle');
+  const isOpen = sub.classList.contains('open');
+  if(isOpen) {
+    sub.classList.remove('open');
+    toggle.classList.remove('open');
+  } else {
+    sub.classList.add('open');
+    toggle.classList.add('open');
+    // go to first sub if no sub active
+    const anyActive = sub.querySelector('.sidebar-item.active');
+    if(!anyActive) goReportTab('rep-income', document.getElementById('nav-rep-income'));
+  }
+}
+
+function goReportTab(tabId, navBtn) {
+  const pageMap = {'rep-income':'page-rep-income','rep-expense':'page-rep-expense','rep-movement':'page-rep-movement'};
+  const pageId = pageMap[tabId];
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.querySelectorAll('#sidebar-sub-report .sidebar-item').forEach(b=>b.classList.remove('active'));
+  if(navBtn) navBtn.classList.add('active');
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[pageId]||'';
+  closeSidebar();
+  initRepDates();
+  if(pageId==='page-rep-income') renderRepIncome();
+  else if(pageId==='page-rep-expense') renderRepExpense();
+  else if(pageId==='page-rep-movement') renderTimeline();
+}
+
+function goSubSetting(id) {
+  goPage(id, null);
+}
+
+function initRepDates() {
+  const m = thisMonth()+'-01';
+  const t = today();
+  ['ri-from','re-from','tl-from'].forEach(id=>{ const el=document.getElementById(id); if(el&&!el.value) el.value=m; });
+  ['ri-to','re-to','tl-to'].forEach(id=>{ const el=document.getElementById(id); if(el&&!el.value) el.value=t; });
 }
 
 function finTab(btn,id) {
@@ -738,15 +848,7 @@ function loanTab(btn,id) {
   btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
 }
-function repMainTab(btn,id) {
-  document.querySelectorAll('#page-report > .tab-bar .tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#page-report .rep-section').forEach(s=>s.style.display='none');
-  document.getElementById(id).style.display='block';
-  if(id==='rep-income') renderRepIncome();
-  else if(id==='rep-expense') renderRepExpense();
-  else if(id==='rep-movement') renderTimeline();
-}
+function repMainTab(btn,id) { /* legacy - now using separate pages */ }
 function reportTab(btn,id) { repMainTab(btn,id); }
 
 // ============ SUPPLIER ============
@@ -837,7 +939,7 @@ function confirmBuy() {
     ['ราคารวม',fmt(price)],['วันที่',date],
   ],()=>{
     const list = DB.get(KEY.buy);
-    list.push({id:uid(),type,name,supplier,qty,unitPrice,price,date});
+    list.push({id:uid(),type,name,supplier,qty,unitPrice,price,date,ts:Date.now()});
     DB.set(KEY.buy,list);
     localStorage.setItem('last_buy_date',date);
     ['buy-name','buy-supplier','buy-qty','buy-unit-price'].forEach(id=>document.getElementById(id).value='');
@@ -903,7 +1005,7 @@ function confirmSale() {
     ['ยอดรวม',fmt(amount)],['วันที่',date],['หมายเหตุ',note||'—'],
   ],()=>{
     const list=DB.get(KEY.sale);
-    list.push({id:uid(),amount,qty,unitPrice,meat:_selectedMeat,date,note});
+    list.push({id:uid(),amount,qty,unitPrice,meat:_selectedMeat,date,note,ts:Date.now()});
     DB.set(KEY.sale,list);
     localStorage.setItem('last_sale_date',date);
     ['sale-amount','sale-qty','sale-unit-price','sale-note'].forEach(id=>document.getElementById(id).value='');
@@ -942,7 +1044,7 @@ function addCapital() {
   const note=document.getElementById('cap-note').value.trim();
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
   const list=DB.get(KEY.capital);
-  list.push({id:uid(),amount,date,note});
+  list.push({id:uid(),amount,date,note,ts:Date.now()});
   DB.set(KEY.capital,list);
   document.getElementById('cap-amount').value='';
   document.getElementById('cap-note').value='';
@@ -967,7 +1069,7 @@ function addLoan() {
   const source=document.getElementById('loan-source').value.trim();
   const date=document.getElementById('loan-date').value;
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.loan); list.push({id:uid(),amount,source,date}); DB.set(KEY.loan,list);
+  const list=DB.get(KEY.loan); list.push({id:uid(),amount,source,date,ts:Date.now()}); DB.set(KEY.loan,list);
   document.getElementById('loan-amount').value=''; document.getElementById('loan-source').value='';
   renderLoanStatus(); updateDashboard();
 }
@@ -976,7 +1078,7 @@ function addLoanPay() {
   const date=document.getElementById('loanpay-date').value;
   const note=document.getElementById('loanpay-note').value.trim();
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.loanpay); list.push({id:uid(),amount,date,note}); DB.set(KEY.loanpay,list);
+  const list=DB.get(KEY.loanpay); list.push({id:uid(),amount,date,note,ts:Date.now()}); DB.set(KEY.loanpay,list);
   document.getElementById('loanpay-amount').value=''; document.getElementById('loanpay-note').value='';
   renderLoanStatus(); updateDashboard();
 }
@@ -1007,7 +1109,7 @@ function addWage() {
   const amount=parseFloat(document.getElementById('wage-amount').value);
   const date=document.getElementById('wage-date').value;
   if(!name||!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.wage); list.push({id:uid(),name,amount,date}); DB.set(KEY.wage,list);
+  const list=DB.get(KEY.wage); list.push({id:uid(),name,amount,date,ts:Date.now()}); DB.set(KEY.wage,list);
   document.getElementById('wage-name').value=''; document.getElementById('wage-amount').value='';
   renderWageList(); updateDashboard();
 }
@@ -1030,7 +1132,7 @@ function addRent() {
   const date=document.getElementById('rent-date').value;
   const note=document.getElementById('rent-note').value.trim();
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.rent); list.push({id:uid(),amount,date,note}); DB.set(KEY.rent,list);
+  const list=DB.get(KEY.rent); list.push({id:uid(),amount,date,note,ts:Date.now()}); DB.set(KEY.rent,list);
   document.getElementById('rent-amount').value=''; document.getElementById('rent-note').value='';
   renderRentList(); updateDashboard();
 }
@@ -1091,15 +1193,15 @@ function delItemName(typeId,idx) {
   renderItemNamesList();
   buildBuyTypeSelect();
 }
-function renderSettings() {
-  renderSaleCatsList();
-  renderBuyTypesList();
-  renderAdminCards();
-  renderSuppliersList();
-  buildSupplierDatalist();
-  renderProfitCfgUI();
-  populateSetItemTypeSelect();
-  renderItemNamesList();
+function renderSettings() { renderSettingsMenu(); } // legacy alias
+function renderSettingsMenu() { /* menu page - no dynamic content needed */ }
+function renderSubSetting(id) {
+  if(id==='set-salecats') renderSaleCatsList();
+  else if(id==='set-suppliers') { renderSuppliersList(); buildSupplierDatalist(); }
+  else if(id==='set-buytypes') renderBuyTypesList();
+  else if(id==='set-itemnames') { populateSetItemTypeSelect(); renderItemNamesList(); }
+  else if(id==='set-profit') renderProfitCfgUI();
+  else if(id==='set-admin') renderAdminCards();
 }
 
 function renderProfitCfgUI() {
@@ -1365,121 +1467,117 @@ function saveEdit() {
 
 // ============ REPORT ============
 // ============ REPORT: รายรับ ============
+function chkRi(id){ const e=document.getElementById(id); return e?e.checked:true; }
 function renderRepIncome() {
-  const from=document.getElementById('ri-from').value;
-  const to=document.getElementById('ri-to').value;
+  const from=document.getElementById('ri-from')?.value;
+  const to=document.getElementById('ri-to')?.value;
   const el=document.getElementById('rep-income-output');
+  if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
-  const saleItems=DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const loanItems=DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const capItems=DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const sale=saleItems.reduce((s,i)=>s+i.amount,0);
-  const loan=loanItems.reduce((s,i)=>s+i.amount,0);
-  const cap=capItems.reduce((s,i)=>s+i.amount,0);
-  const total=sale+loan+cap;
-  function repRows(items,color,fn,af){
-    if(!items.length) return'<div style="font-size:12px;color:var(--text2);padding:6px 0;">ไม่มีรายการ</div>';
-    return items.map(i=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;">
-      <div><div style="font-weight:500;">${fn(i)}</div><div style="font-size:11px;color:var(--text2);">${i.date}</div></div>
-      <span style="color:var(--${color});font-weight:600;white-space:nowrap;margin-left:8px;">${fmt(i[af])}</span>
-    </div>`).join('');
-  }
-  el.innerHTML=`
-  <div class="report-box">
-    <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">${from} — ${to}</div>
-    <div class="report-row"><span class="r-label">💰 ยอดขาย</span><span class="green">${fmt(sale)}</span></div>
-    <div class="report-row"><span class="r-label">🏦 รับเงินกู้</span><span class="blue">${fmt(loan)}</span></div>
-    <div class="report-row"><span class="r-label">💵 รับทุน</span><span class="blue">${fmt(cap)}</span></div>
-    <div class="report-total"><span>รายรับรวม</span><span class="green">${fmt(total)}</span></div>
-  </div>
-  ${saleItems.length?`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">💰 ยอดขาย (${saleItems.length})</div>
-    ${repRows(saleItems,'green',i=>`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}` ,'amount')}
-    <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--green);">รวม ${fmt(sale)}</div></div>`:''}
-  ${loanItems.length?`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">🏦 รับเงินกู้ (${loanItems.length})</div>
-    ${repRows(loanItems,'blue',i=>i.source||'เงินกู้','amount')}
-    <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--accent);">รวม ${fmt(loan)}</div></div>`:''}
-  ${capItems.length?`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">💵 รับทุน (${capItems.length})</div>
-    ${repRows(capItems,'blue',i=>i.note||'เงินทุน','amount')}
-    <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--accent);">รวม ${fmt(cap)}</div></div>`:''}`;
+  let items=[];
+  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×฿${Number(i.unitPrice).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.amount,color:'green'}));
+  if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากหนี้',label:i.source||'เงินกู้',detail:'',amount:i.amount,color:'blue'}));
+  if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue'}));
+  if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
+  items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
+  const total=items.reduce((s,i)=>s+i.amount,0);
+  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
+  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
+    <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
+    <span style="font-size:16px;font-weight:700;color:var(--green);">${fmt(total)}</span>
+  </div>`;
+  html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
+  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;font-size:11px;font-weight:600;color:#fff;">
+    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">จำนวน</span>
+  </div>`;
+  items.forEach((i,idx)=>{
+    const bg=idx%2===0?'var(--card)':'var(--card2)';
+    html+=`<div style="background:${bg};padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;border-top:1px solid var(--border);align-items:center;">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500;line-height:1.3;">${i.label}</div>
+        ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
+      </div>
+      <div style="text-align:right;font-size:13px;font-weight:700;color:var(--${i.color});">+${fmt(i.amount)}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
 }
 
 // ============ REPORT: รายจ่าย ============
+function chkRe(id){ const e=document.getElementById(id); return e?e.checked:true; }
 function renderRepExpense() {
-  const from=document.getElementById('re-from').value;
-  const to=document.getElementById('re-to').value;
+  const from=document.getElementById('re-from')?.value;
+  const to=document.getElementById('re-to')?.value;
   const el=document.getElementById('rep-expense-output');
+  if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
-  const buyItems=DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const wageItems=DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const rentItems=DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const loanPayItems=DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).sort((a,b)=>b.date.localeCompare(a.date));
-  const buy=buyItems.reduce((s,i)=>s+i.price,0);
-  const wage=wageItems.reduce((s,i)=>s+i.amount,0);
-  const rent=rentItems.reduce((s,i)=>s+i.amount,0);
-  const loanPay=loanPayItems.reduce((s,i)=>s+i.amount,0);
-  const total=buy+wage+rent+loanPay;
-  function repRows(items,color,fn,af){
-    if(!items.length) return'<div style="font-size:12px;color:var(--text2);padding:6px 0;">ไม่มีรายการ</div>';
-    return items.map(i=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;">
-      <div><div style="font-weight:500;">${fn(i)}</div><div style="font-size:11px;color:var(--text2);">${i.date}</div></div>
-      <span style="color:var(--${color});font-weight:600;white-space:nowrap;margin-left:8px;">${fmt(i[af])}</span>
-    </div>`).join('');
-  }
   const types=getBuyTypes();
   const typeMap=Object.fromEntries(types.map(t=>[t.id,t.label]));
-  // group buy by type
-  const buyGroups={};
-  buyItems.forEach(i=>{if(!buyGroups[i.type])buyGroups[i.type]=[];buyGroups[i.type].push(i);});
-  const buyGroupHTML=Object.entries(buyGroups).map(([tid,items])=>{
-    const sub=items.reduce((s,i)=>s+i.price,0);
-    return`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">${typeMap[tid]||tid} (${items.length})</div>
-      ${repRows(items,'yellow',i=>i.name+(i.supplier?' · '+i.supplier:''),'price')}
-      <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--yellow);">รวม ${fmt(sub)}</div></div>`;
-  }).join('');
-  el.innerHTML=`
-  <div class="report-box">
-    <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">${from} — ${to}</div>
-    <div class="report-row"><span class="r-label">💸 ซื้อของ/วัตถุดิบ</span><span class="yellow">${fmt(buy)}</span></div>
-    <div class="report-row"><span class="r-label">👷 ค่าแรง</span><span class="yellow">${fmt(wage)}</span></div>
-    <div class="report-row"><span class="r-label">🏠 ค่าเช่า</span><span class="yellow">${fmt(rent)}</span></div>
-    <div class="report-row"><span class="r-label">🏦 จ่ายกู้</span><span class="red">${fmt(loanPay)}</span></div>
-    <div class="report-total"><span>รายจ่ายรวม</span><span class="red">${fmt(total)}</span></div>
-  </div>
-  ${buyGroupHTML}
-  ${wageItems.length?`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">👷 ค่าแรง (${wageItems.length})</div>
-    ${repRows(wageItems,'yellow',i=>i.name,'amount')}
-    <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--yellow);">รวม ${fmt(wage)}</div></div>`:''}
-  ${rentItems.length?`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">🏠 ค่าเช่า (${rentItems.length})</div>
-    ${repRows(rentItems,'yellow',i=>i.note||'ค่าเช่า','amount')}
-    <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--yellow);">รวม ${fmt(rent)}</div></div>`:''}
-  ${loanPayItems.length?`<div class="report-box"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">🏦 จ่ายคืนเงินกู้ (${loanPayItems.length})</div>
-    ${repRows(loanPayItems,'red',i=>i.note||'จ่ายคืน','amount')}
-    <div style="text-align:right;font-weight:600;font-size:14px;padding-top:6px;color:var(--red);">รวม ${fmt(loanPay)}</div></div>`:''}`;
+  let items=[];
+  if(chkRe('re-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:typeMap[i.type]||'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),detail:i.qty?`${i.qty}×฿${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.price}));
+  if(chkRe('re-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'👷 ค่าแรง',label:i.name,detail:'',amount:i.amount}));
+  if(chkRe('re-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount}));
+  if(chkRe('re-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',detail:'',amount:i.amount}));
+  if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
+  items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
+  const total=items.reduce((s,i)=>s+i.amount,0);
+  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
+  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
+    <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
+    <span style="font-size:16px;font-weight:700;color:var(--red);">${fmt(total)}</span>
+  </div>`;
+  html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
+  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;font-size:11px;font-weight:600;color:#fff;">
+    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">จำนวน</span>
+  </div>`;
+  items.forEach((i,idx)=>{
+    const bg=idx%2===0?'var(--card)':'var(--card2)';
+    html+=`<div style="background:${bg};padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;border-top:1px solid var(--border);align-items:center;">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500;line-height:1.3;">${i.label}</div>
+        ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
+      </div>
+      <div style="text-align:right;font-size:13px;font-weight:700;color:var(--red);">−${fmt(i.amount)}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
 }
 
-function renderReport() { renderRepIncome(); } // legacy alias
+function renderReport() { } // legacy alias
 
 // ============ TIMELINE (ecount-style ledger) ============
 function chk(id){ const e=document.getElementById(id); return e?e.checked:true; }
 function renderTimeline() {
-  const from=document.getElementById('tl-from').value;
-  const to=document.getElementById('tl-to').value;
+  const from=document.getElementById('tl-from')?.value;
+  const to=document.getElementById('tl-to')?.value;
   const el=document.getElementById('timeline-output');
+  if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'in',cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×฿${Number(i.unitPrice).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.amount}));
-  if(chk('tl-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'in',cat:'💵 รับทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount}));
-  if(chk('tl-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'in',cat:'🏦 รับกู้',label:i.source||'เงินกู้',detail:'',amount:i.amount}));
-  if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'out',cat:'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),detail:`${i.qty}×฿${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})}`,amount:i.price}));
-  if(chk('tl-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'out',cat:'👷 ค่าแรง',label:i.name,detail:'',amount:i.amount}));
-  if(chk('tl-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'out',cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount}));
-  if(chk('tl-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,kind:'out',cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',detail:'',amount:i.amount}));
+  if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,amount:i.amount}));
+  if(chk('tl-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💵 รับทุน',label:i.note||'เงินทุน',amount:i.amount}));
+  if(chk('tl-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'🏦 รับกู้',label:i.source||'เงินกู้',amount:i.amount}));
+  if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),amount:i.price}));
+  if(chk('tl-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'👷 ค่าแรง',label:i.name,amount:i.amount}));
+  if(chk('tl-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',amount:i.amount}));
+  if(chk('tl-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',amount:i.amount}));
 
-  // sort oldest first for running balance calc, then display newest first
-  items.sort((a,b)=>a.date.localeCompare(b.date));
+  // เรียงเก่า→ใหม่ ตามวันที่ แล้ว ts เป็น tiebreaker เพื่อคำนวณ running balance ให้ถูก
+  items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   let running=0;
-  items.forEach(i=>{ running+= i.kind==='in'?i.amount:-i.amount; i.balance=running; });
-  items.sort((a,b)=>b.date.localeCompare(a.date)); // reverse for display
+  items.forEach(i=>{ running+=(i.kind==='in'?i.amount:-i.amount); i.balance=running; });
+  // reverse เพื่อแสดงใหม่→เก่า
+  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
 
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
 
@@ -1487,48 +1585,38 @@ function renderTimeline() {
   const tOut=items.filter(i=>i.kind==='out').reduce((s,i)=>s+i.amount,0);
   const net=tIn-tOut;
 
-  // summary bar
-  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;gap:0;box-shadow:var(--shadow);">
-    <div style="flex:1;text-align:center;border-right:1px solid var(--border);">
-      <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">รายรับ</div>
-      <div style="font-size:15px;font-weight:700;color:var(--green);">${fmt(tIn)}</div>
+  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;box-shadow:var(--shadow);">
+    <div style="text-align:center;border-right:1px solid var(--border);">
+      <div style="font-size:10px;color:var(--text2);">รับเข้า</div>
+      <div style="font-size:14px;font-weight:700;color:var(--green);">${fmt(tIn)}</div>
     </div>
-    <div style="flex:1;text-align:center;border-right:1px solid var(--border);">
-      <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">รายจ่าย</div>
-      <div style="font-size:15px;font-weight:700;color:var(--red);">${fmt(tOut)}</div>
+    <div style="text-align:center;border-right:1px solid var(--border);">
+      <div style="font-size:10px;color:var(--text2);">จ่ายออก</div>
+      <div style="font-size:14px;font-weight:700;color:var(--red);">${fmt(tOut)}</div>
     </div>
-    <div style="flex:1;text-align:center;">
-      <div style="font-size:10px;color:var(--text2);margin-bottom:2px;">คงเหลือ</div>
-      <div style="font-size:15px;font-weight:700;color:${net>=0?'var(--green)':'var(--red)'};">${fmt(net)}</div>
+    <div style="text-align:center;">
+      <div style="font-size:10px;color:var(--text2);">สุทธิ</div>
+      <div style="font-size:14px;font-weight:700;color:${net>=0?'var(--green)':'var(--red)'};">${fmt(net)}</div>
     </div>
   </div>`;
 
-  // table: 3-col mobile-friendly
-  // col1: วันที่+หมวด | col2: รายการ+จำนวน | col3: ยอดคงเหลือ
+  // 5-col: วันที่ | รายการ | รับ | จ่าย | คงเหลือ
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">`;
-  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:80px 1fr 80px;gap:6px;font-size:11px;font-weight:600;color:#fff;">
-    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">คงเหลือ</span>
+  html+=`<div style="background:var(--accent);padding:8px 10px;display:grid;grid-template-columns:58px 1fr 64px 64px 64px;gap:3px;font-size:10px;font-weight:600;color:#fff;">
+    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">รับ</span><span style="text-align:right;">จ่าย</span><span style="text-align:right;">คงเหลือ</span>
   </div>`;
-
-  let lastDate='';
   items.forEach((i,idx)=>{
-    const isNewDate = i.date!==lastDate;
-    if(isNewDate) lastDate=i.date;
-    const bg = idx%2===0?'var(--card)':'var(--card2)';
-    const isIn = i.kind==='in';
-    const amtColor = isIn?'var(--green)':'var(--red)';
-    const amtSign = isIn?'+':'−';
-    const balColor = i.balance>=0?'var(--green)':'var(--red)';
-    html+=`<div style="background:${bg};padding:10px 12px;display:grid;grid-template-columns:80px 1fr 80px;gap:6px;border-top:1px solid var(--border);align-items:center;">
+    const bg=idx%2===0?'var(--card)':'var(--card2)';
+    const balColor=i.balance>=0?'var(--green)':'var(--red)';
+    html+=`<div style="background:${bg};padding:8px 10px;display:grid;grid-template-columns:58px 1fr 64px 64px 64px;gap:3px;border-top:1px solid var(--border);align-items:center;">
       <div>
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:2px;">${i.cat}</div>
+        <div style="font-size:9px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
-      <div>
-        <div style="font-size:13px;font-weight:500;line-height:1.4;">${i.label}</div>
-        <div style="font-size:11px;color:${amtColor};font-weight:600;margin-top:2px;">${amtSign}${fmt(i.amount)}${i.detail?` · ${i.detail}`:''}</div>
-      </div>
-      <div style="text-align:right;font-size:13px;font-weight:700;color:${balColor};">${fmt(i.balance)}</div>
+      <div style="font-size:12px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
+      <div style="text-align:right;font-size:12px;font-weight:600;color:var(--green);">${i.kind==='in'?fmt(i.amount):'—'}</div>
+      <div style="text-align:right;font-size:12px;font-weight:600;color:var(--red);">${i.kind==='out'?fmt(i.amount):'—'}</div>
+      <div style="text-align:right;font-size:12px;font-weight:700;color:${balColor};">${fmt(i.balance)}</div>
     </div>`;
   });
   html+=`</div>`;
