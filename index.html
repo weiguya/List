@@ -1166,12 +1166,16 @@ function addCapital() {
   const date=document.getElementById('cap-date').value;
   const note=document.getElementById('cap-note').value.trim();
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.capital);
-  list.push({id:uid(),amount,date,note,ts:Date.now()});
-  DB.set(KEY.capital,list);
-  document.getElementById('cap-amount').value='';
-  document.getElementById('cap-note').value='';
-  renderCapList(); updateDashboard();
+  showConfirm('💵 ยืนยันรับเงินทุน',[
+    ['จำนวน',fmt(amount)],['วันที่',date],['หมายเหตุ',note||'—'],
+  ],()=>{
+    const list=DB.get(KEY.capital);
+    list.push({id:uid(),amount,date,note,ts:Date.now()});
+    DB.set(KEY.capital,list);
+    document.getElementById('cap-amount').value='';
+    document.getElementById('cap-note').value='';
+    renderCapList(); updateDashboard();
+  });
 }
 function renderCapList() {
   const el=document.getElementById('cap-list');
@@ -1184,9 +1188,16 @@ function addLoan() {
   const source=document.getElementById('loan-source').value.trim();
   const date=document.getElementById('loan-date').value;
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.loan); list.push({id:uid(),amount,source,date,ts:Date.now()}); DB.set(KEY.loan,list);
-  document.getElementById('loan-amount').value=''; document.getElementById('loan-source').value='';
-  renderLoanStatus(); updateDashboard();
+  showConfirm('🏦 ยืนยันบันทึกเงินกู้',[
+    ['จำนวน',fmt(amount)],['แหล่งที่มา',source||'—'],['วันที่',date],
+  ],()=>{
+    const list=DB.get(KEY.loan);
+    list.push({id:uid(),amount,source,date,ts:Date.now()});
+    DB.set(KEY.loan,list);
+    document.getElementById('loan-amount').value='';
+    document.getElementById('loan-source').value='';
+    renderLoanStatus(); updateDashboard();
+  });
 }
 function addLoanPay() {
   const amount=parseFloat(document.getElementById('loanpay-amount').value);
@@ -1894,7 +1905,6 @@ function renderRepIncome() {
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   const total=items.reduce((s,i)=>s+i.amount,0);
-  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
   let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
     <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
     <span style="font-size:16px;font-weight:700;color:var(--green);">${fmt(total)}</span>
@@ -1936,7 +1946,6 @@ function renderRepExpense() {
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   const total=items.reduce((s,i)=>s+i.amount,0);
-  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
   let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
     <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
     <span style="font-size:16px;font-weight:700;color:var(--red);">${fmt(total)}</span>
@@ -1985,7 +1994,7 @@ function renderRepWages() {
         date:p.paidDate, ts:p.ts||0,
         cat:'👷 ค่าแรงพนักงาน',
         label:`${p.empName} (${p.days?p.days.length:'-'} วัน)`,
-        detail:p.days&&p.days.length?`${fmtDate(p.days[0])}–${fmtDate(p.days[p.days.length-1])}` :'',
+        detail:p.days&&p.days.length?`${p.fmtDate(days[0])}–${fmtDate(p.days[p.days.length-1])}` :'',
         amount:p.total, color:'yellow', type:'wage',
         key:KEY.empwagepay, id:p.id, editMode:'del'
       });
@@ -2025,7 +2034,6 @@ function renderRepWages() {
   const wageTotal=items.filter(i=>i.type==='wage').reduce((s,i)=>s+i.amount,0);
   const adminTotal=items.filter(i=>i.type==='adminpay').reduce((s,i)=>s+i.amount,0);
   const rentTotal=items.filter(i=>i.type==='rent').reduce((s,i)=>s+i.amount,0);
-  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
 
   let html='';
 
