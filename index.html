@@ -2112,10 +2112,17 @@ function renderTimeline() {
     </div>
   </div>`;
 
-  // เรียงใหม่ → เก่า สำหรับแสดง
-  const displayItems=[...items].reverse();
+  // เรียงเก่า → ใหม่ (วันเก่าขึ้นบน)
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">`;
-  displayItems.forEach((i,idx)=>{
+  // Header row
+  html+=`<div style="background:var(--card2);padding:6px 10px;display:flex;align-items:center;gap:6px;border-bottom:2px solid var(--border);">
+    <div style="flex:0 0 52px;font-size:10px;font-weight:700;color:var(--text2);">วันที่</div>
+    <div style="flex:1;font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>
+    <div style="font-size:10px;font-weight:700;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">รับ</div>
+    <div style="font-size:10px;font-weight:700;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">จ่าย</div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);white-space:nowrap;flex:0 0 52px;text-align:right;">คงเหลือ</div>
+  </div>`;
+  items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
     const balColor=i.balance>=0?'var(--green)':'var(--red)';
     html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderTimeline" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
@@ -2280,29 +2287,26 @@ function rowAction(el) {
   _ramCb   = el.dataset.cb;
   _ramMode = el.dataset.mode || 'edit';
 
-  // Build info from live DB
   const list = DB.get(_ramKey);
-  const item = list.find(i => i.id === _ramId);
+  const item = list ? list.find(i => i.id === _ramId) : null;
   if (!item) return;
 
-  // Title from cat stored in data-cat
   document.getElementById('ram-title').textContent = el.dataset.cat || 'รายการ';
 
-  // Build info HTML safely from item fields
   let info = '';
   info += '<div style="margin-bottom:4px;"><b>' + fmtDateFull(item.date || item.paidDate || '') + '</b></div>';
-  if (item.name)     info += '<div>' + item.name + '</div>';
+  if (item.empName)  info += '<div>' + item.empName + '</div>';
+  if (item.adminName) info += '<div>' + item.adminName + '</div>';
   if (item.label)    info += '<div>' + item.label + '</div>';
+  if (item.name && !item.label) info += '<div>' + item.name + '</div>';
   if (item.note)     info += '<div style="color:var(--text2);">' + item.note + '</div>';
   if (item.source)   info += '<div style="color:var(--text2);">' + item.source + '</div>';
   if (item.supplier) info += '<div style="color:var(--text2);">ร้าน: ' + item.supplier + '</div>';
-  if (item.qty && item.unitPrice) info += '<div style="color:var(--text2);">' + item.qty + ' × ' + fmt(item.unitPrice) + '</div>';
-  // amount field
+  if (item.detail)   info += '<div style="color:var(--text2);font-size:12px;">' + item.detail + '</div>';
   const amt = item.amount || item.price || item.total || 0;
   info += '<div style="margin-top:6px;font-size:16px;font-weight:700;">' + fmt(amt) + '</div>';
   document.getElementById('ram-info').innerHTML = info;
 
-  // Edit button: disable if mode=del
   const editBtn = document.getElementById('ram-edit-btn');
   if (_ramMode === 'del') {
     editBtn.disabled = true;
@@ -2323,20 +2327,14 @@ function closeRowAction() {
 
 function ramDoEdit() {
   closeRowAction();
-  const cbMap = {
-    renderRepIncome, renderRepExpense, renderRepWages, renderTimeline
-  };
-  const cb = cbMap[_ramCb] || (()=>{});
-  openEditModal(_ramKey, _ramId, cb);
+  const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
+  openEditModal(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
 }
 
 function ramDoDelete() {
   closeRowAction();
-  const cbMap = {
-    renderRepIncome, renderRepExpense, renderRepWages, renderTimeline
-  };
-  const cb = cbMap[_ramCb] || (()=>{});
-  delItem(_ramKey, _ramId, cb);
+  const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
+  delItem(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
 }
 
 // ============ INIT ============
