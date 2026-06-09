@@ -348,12 +348,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="form-group"><label>วันที่</label><input type="date" id="sale-date"></div>
     <div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div>
     <button class="btn btn-green" onclick="confirmSale()">+ บันทึกยอดขาย</button>
-    <div class="divider"></div>
-    <div class="filter-row">
-      <select id="sale-filter-meat" onchange="renderSaleList()"><option value="">ทุกประเภท</option></select>
-      <input type="month" id="sale-filter-month" onchange="renderSaleList()">
-    </div>
-    <div id="sale-list"></div>
   </div>
 
   <!-- TAB: รับจากหนี้ -->
@@ -382,7 +376,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="report-row"><span class="r-label">คงเหลือต้องจ่าย</span><span class="red" id="loan-remain">0</span></div>
       <div class="loan-progress"><div class="bar-track"><div class="bar-fill" id="loan-bar" style="width:0%;background:var(--green)"></div></div></div>
     </div>
-    <div id="loan-list"></div>
   </div>
 
   <!-- TAB: รับจากทุน -->
@@ -391,7 +384,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="form-group"><label>วันที่</label><input type="date" id="cap-date"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="cap-note" placeholder="เช่น เงินลงทุนเริ่มต้น"></div>
     <button class="btn btn-primary" onclick="addCapital()">+ บันทึกเงินทุน</button>
-    <div class="divider"></div><div id="cap-list"></div>
+    <div class="divider"></div>
   </div>
 </div>
 
@@ -428,12 +421,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div class="form-group"><label>วันที่</label><input type="date" id="buy-date"></div>
   <button class="btn btn-primary" onclick="confirmBuy()">+ บันทึก</button>
-  <div class="divider"></div>
-  <div class="filter-row">
-    <select id="buy-filter-type" onchange="renderBuyList()"><option value="">ทุกประเภท</option></select>
-    <input type="month" id="buy-filter-month" onchange="renderBuyList()">
-  </div>
-  <div id="buy-list"></div>
 </div>
 
 <!-- PAGE: การเงิน -->
@@ -481,11 +468,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
       <button class="btn btn-green" id="emp-wage-pay-btn" onclick="payEmpWage()" style="display:none;">✅ อนุมัติจ่ายค่าแรง</button>
     </div>
-
     <div class="divider"></div>
-    <!-- สรุปการจ่ายล่าสุด -->
-    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">ประวัติการจ่ายค่าแรง</div>
-    <div id="emp-wage-history"></div>
   </div>
 
   <!-- TAB: ผู้บริหาร (ย้ายมาจาก settings) -->
@@ -527,9 +510,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
     <button class="btn btn-green" id="admin-pay-btn" onclick="payAdminCom()" style="display:none;">✅ อนุมัติจ่ายค่าคอม</button>
     <div class="divider"></div>
-    <!-- ปฏิทินประวัติจ่าย -->
-    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">ประวัติการจ่ายค่าคอม</div>
-    <div id="admin-pay-history"></div>
   </div>
 
   <!-- TAB: ค่าเช่า -->
@@ -538,7 +518,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="form-group"><label>วันที่จ่าย</label><input type="date" id="rent-date"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="rent-note" placeholder="เช่น ค่าเช่าเดือน ม.ค."></div>
     <button class="btn btn-primary" onclick="addRent()">+ บันทึกค่าเช่า</button>
-    <div class="divider"></div><div id="rent-list"></div>
+    <div class="divider"></div>
   </div>
 </div>
 
@@ -1051,18 +1031,12 @@ function buildSaleMeatBtns() {
   container.innerHTML = cats.map((c,i)=>`
     <button class="meat-btn${i===0?' active':''}" data-meat="${c}" onclick="selectMeat(this)">${getMeatEmoji(c,i)} ${c}</button>`).join('');
   if(cats.length > 0) _selectedMeat = cats[0];
-
-  // rebuild sale filter
-  const sf = document.getElementById('sale-filter-meat');
-  sf.innerHTML = '<option value="">ทุกประเภท</option>' + cats.map(c=>`<option value="${c}">${getMeatEmoji(c,0)} ${c}</option>`).join('');
 }
 
 function buildBuyTypeSelect() {
   const types = getBuyTypes();
   const sel = document.getElementById('buy-type');
   sel.innerHTML = types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
-  const fsel = document.getElementById('buy-filter-type');
-  fsel.innerHTML = '<option value="">ทุกประเภท</option>' + types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
   if(sel.value) buildItemNameSelect(sel.value);
 }
 
@@ -1112,34 +1086,13 @@ function confirmBuy() {
     clearBuyNameField();
     ['buy-supplier','buy-qty','buy-unit-price'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
     document.getElementById('buy-total-display').textContent='0';
-    renderBuyList(); updateDashboard();
+    updateDashboard();
   });
 }
 
 function renderBuyList() {
-  const types = getBuyTypes();
-  const typeMap = {};
-  types.forEach(t=>typeMap[t.id]=t.label);
-  let list = DB.get(KEY.buy);
-  const ft = document.getElementById('buy-filter-type').value;
-  const fm = document.getElementById('buy-filter-month').value;
-  if(ft) list=list.filter(i=>i.type===ft);
-  if(fm) list=list.filter(i=>i.date.slice(0,7)===fm);
-  list.sort((a,b)=>b.date.localeCompare(a.date));
   const el = document.getElementById('buy-list');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">🛒</div>ยังไม่มีรายการซื้อ</div>';return;}
-  el.innerHTML = list.map(i=>`
-    <div class="list-item">
-      <div style="flex:1">
-        <div class="item-name">${i.name}</div>
-        <div class="item-meta">${typeMap[i.type]||i.type} · ${i.qty||1}×${Math.round(Number(i.unitPrice||i.price)).toLocaleString('th-TH')} · ${i.date}${i.supplier?' · '+i.supplier:''}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:4px">
-        <span class="item-amount yellow">${fmt(i.price)}</span>
-        <button class="item-edit" onclick="openEditModal('${KEY.buy}','${i.id}',renderBuyList)">✏️</button>
-        <button class="item-del" onclick="delItem('${KEY.buy}','${i.id}',renderBuyList)">✕</button>
-      </div>
-    </div>`).join('');
+  if(!el) return;
 }
 
 // ============ SALE ============
@@ -1178,32 +1131,11 @@ function confirmSale() {
     localStorage.setItem('last_sale_date',date);
     ['sale-amount','sale-qty','sale-unit-price','sale-note'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('sale-total-display').textContent='0';
-    renderSaleList(); updateDashboard();
+    renderSaleList_noop(); updateDashboard();
   });
 }
-function renderSaleList() {
-  let list=DB.get(KEY.sale);
-  const fm=document.getElementById('sale-filter-month').value;
-  const fmeat=document.getElementById('sale-filter-meat').value;
-  if(fm) list=list.filter(i=>i.date.slice(0,7)===fm);
-  if(fmeat) list=list.filter(i=>i.meat===fmeat);
-  list.sort((a,b)=>b.date.localeCompare(a.date));
-  const el=document.getElementById('sale-list');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">💰</div>ยังไม่มียอดขาย</div>';return;}
-  el.innerHTML=list.map(i=>{
-    const detail=i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'';
-    return`<div class="list-item">
-      <div style="flex:1">
-        <div class="item-name">${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}</div>
-        <div class="item-meta">${i.date}${detail?' · '+detail:''}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span class="item-amount green">${fmt(i.amount)}</span>
-        <button class="item-edit" onclick="openEditModal('${KEY.sale}','${i.id}',renderSaleList)">✏️</button>
-        <button class="item-del" onclick="delItem('${KEY.sale}','${i.id}',renderSaleList)">✕</button>
-      </div>
-    </div>`}).join('');
-}
+function renderSaleList_noop() { /* list removed - see reports */ }
+function renderSaleList() { renderSaleList_noop(); }
 
 // ============ CAPITAL ============
 function addCapital() {
@@ -1219,16 +1151,8 @@ function addCapital() {
   renderCapList(); updateDashboard();
 }
 function renderCapList() {
-  let list=DB.get(KEY.capital).sort((a,b)=>b.date.localeCompare(a.date));
   const el=document.getElementById('cap-list');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">💵</div>ยังไม่มีรายการเงินทุน</div>';return;}
-  el.innerHTML=list.map(i=>`<div class="list-item">
-    <div><div class="item-name">${i.note||'เงินทุน'}</div><div class="item-meta">${i.date}</div></div>
-    <div style="display:flex;align-items:center;gap:4px">
-      <span class="item-amount blue">${fmt(i.amount)}</span>
-      <button class="item-edit" onclick="openEditModal('${KEY.capital}','${i.id}',renderCapList)">✏️</button>
-      <button class="item-del" onclick="delItem('${KEY.capital}','${i.id}',renderCapList)">✕</button>
-    </div></div>`).join('');
+  if(!el) return;
 }
 
 // ============ LOAN ============
@@ -1259,16 +1183,6 @@ function renderLoanStatus() {
   document.getElementById('loan-paid').textContent=fmt(paid);
   document.getElementById('loan-remain').textContent=fmt(remain);
   document.getElementById('loan-bar').style.width=(total>0?Math.min(100,paid/total*100):0)+'%';
-  const all=[...loans.map(i=>({...i,kind:'in'})),...pays.map(i=>({...i,kind:'out'}))].sort((a,b)=>b.date.localeCompare(a.date));
-  const el=document.getElementById('loan-list');
-  if(!all.length){el.innerHTML='<div class="empty"><div class="empty-icon">🏦</div>ยังไม่มีรายการ</div>';return;}
-  el.innerHTML=all.map(i=>`<div class="list-item">
-    <div><div class="item-name">${i.kind==='in'?'+ กู้เงิน':'- จ่ายคืน'} ${i.source||i.note||''}</div><div class="item-meta">${i.date}</div></div>
-    <div style="display:flex;align-items:center;gap:4px">
-      <span class="item-amount ${i.kind==='in'?'blue':'green'}">${fmt(i.amount)}</span>
-      <button class="item-edit" onclick="openEditModal('${i.kind==='in'?KEY.loan:KEY.loanpay}','${i.id}',renderLoanStatus)">✏️</button>
-      <button class="item-del" onclick="delItem('${i.kind==='in'?KEY.loan:KEY.loanpay}','${i.id}',renderLoanStatus)">✕</button>
-    </div></div>`).join('');
 }
 
 // ============ WAGE (legacy stubs - ระบบใหม่ใช้ payEmpWage แทน) ============
@@ -1299,16 +1213,8 @@ function addRent() {
   renderRentList(); updateDashboard();
 }
 function renderRentList() {
-  let list=DB.get(KEY.rent).sort((a,b)=>b.date.localeCompare(a.date));
   const el=document.getElementById('rent-list');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">🏠</div>ยังไม่มีรายการค่าเช่า</div>';return;}
-  el.innerHTML=list.map(i=>`<div class="list-item">
-    <div><div class="item-name">${i.note||'ค่าเช่า'}</div><div class="item-meta">${i.date}</div></div>
-    <div style="display:flex;align-items:center;gap:4px">
-      <span class="item-amount red">${fmt(i.amount)}</span>
-      <button class="item-edit" onclick="openEditModal('${KEY.rent}','${i.id}',renderRentList)">✏️</button>
-      <button class="item-del" onclick="delItem('${KEY.rent}','${i.id}',renderRentList)">✕</button>
-    </div></div>`).join('');
+  if(!el) return;
 }
 
 // ============ DELETE ============
