@@ -1985,7 +1985,7 @@ function renderRepWages() {
         date:p.paidDate, ts:p.ts||0,
         cat:'👷 ค่าแรงพนักงาน',
         label:`${p.empName} (${p.days?p.days.length:'-'} วัน)`,
-        detail:p.days&&p.days.length?`${p.fmtDate(days[0])}–${fmtDate(p.days[p.days.length-1])}` :'',
+        detail:p.days&&p.days.length?`${fmtDate(p.days[0])}–${fmtDate(p.days[p.days.length-1])}` :'',
         amount:p.total, color:'yellow', type:'wage',
         key:KEY.empwagepay, id:p.id, editMode:'del'
       });
