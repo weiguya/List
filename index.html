@@ -895,10 +895,8 @@ const fmt = n => Math.round(Number(n||0)).toLocaleString('th-TH');
 const today = () => new Date().toISOString().slice(0,10);
 const thisMonth = () => new Date().toISOString().slice(0,7);
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-// แปลง YYYY-MM-DD → DD/MM
-function fmtDate(s) { if(!s||s.length<10) return s||''; return s.slice(8,10)+'/'+s.slice(5,7); }
-// แปลง YYYY-MM-DD → DD/MM/YYYY (สำหรับแสดงวันที่เต็ม)
-function fmtDateFull(s) { if(!s||s.length<10) return s||''; return s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4); }
+function fmtDate(s){if(!s||s.length<10)return s||'';return s.slice(8,10)+'/'+s.slice(5,7);}
+function fmtDateFull(s){if(!s||s.length<10)return s||'';return s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4);}
 
 // ============ SIDEBAR ============
 function openSidebar() {
@@ -1904,8 +1902,7 @@ function renderRepIncome() {
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    const _infoHtml_ri=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}${i.detail?' <span style="color:var(--text2);font-size:11px;">('+i.detail+')</span>':''}<br><span style="font-size:15px;font-weight:700;color:var(--${i.color});">+${fmt(i.amount)}</span>`;
-    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderRepIncome,'edit','${i.cat}','${_infoHtml_ri.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
+    html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepIncome" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
       <div style="flex:0 0 66px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
@@ -1915,7 +1912,6 @@ function renderRepIncome() {
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;">+${fmt(i.amount)}</div>
-      <div style="font-size:18px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -1948,8 +1944,7 @@ function renderRepExpense() {
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    const _infoHtml_re=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}${i.detail?' <span style="color:var(--text2);font-size:11px;">('+i.detail+')</span>':''}<br><span style="font-size:15px;font-weight:700;color:var(--red);">−${fmt(i.amount)}</span>`;
-    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderRepExpense,'edit','${i.cat}','${_infoHtml_re.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
+    html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepExpense" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
       <div style="flex:0 0 66px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
@@ -1959,7 +1954,6 @@ function renderRepExpense() {
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--red);white-space:nowrap;">−${fmt(i.amount)}</div>
-      <div style="font-size:18px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -2059,8 +2053,7 @@ function renderRepWages() {
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    const _infoHtml_rw=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}${i.detail?' <span style="color:var(--text2);font-size:11px;">('+i.detail+')</span>':''}<br><span style="font-size:15px;font-weight:700;color:var(--${i.color});">−${fmt(i.amount)}</span>`;
-    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderRepWages,'${i.editMode||'edit'}','${i.cat}','${_infoHtml_rw.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
+    html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepWages" data-mode="${i.editMode||'edit'}" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
       <div style="flex:0 0 66px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
@@ -2070,7 +2063,6 @@ function renderRepWages() {
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;">−${fmt(i.amount)}</div>
-      <div style="font-size:18px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -2126,8 +2118,7 @@ function renderTimeline() {
   displayItems.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
     const balColor=i.balance>=0?'var(--green)':'var(--red)';
-    const _infoHtml_tl=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}<br>${i.kind==='in'?'<span style="color:var(--green);font-weight:700;">รับ +'+fmt(i.amount)+'</span>':'<span style="color:var(--red);font-weight:700;">จ่าย −'+fmt(i.amount)+'</span>'} · คงเหลือ <span style="color:${balColor};font-weight:700;">${fmt(i.balance)}</span>`;
-    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderTimeline,'edit','${i.cat}','${_infoHtml_tl.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
+    html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderTimeline" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
       <div style="flex:0 0 52px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:9px;color:var(--text2);margin-top:1px;">${i.cat}</div>
@@ -2136,7 +2127,6 @@ function renderTimeline() {
       <div style="font-size:11px;font-weight:600;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='in'?fmt(i.amount):'—'}</div>
       <div style="font-size:11px;font-weight:600;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='out'?fmt(i.amount):'—'}</div>
       <div style="font-size:11px;font-weight:700;color:${balColor};white-space:nowrap;flex:0 0 52px;text-align:right;">${fmt(i.balance)}</div>
-      <div style="font-size:16px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -2281,28 +2271,72 @@ function ac(id,val,colorClass) {
 }
 
 
-// ============ ROW ACTION MODAL (double-click) ============
-let _ramKey, _ramId, _ramCb, _ramEditMode;
-function openRowAction(key, id, cb, editMode, titleText, infoHtml) {
-  _ramKey=key; _ramId=id; _ramCb=cb; _ramEditMode=editMode||'edit';
-  document.getElementById('ram-title').textContent = titleText||'รายการ';
-  document.getElementById('ram-info').innerHTML = infoHtml||'';
-  const editBtn=document.getElementById('ram-edit-btn');
-  if(_ramEditMode==='del') {
-    editBtn.disabled=true; editBtn.style.opacity='0.35';
+// ============ ROW-ACTION MODAL (double-click on report rows) ============
+let _ramKey, _ramId, _ramCb, _ramMode;
+
+function rowAction(el) {
+  _ramKey  = el.dataset.key;
+  _ramId   = el.dataset.id;
+  _ramCb   = el.dataset.cb;
+  _ramMode = el.dataset.mode || 'edit';
+
+  // Build info from live DB
+  const list = DB.get(_ramKey);
+  const item = list.find(i => i.id === _ramId);
+  if (!item) return;
+
+  // Title from cat stored in data-cat
+  document.getElementById('ram-title').textContent = el.dataset.cat || 'รายการ';
+
+  // Build info HTML safely from item fields
+  let info = '';
+  info += '<div style="margin-bottom:4px;"><b>' + fmtDateFull(item.date || item.paidDate || '') + '</b></div>';
+  if (item.name)     info += '<div>' + item.name + '</div>';
+  if (item.label)    info += '<div>' + item.label + '</div>';
+  if (item.note)     info += '<div style="color:var(--text2);">' + item.note + '</div>';
+  if (item.source)   info += '<div style="color:var(--text2);">' + item.source + '</div>';
+  if (item.supplier) info += '<div style="color:var(--text2);">ร้าน: ' + item.supplier + '</div>';
+  if (item.qty && item.unitPrice) info += '<div style="color:var(--text2);">' + item.qty + ' × ' + fmt(item.unitPrice) + '</div>';
+  // amount field
+  const amt = item.amount || item.price || item.total || 0;
+  info += '<div style="margin-top:6px;font-size:16px;font-weight:700;">' + fmt(amt) + '</div>';
+  document.getElementById('ram-info').innerHTML = info;
+
+  // Edit button: disable if mode=del
+  const editBtn = document.getElementById('ram-edit-btn');
+  if (_ramMode === 'del') {
+    editBtn.disabled = true;
+    editBtn.style.opacity = '0.35';
+    editBtn.title = 'รายการนี้ไม่รองรับการแก้ไข';
   } else {
-    editBtn.disabled=false; editBtn.style.opacity='1';
+    editBtn.disabled = false;
+    editBtn.style.opacity = '1';
+    editBtn.title = '';
   }
+
   document.getElementById('row-action-modal').classList.add('open');
 }
-function closeRowAction() { document.getElementById('row-action-modal').classList.remove('open'); }
+
+function closeRowAction() {
+  document.getElementById('row-action-modal').classList.remove('open');
+}
+
 function ramDoEdit() {
   closeRowAction();
-  openEditModal(_ramKey, _ramId, _ramCb);
+  const cbMap = {
+    renderRepIncome, renderRepExpense, renderRepWages, renderTimeline
+  };
+  const cb = cbMap[_ramCb] || (()=>{});
+  openEditModal(_ramKey, _ramId, cb);
 }
+
 function ramDoDelete() {
   closeRowAction();
-  delItem(_ramKey, _ramId, _ramCb);
+  const cbMap = {
+    renderRepIncome, renderRepExpense, renderRepWages, renderTimeline
+  };
+  const cb = cbMap[_ramCb] || (()=>{});
+  delItem(_ramKey, _ramId, cb);
 }
 
 // ============ INIT ============
@@ -2326,17 +2360,19 @@ buildSupplierDatalist();
 updateDashboard();
 </script>
 
-<!-- ROW ACTION MODAL (double-click report row) -->
+<!-- ROW ACTION MODAL -->
 <div class="modal-overlay" id="row-action-modal">
   <div class="modal" style="padding:20px 16px 28px;">
-    <div class="modal-title"><span id="ram-title">รายการ</span><button class="modal-close" onclick="closeRowAction()">✕</button></div>
-    <div id="ram-info" style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.8;"></div>
+    <div class="modal-title">
+      <span id="ram-title">รายการ</span>
+      <button class="modal-close" onclick="closeRowAction()">✕</button>
+    </div>
+    <div id="ram-info" style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.9;"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <button id="ram-edit-btn" class="btn btn-primary" onclick="ramDoEdit()">✏️ แก้ไข</button>
-      <button id="ram-del-btn" class="btn btn-red" onclick="ramDoDelete()">🗑 ลบ</button>
+      <button class="btn btn-red" onclick="ramDoDelete()">🗑 ลบ</button>
     </div>
   </div>
 </div>
-
 </body>
 </html>
