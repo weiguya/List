@@ -228,6 +228,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <button class="sidebar-item" id="nav-rep-income" onclick="goReportTab('rep-income',this)">💚 รายรับ</button>
       <button class="sidebar-item" id="nav-rep-expense" onclick="goReportTab('rep-expense',this)">💸 รายจ่าย</button>
       <button class="sidebar-item" id="nav-rep-movement" onclick="goReportTab('rep-movement',this)">📋 เคลื่อนไหว</button>
+      <button class="sidebar-item" id="nav-rep-wages" onclick="goReportTab('rep-wages',this)">👷 ค่าแรง/คอม/เช่า</button>
     </div>
     <div class="sidebar-divider"></div>
     <button class="sidebar-item" id="nav-page-settings" onclick="goPage('page-settings',this)">
@@ -580,7 +581,25 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div id="timeline-output"></div>
 </div>
 
-<!-- PAGE: ตั้งค่า (menu) -->
+<!-- PAGE: รายงาน ค่าแรง/คอม/เช่า -->
+<div class="page" id="page-rep-wages">
+  <div class="section-title">👷 รายงานค่าแรง / ค่าคอม / ค่าเช่า</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="rw-from" onchange="renderRepWages()"></div>
+    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="rw-to" onchange="renderRepWages()"></div>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">แสดงประเภท</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <label class="chk-label"><input type="checkbox" id="rw-c-wage" checked onchange="renderRepWages()"> 👷 ค่าแรงพนักงาน</label>
+      <label class="chk-label"><input type="checkbox" id="rw-c-adminpay" checked onchange="renderRepWages()"> 👔 ค่าคอมผู้บริหาร</label>
+      <label class="chk-label"><input type="checkbox" id="rw-c-rent" checked onchange="renderRepWages()"> 🏠 ค่าเช่า</label>
+    </div>
+  </div>
+  <div id="rep-wages-output"></div>
+</div>
+
+
 <div class="page" id="page-settings">
   <div class="section-title">⚙️ ตั้งค่า</div>
   <div onclick="goSubSetting('set-salecats')" class="set-menu-item">
@@ -892,6 +911,7 @@ const PAGE_TITLES = {
   'page-home':'🏪 Dashboard','page-sale':'💰 ยอดขาย','page-buy':'💸 รายจ่าย','page-income':'💚 รายรับ',
   'page-finance':'💳 การเงิน','page-settings':'⚙️ ตั้งค่า',
   'page-rep-income':'💚 รายงานรายรับ','page-rep-expense':'💸 รายงานรายจ่าย','page-rep-movement':'📋 การเคลื่อนไหว',
+  'page-rep-wages':'👷 ค่าแรง/คอม/เช่า',
   'set-salecats':'🥩 หมวดหมู่ยอดขาย','set-suppliers':'🏪 ซัพพลายเออร์','set-buytypes':'🛒 ประเภทการซื้อ',
   'set-itemnames':'📦 ชื่อสินค้า','set-profit':'📈 การคำนวณกำไร','set-admin':'👔 ค่าคอมผู้บริหาร','set-employees':'👷 พนักงาน','set-backup':'💾 สำรองข้อมูล'
 };
@@ -913,6 +933,7 @@ function goPage(id, navBtn) {
   if(id==='page-rep-income') { initRepDates(); renderRepIncome(); }
   if(id==='page-rep-expense') { initRepDates(); renderRepExpense(); }
   if(id==='page-rep-movement') { initRepDates(); renderTimeline(); }
+  if(id==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
   if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-profit','set-admin','set-employees','set-backup'].includes(id)) renderSubSetting(id);
 }
 
@@ -930,7 +951,7 @@ function toggleReportSubmenu(btn) {
 }
 
 function goReportTab(tabId, navBtn) {
-  const pageMap = {'rep-income':'page-rep-income','rep-expense':'page-rep-expense','rep-movement':'page-rep-movement'};
+  const pageMap = {'rep-income':'page-rep-income','rep-expense':'page-rep-expense','rep-movement':'page-rep-movement','rep-wages':'page-rep-wages'};
   const pageId = pageMap[tabId];
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
@@ -938,10 +959,10 @@ function goReportTab(tabId, navBtn) {
   if(navBtn) navBtn.classList.add('active');
   document.getElementById('topbar-title').textContent = PAGE_TITLES[pageId]||'';
   closeSidebar();
-  initRepDates();
-  if(pageId==='page-rep-income') renderRepIncome();
-  else if(pageId==='page-rep-expense') renderRepExpense();
-  else if(pageId==='page-rep-movement') renderTimeline();
+  if(pageId==='page-rep-income') { initRepDates(); renderRepIncome(); }
+  else if(pageId==='page-rep-expense') { initRepDates(); renderRepExpense(); }
+  else if(pageId==='page-rep-movement') { initRepDates(); renderTimeline(); }
+  else if(pageId==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
 }
 
 function goSubSetting(id) {
@@ -1659,7 +1680,7 @@ function calcAdminPay() {
   if(isNaN(idx)||!from||!to){
     if(calcEl)calcEl.style.display='none';
     if(warnEl)warnEl.style.display='none';
-    if(payBtn)payBtn.style.display='none';
+    if(payBtn){payBtn.style.display='none';}
     return;
   }
   const admins=getAdmins();
@@ -1683,7 +1704,12 @@ function calcAdminPay() {
     document.getElementById('admin-pay-pct').textContent=pct+'%';
     document.getElementById('admin-pay-amount').textContent=fmt(amount);
   }
-  if(payBtn)payBtn.style.display=amount>0?'block':'none';
+  if(payBtn){
+    payBtn.style.display='block';
+    payBtn.disabled=amount<=0;
+    payBtn.style.opacity=amount>0?'1':'0.45';
+    payBtn.textContent=amount>0?'✅ อนุมัติจ่ายค่าคอม':'⚠️ ยอดขายในช่วงนี้ = 0 (ไม่มีค่าคอม)';
+  }
 }
 
 function payAdminCom() {
@@ -1940,6 +1966,118 @@ function renderRepExpense() {
 
 function renderReport() { } // legacy alias
 
+// ============ REPORT: ค่าแรง / ค่าคอม / ค่าเช่า ============
+function initRepWagesDates() {
+  const m = thisMonth()+'-01';
+  const t = today();
+  const f=document.getElementById('rw-from'); if(f&&!f.value) f.value=m;
+  const to=document.getElementById('rw-to'); if(to&&!to.value) to.value=t;
+}
+function chkRw(id){ const e=document.getElementById(id); return e?e.checked:true; }
+function renderRepWages() {
+  const from=document.getElementById('rw-from')?.value;
+  const to=document.getElementById('rw-to')?.value;
+  const el=document.getElementById('rep-wages-output');
+  if(!el) return;
+  if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
+
+  let items=[];
+
+  // ค่าแรงพนักงาน — ดึงจาก empwagepay (ประวัติจริง ไม่ใช่ wage aggregate)
+  if(chkRw('rw-c-wage')) {
+    DB.get(KEY.empwagepay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
+      items.push({
+        date:p.paidDate, ts:p.ts||0,
+        cat:'👷 ค่าแรงพนักงาน',
+        label:`${p.empName} (${p.days?p.days.length:'-'} วัน)`,
+        detail: p.days&&p.days.length?`${p.days[0].slice(5).replace('-','/')}–${p.days[p.days.length-1].slice(5).replace('-','/')}` :'',
+        amount:p.total, color:'yellow', type:'wage'
+      });
+    });
+  }
+
+  // ค่าคอมผู้บริหาร
+  if(chkRw('rw-c-adminpay')) {
+    DB.get(KEY.adminpay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
+      items.push({
+        date:p.paidDate, ts:p.ts||0,
+        cat:'👔 ค่าคอมผู้บริหาร',
+        label:`${p.adminName||'ผู้บริหาร'} (${p.pct||0}%)`,
+        detail:`ยอดขาย ${fmt(p.saleSum)} · ช่วง ${p.from.slice(5).replace('-','/')}–${p.to.slice(5).replace('-','/')}`,
+        amount:p.amount, color:'purple', type:'adminpay'
+      });
+    });
+  }
+
+  // ค่าเช่า
+  if(chkRw('rw-c-rent')) {
+    DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{
+      items.push({
+        date:i.date, ts:i.ts||0,
+        cat:'🏠 ค่าเช่า',
+        label:i.note||'ค่าเช่า',
+        detail:'',
+        amount:i.amount, color:'red', type:'rent'
+      });
+    });
+  }
+
+  if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">👷</div>ไม่มีรายการในช่วงนี้</div>';return;}
+
+  items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
+  const total=items.reduce((s,i)=>s+i.amount,0);
+  const wageTotal=items.filter(i=>i.type==='wage').reduce((s,i)=>s+i.amount,0);
+  const adminTotal=items.filter(i=>i.type==='adminpay').reduce((s,i)=>s+i.amount,0);
+  const rentTotal=items.filter(i=>i.type==='rent').reduce((s,i)=>s+i.amount,0);
+  items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
+
+  let html='';
+
+  // summary bar
+  html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;box-shadow:var(--shadow);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
+      <span style="font-size:16px;font-weight:700;color:var(--red);">−${fmt(total)}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;text-align:center;">
+      <div style="background:var(--yellow-soft);border-radius:8px;padding:6px 4px;">
+        <div style="color:var(--text2);">👷 ค่าแรง</div>
+        <div style="font-weight:700;color:var(--yellow);">${fmt(wageTotal)}</div>
+      </div>
+      <div style="background:#f3eeff;border-radius:8px;padding:6px 4px;">
+        <div style="color:var(--text2);">👔 ค่าคอม</div>
+        <div style="font-weight:700;color:var(--purple);">${fmt(adminTotal)}</div>
+      </div>
+      <div style="background:var(--red-soft);border-radius:8px;padding:6px 4px;">
+        <div style="color:var(--text2);">🏠 ค่าเช่า</div>
+        <div style="font-weight:700;color:var(--red);">${fmt(rentTotal)}</div>
+      </div>
+    </div>
+  </div>`;
+
+  html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
+  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;font-size:11px;font-weight:600;color:#fff;">
+    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">จำนวน</span>
+  </div>`;
+  items.forEach((i,idx)=>{
+    const bg=idx%2===0?'var(--card)':'var(--card2)';
+    html+=`<div style="background:${bg};padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;border-top:1px solid var(--border);align-items:center;">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500;line-height:1.3;">${i.label}</div>
+        ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
+      </div>
+      <div style="text-align:right;font-size:13px;font-weight:700;color:var(--${i.color});">−${fmt(i.amount)}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+
 // ============ TIMELINE (ecount-style ledger) ============
 function chk(id){ const e=document.getElementById(id); return e?e.checked:true; }
 function renderTimeline() {
@@ -2156,6 +2294,8 @@ document.getElementById('ri-from').value=thisMonth()+'-01';
 document.getElementById('ri-to').value=today();
 document.getElementById('re-from').value=thisMonth()+'-01';
 document.getElementById('re-to').value=today();
+document.getElementById('rw-from').value=thisMonth()+'-01';
+document.getElementById('rw-to').value=today();
 buildSaleMeatBtns();
 buildBuyTypeSelect();
 buildSupplierDatalist();
