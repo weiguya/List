@@ -1886,9 +1886,9 @@ function renderRepIncome() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green'}));
-  if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากหนี้',label:i.source||'เงินกู้',detail:'',amount:i.amount,color:'blue'}));
-  if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue'}));
+  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id}));
+  if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากหนี้',label:i.source||'เงินกู้',detail:'',amount:i.amount,color:'blue',key:KEY.loan,id:i.id}));
+  if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue',key:KEY.capital,id:i.id}));
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   const total=items.reduce((s,i)=>s+i.amount,0);
@@ -1898,21 +1898,22 @@ function renderRepIncome() {
     <span style="font-size:16px;font-weight:700;color:var(--green);">${fmt(total)}</span>
   </div>`;
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
-  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;font-size:11px;font-weight:600;color:#fff;">
-    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">จำนวน</span>
-  </div>`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    html+=`<div style="background:${bg};padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;border-top:1px solid var(--border);align-items:center;">
-      <div>
+    html+=`<div style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+      <div style="flex:0 0 66px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
-      <div>
-        <div style="font-size:13px;font-weight:500;line-height:1.3;">${i.label}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
-      <div style="text-align:right;font-size:13px;font-weight:700;color:var(--${i.color});">+${fmt(i.amount)}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;">+${fmt(i.amount)}</div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">
+        <button onclick="openEditModal('${i.key}','${i.id}',renderRepIncome)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">✏️</button>
+        <button onclick="delItem('${i.key}','${i.id}',renderRepIncome)" style="background:var(--red-soft);border:none;color:var(--red);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">🗑</button>
+      </div>
     </div>`;
   });
   html+=`</div>`;
@@ -1930,10 +1931,10 @@ function renderRepExpense() {
   const types=getBuyTypes();
   const typeMap=Object.fromEntries(types.map(t=>[t.id,t.label]));
   let items=[];
-  if(chkRe('re-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:typeMap[i.type]||'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),detail:i.qty?`${i.qty}×${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.price}));
-  if(chkRe('re-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'👷 ค่าแรง',label:i.name,detail:'',amount:i.amount}));
-  if(chkRe('re-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount}));
-  if(chkRe('re-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',detail:'',amount:i.amount}));
+  if(chkRe('re-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:typeMap[i.type]||'💸 ซื้อของ',label:i.name+(i.supplier?' · '+i.supplier:''),detail:i.qty?`${i.qty}×${Number(i.unitPrice||i.price).toLocaleString('th-TH',{minimumFractionDigits:2})}`:'',amount:i.price,key:KEY.buy,id:i.id}));
+  if(chkRe('re-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'👷 ค่าแรง',label:i.name,detail:'',amount:i.amount,key:KEY.wage,id:i.id}));
+  if(chkRe('re-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount,key:KEY.rent,id:i.id}));
+  if(chkRe('re-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',detail:'',amount:i.amount,key:KEY.loanpay,id:i.id}));
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   const total=items.reduce((s,i)=>s+i.amount,0);
@@ -1943,21 +1944,22 @@ function renderRepExpense() {
     <span style="font-size:16px;font-weight:700;color:var(--red);">${fmt(total)}</span>
   </div>`;
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
-  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;font-size:11px;font-weight:600;color:#fff;">
-    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">จำนวน</span>
-  </div>`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    html+=`<div style="background:${bg};padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;border-top:1px solid var(--border);align-items:center;">
-      <div>
+    html+=`<div style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+      <div style="flex:0 0 66px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
-      <div>
-        <div style="font-size:13px;font-weight:500;line-height:1.3;">${i.label}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
-      <div style="text-align:right;font-size:13px;font-weight:700;color:var(--red);">−${fmt(i.amount)}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--red);white-space:nowrap;">−${fmt(i.amount)}</div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">
+        <button onclick="openEditModal('${i.key}','${i.id}',renderRepExpense)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">✏️</button>
+        <button onclick="delItem('${i.key}','${i.id}',renderRepExpense)" style="background:var(--red-soft);border:none;color:var(--red);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">🗑</button>
+      </div>
     </div>`;
   });
   html+=`</div>`;
@@ -1983,20 +1985,19 @@ function renderRepWages() {
 
   let items=[];
 
-  // ค่าแรงพนักงาน — ดึงจาก empwagepay (ประวัติจริง ไม่ใช่ wage aggregate)
   if(chkRw('rw-c-wage')) {
     DB.get(KEY.empwagepay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
       items.push({
         date:p.paidDate, ts:p.ts||0,
         cat:'👷 ค่าแรงพนักงาน',
         label:`${p.empName} (${p.days?p.days.length:'-'} วัน)`,
-        detail: p.days&&p.days.length?`${p.days[0].slice(5).replace('-','/')}–${p.days[p.days.length-1].slice(5).replace('-','/')}` :'',
-        amount:p.total, color:'yellow', type:'wage'
+        detail:p.days&&p.days.length?`${p.days[0].slice(5).replace('-','/')}–${p.days[p.days.length-1].slice(5).replace('-','/')}` :'',
+        amount:p.total, color:'yellow', type:'wage',
+        key:KEY.empwagepay, id:p.id, editMode:'del'
       });
     });
   }
 
-  // ค่าคอมผู้บริหาร
   if(chkRw('rw-c-adminpay')) {
     DB.get(KEY.adminpay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
       items.push({
@@ -2004,12 +2005,12 @@ function renderRepWages() {
         cat:'👔 ค่าคอมผู้บริหาร',
         label:`${p.adminName||'ผู้บริหาร'} (${p.pct||0}%)`,
         detail:`ยอดขาย ${fmt(p.saleSum)} · ช่วง ${p.from.slice(5).replace('-','/')}–${p.to.slice(5).replace('-','/')}`,
-        amount:p.amount, color:'purple', type:'adminpay'
+        amount:p.amount, color:'purple', type:'adminpay',
+        key:KEY.adminpay, id:p.id, editMode:'del'
       });
     });
   }
 
-  // ค่าเช่า
   if(chkRw('rw-c-rent')) {
     DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{
       items.push({
@@ -2017,7 +2018,8 @@ function renderRepWages() {
         cat:'🏠 ค่าเช่า',
         label:i.note||'ค่าเช่า',
         detail:'',
-        amount:i.amount, color:'red', type:'rent'
+        amount:i.amount, color:'red', type:'rent',
+        key:KEY.rent, id:i.id, editMode:'edit'
       });
     });
   }
@@ -2033,7 +2035,6 @@ function renderRepWages() {
 
   let html='';
 
-  // summary bar
   html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;box-shadow:var(--shadow);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
       <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
@@ -2056,21 +2057,25 @@ function renderRepWages() {
   </div>`;
 
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
-  html+=`<div style="background:var(--accent);padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;font-size:11px;font-weight:600;color:#fff;">
-    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">จำนวน</span>
-  </div>`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    html+=`<div style="background:${bg};padding:9px 12px;display:grid;grid-template-columns:74px 1fr 78px;gap:4px;border-top:1px solid var(--border);align-items:center;">
-      <div>
+    const editBtn=i.editMode==='edit'
+      ?`<button onclick="openEditModal('${i.key}','${i.id}',renderRepWages)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">✏️</button>`
+      :`<button disabled style="background:var(--border);border:none;color:var(--text2);font-size:12px;padding:4px 8px;border-radius:7px;opacity:0.4;">✏️</button>`;
+    html+=`<div style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+      <div style="flex:0 0 66px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
-      <div>
-        <div style="font-size:13px;font-weight:500;line-height:1.3;">${i.label}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
-      <div style="text-align:right;font-size:13px;font-weight:700;color:var(--${i.color});">−${fmt(i.amount)}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;">−${fmt(i.amount)}</div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">
+        ${editBtn}
+        <button onclick="delItem('${i.key}','${i.id}',renderRepWages)" style="background:var(--red-soft);border:none;color:var(--red);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">🗑</button>
+      </div>
     </div>`;
   });
   html+=`</div>`;
@@ -2087,15 +2092,14 @@ function renderTimeline() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,amount:i.amount}));
-  if(chk('tl-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💵 รับทุน',label:i.note||'เงินทุน',amount:i.amount}));
-  if(chk('tl-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'🏦 รับกู้',label:i.source||'เงินกู้',amount:i.amount}));
-  if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'💸 ซื้อของ',label:i.name,amount:i.price}));
-  if(chk('tl-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'👷 ค่าแรง',label:i.name,amount:i.amount}));
-  if(chk('tl-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',amount:i.amount}));
-  if(chk('tl-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',amount:i.amount}));
+  if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,amount:i.amount,key:KEY.sale,id:i.id}));
+  if(chk('tl-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💵 รับทุน',label:i.note||'เงินทุน',amount:i.amount,key:KEY.capital,id:i.id}));
+  if(chk('tl-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'🏦 รับกู้',label:i.source||'เงินกู้',amount:i.amount,key:KEY.loan,id:i.id}));
+  if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'💸 ซื้อของ',label:i.name,amount:i.price,key:KEY.buy,id:i.id}));
+  if(chk('tl-c-wage')) DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'👷 ค่าแรง',label:i.name,amount:i.amount,key:KEY.wage,id:i.id}));
+  if(chk('tl-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏠 ค่าเช่า',label:i.note||'ค่าเช่า',amount:i.amount,key:KEY.rent,id:i.id}));
+  if(chk('tl-c-loanpay')) DB.get(KEY.loanpay).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'🏦 จ่ายหนี้',label:i.note||'จ่ายหนี้',amount:i.amount,key:KEY.loanpay,id:i.id}));
 
-  // เรียงเก่า→ใหม่ ตามวันที่ แล้ว ts เป็น tiebreaker เพื่อคำนวณ running balance ให้ถูก
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   let running=0;
   items.forEach(i=>{ running+=(i.kind==='in'?i.amount:-i.amount); i.balance=running; });
@@ -2121,23 +2125,25 @@ function renderTimeline() {
     </div>
   </div>`;
 
-  // 5-col: วันที่ | รายการ | รับ | จ่าย | คงเหลือ
+  // เรียงใหม่ → เก่า สำหรับแสดง
+  const displayItems=[...items].reverse();
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">`;
-  html+=`<div style="background:var(--accent);padding:8px 10px;display:grid;grid-template-columns:58px 1fr 64px 64px 64px;gap:3px;font-size:10px;font-weight:600;color:#fff;">
-    <span>วันที่</span><span>รายการ</span><span style="text-align:right;">รับ</span><span style="text-align:right;">จ่าย</span><span style="text-align:right;">คงเหลือ</span>
-  </div>`;
-  items.forEach((i,idx)=>{
+  displayItems.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
     const balColor=i.balance>=0?'var(--green)':'var(--red)';
-    html+=`<div style="background:${bg};padding:8px 10px;display:grid;grid-template-columns:58px 1fr 64px 64px 64px;gap:3px;border-top:1px solid var(--border);align-items:center;">
-      <div>
+    html+=`<div style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);">
+      <div style="flex:0 0 52px;">
         <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
         <div style="font-size:9px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
-      <div style="font-size:12px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
-      <div style="text-align:right;font-size:12px;font-weight:600;color:var(--green);">${i.kind==='in'?fmt(i.amount):'—'}</div>
-      <div style="text-align:right;font-size:12px;font-weight:600;color:var(--red);">${i.kind==='out'?fmt(i.amount):'—'}</div>
-      <div style="text-align:right;font-size:12px;font-weight:700;color:${balColor};">${fmt(i.balance)}</div>
+      <div style="flex:1;min-width:0;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
+      <div style="font-size:11px;font-weight:600;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='in'?fmt(i.amount):'—'}</div>
+      <div style="font-size:11px;font-weight:600;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='out'?fmt(i.amount):'—'}</div>
+      <div style="font-size:11px;font-weight:700;color:${balColor};white-space:nowrap;flex:0 0 52px;text-align:right;">${fmt(i.balance)}</div>
+      <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0;">
+        <button onclick="openEditModal('${i.key}','${i.id}',renderTimeline)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:11px;cursor:pointer;padding:3px 6px;border-radius:6px;">✏️</button>
+        <button onclick="delItem('${i.key}','${i.id}',renderTimeline)" style="background:var(--red-soft);border:none;color:var(--red);font-size:11px;cursor:pointer;padding:3px 6px;border-radius:6px;">🗑</button>
+      </div>
     </div>`;
   });
   html+=`</div>`;
