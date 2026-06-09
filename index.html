@@ -895,6 +895,10 @@ const fmt = n => Math.round(Number(n||0)).toLocaleString('th-TH');
 const today = () => new Date().toISOString().slice(0,10);
 const thisMonth = () => new Date().toISOString().slice(0,7);
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+// แปลง YYYY-MM-DD → DD/MM
+function fmtDate(s) { if(!s||s.length<10) return s||''; return s.slice(8,10)+'/'+s.slice(5,7); }
+// แปลง YYYY-MM-DD → DD/MM/YYYY (สำหรับแสดงวันที่เต็ม)
+function fmtDateFull(s) { if(!s||s.length<10) return s||''; return s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4); }
 
 // ============ SIDEBAR ============
 function openSidebar() {
@@ -1607,7 +1611,7 @@ function updateEmpWageSummary() {
   const total=days.length*emp.rate;
   if(summary){
     summary.style.display='block';
-    document.getElementById('emp-wage-sel-days').textContent=`${days.map(d=>d.slice(5).replace('-','/')).join(', ')} (${days.length} วัน)`;
+    document.getElementById('emp-wage-sel-days').textContent=`${days.map(d=>fmtDate(d)).join(', ')} (${days.length} วัน)`;
     document.getElementById('emp-wage-total').textContent=fmt(total);
   }
   if(warn) warn.style.display='none';
@@ -1623,7 +1627,7 @@ function payEmpWage() {
   showConfirm('✅ ยืนยันจ่ายค่าแรง',[
     ['พนักงาน',emp.name],
     ['จำนวนวัน',`${days.length} วัน`],
-    ['วันที่',`${days[0].slice(5).replace('-','/')} – ${days[days.length-1].slice(5).replace('-','/')}`],
+    ['วันที่',`${fmtDate(days[0])} – ${fmtDate(days[days.length-1])}`],
     ['ค่าแรง/วัน',fmt(emp.rate)],
     ['รวม',fmt(total)],
   ],()=>{
@@ -1633,7 +1637,7 @@ function payEmpWage() {
     DB.set(KEY.empwagepay,pays);
     // บันทึกลง wage (รายงาน)
     const wages=DB.get(KEY.wage);
-    wages.push({id:uid(),name:`👷 ${emp.name} (ค่าแรง ${days[0].slice(5).replace('-','/')}–${days[days.length-1].slice(5).replace('-','/')})`,amount:total,date:today(),ts:Date.now()});
+    wages.push({id:uid(),name:`👷 ${emp.name} (ค่าแรง ${fmtDate(days[0])}–${fmtDate(days[days.length-1])})`,amount:total,date:today(),ts:Date.now()});
     DB.set(KEY.wage,wages);
     _empSelDays=new Set();
     drawEmpCal();
@@ -1655,7 +1659,7 @@ function renderEmpWageHistory() {
     <div class="list-item">
       <div style="flex:1">
         <div class="item-name">👷 ${p.empName}</div>
-        <div class="item-meta">${p.days.length} วัน · ${p.paidDate}</div>
+        <div class="item-meta">${p.days.length} วัน · ${fmtDateFull(p.paidDate)}</div>
       </div>
       <span class="item-amount yellow">${fmt(p.total)}</span>
     </div>`).join('');
@@ -1692,7 +1696,7 @@ function calcAdminPay() {
   // ตรวจซ้ำ
   const existing=DB.get(KEY.adminpay).find(p=>p.adminIdx===idx&&p.from===from&&p.to===to);
   if(existing){
-    if(warnEl){warnEl.style.display='block';document.getElementById('admin-pay-warn-text').textContent=`ช่วงวันที่ ${from} – ${to} จ่ายให้ ${a.name||'ผู้บริหาร '+(idx+1)} ไปแล้วเมื่อ ${existing.paidDate}`;}
+    if(warnEl){warnEl.style.display='block';document.getElementById('admin-pay-warn-text').textContent=`ช่วงวันที่ ${from} – ${to} จ่ายให้ ${a.name||'ผู้บริหาร '+(idx+1)} ไปแล้วเมื่อ ${fmtDateFull(existing.paidDate)}`;}
     if(calcEl)calcEl.style.display='none';
     if(payBtn)payBtn.style.display='none';
     return;
@@ -1735,7 +1739,7 @@ function payAdminCom() {
     DB.set(KEY.adminpay,pays);
     // บันทึกลง wage (รายงาน)
     const wages=DB.get(KEY.wage);
-    wages.push({id:uid(),name:`👔 ${a.name||'ผู้บริหาร '+(idx+1)} (ค่าคอม ${from.slice(5).replace('-','/')}–${to.slice(5).replace('-','/')})`,amount,date:today(),ts:Date.now()});
+    wages.push({id:uid(),name:`👔 ${a.name||'ผู้บริหาร '+(idx+1)} (ค่าคอม ${fmtDate(from)}–${fmtDate(to)})`,amount,date:today(),ts:Date.now()});
     DB.set(KEY.wage,wages);
     // reset UI
     document.getElementById('admin-pay-select').value='';
@@ -1758,7 +1762,7 @@ function renderAdminPayHistory() {
     <div class="list-item">
       <div style="flex:1">
         <div class="item-name">👔 ${p.adminName||'ผู้บริหาร'}</div>
-        <div class="item-meta">${p.from.slice(5).replace('-','/')}–${p.to.slice(5).replace('-','/')} · จ่ายวันที่ ${p.paidDate}</div>
+        <div class="item-meta">${fmtDate(p.from)}–${fmtDate(p.to)} · จ่ายวันที่ ${fmtDateFull(p.paidDate)}</div>
       </div>
       <span class="item-amount green">${fmt(p.amount)}</span>
     </div>`).join('');
@@ -1894,15 +1898,16 @@ function renderRepIncome() {
   const total=items.reduce((s,i)=>s+i.amount,0);
   items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
   let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
-    <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
+    <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
     <span style="font-size:16px;font-weight:700;color:var(--green);">${fmt(total)}</span>
   </div>`;
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    html+=`<div style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+    const _infoHtml_ri=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}${i.detail?' <span style="color:var(--text2);font-size:11px;">('+i.detail+')</span>':''}<br><span style="font-size:15px;font-weight:700;color:var(--${i.color});">+${fmt(i.amount)}</span>`;
+    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderRepIncome,'edit','${i.cat}','${_infoHtml_ri.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
       <div style="flex:0 0 66px;">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
       <div style="flex:1;min-width:0;">
@@ -1910,10 +1915,7 @@ function renderRepIncome() {
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;">+${fmt(i.amount)}</div>
-      <div style="display:flex;gap:4px;flex-shrink:0;">
-        <button onclick="openEditModal('${i.key}','${i.id}',renderRepIncome)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">✏️</button>
-        <button onclick="delItem('${i.key}','${i.id}',renderRepIncome)" style="background:var(--red-soft);border:none;color:var(--red);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">🗑</button>
-      </div>
+      <div style="font-size:18px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -1940,15 +1942,16 @@ function renderRepExpense() {
   const total=items.reduce((s,i)=>s+i.amount,0);
   items.sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
   let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
-    <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
+    <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
     <span style="font-size:16px;font-weight:700;color:var(--red);">${fmt(total)}</span>
   </div>`;
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    html+=`<div style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+    const _infoHtml_re=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}${i.detail?' <span style="color:var(--text2);font-size:11px;">('+i.detail+')</span>':''}<br><span style="font-size:15px;font-weight:700;color:var(--red);">−${fmt(i.amount)}</span>`;
+    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderRepExpense,'edit','${i.cat}','${_infoHtml_re.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
       <div style="flex:0 0 66px;">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
       <div style="flex:1;min-width:0;">
@@ -1956,10 +1959,7 @@ function renderRepExpense() {
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--red);white-space:nowrap;">−${fmt(i.amount)}</div>
-      <div style="display:flex;gap:4px;flex-shrink:0;">
-        <button onclick="openEditModal('${i.key}','${i.id}',renderRepExpense)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">✏️</button>
-        <button onclick="delItem('${i.key}','${i.id}',renderRepExpense)" style="background:var(--red-soft);border:none;color:var(--red);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">🗑</button>
-      </div>
+      <div style="font-size:18px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -1991,7 +1991,7 @@ function renderRepWages() {
         date:p.paidDate, ts:p.ts||0,
         cat:'👷 ค่าแรงพนักงาน',
         label:`${p.empName} (${p.days?p.days.length:'-'} วัน)`,
-        detail:p.days&&p.days.length?`${p.days[0].slice(5).replace('-','/')}–${p.days[p.days.length-1].slice(5).replace('-','/')}` :'',
+        detail:p.days&&p.days.length?`${p.fmtDate(days[0])}–${fmtDate(p.days[p.days.length-1])}` :'',
         amount:p.total, color:'yellow', type:'wage',
         key:KEY.empwagepay, id:p.id, editMode:'del'
       });
@@ -2004,7 +2004,7 @@ function renderRepWages() {
         date:p.paidDate, ts:p.ts||0,
         cat:'👔 ค่าคอมผู้บริหาร',
         label:`${p.adminName||'ผู้บริหาร'} (${p.pct||0}%)`,
-        detail:`ยอดขาย ${fmt(p.saleSum)} · ช่วง ${p.from.slice(5).replace('-','/')}–${p.to.slice(5).replace('-','/')}`,
+        detail:`ยอดขาย ${fmt(p.saleSum)} · ช่วง ${fmtDate(p.from)}–${fmtDate(p.to)}`,
         amount:p.amount, color:'purple', type:'adminpay',
         key:KEY.adminpay, id:p.id, editMode:'del'
       });
@@ -2037,7 +2037,7 @@ function renderRepWages() {
 
   html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;box-shadow:var(--shadow);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <span style="font-size:13px;color:var(--text2);">${from} — ${to} (${items.length} รายการ)</span>
+      <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
       <span style="font-size:16px;font-weight:700;color:var(--red);">−${fmt(total)}</span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;text-align:center;">
@@ -2059,12 +2059,10 @@ function renderRepWages() {
   html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
   items.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
-    const editBtn=i.editMode==='edit'
-      ?`<button onclick="openEditModal('${i.key}','${i.id}',renderRepWages)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">✏️</button>`
-      :`<button disabled style="background:var(--border);border:none;color:var(--text2);font-size:12px;padding:4px 8px;border-radius:7px;opacity:0.4;">✏️</button>`;
-    html+=`<div style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+    const _infoHtml_rw=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}${i.detail?' <span style="color:var(--text2);font-size:11px;">('+i.detail+')</span>':''}<br><span style="font-size:15px;font-weight:700;color:var(--${i.color});">−${fmt(i.amount)}</span>`;
+    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderRepWages,'${i.editMode||'edit'}','${i.cat}','${_infoHtml_rw.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
       <div style="flex:0 0 66px;">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
       <div style="flex:1;min-width:0;">
@@ -2072,10 +2070,7 @@ function renderRepWages() {
         ${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}
       </div>
       <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;">−${fmt(i.amount)}</div>
-      <div style="display:flex;gap:4px;flex-shrink:0;">
-        ${editBtn}
-        <button onclick="delItem('${i.key}','${i.id}',renderRepWages)" style="background:var(--red-soft);border:none;color:var(--red);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:7px;">🗑</button>
-      </div>
+      <div style="font-size:18px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -2131,19 +2126,17 @@ function renderTimeline() {
   displayItems.forEach((i,idx)=>{
     const bg=idx%2===0?'var(--card)':'var(--card2)';
     const balColor=i.balance>=0?'var(--green)':'var(--red)';
-    html+=`<div style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);">
+    const _infoHtml_tl=`<b>${fmtDate(i.date)}</b> · ${i.cat}<br>${i.label}<br>${i.kind==='in'?'<span style="color:var(--green);font-weight:700;">รับ +'+fmt(i.amount)+'</span>':'<span style="color:var(--red);font-weight:700;">จ่าย −'+fmt(i.amount)+'</span>'} · คงเหลือ <span style="color:${balColor};font-weight:700;">${fmt(i.balance)}</span>`;
+    html+=`<div ondblclick="openRowAction('${i.key}','${i.id}',renderTimeline,'edit','${i.cat}','${_infoHtml_tl.replace(/'/g,'\'').replace(/`/g,'\`')}')" style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" title="ดับเบิลคลิกเพื่อแก้ไข/ลบ">
       <div style="flex:0 0 52px;">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);">${i.date.slice(5).replace('-','/')}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div>
         <div style="font-size:9px;color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
       <div style="flex:1;min-width:0;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
       <div style="font-size:11px;font-weight:600;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='in'?fmt(i.amount):'—'}</div>
       <div style="font-size:11px;font-weight:600;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='out'?fmt(i.amount):'—'}</div>
       <div style="font-size:11px;font-weight:700;color:${balColor};white-space:nowrap;flex:0 0 52px;text-align:right;">${fmt(i.balance)}</div>
-      <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0;">
-        <button onclick="openEditModal('${i.key}','${i.id}',renderTimeline)" style="background:var(--yellow-soft);border:none;color:var(--yellow);font-size:11px;cursor:pointer;padding:3px 6px;border-radius:6px;">✏️</button>
-        <button onclick="delItem('${i.key}','${i.id}',renderTimeline)" style="background:var(--red-soft);border:none;color:var(--red);font-size:11px;cursor:pointer;padding:3px 6px;border-radius:6px;">🗑</button>
-      </div>
+      <div style="font-size:16px;color:var(--border);flex-shrink:0;">⋮</div>
     </div>`;
   });
   html+=`</div>`;
@@ -2178,7 +2171,7 @@ function updateDashboard() {
     const wr=getWeekRange();
     periodFrom=wr.wFrom; periodTo=wr.wTo;
     saleLabel='💰 ยอดขายสัปดาห์นี้'; buyLabel='🛒 ซื้อของสัปดาห์นี้';
-    periodLabel=`${periodFrom.slice(5).replace('-','/')} – ${periodTo.slice(5).replace('-','/')}`;
+    periodLabel=`${fmtDate(periodFrom)} – ${fmtDate(periodTo)}`;
   } else {
     periodFrom=tm+'-01';
     const lastDay=new Date(new Date(tm).getFullYear(),new Date(tm).getMonth()+1,0).getDate();
@@ -2287,6 +2280,31 @@ function ac(id,val,colorClass) {
   const t=setInterval(()=>{cur=Math.min(cur+inc,val);el.textContent=fmt(cur);if(cur>=val){clearInterval(t);el.textContent=fmt(val);}},20);
 }
 
+
+// ============ ROW ACTION MODAL (double-click) ============
+let _ramKey, _ramId, _ramCb, _ramEditMode;
+function openRowAction(key, id, cb, editMode, titleText, infoHtml) {
+  _ramKey=key; _ramId=id; _ramCb=cb; _ramEditMode=editMode||'edit';
+  document.getElementById('ram-title').textContent = titleText||'รายการ';
+  document.getElementById('ram-info').innerHTML = infoHtml||'';
+  const editBtn=document.getElementById('ram-edit-btn');
+  if(_ramEditMode==='del') {
+    editBtn.disabled=true; editBtn.style.opacity='0.35';
+  } else {
+    editBtn.disabled=false; editBtn.style.opacity='1';
+  }
+  document.getElementById('row-action-modal').classList.add('open');
+}
+function closeRowAction() { document.getElementById('row-action-modal').classList.remove('open'); }
+function ramDoEdit() {
+  closeRowAction();
+  openEditModal(_ramKey, _ramId, _ramCb);
+}
+function ramDoDelete() {
+  closeRowAction();
+  delItem(_ramKey, _ramId, _ramCb);
+}
+
 // ============ INIT ============
 const d=new Date();
 const dateStr=d.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short',year:'2-digit'});
@@ -2307,5 +2325,18 @@ buildBuyTypeSelect();
 buildSupplierDatalist();
 updateDashboard();
 </script>
+
+<!-- ROW ACTION MODAL (double-click report row) -->
+<div class="modal-overlay" id="row-action-modal">
+  <div class="modal" style="padding:20px 16px 28px;">
+    <div class="modal-title"><span id="ram-title">รายการ</span><button class="modal-close" onclick="closeRowAction()">✕</button></div>
+    <div id="ram-info" style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.8;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button id="ram-edit-btn" class="btn btn-primary" onclick="ramDoEdit()">✏️ แก้ไข</button>
+      <button id="ram-del-btn" class="btn btn-red" onclick="ramDoDelete()">🗑 ลบ</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
