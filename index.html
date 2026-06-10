@@ -327,15 +327,23 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <!-- TAB: ยอดขาย -->
   <div id="inc-sale" class="inc-section">
     <div class="form-group">
-      <label>ประเภท</label>
-      <div id="sale-meat-btns" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
+      <label>สินค้า</label>
+      <div style="position:relative;">
+        <input type="text" id="sale-product-input" placeholder="พิมหรือกดเลือกสินค้า" autocomplete="off"
+          oninput="onSaleProductInput()"
+          style="width:100%;padding-right:40px;">
+        <datalist id="sale-product-datalist"></datalist>
+        <button onclick="toggleSaleDropdown()" type="button"
+          style="position:absolute;right:0;top:0;height:100%;width:40px;background:none;border:none;border-left:1.5px solid var(--border);cursor:pointer;font-size:16px;color:var(--text2);border-radius:0 10px 10px 0;">▾</button>
+      </div>
+      <div id="sale-dropdown" style="display:none;background:var(--card);border:1.5px solid var(--border);border-radius:10px;margin-top:4px;overflow:hidden;box-shadow:var(--shadow);max-height:220px;overflow-y:auto;"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div class="form-group"><label>จำนวน (ไม้/ชิ้น)</label>
         <input type="number" id="sale-qty" placeholder="1" step="0.01" min="0" oninput="calcSaleTotal()">
       </div>
       <div class="form-group"><label>ราคา/หน่วย (บาท)</label>
-        <input type="number" id="sale-unit-price" placeholder="0.00" step="0.01" min="0" oninput="calcSaleTotal()">
+        <input type="number" id="sale-unit-price" placeholder="0.00" step="0.01" min="0" oninput="calcSaleTotal()" style="background:var(--blue-soft);">
       </div>
     </div>
     <div class="form-group">
@@ -343,7 +351,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--green);" id="sale-total-display">0</div>
     </div>
     <div class="form-group" style="margin-top:-6px">
-      <label style="font-size:11px;">หรือกรอกยอดรวมตรงๆ ได้เลย</label>
+      <label style="font-size:11px;">แก้ยอดรวมได้เลย (เช่น กรณีแถม / ราคาพิเศษ)</label>
       <input type="number" id="sale-amount" placeholder="0.00" step="0.01" oninput="onSaleAmountDirect()">
     </div>
     <div class="form-group"><label>วันที่</label><input type="date" id="sale-date"></div>
@@ -604,7 +612,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="section-title">⚙️ ตั้งค่า</div>
   <div onclick="goSubSetting('set-salecats')" class="set-menu-item">
     <span class="smi-ico">🥩</span>
-    <div class="smi-body"><div class="smi-title">หมวดหมู่ยอดขาย</div><div class="smi-sub">จัดการประเภทเนื้อสัตว์ / สินค้าขาย</div></div>
+    <div class="smi-body"><div class="smi-title">สินค้าขาย</div><div class="smi-sub">เพิ่ม/ลบสินค้า และตั้งราคาขาย/หน่วย</div></div>
     <span class="smi-arrow">›</span>
   </div>
   <div onclick="goSubSetting('set-suppliers')" class="set-menu-item">
@@ -644,14 +652,20 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
-<!-- SUB: หมวดยอดขาย -->
+<!-- SUB: หมวดยอดขาย (SKU) -->
 <div class="page" id="set-salecats">
-  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ หมวดหมู่ยอดขาย</div>
+  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ สินค้าขาย</div>
   <div class="set-section">
-    <div class="tag-list" id="sale-cats-list"></div>
-    <div class="tag-add">
-      <input type="text" id="new-sale-cat" placeholder="เพิ่มหมวดใหม่ เช่น หมูกระทะ">
-      <button onclick="addSaleCat()">+ เพิ่ม</button>
+    <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border);">
+      💡 เพิ่มสินค้าและตั้งราคาขาย/หน่วย — ราคาจะถูกดึงไปใช้อัตโนมัติตอนบันทึกยอดขาย
+    </div>
+    <div class="tag-list" id="sale-cats-list" style="flex-direction:column;gap:10px;"></div>
+    <div class="divider"></div>
+    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มสินค้าใหม่</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <input type="text" id="new-sale-cat" placeholder="ชื่อสินค้า เช่น หมู" style="flex:1;min-width:100px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <input type="number" id="new-sale-price" placeholder="ราคา/หน่วย" step="0.01" min="0" style="width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <button onclick="addSaleCat()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;">+ เพิ่ม</button>
     </div>
   </div>
 </div>
@@ -791,13 +805,18 @@ const KEY = {
   buy:'shop_buy', sale:'shop_sale', capital:'shop_capital',
   loan:'shop_loan', loanpay:'shop_loanpay', wage:'shop_wage',
   rent:'shop_rent', admin:'shop_admin',
-  saleCats:'shop_sale_cats', buyTypes:'shop_buy_types',
+  saleCats:'shop_sale_cats', saleSkus:'shop_sale_skus', buyTypes:'shop_buy_types',
   suppliers:'shop_suppliers', profitCfg:'shop_profit_cfg', itemNames:'shop_item_names',
   employees:'shop_employees', adminpay:'shop_adminpay', empwagepay:'shop_empwagepay'
 };
 
 // ============ SETTINGS DATA ============
 const DEFAULT_SALE_CATS = ['หมู','ไก่','เนื้อ'];
+const DEFAULT_SALE_SKUS = [
+  {id:'sku_moo',  name:'หมู',  price:0, emoji:'🐷'},
+  {id:'sku_kai',  name:'ไก่',  price:0, emoji:'🐔'},
+  {id:'sku_nuea', name:'เนื้อ', price:0, emoji:'🥩'},
+];
 const DEFAULT_BUY_TYPES = [
   {id:'material',  label:'🥩 วัตถุดิบ',           gross:true},
   {id:'supply',    label:'📦 สิ้นเปลือง',          gross:true},
@@ -885,6 +904,14 @@ function getSaleCats() {
   const s = localStorage.getItem(KEY.saleCats);
   return s ? JSON.parse(s) : [...DEFAULT_SALE_CATS];
 }
+function getSaleSkus() {
+  const s = localStorage.getItem(KEY.saleSkus);
+  if(s) return JSON.parse(s);
+  // migrate: ถ้ามี saleCats เดิม ให้สร้าง SKU จากนั้น
+  const cats = getSaleCats();
+  return cats.map((c,i)=>({id:'sku_'+uid(), name:c, price:0, emoji:getMeatEmoji(c,i)}));
+}
+function saveSaleSkus(arr) { localStorage.setItem(KEY.saleSkus, JSON.stringify(arr)); }
 function getBuyTypes() {
   const s = localStorage.getItem(KEY.buyTypes);
   return s ? JSON.parse(s) : DEFAULT_BUY_TYPES.map(t=>({...t}));
@@ -914,7 +941,7 @@ const PAGE_TITLES = {
   'page-finance':'💳 การเงิน','page-settings':'⚙️ ตั้งค่า',
   'page-rep-income':'💚 รายงานรายรับ','page-rep-expense':'💸 รายงานรายจ่าย','page-rep-movement':'📋 การเคลื่อนไหว',
   'page-rep-wages':'👷 ค่าแรง/คอม/เช่า',
-  'set-salecats':'🥩 หมวดหมู่ยอดขาย','set-suppliers':'🏪 ซัพพลายเออร์','set-buytypes':'🛒 ประเภทการซื้อ',
+  'set-salecats':'🥩 สินค้าขาย','set-suppliers':'🏪 ซัพพลายเออร์','set-buytypes':'🛒 ประเภทการซื้อ',
   'set-itemnames':'📦 ชื่อสินค้า','set-profit':'📈 การคำนวณกำไร','set-admin':'👔 ค่าคอมผู้บริหาร','set-employees':'👷 พนักงาน','set-backup':'💾 สำรองข้อมูล'
 };
 
@@ -1047,14 +1074,6 @@ function getMeatEmoji(name,idx) {
   return map[name] || MEAT_EMOJIS[idx%MEAT_EMOJIS.length] || '🍽️';
 }
 
-function buildSaleMeatBtns() {
-  const cats = getSaleCats();
-  const container = document.getElementById('sale-meat-btns');
-  container.style.gridTemplateColumns = cats.length <= 3 ? 'repeat(3,1fr)' : 'repeat(3,1fr)';
-  container.innerHTML = cats.map((c,i)=>`
-    <button class="meat-btn${i===0?' active':''}" data-meat="${c}" onclick="selectMeat(this)">${getMeatEmoji(c,i)} ${c}</button>`).join('');
-  if(cats.length > 0) _selectedMeat = cats[0];
-}
 
 function buildBuyTypeSelect() {
   const types = getBuyTypes();
@@ -1120,11 +1139,101 @@ function renderBuyList() {
 
 // ============ SALE ============
 let _selectedMeat = '';
+let _selectedSku = null;
+let _saleDropdownOpen = false;
+
+function buildSaleMeatBtns() {
+  // ฟังก์ชันนี้ยังถูกเรียกจาก goPage/incomeTab — forward ไปหา buildSaleProductDatalist
+  buildSaleProductDatalist();
+}
+
+function buildSaleProductDatalist() {
+  const skus = getSaleSkus();
+  const dl = document.getElementById('sale-product-datalist');
+  if(dl) dl.innerHTML = skus.map(s=>`<option value="${s.name}">`).join('');
+}
+
+function renderSaleDropdown(filter) {
+  const skus = getSaleSkus();
+  const dd = document.getElementById('sale-dropdown');
+  if(!dd) return;
+  const filtered = filter
+    ? skus.filter(s=>s.name.includes(filter))
+    : skus;
+  if(!filtered.length) {
+    dd.innerHTML=`<div style="padding:10px 14px;font-size:13px;color:var(--text2);">
+      ${filter?`"${filter}" ยังไม่มีในระบบ — บันทึกแล้วจะเพิ่มให้อัตโนมัติ`:'ยังไม่มีสินค้า'}
+    </div>`;
+  } else {
+    dd.innerHTML = filtered.map(s=>`
+      <div onclick="selectSaleProduct('${s.name}')"
+        style="padding:11px 14px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
+        <span>${getMeatEmoji(s.name,0)} ${s.name}</span>
+        <span style="font-size:12px;color:var(--text2);">${s.price>0?fmt(s.price)+' บาท':'—'}</span>
+      </div>`).join('');
+  }
+  dd.style.display='block';
+  _saleDropdownOpen=true;
+}
+
+function toggleSaleDropdown() {
+  if(_saleDropdownOpen) {
+    closeSaleDropdown();
+  } else {
+    renderSaleDropdown('');
+  }
+}
+
+function closeSaleDropdown() {
+  const dd = document.getElementById('sale-dropdown');
+  if(dd) dd.style.display='none';
+  _saleDropdownOpen=false;
+}
+
+function onSaleProductInput() {
+  const val = document.getElementById('sale-product-input').value.trim();
+  renderSaleDropdown(val);
+  // ถ้าตรงกับ SKU ที่มีอยู่ → เซ็ตราคาทันที
+  const skus = getSaleSkus();
+  const match = skus.find(s=>s.name===val);
+  if(match) {
+    _selectedMeat = match.name;
+    _selectedSku = match;
+    const upEl = document.getElementById('sale-unit-price');
+    if(upEl && match.price>0) { upEl.value=match.price; calcSaleTotal(); }
+  } else {
+    _selectedMeat = val;
+    _selectedSku = null;
+  }
+}
+
+function selectSaleProduct(name) {
+  document.getElementById('sale-product-input').value = name;
+  closeSaleDropdown();
+  const skus = getSaleSkus();
+  const match = skus.find(s=>s.name===name);
+  _selectedMeat = name;
+  _selectedSku = match||null;
+  const upEl = document.getElementById('sale-unit-price');
+  if(upEl) {
+    upEl.value = match&&match.price>0 ? match.price : '';
+    calcSaleTotal();
+  }
+  document.getElementById('sale-qty').focus();
+}
+
+// ปิด dropdown เมื่อแตะนอก
+document.addEventListener('click', e=>{
+  const dd = document.getElementById('sale-dropdown');
+  const wrap = document.getElementById('sale-product-input')?.closest('.form-group');
+  if(dd && wrap && !wrap.contains(e.target)) closeSaleDropdown();
+});
+
 function selectMeat(btn) {
-  document.querySelectorAll('.meat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  // legacy — ไม่ถูกเรียกใช้แล้ว แต่เก็บไว้ไม่ให้ error
   _selectedMeat = btn.dataset.meat;
 }
+
 function calcSaleTotal() {
   const q=parseFloat(document.getElementById('sale-qty').value)||0;
   const u=parseFloat(document.getElementById('sale-unit-price').value)||0;
@@ -1136,24 +1245,37 @@ function onSaleAmountDirect() {
   const v=parseFloat(document.getElementById('sale-amount').value)||0;
   document.getElementById('sale-total-display').textContent=v.toLocaleString('th-TH');
 }
+
 function confirmSale() {
+  const productName = document.getElementById('sale-product-input').value.trim();
   const qty=parseFloat(document.getElementById('sale-qty').value)||0;
   const unitPrice=parseFloat(document.getElementById('sale-unit-price').value)||0;
   const amount=parseFloat(document.getElementById('sale-amount').value);
   const date=document.getElementById('sale-date').value;
   const note=document.getElementById('sale-note').value.trim();
+  if(!productName) return alert('กรุณาระบุชื่อสินค้า');
   if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
   showConfirm('💰 ยืนยันยอดขาย',[
-    ['ประเภท',getMeatEmoji(_selectedMeat,0)+' '+_selectedMeat],
+    ['สินค้า',getMeatEmoji(productName,0)+' '+productName],
     ['จำนวน × ราคา',qty&&unitPrice?`${qty} × ${unitPrice.toLocaleString('th-TH',{minimumFractionDigits:2})}`:'—'],
     ['ยอดรวม',fmt(amount)],['วันที่',date],['หมายเหตุ',note||'—'],
   ],()=>{
+    // auto-add SKU ถ้าเป็นชื่อใหม่
+    const skus = getSaleSkus();
+    if(!skus.find(s=>s.name===productName)) {
+      skus.push({id:'sku_'+uid(), name:productName, price:unitPrice||0, emoji:getMeatEmoji(productName, skus.length)});
+      saveSaleSkus(skus);
+      buildSaleProductDatalist();
+    }
     const list=DB.get(KEY.sale);
-    list.push({id:uid(),amount,qty,unitPrice,meat:_selectedMeat,date,note,ts:Date.now()});
+    const skuMatch = getSaleSkus().find(s=>s.name===productName);
+    list.push({id:uid(),amount,qty,unitPrice,meat:productName,skuId:skuMatch?.id||'',date,note,ts:Date.now()});
     DB.set(KEY.sale,list);
     localStorage.setItem('last_sale_date',date);
+    document.getElementById('sale-product-input').value='';
     ['sale-amount','sale-qty','sale-unit-price','sale-note'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('sale-total-display').textContent='0';
+    _selectedMeat=''; _selectedSku=null;
     renderSaleList_noop(); updateDashboard();
   });
 }
@@ -1353,26 +1475,53 @@ function addSupplierFromSettings() {
 }
 
 function renderSaleCatsList() {
-  const cats=getSaleCats();
-  document.getElementById('sale-cats-list').innerHTML = cats.map((c,i)=>`
-    <div class="tag-chip">${getMeatEmoji(c,i)} ${c}
-      <button class="chip-del" onclick="delSaleCat(${i})">×</button>
+  const skus = getSaleSkus();
+  const el = document.getElementById('sale-cats-list');
+  if(!el) return;
+  if(!skus.length) {
+    el.innerHTML='<div style="font-size:12px;color:var(--text2);">ยังไม่มีสินค้า</div>';
+    return;
+  }
+  el.innerHTML = skus.map((s,i)=>`
+    <div style="background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:20px;">${s.emoji||getMeatEmoji(s.name,i)}</span>
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:600;">${s.name}</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px;">ราคา/หน่วย: <b>${s.price>0?fmt(s.price)+' บาท':'ยังไม่ได้ตั้ง'}</b></div>
+      </div>
+      <input type="number" value="${s.price||''}" placeholder="ราคา" step="0.01" min="0"
+        style="width:90px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);"
+        oninput="updateSkuPrice('${s.id}', this.value)">
+      <button class="chip-del" onclick="delSaleCat('${s.id}')" style="font-size:16px;padding:4px 8px;">×</button>
     </div>`).join('');
 }
-function addSaleCat() {
-  const val=document.getElementById('new-sale-cat').value.trim();
-  if(!val) return;
-  const cats=getSaleCats();
-  if(cats.includes(val)) return alert('มีหมวดนี้อยู่แล้ว');
-  cats.push(val); localStorage.setItem(KEY.saleCats,JSON.stringify(cats));
-  document.getElementById('new-sale-cat').value='';
-  renderSaleCatsList();
+function updateSkuPrice(skuId, val) {
+  const skus = getSaleSkus();
+  const s = skus.find(x=>x.id===skuId);
+  if(!s) return;
+  s.price = parseFloat(val)||0;
+  saveSaleSkus(skus);
+  buildSaleMeatBtns();
 }
-function delSaleCat(idx) {
-  if(!confirm('ลบหมวดนี้?')) return;
-  const cats=getSaleCats(); cats.splice(idx,1);
-  localStorage.setItem(KEY.saleCats,JSON.stringify(cats));
+function addSaleCat() {
+  const name = document.getElementById('new-sale-cat').value.trim();
+  const price = parseFloat(document.getElementById('new-sale-price').value)||0;
+  if(!name) return;
+  const skus = getSaleSkus();
+  if(skus.find(s=>s.name===name)) return alert('มีสินค้านี้อยู่แล้ว');
+  skus.push({id:'sku_'+uid(), name, price, emoji:getMeatEmoji(name, skus.length)});
+  saveSaleSkus(skus);
+  document.getElementById('new-sale-cat').value='';
+  document.getElementById('new-sale-price').value='';
   renderSaleCatsList();
+  buildSaleMeatBtns();
+}
+function delSaleCat(skuId) {
+  if(!confirm('ลบสินค้านี้?')) return;
+  const skus = getSaleSkus().filter(s=>s.id!==skuId);
+  saveSaleSkus(skus);
+  renderSaleCatsList();
+  buildSaleMeatBtns();
 }
 
 function renderBuyTypesList() {
