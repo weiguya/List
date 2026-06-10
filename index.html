@@ -229,6 +229,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <button class="sidebar-item" id="nav-rep-expense" onclick="goReportTab('rep-expense',this)">💸 รายจ่าย</button>
       <button class="sidebar-item" id="nav-rep-movement" onclick="goReportTab('rep-movement',this)">📋 เคลื่อนไหว</button>
       <button class="sidebar-item" id="nav-rep-wages" onclick="goReportTab('rep-wages',this)">👷 ค่าแรง/คอม/เช่า</button>
+      <button class="sidebar-item" id="nav-rep-loan" onclick="goReportTab('rep-loan',this)">🏦 เงินกู้</button>
     </div>
     <div class="sidebar-divider"></div>
     <button class="sidebar-item" id="nav-page-settings" onclick="goPage('page-settings',this)">
@@ -262,39 +263,48 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div id="dash-period-label" style="font-size:11px;color:var(--text2);margin-bottom:10px;text-align:center;"></div>
 
   <div class="stats-grid">
-    <div class="stat-card">
+    <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{const c=document.getElementById('ri-c-sale');if(c){['ri-c-loan','ri-c-capital'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});c.checked=true;renderRepIncome();}},200);">
       <div class="label" id="d-sale-label">💰 ยอดขายวันนี้</div>
       <div class="value green" id="d-sale">0</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;">แตะดูรายละเอียด →</div>
     </div>
-    <div class="stat-card" id="d-profit-card" onclick="openProfitMonthPicker()" style="cursor:pointer;">
+    <div class="stat-card" id="d-profit-card" style="cursor:pointer;" onclick="openProfitDetail()">
       <div class="label" id="d-profit-label" style="display:flex;align-items:center;gap:4px;">📈 กำไร <span id="d-profit-month-tag" style="font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;"></span></div>
       <div class="value" id="d-profit">0</div>
       <div style="font-size:10px;color:var(--text2);margin-top:3px;" id="d-profit-formula">—</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-expense',document.getElementById('nav-rep-expense'));setTimeout(()=>{['re-c-wage','re-c-rent','re-c-loanpay'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const b=document.getElementById('re-c-buy');if(b)b.checked=true;renderRepExpense();},200);">
       <div class="label" id="d-buy-label">🛒 ซื้อของวันนี้</div>
       <div class="value yellow" id="d-buy">0</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;">แตะดูรายละเอียด →</div>
     </div>
-    <div class="stat-card" style="cursor:pointer;" onclick="goPage('page-income',document.getElementById('nav-page-income'));setTimeout(()=>{document.querySelector('#page-income .tab-btn:nth-child(2)')?.click()},100);">
+    <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));">
       <div class="label">🏦 หนี้คงเหลือ (ต้น+ดอก)</div>
       <div class="value red" id="d-loan">0</div>
       <div style="font-size:10px;color:var(--text2);margin-top:2px;">ยอดชำระทั้งหมด: <span id="d-loan-due" class="red">0</span></div>
     </div>
-    <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;">
+    <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;cursor:pointer;" onclick="goReportTab('rep-movement',document.getElementById('nav-rep-movement'));">
       <div class="label" style="color:rgba(255,255,255,0.75);">💳 เงินคงเหลือในบัญชีจริง</div>
       <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;">0</div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้ · แตะดูเคลื่อนไหว →</div>
     </div>
-    <div class="stat-card full">
+    <div class="stat-card full" style="cursor:pointer;" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);">
       <div class="label">💵 เงินทุนที่ใส่เข้ามา</div>
       <div class="value blue" id="d-capital">0</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:2px;">แตะดูรายละเอียด →</div>
     </div>
   </div>
 
   <div class="chart-card">
-    <h3>📈 ยอดขาย 7 วันย้อนหลัง</h3>
+    <h3>📈 ยอดขาย 7 วันย้อนหลัง (฿)</h3>
     <div id="chart7day" style="display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:8px;"></div>
     <div id="chart7day-labels" style="display:flex;gap:4px;margin-top:4px;"></div>
+  </div>
+
+  <div class="chart-card">
+    <h3>🍢 จำนวนขาย 7 วันย้อนหลัง (ไม้/ชิ้น)</h3>
+    <div id="chart7day-qty" style="display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:8px;"></div>
+    <div id="chart7day-qty-labels" style="display:flex;gap:4px;margin-top:4px;"></div>
   </div>
 
   <div class="chart-card">
@@ -629,6 +639,13 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
   </div>
   <div id="rep-wages-output"></div>
+</div>
+
+
+<!-- PAGE: รายงาน เงินกู้ -->
+<div class="page" id="page-rep-loan">
+  <div class="section-title">🏦 รายงานเงินกู้</div>
+  <div id="rep-loan-output"></div>
 </div>
 
 
@@ -1024,6 +1041,7 @@ const PAGE_TITLES = {
   'page-finance':'💳 การเงิน','page-settings':'⚙️ ตั้งค่า',
   'page-rep-income':'💚 รายงานรายรับ','page-rep-expense':'💸 รายงานรายจ่าย','page-rep-movement':'📋 การเคลื่อนไหว',
   'page-rep-wages':'👷 ค่าแรง/คอม/เช่า',
+  'page-rep-loan':'🏦 รายงานเงินกู้',
   'set-salecats':'🥩 สินค้าขาย','set-suppliers':'🏪 ซัพพลายเออร์','set-buytypes':'🛒 ประเภทการซื้อ',
   'set-itemnames':'📦 ชื่อสินค้า','set-profit':'📈 การคำนวณกำไร','set-admin':'👔 ค่าคอมผู้บริหาร','set-employees':'👷 พนักงาน','set-backup':'💾 สำรองข้อมูล'
 };
@@ -1063,7 +1081,7 @@ function toggleReportSubmenu(btn) {
 }
 
 function goReportTab(tabId, navBtn) {
-  const pageMap = {'rep-income':'page-rep-income','rep-expense':'page-rep-expense','rep-movement':'page-rep-movement','rep-wages':'page-rep-wages'};
+  const pageMap = {'rep-income':'page-rep-income','rep-expense':'page-rep-expense','rep-movement':'page-rep-movement','rep-wages':'page-rep-wages','rep-loan':'page-rep-loan'};
   const pageId = pageMap[tabId];
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
@@ -1075,6 +1093,7 @@ function goReportTab(tabId, navBtn) {
   else if(pageId==='page-rep-expense') { initRepDates(); renderRepExpense(); }
   else if(pageId==='page-rep-movement') { initRepDates(); renderTimeline(); }
   else if(pageId==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
+  else if(pageId==='page-rep-loan') { renderRepLoan(); }
 }
 
 function goSubSetting(id) {
@@ -2690,17 +2709,29 @@ function updateDashboard() {
   ac('d-buy',periodBuy,'yellow'); ac('d-loan',loanRemain,'red');
   ac('d-capital',capitalTotal,'blue'); ac('d-cashbal',cashBal,cashBal>=0?'':'red');
 
-  // 7-day chart
+  // 7-day chart (ยอดเงิน)
   const days7=[];
-  for(let i=6;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);const ds=dt.toISOString().slice(0,10);const lbl=dt.toLocaleDateString('th-TH',{weekday:'short'});const v=sales.filter(s=>s.date===ds).reduce((s,x)=>s+x.amount,0);days7.push({ds,lbl,v});}
+  for(let i=6;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);const ds=dt.toISOString().slice(0,10);const lbl=dt.toLocaleDateString('th-TH',{weekday:'short'});const v=sales.filter(s=>s.date===ds).reduce((s,x)=>s+x.amount,0);const q=sales.filter(s=>s.date===ds).reduce((s,x)=>s+(x.qty||0),0);days7.push({ds,lbl,v,q});}
   const maxD=Math.max(...days7.map(d=>d.v),1);
   document.getElementById('chart7day').innerHTML=days7.map(d=>`
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;">
-      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.v>0?fmt(d.v):'—'}</div>
+      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.v>0?fmt(d.v)+'฿':'—'}</div>
       <div style="width:100%;background:${d.ds===td?'var(--green)':'var(--accent)'};border-radius:4px 4px 0 0;opacity:${d.ds===td?1:0.65};height:${Math.max(d.v/maxD*70,d.v>0?5:2)}px;transition:height 0.8s ease;"></div>
     </div>`).join('');
   document.getElementById('chart7day-labels').innerHTML=days7.map(d=>`
     <div style="flex:1;text-align:center;font-size:10px;color:${d.ds===td?'var(--accent)':'var(--text2)'};font-weight:${d.ds===td?600:400}">${d.lbl}</div>`).join('');
+
+  // 7-day chart (จำนวนไม้/ชิ้น)
+  const maxQ=Math.max(...days7.map(d=>d.q),1);
+  const qtyEl=document.getElementById('chart7day-qty');
+  const qtyLblEl=document.getElementById('chart7day-qty-labels');
+  if(qtyEl) qtyEl.innerHTML=days7.map(d=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;">
+      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.q>0?d.q+'':'—'}</div>
+      <div style="width:100%;background:${d.ds===td?'var(--purple)':'var(--yellow)'};border-radius:4px 4px 0 0;opacity:${d.ds===td?1:0.65};height:${Math.max(d.q/maxQ*70,d.q>0?5:2)}px;transition:height 0.8s ease;"></div>
+    </div>`).join('');
+  if(qtyLblEl) qtyLblEl.innerHTML=days7.map(d=>`
+    <div style="flex:1;text-align:center;font-size:10px;color:${d.ds===td?'var(--purple)':'var(--text2)'};font-weight:${d.ds===td?600:400}">${d.lbl}</div>`).join('');
 
   // bar chart — ใช้ค่าของ profitMonth เสมอ (pmSale, pmBuyDeduct ถูก declare แล้ว)
   // monthWage/monthRent/monthLoanPay ถูก declare ด้านบนแล้ว (filter by profitMonth)
@@ -2786,6 +2817,134 @@ function ramDoDelete() {
   closeRowAction();
   const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
   delItem(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
+}
+
+// ============ PROFIT DETAIL (กดที่ card กำไร) ============
+function openProfitDetail() {
+  // ถ้า long-press → เปิด month picker, ถ้า tap → ไปรายงานเคลื่อนไหว filter ตามที่หักกำไร
+  goReportTab('rep-movement', document.getElementById('nav-rep-movement'));
+  // set dates ให้ตรงกับ profitMonth
+  setTimeout(()=>{
+    const pm=_profitViewMonth||thisMonth();
+    const from=pm+'-01';
+    const lastDay=new Date(new Date(pm).getFullYear(),new Date(pm).getMonth()+1,0).getDate();
+    const to=pm+'-'+String(lastDay).padStart(2,'0');
+    const fe=document.getElementById('tl-from'); if(fe) fe.value=from;
+    const te=document.getElementById('tl-to'); if(te) te.value=to;
+    renderTimeline();
+  },150);
+}
+
+// ============ REPORT: เงินกู้ ============
+function renderRepLoan() {
+  const el=document.getElementById('rep-loan-output');
+  if(!el) return;
+  const loans=DB.get(KEY.loan);
+  const pays=DB.get(KEY.loanpay);
+  if(!loans.length){el.innerHTML='<div class="empty"><div class="empty-icon">🏦</div>ยังไม่มีรายการเงินกู้</div>';return;}
+
+  const totalPrincipal=loans.reduce((s,i)=>s+i.amount,0);
+  const totalDue=calcTotalLoanDue();
+  const totalInterest=totalDue-totalPrincipal;
+  const totalPaid=pays.reduce((s,i)=>s+i.amount,0);
+  const remain=Math.max(0,totalDue-totalPaid);
+  const pct=totalDue>0?Math.min(100,totalPaid/totalDue*100):0;
+  const pctR=Math.round(pct);
+  const barColor=pct>=100?'var(--green)':pct>=50?'var(--accent)':'var(--red)';
+
+  let html='';
+
+  // สรุปรวม
+  html+=`<div style="background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow);">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px;">📊 สรุปภาพรวม</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div style="background:var(--card);border-radius:10px;padding:10px 12px;">
+        <div style="font-size:10px;color:var(--text2);">เงินต้นรวม</div>
+        <div style="font-size:16px;font-weight:700;color:var(--accent);">${fmt(totalPrincipal)}</div>
+      </div>
+      <div style="background:var(--card);border-radius:10px;padding:10px 12px;">
+        <div style="font-size:10px;color:var(--text2);">ดอกเบี้ยรวม</div>
+        <div style="font-size:16px;font-weight:700;color:var(--red);">${fmt(totalInterest)}</div>
+      </div>
+      <div style="background:var(--card);border-radius:10px;padding:10px 12px;">
+        <div style="font-size:10px;color:var(--text2);">ยอดที่ต้องชำระทั้งหมด</div>
+        <div style="font-size:16px;font-weight:700;color:var(--red);">${fmt(totalDue)}</div>
+      </div>
+      <div style="background:var(--card);border-radius:10px;padding:10px 12px;">
+        <div style="font-size:10px;color:var(--text2);">ชำระแล้ว</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green);">${fmt(totalPaid)}</div>
+      </div>
+    </div>
+    <div style="background:var(--card);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:13px;font-weight:600;">คงเหลือต้องจ่าย</span>
+      <span style="font-size:18px;font-weight:700;color:${remain>0?'var(--red)':'var(--green)'};">${fmt(remain)}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;">
+      <span>ความคืบหน้าการชำระ</span>
+      <span style="font-weight:700;color:${barColor};">${pctR}%</span>
+    </div>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;height:18px;overflow:hidden;">
+      <div style="height:100%;border-radius:8px;background:${barColor};width:${pct}%;transition:width 1s ease;position:relative;">
+        ${pct>12?`<span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:#fff;">${pctR}%</span>`:''}
+      </div>
+    </div>
+  </div>`;
+
+  // รายการกู้แต่ละรายการ
+  html+=`<div style="font-size:13px;font-weight:700;margin-bottom:8px;">📋 รายการกู้</div>`;
+  loans.sort((a,b)=>a.date.localeCompare(b.date)).forEach((ln,i)=>{
+    const due=ln.totalDue||ln.amount;
+    const interest=due-ln.amount;
+    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div>
+          <div style="font-size:14px;font-weight:600;">${ln.source||'เงินกู้ #'+(i+1)}</div>
+          <div style="font-size:11px;color:var(--text2);">กู้วันที่ ${fmtDateFull(ln.date)}</div>
+        </div>
+        ${ln.interestRate>0?`<span style="font-size:11px;background:var(--red-soft);color:var(--red);border-radius:6px;padding:3px 8px;font-weight:600;">${ln.interestRate}% / ปี</span>`:'<span style="font-size:11px;background:var(--green-soft);color:var(--green);border-radius:6px;padding:3px 8px;">ไม่มีดอก</span>'}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;text-align:center;">
+        <div style="background:var(--card2);border-radius:6px;padding:5px 4px;">
+          <div style="color:var(--text2);">เงินต้น</div>
+          <div style="font-weight:700;color:var(--accent);">${fmt(ln.amount)}</div>
+        </div>
+        <div style="background:var(--red-soft);border-radius:6px;padding:5px 4px;">
+          <div style="color:var(--text2);">ดอกเบี้ย</div>
+          <div style="font-weight:700;color:var(--red);">${fmt(interest)}</div>
+        </div>
+        <div style="background:var(--card2);border-radius:6px;padding:5px 4px;">
+          <div style="color:var(--text2);">รวมต้องจ่าย</div>
+          <div style="font-weight:700;color:var(--red);">${fmt(due)}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // ประวัติการจ่ายคืน
+  html+=`<div style="font-size:13px;font-weight:700;margin:14px 0 8px;">💸 ประวัติการจ่ายคืน</div>`;
+  const sortedPays=pays.sort((a,b)=>a.date.localeCompare(b.date));
+  if(!sortedPays.length){
+    html+=`<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">ยังไม่มีประวัติการจ่ายคืน</div>`;
+  } else {
+    let runRemain=totalDue;
+    html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
+    html+=`<div style="background:var(--card2);padding:7px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;font-size:10px;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);">
+      <span>วันที่</span><span>หมายเหตุ</span><span style="text-align:right;">จ่ายคืน</span><span style="text-align:right;">คงเหลือ</span>
+    </div>`;
+    sortedPays.forEach((p,idx)=>{
+      runRemain=Math.max(0,runRemain-p.amount);
+      const bg=idx%2===0?'var(--card)':'var(--card2)';
+      html+=`<div style="background:${bg};padding:8px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;align-items:center;border-top:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDateFull(p.date)}</div>
+        <div style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.note||'—'}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--green);text-align:right;">−${fmt(p.amount)}</div>
+        <div style="font-size:12px;font-weight:700;color:${runRemain>0?'var(--red)':'var(--green)'};text-align:right;">${fmt(runRemain)}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  el.innerHTML=html;
 }
 
 // ============ INIT ============
