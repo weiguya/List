@@ -610,9 +610,9 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
 <div class="page" id="page-settings">
   <div class="section-title">⚙️ ตั้งค่า</div>
-  <div onclick="goSubSetting('set-salecats')" class="set-menu-item">
-    <span class="smi-ico">🥩</span>
-    <div class="smi-body"><div class="smi-title">สินค้าขาย</div><div class="smi-sub">เพิ่ม/ลบสินค้า และตั้งราคาขาย/หน่วย</div></div>
+  <div onclick="goSubSetting('set-itemnames')" class="set-menu-item">
+    <span class="smi-ico">📦</span>
+    <div class="smi-body"><div class="smi-title">ชื่อสินค้า</div><div class="smi-sub">สินค้าขาย / วัตถุดิบ / อุปกรณ์ ทั้งหมดในระบบ</div></div>
     <span class="smi-arrow">›</span>
   </div>
   <div onclick="goSubSetting('set-suppliers')" class="set-menu-item">
@@ -623,11 +623,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div onclick="goSubSetting('set-buytypes')" class="set-menu-item">
     <span class="smi-ico">🛒</span>
     <div class="smi-body"><div class="smi-title">ประเภทการซื้อ</div><div class="smi-sub">วัตถุดิบ, สิ้นเปลือง, อุปกรณ์ ฯลฯ</div></div>
-    <span class="smi-arrow">›</span>
-  </div>
-  <div onclick="goSubSetting('set-itemnames')" class="set-menu-item">
-    <span class="smi-ico">📦</span>
-    <div class="smi-body"><div class="smi-title">ชื่อสินค้า</div><div class="smi-sub">เพิ่มชื่อสินค้าพร้อมเลือกประเภท</div></div>
     <span class="smi-arrow">›</span>
   </div>
   <div onclick="goSubSetting('set-profit')" class="set-menu-item">
@@ -652,23 +647,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
-<!-- SUB: หมวดยอดขาย (SKU) -->
-<div class="page" id="set-salecats">
-  <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ สินค้าขาย</div>
-  <div class="set-section">
-    <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border);">
-      💡 เพิ่มสินค้าและตั้งราคาขาย/หน่วย — ราคาจะถูกดึงไปใช้อัตโนมัติตอนบันทึกยอดขาย
-    </div>
-    <div class="tag-list" id="sale-cats-list" style="flex-direction:column;gap:10px;"></div>
-    <div class="divider"></div>
-    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มสินค้าใหม่</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-      <input type="text" id="new-sale-cat" placeholder="ชื่อสินค้า เช่น หมู" style="flex:1;min-width:100px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
-      <input type="number" id="new-sale-price" placeholder="ราคา/หน่วย" step="0.01" min="0" style="width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
-      <button onclick="addSaleCat()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;">+ เพิ่ม</button>
-    </div>
-  </div>
-</div>
 
 <!-- SUB: ซัพพลายเออร์ -->
 <div class="page" id="set-suppliers">
@@ -694,19 +672,56 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
-<!-- SUB: ชื่อสินค้า -->
+<!-- SUB: ชื่อสินค้า (รวม) -->
 <div class="page" id="set-itemnames">
   <div class="section-title" style="cursor:pointer;" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">‹ ชื่อสินค้า</div>
   <div class="set-section">
     <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border);">
-      💡 พิมพ์ชื่อสินค้า แล้วเลือกประเภท กด + เพิ่ม
+      💡 แตะค้างที่สินค้า เพื่อแก้ไขชื่อ ประเภท หรือราคา
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-      <input type="text" id="new-item-name" placeholder="ชื่อสินค้า เช่น แป้ง, ไม้จิ้ม" style="flex:1;min-width:130px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
-      <select id="set-item-type" onchange="renderItemNamesList()" style="flex:0 0 auto;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;"></select>
-      <button onclick="addItemName()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;">+ เพิ่ม</button>
+    <div id="item-names-list"></div>
+    <div class="divider"></div>
+    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มสินค้าใหม่</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <input type="text" id="new-item-name" placeholder="ชื่อสินค้า เช่น หมู, แป้ง, โต๊ะ"
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+      <div style="display:flex;gap:8px;">
+        <select id="set-item-type"
+          style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;"></select>
+        <input type="number" id="new-item-price" placeholder="ราคา/หน่วย" step="0.01" min="0"
+          style="width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      </div>
+      <div id="new-item-price-row" style="font-size:11px;color:var(--text2);margin-top:-4px;display:none;">💡 ราคา/หน่วย ใส่เฉพาะสินค้าขาย (ไม่บังคับ)</div>
+      <button onclick="addItemName()"
+        style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสินค้า</button>
     </div>
-    <div class="tag-list" id="item-names-list"></div>
+  </div>
+</div>
+
+<!-- Modal แก้ไขสินค้า -->
+<div id="edit-item-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border-radius:16px;padding:20px;width:88%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+    <div style="font-size:15px;font-weight:700;margin-bottom:16px;">✏️ แก้ไขสินค้า</div>
+    <input type="hidden" id="edit-item-old-type">
+    <input type="hidden" id="edit-item-old-name">
+    <div class="form-group"><label>ชื่อสินค้า</label>
+      <input type="text" id="edit-item-name"
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+    </div>
+    <div class="form-group"><label>ประเภท</label>
+      <select id="edit-item-type"
+        style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;box-sizing:border-box;"></select>
+    </div>
+    <div class="form-group" id="edit-item-price-row"><label>ราคา/หน่วย (บาท) — เฉพาะสินค้าขาย</label>
+      <input type="number" id="edit-item-price" placeholder="0.00" step="0.01" min="0"
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button onclick="saveEditItem()"
+        style="flex:1;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">💾 บันทึก</button>
+      <button onclick="closeEditItemModal()"
+        style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
+    </div>
   </div>
 </div>
 
@@ -845,15 +860,51 @@ function saveProfitCfg(cfg) {
   localStorage.setItem(KEY.profitCfg, JSON.stringify(cfg));
 }
 
-// ============ ITEM NAMES PER BUY-TYPE ============
-// structure: { typeId: ['ชื่อ1','ชื่อ2',...], ... }
+// ============ ITEM NAMES PER TYPE ============
+// structure: { typeId: ['ชื่อ1','ชื่อ2',...], sale: [{id,name,price},...] }
+const SALE_TYPE_ID = 'sale';
 function getItemNames() {
   const s=localStorage.getItem(KEY.itemNames);
   return s?JSON.parse(s):{};
 }
 function saveItemNames(obj){ localStorage.setItem(KEY.itemNames,JSON.stringify(obj)); }
 function getItemNamesForType(typeId){
-  const all=getItemNames(); return all[typeId]||[];
+  const all=getItemNames();
+  if(typeId===SALE_TYPE_ID) return (all[SALE_TYPE_ID]||[]).map(x=>typeof x==='string'?x:(x.name||x));
+  return all[typeId]||[];
+}
+// getSaleSkus — ดึงจาก itemNames[sale] เป็น [{id,name,price}]
+function getSaleSkus() {
+  const all=getItemNames();
+  const raw=all[SALE_TYPE_ID];
+  if(raw&&raw.length) {
+    return raw.map((x,i)=>typeof x==='string'
+      ?{id:'sku_'+i,name:x,price:0,emoji:getMeatEmoji(x,i)}
+      :{id:x.id||('sku_'+i),name:x.name,price:x.price||0,emoji:x.emoji||getMeatEmoji(x.name,i)});
+  }
+  // migrate จาก saleSkus เดิม
+  const old=localStorage.getItem(KEY.saleSkus);
+  if(old) {
+    const skus=JSON.parse(old);
+    const all2=getItemNames();
+    all2[SALE_TYPE_ID]=skus.map(s=>({id:s.id,name:s.name,price:s.price||0,emoji:s.emoji||''}));
+    saveItemNames(all2);
+    return getSaleSkus();
+  }
+  // migrate จาก saleCats เดิม
+  const cats=getSaleCats();
+  if(cats.length) {
+    const all3=getItemNames();
+    all3[SALE_TYPE_ID]=cats.map((c,i)=>({id:'sku_'+uid(),name:c,price:0,emoji:getMeatEmoji(c,i)}));
+    saveItemNames(all3);
+    return getSaleSkus();
+  }
+  return [];
+}
+function saveSaleSkus(arr) {
+  const all=getItemNames();
+  all[SALE_TYPE_ID]=arr;
+  saveItemNames(all);
 }
 // ประเภทที่บังคับเลือกจาก list (ไม่ให้พิมพ์เอง)
 const FORCED_SELECT_TYPES = ['material','supply'];
@@ -1382,45 +1433,170 @@ function delItem(key,id,cb) {
 
 // ============ SETTINGS PAGE ============
 function populateSetItemTypeSelect() {
+  const types = getAllItemTypes();
+  ['set-item-type','edit-item-type'].forEach(selId=>{
+    const sel=document.getElementById(selId);
+    if(!sel) return;
+    sel.innerHTML=types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  });
   const sel=document.getElementById('set-item-type');
-  if(!sel) return;
-  const types=getBuyTypes();
-  sel.innerHTML=types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  if(sel) sel.onchange=onNewItemTypeChange;
+  onNewItemTypeChange();
 }
+
+function getAllItemTypes() {
+  const buyTypes=getBuyTypes();
+  return [{id:SALE_TYPE_ID,label:'🛒 สินค้าขาย'},...buyTypes];
+}
+
+function onNewItemTypeChange() {
+  const sel=document.getElementById('set-item-type');
+  const row=document.getElementById('new-item-price-row');
+  const priceEl=document.getElementById('new-item-price');
+  if(!sel||!row||!priceEl) return;
+  const isSale=sel.value===SALE_TYPE_ID;
+  row.style.display=isSale?'block':'none';
+  priceEl.style.display=isSale?'block':'none';
+}
+
 function renderItemNamesList() {
-  const typeId=document.getElementById('set-item-type')?.value;
   const el=document.getElementById('item-names-list');
-  if(!el||!typeId) return;
-  const names=getItemNamesForType(typeId);
-  el.innerHTML=names.length
-    ? names.map((n,i)=>`<div class="tag-chip">${n}<button class="chip-del" onclick="delItemName('${typeId}',${i})">×</button></div>`).join('')
-    : '<div style="font-size:12px;color:var(--text2);">ยังไม่มีสินค้าในประเภทนี้</div>';
+  if(!el) return;
+  const types=getAllItemTypes();
+  const all=getItemNames();
+  let html='';
+  types.forEach(t=>{
+    let items=[];
+    if(t.id===SALE_TYPE_ID){
+      items=getSaleSkus();
+    } else {
+      items=(all[t.id]||[]).map((n,i)=>({id:t.id+'_'+i,name:n,price:null,typeId:t.id,idx:i}));
+    }
+    if(!items.length) return;
+    html+=`<div style="margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:0.5px;">${t.label}</div>`;
+    items.forEach((item,i)=>{
+      const priceTag=t.id===SALE_TYPE_ID&&item.price>0
+        ?`<span style="font-size:11px;color:var(--green);margin-left:6px;">฿${fmt(item.price)}</span>`:'';
+      html+=`<div style="display:flex;align-items:center;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:6px;cursor:pointer;"
+        ondblclick="openEditItemModal('${t.id}','${encodeURIComponent(item.name)}',${t.id===SALE_TYPE_ID?item.price||0:0})"
+        ontouchstart="startItemLongPress('${t.id}','${encodeURIComponent(item.name)}',${t.id===SALE_TYPE_ID?item.price||0:0},event)"
+        ontouchend="cancelItemLongPress()"
+        ontouchmove="cancelItemLongPress()">
+        <span style="flex:1;font-size:13px;">${item.name}${priceTag}</span>
+        <button onclick="event.stopPropagation();delItemName('${t.id}','${encodeURIComponent(item.name)}')"
+          style="background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html||'<div style="font-size:13px;color:var(--text2);">ยังไม่มีสินค้าในระบบ</div>';
 }
+
+// Long press สำหรับ mobile
+let _itemLongPressTimer=null;
+function startItemLongPress(typeId,encodedName,price,e){
+  _itemLongPressTimer=setTimeout(()=>openEditItemModal(typeId,encodedName,price),500);
+}
+function cancelItemLongPress(){ clearTimeout(_itemLongPressTimer); }
+
 function addItemName() {
+  const name=document.getElementById('new-item-name')?.value.trim();
   const typeId=document.getElementById('set-item-type')?.value;
-  const val=document.getElementById('new-item-name')?.value.trim();
-  if(!typeId||!val) return;
-  const all=getItemNames();
-  if(!all[typeId]) all[typeId]=[];
-  if(all[typeId].includes(val)) return alert('มีอยู่แล้ว');
-  all[typeId].push(val);
-  saveItemNames(all);
+  const price=parseFloat(document.getElementById('new-item-price')?.value)||0;
+  if(!name||!typeId) return alert('กรุณากรอกชื่อสินค้าและเลือกประเภท');
+  if(typeId===SALE_TYPE_ID){
+    const skus=getSaleSkus();
+    if(skus.find(s=>s.name===name)) return alert('มีสินค้านี้อยู่แล้ว');
+    skus.push({id:'sku_'+uid(),name,price,emoji:getMeatEmoji(name,skus.length)});
+    saveSaleSkus(skus);
+  } else {
+    const all=getItemNames();
+    if(!all[typeId]) all[typeId]=[];
+    if(all[typeId].includes(name)) return alert('มีสินค้านี้อยู่แล้ว');
+    all[typeId].push(name);
+    saveItemNames(all);
+  }
   document.getElementById('new-item-name').value='';
+  document.getElementById('new-item-price').value='';
   renderItemNamesList();
   buildBuyTypeSelect();
+  buildSaleProductDatalist();
 }
-function delItemName(typeId,idx) {
-  if(!confirm('ลบสินค้านี้?')) return;
-  const all=getItemNames();
-  if(all[typeId]) all[typeId].splice(idx,1);
-  saveItemNames(all);
+
+function delItemName(typeId,encodedName) {
+  const name=decodeURIComponent(encodedName);
+  if(!confirm('ลบ "'+name+'" ?')) return;
+  if(typeId===SALE_TYPE_ID){
+    saveSaleSkus(getSaleSkus().filter(s=>s.name!==name));
+  } else {
+    const all=getItemNames();
+    if(all[typeId]) all[typeId]=all[typeId].filter(n=>n!==name);
+    saveItemNames(all);
+  }
   renderItemNamesList();
   buildBuyTypeSelect();
+  buildSaleProductDatalist();
+}
+
+function openEditItemModal(typeId,encodedName,price) {
+  const name=decodeURIComponent(encodedName);
+  document.getElementById('edit-item-old-type').value=typeId;
+  document.getElementById('edit-item-old-name').value=name;
+  document.getElementById('edit-item-name').value=name;
+  document.getElementById('edit-item-price').value=price||'';
+  // populate type select
+  const sel=document.getElementById('edit-item-type');
+  const types=getAllItemTypes();
+  sel.innerHTML=types.map(t=>`<option value="${t.id}"${t.id===typeId?' selected':''}>${t.label}</option>`).join('');
+  // show/hide price row
+  const priceRow=document.getElementById('edit-item-price-row');
+  priceRow.style.display=typeId===SALE_TYPE_ID?'block':'none';
+  sel.onchange=()=>{
+    priceRow.style.display=sel.value===SALE_TYPE_ID?'block':'none';
+  };
+  document.getElementById('edit-item-modal').style.display='flex';
+}
+
+function closeEditItemModal() {
+  document.getElementById('edit-item-modal').style.display='none';
+}
+
+function saveEditItem() {
+  const oldType=document.getElementById('edit-item-old-type').value;
+  const oldName=document.getElementById('edit-item-old-name').value;
+  const newName=document.getElementById('edit-item-name').value.trim();
+  const newType=document.getElementById('edit-item-type').value;
+  const newPrice=parseFloat(document.getElementById('edit-item-price').value)||0;
+  if(!newName) return alert('กรุณากรอกชื่อสินค้า');
+  // ลบของเก่า
+  if(oldType===SALE_TYPE_ID){
+    saveSaleSkus(getSaleSkus().filter(s=>s.name!==oldName));
+  } else {
+    const all=getItemNames();
+    if(all[oldType]) all[oldType]=all[oldType].filter(n=>n!==oldName);
+    saveItemNames(all);
+  }
+  // เพิ่มของใหม่
+  if(newType===SALE_TYPE_ID){
+    const skus=getSaleSkus();
+    skus.push({id:'sku_'+uid(),name:newName,price:newPrice,emoji:getMeatEmoji(newName,skus.length)});
+    saveSaleSkus(skus);
+  } else {
+    const all=getItemNames();
+    if(!all[newType]) all[newType]=[];
+    if(!all[newType].includes(newName)) all[newType].push(newName);
+    saveItemNames(all);
+  }
+  closeEditItemModal();
+  renderItemNamesList();
+  buildBuyTypeSelect();
+  buildSaleProductDatalist();
 }
 function renderSettings() { renderSettingsMenu(); } // legacy alias
 function renderSettingsMenu() { /* menu page - no dynamic content needed */ }
 function renderSubSetting(id) {
-  if(id==='set-salecats') renderSaleCatsList();
+  if(id==='set-salecats') { goSubSetting('set-itemnames'); return; } // redirect เก่า
   else if(id==='set-suppliers') { renderSuppliersList(); buildSupplierDatalist(); }
   else if(id==='set-buytypes') renderBuyTypesList();
   else if(id==='set-itemnames') { populateSetItemTypeSelect(); renderItemNamesList(); }
@@ -1474,55 +1650,6 @@ function addSupplierFromSettings() {
   buildSupplierDatalist();
 }
 
-function renderSaleCatsList() {
-  const skus = getSaleSkus();
-  const el = document.getElementById('sale-cats-list');
-  if(!el) return;
-  if(!skus.length) {
-    el.innerHTML='<div style="font-size:12px;color:var(--text2);">ยังไม่มีสินค้า</div>';
-    return;
-  }
-  el.innerHTML = skus.map((s,i)=>`
-    <div style="background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:20px;">${s.emoji||getMeatEmoji(s.name,i)}</span>
-      <div style="flex:1;">
-        <div style="font-size:14px;font-weight:600;">${s.name}</div>
-        <div style="font-size:11px;color:var(--text2);margin-top:2px;">ราคา/หน่วย: <b>${s.price>0?fmt(s.price)+' บาท':'ยังไม่ได้ตั้ง'}</b></div>
-      </div>
-      <input type="number" value="${s.price||''}" placeholder="ราคา" step="0.01" min="0"
-        style="width:90px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);"
-        oninput="updateSkuPrice('${s.id}', this.value)">
-      <button class="chip-del" onclick="delSaleCat('${s.id}')" style="font-size:16px;padding:4px 8px;">×</button>
-    </div>`).join('');
-}
-function updateSkuPrice(skuId, val) {
-  const skus = getSaleSkus();
-  const s = skus.find(x=>x.id===skuId);
-  if(!s) return;
-  s.price = parseFloat(val)||0;
-  saveSaleSkus(skus);
-  buildSaleMeatBtns();
-}
-function addSaleCat() {
-  const name = document.getElementById('new-sale-cat').value.trim();
-  const price = parseFloat(document.getElementById('new-sale-price').value)||0;
-  if(!name) return;
-  const skus = getSaleSkus();
-  if(skus.find(s=>s.name===name)) return alert('มีสินค้านี้อยู่แล้ว');
-  skus.push({id:'sku_'+uid(), name, price, emoji:getMeatEmoji(name, skus.length)});
-  saveSaleSkus(skus);
-  document.getElementById('new-sale-cat').value='';
-  document.getElementById('new-sale-price').value='';
-  renderSaleCatsList();
-  buildSaleMeatBtns();
-}
-function delSaleCat(skuId) {
-  if(!confirm('ลบสินค้านี้?')) return;
-  const skus = getSaleSkus().filter(s=>s.id!==skuId);
-  saveSaleSkus(skus);
-  renderSaleCatsList();
-  buildSaleMeatBtns();
-}
 
 function renderBuyTypesList() {
   const types=getBuyTypes();
