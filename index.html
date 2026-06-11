@@ -402,10 +402,56 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <button class="btn btn-primary" onclick="addLoan()">+ บันทึกรับเงินกู้</button>
     </div>
     <div id="loan-out" style="display:none">
-      <div class="form-group"><label>จำนวนที่จ่ายคืน (บาท)</label><input type="number" id="loanpay-amount" placeholder="0.00" step="0.01"></div>
-      <div class="form-group"><label>วันที่</label><input type="date" id="loanpay-date"></div>
-      <div class="form-group"><label>หมายเหตุ</label><input type="text" id="loanpay-note" placeholder="เช่น งวดที่ 1"></div>
-      <button class="btn btn-red" onclick="addLoanPay()">- บันทึกการจ่ายคืน</button>
+      <!-- ขั้นตอนที่ 1: เลือกสัญญา -->
+      <div class="form-group">
+        <label>เลือกสัญญาที่จะจ่ายคืน</label>
+        <select id="loanpay-contract-select" onchange="onLoanContractSelect()">
+          <option value="">-- เลือกสัญญา --</option>
+        </select>
+      </div>
+      <!-- แสดงข้อมูลสัญญาที่เลือก -->
+      <div id="loanpay-contract-info" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">📋 รายละเอียดสัญญา</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
+          <div style="background:var(--card);border-radius:8px;padding:8px 10px;">
+            <div style="color:var(--text2);font-size:10px;">เงินต้น</div>
+            <div style="font-weight:700;color:var(--accent);" id="lpci-principal">—</div>
+          </div>
+          <div style="background:var(--red-soft);border-radius:8px;padding:8px 10px;">
+            <div style="color:var(--text2);font-size:10px;">ดอกเบี้ย</div>
+            <div style="font-weight:700;color:var(--red);" id="lpci-interest">—</div>
+          </div>
+          <div style="background:var(--card);border-radius:8px;padding:8px 10px;">
+            <div style="color:var(--text2);font-size:10px;">ชำระแล้ว</div>
+            <div style="font-weight:700;color:var(--green);" id="lpci-paid">—</div>
+          </div>
+          <div style="background:var(--red-soft);border-radius:8px;padding:8px 10px;">
+            <div style="color:var(--text2);font-size:10px;">คงเหลือต้องจ่าย</div>
+            <div style="font-weight:700;color:var(--red);" id="lpci-remain">—</div>
+          </div>
+        </div>
+        <!-- progress bar -->
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px;">
+            <span>ความคืบหน้า</span><span id="lpci-pct" style="font-weight:700;">0%</span>
+          </div>
+          <div style="background:var(--card);border-radius:6px;height:10px;overflow:hidden;">
+            <div id="lpci-bar" style="height:100%;border-radius:6px;background:var(--green);width:0%;transition:width 0.5s ease;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ขั้นตอนที่ 2: กรอกจำนวนที่จ่าย -->
+      <div id="loanpay-fields" style="display:none;">
+        <div class="form-group"><label>จำนวนที่จ่ายคืน (บาท)</label><input type="number" id="loanpay-amount" placeholder="0.00" step="0.01"></div>
+        <div class="form-group"><label>วันที่</label><input type="date" id="loanpay-date"></div>
+        <div class="form-group"><label>หมายเหตุ</label><input type="text" id="loanpay-note" placeholder="เช่น งวดที่ 1"></div>
+        <button class="btn btn-red" onclick="addLoanPay()">- บันทึกการจ่ายคืน</button>
+      </div>
+      <!-- กรณียังไม่มีสัญญา -->
+      <div id="loanpay-no-contract" style="display:none;text-align:center;padding:24px 12px;color:var(--text2);font-size:13px;">
+        <div style="font-size:32px;margin-bottom:8px;">🏦</div>
+        ยังไม่มีรายการกู้ — กรุณาบันทึกรับเงินกู้ก่อน
+      </div>
     </div>
     <div class="divider"></div>
     <div class="loan-box">
@@ -1129,6 +1175,7 @@ function loanTab(btn,id) {
   document.getElementById(id).style.display='block';
   btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  if(id==='loan-out') buildLoanContractSelect();
 }
 function repMainTab(btn,id) { /* legacy - now using separate pages */ }
 function reportTab(btn,id) { repMainTab(btn,id); }
@@ -1468,14 +1515,108 @@ function addLoan() {
     renderLoanStatus(); updateDashboard();
   });
 }
+// สร้าง dropdown รายการสัญญา
+function buildLoanContractSelect() {
+  const loans = DB.get(KEY.loan);
+  const pays = DB.get(KEY.loanpay);
+  const sel = document.getElementById('loanpay-contract-select');
+  const noContract = document.getElementById('loanpay-no-contract');
+  const fields = document.getElementById('loanpay-fields');
+  if(!sel) return;
+  if(!loans.length) {
+    sel.style.display='none';
+    if(noContract) noContract.style.display='block';
+    if(fields) fields.style.display='none';
+    return;
+  }
+  sel.style.display='';
+  if(noContract) noContract.style.display='none';
+  sel.innerHTML = '<option value="">-- เลือกสัญญา --</option>' + loans.map(ln=>{
+    const due = ln.totalDue || ln.amount;
+    const paidForThis = pays.filter(p=>p.loanId===ln.id).reduce((s,p)=>s+p.amount,0);
+    const remain = Math.max(0, due - paidForThis);
+    const rate = ln.interestRate>0 ? ` · ${ln.interestRate}%/ปี` : ' · ไม่มีดอก';
+    const src = ln.source ? ln.source : 'เงินกู้';
+    const status = remain<=0 ? ' ✅' : '';
+    return `<option value="${ln.id}">${src}${rate} | คงเหลือ ${fmt(remain)}${status}</option>`;
+  }).join('');
+  sel.value='';
+  document.getElementById('loanpay-contract-info').style.display='none';
+  if(fields) fields.style.display='none';
+}
+
+// เมื่อเลือกสัญญา
+function onLoanContractSelect() {
+  const sel = document.getElementById('loanpay-contract-select');
+  const loanId = sel.value;
+  const info = document.getElementById('loanpay-contract-info');
+  const fields = document.getElementById('loanpay-fields');
+  if(!loanId) {
+    info.style.display='none';
+    if(fields) fields.style.display='none';
+    return;
+  }
+  const loans = DB.get(KEY.loan);
+  const pays = DB.get(KEY.loanpay);
+  const ln = loans.find(l=>l.id===loanId);
+  if(!ln) return;
+  const due = ln.totalDue || ln.amount;
+  const interest = due - ln.amount;
+  const paidForThis = pays.filter(p=>p.loanId===loanId).reduce((s,p)=>s+p.amount,0);
+  const remain = Math.max(0, due - paidForThis);
+  const pct = due>0 ? Math.min(100, paidForThis/due*100) : 0;
+  document.getElementById('lpci-principal').textContent = fmt(ln.amount);
+  document.getElementById('lpci-interest').textContent = ln.interestRate>0 ? `${fmt(interest)} (${ln.interestRate}%/ปี)` : 'ไม่มีดอกเบี้ย';
+  document.getElementById('lpci-paid').textContent = fmt(paidForThis);
+  document.getElementById('lpci-remain').textContent = fmt(remain);
+  document.getElementById('lpci-pct').textContent = Math.round(pct)+'%';
+  document.getElementById('lpci-bar').style.width = pct+'%';
+  document.getElementById('lpci-bar').style.background = pct>=100 ? 'var(--green)' : pct>=50 ? 'var(--accent)' : 'var(--red)';
+  info.style.display='block';
+  const done = document.getElementById('loan-paid-done');
+  if(done) done.remove();
+  if(fields) {
+    if(remain<=0) {
+      fields.style.display='none';
+      info.insertAdjacentHTML('afterend','<div id="loan-paid-done" style="text-align:center;padding:12px;color:var(--green);font-size:13px;font-weight:600;">✅ ชำระครบแล้ว</div>');
+    } else {
+      fields.style.display='block';
+    }
+  }
+}
+
 function addLoanPay() {
-  const amount=parseFloat(document.getElementById('loanpay-amount').value);
-  const date=document.getElementById('loanpay-date').value;
-  const note=document.getElementById('loanpay-note').value.trim();
-  if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  const list=DB.get(KEY.loanpay); list.push({id:uid(),amount,date,note,ts:Date.now()}); DB.set(KEY.loanpay,list);
-  document.getElementById('loanpay-amount').value=''; document.getElementById('loanpay-note').value='';
-  renderLoanStatus(); updateDashboard();
+  const loanId = document.getElementById('loanpay-contract-select').value;
+  const amount = parseFloat(document.getElementById('loanpay-amount').value);
+  const date = document.getElementById('loanpay-date').value;
+  const note = document.getElementById('loanpay-note').value.trim();
+  if(!loanId) return alert('กรุณาเลือกสัญญาก่อน');
+  if(!amount||!date) return alert('กรุณากรอกจำนวนเงินและวันที่');
+  const loans = DB.get(KEY.loan);
+  const ln = loans.find(l=>l.id===loanId);
+  if(!ln) return alert('ไม่พบสัญญา');
+  const due = ln.totalDue || ln.amount;
+  const pays = DB.get(KEY.loanpay);
+  const paidSoFar = pays.filter(p=>p.loanId===loanId).reduce((s,p)=>s+p.amount,0);
+  const remain = Math.max(0, due - paidSoFar);
+  const src = ln.source || 'เงินกู้';
+  showConfirm('🏦 ยืนยันจ่ายคืนหนี้',[
+    ['สัญญา', src + (ln.interestRate>0 ? ` (${ln.interestRate}%/ปี)` : '')],
+    ['จ่ายคืนครั้งนี้', fmt(amount)],
+    ['คงเหลือหลังจ่าย', fmt(Math.max(0, remain-amount))],
+    ['วันที่', date],
+    ['หมายเหตุ', note||'—'],
+  ],()=>{
+    const list = DB.get(KEY.loanpay);
+    list.push({id:uid(), loanId, amount, date, note, ts:Date.now()});
+    DB.set(KEY.loanpay, list);
+    document.getElementById('loanpay-amount').value='';
+    document.getElementById('loanpay-note').value='';
+    buildLoanContractSelect();
+    document.getElementById('loanpay-contract-select').value = loanId;
+    onLoanContractSelect();
+    renderLoanStatus(); updateDashboard();
+  });
 }
 function renderLoanStatus() {
   const loans=DB.get(KEY.loan); const pays=DB.get(KEY.loanpay);
@@ -2920,28 +3061,58 @@ function renderRepLoan() {
     </div>`;
   });
 
-  // ประวัติการจ่ายคืน
-  html+=`<div style="font-size:13px;font-weight:700;margin:14px 0 8px;">💸 ประวัติการจ่ายคืน</div>`;
-  const sortedPays=pays.sort((a,b)=>a.date.localeCompare(b.date));
-  if(!sortedPays.length){
-    html+=`<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">ยังไม่มีประวัติการจ่ายคืน</div>`;
-  } else {
-    let runRemain=totalDue;
-    html+=`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">`;
-    html+=`<div style="background:var(--card2);padding:7px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;font-size:10px;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);">
-      <span>วันที่</span><span>หมายเหตุ</span><span style="text-align:right;">จ่ายคืน</span><span style="text-align:right;">คงเหลือ</span>
-    </div>`;
-    sortedPays.forEach((p,idx)=>{
-      runRemain=Math.max(0,runRemain-p.amount);
-      const bg=idx%2===0?'var(--card)':'var(--card2)';
-      html+=`<div style="background:${bg};padding:8px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;align-items:center;border-top:1px solid var(--border);">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDateFull(p.date)}</div>
-        <div style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.note||'—'}</div>
-        <div style="font-size:12px;font-weight:700;color:var(--green);text-align:right;">−${fmt(p.amount)}</div>
-        <div style="font-size:12px;font-weight:700;color:${runRemain>0?'var(--red)':'var(--green)'};text-align:right;">${fmt(runRemain)}</div>
+  // ประวัติการจ่ายคืน (แยกต่อสัญญา)
+  html+=`<div style="font-size:13px;font-weight:700;margin:14px 0 8px;">💸 ประวัติการจ่ายคืน (แยกตามสัญญา)</div>`;
+  const sortedLoans=[...loans].sort((a,b)=>a.date.localeCompare(b.date));
+  const allPaysHasContract=pays.every(p=>p.loanId);
+  // แสดงแยกตามสัญญา
+  sortedLoans.forEach((ln,li)=>{
+    const due=ln.totalDue||ln.amount;
+    const lnPays=pays.filter(p=>p.loanId===ln.id).sort((a,b)=>a.date.localeCompare(b.date));
+    // รวมถึงรายการเก่าที่ไม่มี loanId (แบ่งสัดส่วน legacy: ถ้าสัญญาเดียวใส่ทั้งหมด)
+    const legacyPays=(li===0&&!allPaysHasContract)?pays.filter(p=>!p.loanId).sort((a,b)=>a.date.localeCompare(b.date)):[];
+    const allLnPays=[...lnPays,...legacyPays].sort((a,b)=>a.date.localeCompare(b.date));
+    const paidForThis=allLnPays.reduce((s,p)=>s+p.amount,0);
+    const remainForThis=Math.max(0,due-paidForThis);
+    const pctThis=due>0?Math.min(100,paidForThis/due*100):0;
+    const barCol=pctThis>=100?'var(--green)':pctThis>=50?'var(--accent)':'var(--red)';
+    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);">
+      <div style="background:var(--card2);padding:10px 14px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="font-size:13px;font-weight:700;">${ln.source||'เงินกู้ #'+(li+1)}</div>
+          ${ln.interestRate>0?`<span style="font-size:10px;background:var(--red-soft);color:var(--red);border-radius:5px;padding:2px 6px;">${ln.interestRate}%/ปี</span>`:'<span style="font-size:10px;background:var(--green-soft);color:var(--green);border-radius:5px;padding:2px 6px;">ไม่มีดอก</span>'}
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;">
+          <span>ชำระแล้ว ${fmt(paidForThis)} / ${fmt(due)}</span>
+          <span style="font-weight:700;color:${barCol};">${Math.round(pctThis)}%</span>
+        </div>
+        <div style="background:var(--card);border-radius:5px;height:8px;overflow:hidden;">
+          <div style="height:100%;border-radius:5px;background:${barCol};width:${pctThis}%;"></div>
+        </div>
       </div>`;
-    });
+    if(!allLnPays.length){
+      html+=`<div style="padding:14px;text-align:center;font-size:12px;color:var(--text2);">ยังไม่มีประวัติการจ่ายในสัญญานี้</div>`;
+    } else {
+      let runR=due;
+      html+=`<div style="background:var(--card2);padding:6px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;font-size:10px;font-weight:700;color:var(--text2);">
+        <span>วันที่</span><span>หมายเหตุ</span><span style="text-align:right;">จ่ายคืน</span><span style="text-align:right;">คงเหลือ</span>
+      </div>`;
+      allLnPays.forEach((p,idx)=>{
+        runR=Math.max(0,runR-p.amount);
+        const bg=idx%2===0?'var(--card)':'var(--card2)';
+        html+=`<div style="background:${bg};padding:7px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;align-items:center;border-top:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDateFull(p.date)}</div>
+          <div style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.note||'—'}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--green);text-align:right;">−${fmt(p.amount)}</div>
+          <div style="font-size:12px;font-weight:700;color:${runR>0?'var(--red)':'var(--green)'};text-align:right;">${fmt(runR)}</div>
+        </div>`;
+      });
+    }
     html+=`</div>`;
+  });
+  // ถ้าไม่มีการจ่ายเลย
+  if(!pays.length){
+    html+=`<div style="text-align:center;padding:20px;color:var(--text2);font-size:13px;">ยังไม่มีประวัติการจ่ายคืน</div>`;
   }
 
   el.innerHTML=html;
