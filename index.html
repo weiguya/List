@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ร้านของฉัน</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -184,6 +185,23 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .payout-btn{background:var(--green);border:none;color:#fff;border-radius:8px;padding:6px 14px;font-family:'Prompt',sans-serif;font-size:12px;font-weight:500;cursor:pointer;}
 .export-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1.5px solid var(--accent);color:var(--accent);border-radius:12px;padding:14px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-bottom:10px;transition:background 0.15s;}
 .export-btn:active{background:var(--blue-soft);}
+
+/* LOGIN PAGE */
+#login-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
+#login-page.show{display:flex;}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(69,117,243,0.12);}
+.login-logo{font-size:40px;text-align:center;margin-bottom:8px;}
+.login-title{font-size:20px;font-weight:700;text-align:center;color:var(--accent);margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--text2);text-align:center;margin-bottom:22px;}
+.login-tab{display:flex;gap:0;margin-bottom:18px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+.login-tab-btn{flex:1;padding:10px;border:none;background:var(--card2);font-family:'Prompt',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all 0.2s;}
+.login-tab-btn.active{background:var(--accent);color:#fff;}
+.login-error{background:var(--red-soft);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:12px;display:none;}
+.login-error.show{display:block;}
+.login-loading{text-align:center;padding:12px;font-size:13px;color:var(--text2);display:none;}
+.login-loading.show{display:block;}
+/* USER CHIP in topbar */
+.user-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:none;border-radius:20px;padding:4px 10px;color:#fff;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -249,7 +267,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </button>
     <h1 id="topbar-title">🏪 Dashboard</h1>
   </div>
-  <span class="topdate" id="topDate"></span>
+  <button class="user-chip" id="user-chip" onclick="showUserMenu()" style="display:none;">👤 <span id="user-email-short"></span></button><span class="topdate" id="topDate"></span>
 </div>
 
 <!-- PAGE: DASHBOARD -->
@@ -3118,6 +3136,90 @@ function renderRepLoan() {
   el.innerHTML=html;
 }
 
+
+// ============ SUPABASE ============
+const SUPA_URL = 'https://gvwhbyunoeytixetjffz.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2d2hieXVub2V5dGl4ZXRqZmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNTkzOTIsImV4cCI6MjA5NjczNTM5Mn0.iQqZgvCHN9lPgIDFfFjI8EPgfH7dP7BQ2MCWyQVytro';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+let _currentUser = null;
+
+// ============ AUTH FUNCTIONS ============
+function switchLoginTab(tab) {
+  document.getElementById('login-form').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('lt-login').classList.toggle('active', tab==='login');
+  document.getElementById('lt-register').classList.toggle('active', tab==='register');
+  document.getElementById('login-error').classList.remove('show');
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function setLoginLoading(on) {
+  document.getElementById('login-loading').classList.toggle('show', on);
+  document.getElementById('login-form').style.opacity = on ? '0.4' : '1';
+  document.getElementById('register-form').style.opacity = on ? '0.4' : '1';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if(!email || !password) return showLoginError('กรุณากรอกอีเมลและรหัสผ่าน');
+  setLoginLoading(true);
+  document.getElementById('login-error').classList.remove('show');
+  const { error } = await supa.auth.signInWithPassword({ email, password });
+  setLoginLoading(false);
+  if(error) return showLoginError('เข้าสู่ระบบไม่ได้: ' + (error.message === 'Invalid login credentials' ? 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' : error.message));
+}
+
+async function doRegister() {
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  if(!email || !password) return showLoginError('กรุณากรอกอีเมลและรหัสผ่าน');
+  if(password.length < 6) return showLoginError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+  setLoginLoading(true);
+  document.getElementById('login-error').classList.remove('show');
+  const { error } = await supa.auth.signUp({ email, password });
+  setLoginLoading(false);
+  if(error) return showLoginError('สมัครไม่ได้: ' + error.message);
+  alert('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+  switchLoginTab('login');
+  document.getElementById('login-email').value = email;
+}
+
+function onUserLoggedIn(user) {
+  _currentUser = user;
+  document.getElementById('login-page').classList.remove('show');
+  const chip = document.getElementById('user-chip');
+  chip.style.display = 'flex';
+  const short = user.email.split('@')[0];
+  document.getElementById('user-email-short').textContent = short.length > 10 ? short.slice(0,10)+'…' : short;
+}
+
+function onUserLoggedOut() {
+  _currentUser = null;
+  document.getElementById('login-page').classList.add('show');
+  document.getElementById('user-chip').style.display = 'none';
+}
+
+function showUserMenu() {
+  if(confirm('ออกจากระบบ?')) {
+    supa.auth.signOut();
+  }
+}
+
+// ============ AUTH STATE LISTENER ============
+supa.auth.onAuthStateChange((event, session) => {
+  if(session && session.user) {
+    onUserLoggedIn(session.user);
+  } else {
+    onUserLoggedOut();
+  }
+});
+
 // ============ INIT ============
 const d=new Date();
 const dateStr=d.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short',year:'2-digit'});
@@ -3151,6 +3253,43 @@ updateDashboard();
       <button id="ram-edit-btn" class="btn btn-primary" onclick="ramDoEdit()">✏️ แก้ไข</button>
       <button class="btn btn-red" onclick="ramDoDelete()">🗑 ลบ</button>
     </div>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="login-page" class="show">
+  <div class="login-box">
+    <div class="login-logo">🏪</div>
+    <div class="login-title">ร้านของฉัน</div>
+    <div class="login-sub">เข้าสู่ระบบเพื่อจัดการร้าน</div>
+    <div class="login-tab">
+      <button class="login-tab-btn active" id="lt-login" onclick="switchLoginTab('login')">เข้าสู่ระบบ</button>
+      <button class="login-tab-btn" id="lt-register" onclick="switchLoginTab('register')">สมัครสมาชิก</button>
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <div id="login-form">
+      <div class="form-group">
+        <label>อีเมล</label>
+        <input type="email" id="login-email" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่าน</label>
+        <input type="password" id="login-password" placeholder="รหัสผ่าน" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()" style="margin-top:4px;">เข้าสู่ระบบ</button>
+    </div>
+    <div id="register-form" style="display:none;">
+      <div class="form-group">
+        <label>อีเมล</label>
+        <input type="email" id="reg-email" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่าน (อย่างน้อย 6 ตัว)</label>
+        <input type="password" id="reg-password" placeholder="รหัสผ่าน" autocomplete="new-password">
+      </div>
+      <button class="btn btn-green" onclick="doRegister()" style="margin-top:4px;">สมัครสมาชิก</button>
+    </div>
+    <div class="login-loading" id="login-loading">⏳ กรุณารอสักครู่...</div>
   </div>
 </div>
 </body>
