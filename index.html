@@ -3300,14 +3300,15 @@ supa.auth.onAuthStateChange(async (event, session) => {
 async function loadProfileAndRoute(user) {
   try {
     const isSA = user.email === SUPERADMIN_EMAIL;
+    showLoginError('DEBUG 1: โหลด profile...');
     let { data: profile, error: profErr } = await supa
       .from('profiles').select('*').eq('id', user.id).single();
-
     if(profErr && profErr.code !== 'PGRST116') {
+      showLoginError('DEBUG ERR: ' + profErr.message);
       setLoginLoading(false);
-      showLoginError('โหลดข้อมูลไม่ได้: ' + profErr.message);
       await supa.auth.signOut(); return;
     }
+    showLoginError('DEBUG 2: role=' + profile?.role + ' status=' + profile?.status);
 
     // ยังไม่มี profile → สร้างใหม่
     if(!profile) {
@@ -3354,27 +3355,23 @@ async function showShopSelectOrEnter(user, profile) {
   let shops = [];
   try {
     if(profile?.role === 'superadmin') {
+      showLoginError('DEBUG 3: query shops...');
+      document.getElementById('login-page').classList.add('show');
       const { data: ownShops, error: shopErr } = await supa.from('shops').select('*').eq('owner_id', user.id);
-      if(shopErr) {
-        showLoginError('โหลดร้านไม่ได้: ' + shopErr.message);
-        document.getElementById('login-page').classList.add('show');
-        setLoginLoading(false);
-        await supa.auth.signOut(); return;
-      }
+      showLoginError('DEBUG 4: shops=' + (ownShops||[]).length + (shopErr?' ERR='+shopErr.message:' OK'));
+      if(shopErr) { setLoginLoading(false); await supa.auth.signOut(); return; }
       shops = (ownShops||[]).map(s => ({...s, myRole:'master'}));
     } else {
+      showLoginError('DEBUG 3: query shop_members...');
+      document.getElementById('login-page').classList.add('show');
       const { data: memberships, error: memErr } = await supa.from('shop_members')
         .select('*, shops(*)').eq('user_id', user.id).eq('status','active');
-      if(memErr) {
-        showLoginError('โหลดสิทธิ์ไม่ได้: ' + memErr.message);
-        document.getElementById('login-page').classList.add('show');
-        setLoginLoading(false);
-        await supa.auth.signOut(); return;
-      }
+      showLoginError('DEBUG 4: members=' + (memberships||[]).length + (memErr?' ERR='+memErr.message:' OK'));
+      if(memErr) { setLoginLoading(false); await supa.auth.signOut(); return; }
       shops = (memberships||[]).map(m => ({...m.shops, myRole: m.role, memberStatus: m.status}));
     }
   } catch(e) {
-    showLoginError('โหลดข้อมูลร้านไม่ได้: ' + e.message);
+    showLoginError('DEBUG CATCH: ' + e.message);
     document.getElementById('login-page').classList.add('show');
     setLoginLoading(false);
     await supa.auth.signOut();
@@ -3430,6 +3427,8 @@ async function enterShopById(shopId) {
 }
 
 async function enterShop(shop, profile) {
+  showLoginError('DEBUG 6: enterShop role=' + shop.myRole);
+  document.getElementById('login-page').classList.add('show');
   _currentShop = shop;
   document.getElementById('shop-select-page').classList.remove('show');
 
@@ -3452,12 +3451,13 @@ async function enterShop(shop, profile) {
     (short.length > 8 ? short.slice(0,8)+'…' : short) + ' · ' + shop.name;
 
   // ถ้า superadmin → เพิ่ม admin menu ใน sidebar
+  showLoginError('DEBUG 7: updateSidebar...');
   updateSidebarForRole(profile, shop);
-
-  // บล็อก/ซ่อน menu ตาม permission
   applyPermissionToSidebar();
-
+  showLoginError('DEBUG 8: updateDashboard...');
   updateDashboard();
+  showLoginError('DEBUG 9: เสร็จ!');
+  document.getElementById('login-page').classList.remove('show');
 }
 
 function updateSidebarForRole(profile, shop) {
