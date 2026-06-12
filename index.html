@@ -3174,7 +3174,7 @@ function renderRepLoan() {
 // ============ SUPABASE ============
 const SUPA_URL = 'https://gvwhbyunoeytixetjffz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2d2hieXVub2V5dGl4ZXRqZmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNTkzOTIsImV4cCI6MjA5NjczNTM5Mn0.iQqZgvCHN9lPgIDFfFjI8EPgfH7dP7BQ2MCWyQVytro';
-const SUPERADMIN_EMAIL = 'weiguya@gmail.com'; // ← เปลี่ยนตรงนี้เป็นอีเมลจริงของคุณ ต้องมีเครื่องหมาย ' ครอบ
+const SUPERADMIN_EMAIL = 'YOUREMAIL@gmail.com'; // ← เปลี่ยนตรงนี้เป็นอีเมลจริงของคุณ ต้องมีเครื่องหมาย ' ครอบ
 const supa = supabase.createClient(SUPA_URL, SUPA_KEY, {
   auth: { persistSession: true, autoRefreshToken: true }
 });
@@ -3235,9 +3235,7 @@ async function doLogin() {
   setLoginLoading(true);
   document.getElementById('login-error').classList.remove('show');
   try {
-    showLoginError('🔄 กำลัง signIn...');
     const { data, error } = await supa.auth.signInWithPassword({ email, password });
-    showLoginError('🔄 signIn done. error=' + (error ? error.message : 'none'));
     if(error) {
       const msg = error.message;
       if(msg.includes('Invalid login credentials')) return showLoginError('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
@@ -3245,7 +3243,6 @@ async function doLogin() {
       if(msg.includes('Too many requests')) return showLoginError('ลองใหม่อีกครั้งในอีกสักครู่');
       return showLoginError('เข้าสู่ระบบไม่ได้: ' + msg);
     }
-    showLoginError('🔄 รอ onAuthStateChange...');
   } catch(e) {
     showLoginError('❌ exception: ' + e.message);
     console.error('doLogin error:', e);
@@ -3302,14 +3299,11 @@ supa.auth.onAuthStateChange(async (event, session) => {
 async function loadProfileAndRoute(user) {
   try {
     const isSA = user.email === SUPERADMIN_EMAIL;
-    document.getElementById('login-error').classList.add('show');
-    document.getElementById('login-error').textContent = '🔄 loadProfile uid=' + user.id.slice(0,8);
-
     // โหลด profile พร้อม timeout
     let { data: profile, error: profErr } = await withTimeout(
       supa.from('profiles').select('*').eq('id', user.id).single()
     );
-    document.getElementById('login-error').textContent = '🔄 profile=' + JSON.stringify(profile) + ' err=' + (profErr?.message||'none');
+
 
     // ยังไม่มี profile → สร้างใหม่
     if(!profile) {
