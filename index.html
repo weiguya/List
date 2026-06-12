@@ -3174,7 +3174,7 @@ function renderRepLoan() {
 // ============ SUPABASE ============
 const SUPA_URL = 'https://gvwhbyunoeytixetjffz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2d2hieXVub2V5dGl4ZXRqZmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNTkzOTIsImV4cCI6MjA5NjczNTM5Mn0.iQqZgvCHN9lPgIDFfFjI8EPgfH7dP7BQ2MCWyQVytro';
-const SUPERADMIN_EMAIL = 'weiguya@gmail.com'; // ← เปลี่ยนตรงนี้เป็นอีเมลจริงของคุณ ต้องมีเครื่องหมาย ' ครอบ
+const SUPERADMIN_EMAIL = 'YOUREMAIL@gmail.com'; // ← เปลี่ยนตรงนี้เป็นอีเมลจริงของคุณ ต้องมีเครื่องหมาย ' ครอบ
 const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 let _currentUser = null;
@@ -3270,35 +3270,46 @@ supa.auth.onAuthStateChange(async (event, session) => {
 });
 
 async function loadProfileAndRoute(user) {
-  // โหลด profile
-  const { data: profile } = await supa.from('profiles').select('*').eq('id', user.id).single();
+  try {
+    let { data: profile } = await supa.from('profiles').select('*').eq('id', user.id).single();
 
-  // ถ้าเป็น email ของ superadmin → อัปเดต role เป็น superadmin
-  if(user.email === SUPERADMIN_EMAIL && profile?.role !== 'superadmin') {
-    await supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id);
-    profile.role = 'superadmin'; profile.status = 'active';
-  }
-  _currentProfile = profile;
+    if(!profile) {
+      const isSA = user.email === SUPERADMIN_EMAIL;
+      const { data: newProf } = await supa.from('profiles').upsert({
+        id: user.id, email: user.email,
+        role: isSA ? 'superadmin' : 'user',
+        status: isSA ? 'active' : 'pending'
+      }, { onConflict: 'id' }).select().single();
+      profile = newProf || { id:user.id, email:user.email, role:isSA?'superadmin':'user', status:isSA?'active':'pending' };
+    }
 
-  // ถ้า pending และไม่ใช่ superadmin → แจ้งรอ approve
-  if(profile?.status === 'pending' && profile?.role !== 'superadmin') {
+    if(user.email === SUPERADMIN_EMAIL && (profile.role !== 'superadmin' || profile.status !== 'active')) {
+      await supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id);
+      profile.role = 'superadmin'; profile.status = 'active';
+    }
+    _currentProfile = profile;
+    setLoginLoading(false);
+
+    if(profile.status === 'pending' && profile.role !== 'superadmin') {
+      document.getElementById('login-page').classList.remove('show');
+      alert('บัญชีของคุณยังรอ Admin อนุมัติ กรุณารอสักครู่');
+      supaSignOut(); return;
+    }
+    if(profile.status === 'suspended') {
+      document.getElementById('login-page').classList.remove('show');
+      alert('บัญชีของคุณถูกระงับการใช้งาน');
+      supaSignOut(); return;
+    }
+
     document.getElementById('login-page').classList.remove('show');
-    alert('บัญชีของคุณยังรอ Admin อนุมัติ กรุณารอสักครู่');
-    supaSignOut();
-    return;
-  }
-  if(profile?.status === 'suspended') {
-    document.getElementById('login-page').classList.remove('show');
-    alert('บัญชีของคุณถูกระงับการใช้งาน');
-    supaSignOut();
-    return;
-  }
+    await showShopSelectOrEnter(user, profile);
 
-  document.getElementById('login-page').classList.remove('show');
-
-  // superadmin → ไปเลือกร้านของตัวเอง (หรือสร้างถ้ายังไม่มี)
-  // master/staff → เลือกร้านที่สังกัด
-  await showShopSelectOrEnter(user, profile);
+  } catch(e) {
+    setLoginLoading(false);
+    console.error('loadProfileAndRoute error:', e);
+    document.getElementById('login-page').classList.add('show');
+    showLoginError('เกิดข้อผิดพลาด: ' + (e.message||'ไม่ทราบสาเหตุ'));
+  }
 }
 
 async function showShopSelectOrEnter(user, profile) {
@@ -3449,11 +3460,10 @@ function applyPermissionToSidebar() {
 function adminTab(btn, tabId) {
   document.querySelectorAll('#page-admin .tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('#page-admin .tab-bar + div, #page-admin .tab-bar ~ div').forEach(el => {
-    if(el.classList.contains('tab-bar')) return;
-    el.style.display = 'none';
+  ['adm-users','adm-shops','adm-reset'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = id === tabId ? 'block' : 'none';
   });
-  document.getElementById(tabId).style.display = 'block';
   if(tabId === 'adm-users') loadAdminUsers();
   if(tabId === 'adm-shops') loadAdminShops();
   if(tabId === 'adm-reset') loadResetShopSelect();
