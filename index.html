@@ -202,6 +202,40 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .login-loading.show{display:block;}
 /* USER CHIP in topbar */
 .user-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:none;border-radius:20px;padding:4px 10px;color:#fff;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;}
+
+/* SHOP SELECT SCREEN */
+#shop-select-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:9998;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
+#shop-select-page.show{display:flex;}
+.shop-card{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:20px 18px;margin-bottom:12px;width:100%;max-width:380px;cursor:pointer;transition:border-color 0.2s,transform 0.1s;box-shadow:var(--shadow);}
+.shop-card:active{transform:scale(0.98);border-color:var(--accent);}
+.shop-card.suspended{opacity:0.5;cursor:not-allowed;}
+.shop-card .sc-name{font-size:16px;font-weight:700;color:var(--text);}
+.shop-card .sc-role{font-size:11px;color:var(--text2);margin-top:3px;}
+.shop-card .sc-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:6px;display:inline-block;}
+.sc-status.active{background:var(--green-soft);color:var(--green);}
+.sc-status.suspended{background:var(--red-soft);color:var(--red);}
+.sc-status.pending{background:var(--yellow-soft);color:var(--yellow);}
+
+/* ADMIN PANEL */
+.admin-panel-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.admin-panel-card .apc-name{font-size:14px;font-weight:600;}
+.admin-panel-card .apc-meta{font-size:11px;color:var(--text2);margin-top:2px;}
+.role-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;}
+.role-badge.superadmin{background:#fef3c7;color:#92400e;}
+.role-badge.master{background:var(--blue-soft);color:var(--accent);}
+.role-badge.staff{background:var(--green-soft);color:var(--green);}
+.role-badge.pending{background:var(--red-soft);color:var(--red);}
+
+/* PERMISSION TOGGLE */
+.perm-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.perm-row:last-child{border-bottom:none;}
+.perm-label{font-size:13px;}
+.toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:24px;transition:0.3s;}
+.toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.3s;}
+.toggle-switch input:checked + .toggle-slider{background:var(--accent);}
+.toggle-switch input:checked + .toggle-slider:before{transform:translateX(20px);}
 </style>
 </head>
 <body>
@@ -255,7 +289,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </button>
   </nav>
   <div class="sidebar-footer">
-    <div class="version">v2.0 · ข้อมูลเก็บในเครื่อง</div>
+    <div class="version">v3.0 · Supabase</div>
   </div>
 </div>
 
@@ -3140,10 +3174,33 @@ function renderRepLoan() {
 // ============ SUPABASE ============
 const SUPA_URL = 'https://gvwhbyunoeytixetjffz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2d2hieXVub2V5dGl4ZXRqZmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNTkzOTIsImV4cCI6MjA5NjczNTM5Mn0.iQqZgvCHN9lPgIDFfFjI8EPgfH7dP7BQ2MCWyQVytro';
+const SUPERADMIN_EMAIL = 'prawit@admin.com'; // เปลี่ยนเป็นอีเมลของคุณ
 const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
-let _currentUser = null;
 
-// ============ AUTH FUNCTIONS ============
+let _currentUser = null;
+let _currentProfile = null;
+let _currentShop = null; // { id, name, role } ร้านที่กำลังใช้งาน
+let _myPerms = {}; // { feature: true/false }
+
+// ============ FEATURES LIST ============
+const FEATURES = [
+  { key:'sale_add',       label:'💰 บันทึกยอดขาย' },
+  { key:'buy_add',        label:'💸 บันทึกรายจ่าย' },
+  { key:'sale_view',      label:'📊 ดูยอดขายรวม' },
+  { key:'report_income',  label:'📋 ดูรายงานรายรับ' },
+  { key:'report_expense', label:'📋 ดูรายงานรายจ่าย' },
+  { key:'report_movement',label:'📋 ดูรายงานเคลื่อนไหว' },
+  { key:'report_wages',   label:'👷 ดูรายงานค่าแรง/คอม/เช่า' },
+  { key:'report_loan',    label:'🏦 ดูรายงานเงินกู้' },
+  { key:'wage_view',      label:'👷 ดูค่าแรงตัวเอง' },
+  { key:'capital_view',   label:'💵 ดูเงินทุน' },
+  { key:'loan_view',      label:'🏦 ดูเงินกู้/หนี้' },
+  { key:'finance_page',   label:'💳 เข้าหน้าการเงิน' },
+  { key:'settings_page',  label:'⚙️ เข้าหน้าตั้งค่า' },
+  { key:'dashboard_cash', label:'💳 ดูเงินคงเหลือจริง' },
+];
+
+// ============ AUTH UI ============
 function switchLoginTab(tab) {
   document.getElementById('login-form').style.display = tab==='login' ? 'block' : 'none';
   document.getElementById('register-form').style.display = tab==='register' ? 'block' : 'none';
@@ -3151,13 +3208,10 @@ function switchLoginTab(tab) {
   document.getElementById('lt-register').classList.toggle('active', tab==='register');
   document.getElementById('login-error').classList.remove('show');
 }
-
 function showLoginError(msg) {
   const el = document.getElementById('login-error');
-  el.textContent = msg;
-  el.classList.add('show');
+  el.textContent = msg; el.classList.add('show');
 }
-
 function setLoginLoading(on) {
   document.getElementById('login-loading').classList.toggle('show', on);
   document.getElementById('login-form').style.opacity = on ? '0.4' : '1';
@@ -3172,7 +3226,7 @@ async function doLogin() {
   document.getElementById('login-error').classList.remove('show');
   const { error } = await supa.auth.signInWithPassword({ email, password });
   setLoginLoading(false);
-  if(error) return showLoginError('เข้าสู่ระบบไม่ได้: ' + (error.message === 'Invalid login credentials' ? 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' : error.message));
+  if(error) return showLoginError('เข้าสู่ระบบไม่ได้: ' + (error.message==='Invalid login credentials'?'อีเมลหรือรหัสผ่านไม่ถูกต้อง':error.message));
 }
 
 async function doRegister() {
@@ -3185,40 +3239,459 @@ async function doRegister() {
   const { error } = await supa.auth.signUp({ email, password });
   setLoginLoading(false);
   if(error) return showLoginError('สมัครไม่ได้: ' + error.message);
-  alert('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+  alert('สมัครสมาชิกสำเร็จ! รอ Admin อนุมัติก่อนเข้าใช้งาน');
   switchLoginTab('login');
   document.getElementById('login-email').value = email;
 }
 
-function onUserLoggedIn(user) {
-  _currentUser = user;
-  document.getElementById('login-page').classList.remove('show');
-  const chip = document.getElementById('user-chip');
-  chip.style.display = 'flex';
-  const short = user.email.split('@')[0];
-  document.getElementById('user-email-short').textContent = short.length > 10 ? short.slice(0,10)+'…' : short;
-}
-
-function onUserLoggedOut() {
-  _currentUser = null;
-  document.getElementById('login-page').classList.add('show');
-  document.getElementById('user-chip').style.display = 'none';
+function supaSignOut() {
+  _currentShop = null; _myPerms = {};
+  supa.auth.signOut();
 }
 
 function showUserMenu() {
-  if(confirm('ออกจากระบบ?')) {
-    supa.auth.signOut();
+  const role = _currentProfile?.role || '';
+  const shopName = _currentShop?.name || '—';
+  const msg = `ร้าน: ${shopName}\nอีเมล: ${_currentUser?.email}\nบทบาท: ${role}\n\nต้องการออกจากระบบ?`;
+  if(confirm(msg)) supaSignOut();
+}
+
+// ============ AUTH STATE ============
+supa.auth.onAuthStateChange(async (event, session) => {
+  if(session && session.user) {
+    _currentUser = session.user;
+    await loadProfileAndRoute(session.user);
+  } else {
+    _currentUser = null; _currentProfile = null; _currentShop = null; _myPerms = {};
+    document.getElementById('login-page').classList.add('show');
+    document.getElementById('shop-select-page').classList.remove('show');
+    document.getElementById('user-chip').style.display = 'none';
+  }
+});
+
+async function loadProfileAndRoute(user) {
+  // โหลด profile
+  const { data: profile } = await supa.from('profiles').select('*').eq('id', user.id).single();
+
+  // ถ้าเป็น email ของ superadmin → อัปเดต role เป็น superadmin
+  if(user.email === SUPERADMIN_EMAIL && profile?.role !== 'superadmin') {
+    await supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id);
+    profile.role = 'superadmin'; profile.status = 'active';
+  }
+  _currentProfile = profile;
+
+  // ถ้า pending และไม่ใช่ superadmin → แจ้งรอ approve
+  if(profile?.status === 'pending' && profile?.role !== 'superadmin') {
+    document.getElementById('login-page').classList.remove('show');
+    alert('บัญชีของคุณยังรอ Admin อนุมัติ กรุณารอสักครู่');
+    supaSignOut();
+    return;
+  }
+  if(profile?.status === 'suspended') {
+    document.getElementById('login-page').classList.remove('show');
+    alert('บัญชีของคุณถูกระงับการใช้งาน');
+    supaSignOut();
+    return;
+  }
+
+  document.getElementById('login-page').classList.remove('show');
+
+  // superadmin → ไปเลือกร้านของตัวเอง (หรือสร้างถ้ายังไม่มี)
+  // master/staff → เลือกร้านที่สังกัด
+  await showShopSelectOrEnter(user, profile);
+}
+
+async function showShopSelectOrEnter(user, profile) {
+  let shops = [];
+
+  if(profile?.role === 'superadmin') {
+    // superadmin ดูร้านของตัวเอง (owner) + ร้านที่เป็น member
+    const { data: ownShops } = await supa.from('shops').select('*').eq('owner_id', user.id);
+    shops = (ownShops||[]).map(s => ({...s, myRole:'master'}));
+  } else {
+    // ดูจาก shop_members
+    const { data: memberships } = await supa.from('shop_members')
+      .select('*, shops(*)')
+      .eq('user_id', user.id)
+      .eq('status','active');
+    shops = (memberships||[]).map(m => ({...m.shops, myRole: m.role, memberStatus: m.status}));
+  }
+
+  if(!shops.length) {
+    // superadmin ยังไม่มีร้าน → สร้างอัตโนมัติ
+    if(profile?.role === 'superadmin') {
+      const { data: newShop } = await supa.from('shops').insert({
+        name: 'ร้านค้า 01',
+        owner_id: user.id,
+        status: 'active'
+      }).select().single();
+      shops = [{...newShop, myRole:'master'}];
+    } else {
+      document.getElementById('shop-select-page').classList.add('show');
+      document.getElementById('shop-select-email').textContent = user.email;
+      document.getElementById('shop-select-list').innerHTML =
+        '<div style="text-align:center;padding:32px 16px;color:var(--text2);font-size:13px;"><div style="font-size:36px;margin-bottom:8px;">⏳</div>ยังไม่ได้รับสิทธิ์เข้าร้านใด<br>กรุณารอ Admin เพิ่มคุณเข้าร้าน</div>';
+      return;
+    }
+  }
+
+  if(shops.length === 1) {
+    // ร้านเดียว → เข้าเลย
+    await enterShop(shops[0], profile);
+  } else {
+    // หลายร้าน → แสดง shop select
+    showShopSelectScreen(shops, profile);
   }
 }
 
-// ============ AUTH STATE LISTENER ============
-supa.auth.onAuthStateChange((event, session) => {
-  if(session && session.user) {
-    onUserLoggedIn(session.user);
+function showShopSelectScreen(shops, profile) {
+  document.getElementById('shop-select-page').classList.add('show');
+  document.getElementById('shop-select-email').textContent = _currentUser?.email;
+  let html = '';
+  shops.forEach(shop => {
+    const suspended = shop.status === 'suspended';
+    html += `<div class="shop-card ${suspended?'suspended':''}" onclick="${suspended?'alert(\"ร้านนี้ถูกระงับชั่วคราว\")':'enterShopById(\"'+shop.id+'\")'}">
+      <div class="sc-name">🏪 ${shop.name}</div>
+      <div class="sc-role">บทบาท: ${shop.myRole==='master'?'Master (เจ้าของ)':'Staff'}</div>
+      <span class="sc-status ${shop.status}">${shop.status==='active'?'เปิดใช้งาน':shop.status==='suspended'?'ระงับชั่วคราว':'รอดำเนินการ'}</span>
+    </div>`;
+  });
+  document.getElementById('shop-select-list').innerHTML = html;
+}
+
+async function enterShopById(shopId) {
+  const { data: shop } = await supa.from('shops').select('*').eq('id', shopId).single();
+  if(!shop) return alert('ไม่พบข้อมูลร้าน');
+  const role = shop.owner_id === _currentUser.id ? 'master' : 'staff';
+  await enterShop({...shop, myRole: role}, _currentProfile);
+}
+
+async function enterShop(shop, profile) {
+  _currentShop = shop;
+  document.getElementById('shop-select-page').classList.remove('show');
+
+  // โหลด permissions ของ user นี้ในร้านนี้
+  if(shop.myRole === 'staff') {
+    const { data: perms } = await supa.from('permissions')
+      .select('*').eq('shop_id', shop.id).eq('user_id', _currentUser.id);
+    _myPerms = {};
+    (perms||[]).forEach(p => { _myPerms[p.feature] = p.enabled; });
   } else {
-    onUserLoggedOut();
+    // master/superadmin เข้าถึงทุก feature
+    _myPerms = Object.fromEntries(FEATURES.map(f => [f.key, true]));
   }
-});
+
+  // อัปเดต topbar
+  const chip = document.getElementById('user-chip');
+  chip.style.display = 'flex';
+  const short = (_currentUser.email||'').split('@')[0];
+  document.getElementById('user-email-short').textContent =
+    (short.length > 8 ? short.slice(0,8)+'…' : short) + ' · ' + shop.name;
+
+  // ถ้า superadmin → เพิ่ม admin menu ใน sidebar
+  updateSidebarForRole(profile, shop);
+
+  // บล็อก/ซ่อน menu ตาม permission
+  applyPermissionToSidebar();
+
+  updateDashboard();
+}
+
+function updateSidebarForRole(profile, shop) {
+  // เพิ่ม/ลบ Admin Panel ใน sidebar
+  let adminBtn = document.getElementById('nav-page-admin');
+  if(profile?.role === 'superadmin') {
+    if(!adminBtn) {
+      const sidebar = document.querySelector('.sidebar-menu');
+      const divider = document.createElement('div');
+      divider.className = 'sidebar-divider';
+      const btn = document.createElement('button');
+      btn.className = 'sidebar-item';
+      btn.id = 'nav-page-admin';
+      btn.innerHTML = '<span class="s-ico">🛡️</span>Admin Panel';
+      btn.onclick = function(){ goPage('page-admin', this); loadAdminPanel(); };
+      sidebar.appendChild(divider);
+      sidebar.appendChild(btn);
+    }
+  } else {
+    if(adminBtn) { adminBtn.previousSibling?.remove(); adminBtn.remove(); }
+  }
+
+  // อัปเดต footer version
+  const footer = document.querySelector('.sidebar-footer .version');
+  if(footer) footer.textContent = `v2.0 · ${shop.name} · ${profile?.role||'user'}`;
+}
+
+function applyPermissionToSidebar() {
+  if(!_currentShop || _currentShop.myRole !== 'staff') return;
+  // ซ่อนเมนูที่ไม่มีสิทธิ์
+  const map = {
+    'nav-page-income':   ['sale_add'],
+    'nav-page-buy':      ['buy_add'],
+    'nav-page-finance':  ['finance_page'],
+    'nav-page-settings': ['settings_page'],
+    'nav-rep-income':    ['report_income'],
+    'nav-rep-expense':   ['report_expense'],
+    'nav-rep-movement':  ['report_movement'],
+    'nav-rep-wages':     ['report_wages'],
+    'nav-rep-loan':      ['report_loan'],
+  };
+  Object.entries(map).forEach(([navId, feats]) => {
+    const el = document.getElementById(navId);
+    if(el) el.style.display = feats.some(f => _myPerms[f]) ? '' : 'none';
+  });
+  // ซ่อนยอดเงินคงเหลือใน dashboard
+  const cashCard = document.querySelector('#page-home .stat-card.full');
+  if(cashCard && !_myPerms['dashboard_cash']) cashCard.style.display = 'none';
+}
+
+// ============ ADMIN PANEL ============
+function adminTab(btn, tabId) {
+  document.querySelectorAll('#page-admin .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#page-admin .tab-bar + div, #page-admin .tab-bar ~ div').forEach(el => {
+    if(el.classList.contains('tab-bar')) return;
+    el.style.display = 'none';
+  });
+  document.getElementById(tabId).style.display = 'block';
+  if(tabId === 'adm-users') loadAdminUsers();
+  if(tabId === 'adm-shops') loadAdminShops();
+  if(tabId === 'adm-reset') loadResetShopSelect();
+}
+
+async function loadAdminPanel() {
+  loadAdminUsers();
+  loadResetShopSelect();
+}
+
+async function loadAdminUsers() {
+  const el = document.getElementById('adm-users-list');
+  if(!el) return;
+  el.innerHTML = '<div style="font-size:12px;color:var(--text2);">กำลังโหลด...</div>';
+
+  const { data: profiles } = await supa.from('profiles').select('*').order('created_at');
+  if(!profiles?.length) { el.innerHTML = '<div class="empty">ยังไม่มี user</div>'; return; }
+
+  let html = '';
+  for(const p of profiles) {
+    const roleColor = p.role==='superadmin'?'superadmin':p.role==='master'?'master':p.status==='pending'?'pending':'staff';
+    const roleLabel = p.role==='superadmin'?'Super Admin':p.role==='master'?'Master':p.status==='pending'?'รอ Approve':'Staff';
+    html += `<div class="admin-panel-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div>
+          <div class="apc-name">${p.display_name||p.email}</div>
+          <div class="apc-meta">${p.email}</div>
+          <div style="margin-top:4px;">
+            <span class="role-badge ${roleColor}">${roleLabel}</span>
+            ${p.status==='suspended'?'<span class="role-badge" style="background:var(--red-soft);color:var(--red);margin-left:4px;">ระงับ</span>':''}
+          </div>
+        </div>
+      </div>
+      ${p.status==='pending' && p.role!=='superadmin' ? `
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button onclick="approveUser('${p.id}')" style="flex:1;background:var(--green);border:none;color:#fff;border-radius:8px;padding:8px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;">✅ อนุมัติ</button>
+          <button onclick="rejectUser('${p.id}')" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:8px;padding:8px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;">❌ ปฏิเสธ</button>
+        </div>` : ''}
+      ${p.id !== _currentUser?.id ? `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${p.status==='active' ? `<button onclick="suspendUser('${p.id}')" style="background:var(--yellow-soft);border:1px solid var(--yellow);color:var(--yellow);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">⏸ ระงับ</button>` : ''}
+          ${p.status==='suspended' ? `<button onclick="unsuspendUser('${p.id}')" style="background:var(--green-soft);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">▶ ปลดระงับ</button>` : ''}
+          <button onclick="openPermForUser('${p.id}','${(p.display_name||p.email).replace(/'/g,'')}')" style="background:var(--blue-soft);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">🔐 จัดการสิทธิ์</button>
+          <button onclick="setUserMaster('${p.id}')" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">👑 ตั้งเป็น Master</button>
+        </div>` : '<div style="font-size:11px;color:var(--text2);">— บัญชีของคุณ —</div>'}
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+async function approveUser(userId) {
+  await supa.from('profiles').update({ status:'active', role:'staff' }).eq('id', userId);
+  loadAdminUsers();
+  alert('อนุมัติแล้ว');
+}
+async function rejectUser(userId) {
+  if(!confirm('ปฏิเสธและลบ user นี้?')) return;
+  await supa.from('profiles').delete().eq('id', userId);
+  loadAdminUsers();
+}
+async function suspendUser(userId) {
+  await supa.from('profiles').update({ status:'suspended' }).eq('id', userId);
+  loadAdminUsers();
+}
+async function unsuspendUser(userId) {
+  await supa.from('profiles').update({ status:'active' }).eq('id', userId);
+  loadAdminUsers();
+}
+async function setUserMaster(userId) {
+  await supa.from('profiles').update({ role:'master' }).eq('id', userId);
+  loadAdminUsers();
+}
+
+async function loadAdminShops() {
+  const el = document.getElementById('adm-shops-list');
+  if(!el) return;
+  el.innerHTML = '<div style="font-size:12px;color:var(--text2);">กำลังโหลด...</div>';
+  const { data: shops } = await supa.from('shops').select('*').order('created_at');
+  if(!shops?.length) { el.innerHTML = '<div class="empty">ยังไม่มีร้าน</div>'; return; }
+  let html = '';
+  shops.forEach(shop => {
+    html += `<div class="admin-panel-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="apc-name">🏪 ${shop.name}</div>
+          <div class="apc-meta">สร้าง ${new Date(shop.created_at).toLocaleDateString('th-TH')}</div>
+          <span class="sc-status ${shop.status}" style="margin-top:4px;">${shop.status==='active'?'เปิด':'ระงับ'}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${shop.status==='active' ? `<button onclick="suspendShop('${shop.id}')" style="background:var(--yellow-soft);border:1px solid var(--yellow);color:var(--yellow);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">⏸ ระงับ</button>` : `<button onclick="unsuspendShop('${shop.id}')" style="background:var(--green-soft);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">▶ เปิด</button>`}
+          <button onclick="openMemberReq('${shop.id}')" style="background:var(--blue-soft);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">👤 Members</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+async function adminCreateShop() {
+  const name = document.getElementById('new-shop-name').value.trim();
+  if(!name) return alert('กรุณากรอกชื่อร้าน');
+  const { error } = await supa.from('shops').insert({ name, owner_id: _currentUser.id, status:'active' });
+  if(error) return alert('เกิดข้อผิดพลาด: ' + error.message);
+  document.getElementById('new-shop-name').value = '';
+  loadAdminShops();
+  loadResetShopSelect();
+  alert('สร้างร้านสำเร็จ');
+}
+
+async function suspendShop(shopId) {
+  await supa.from('shops').update({ status:'suspended' }).eq('id', shopId);
+  loadAdminShops();
+}
+async function unsuspendShop(shopId) {
+  await supa.from('shops').update({ status:'active' }).eq('id', shopId);
+  loadAdminShops();
+}
+
+async function openMemberReq(shopId) {
+  const modal = document.getElementById('member-req-modal');
+  const listEl = document.getElementById('member-req-list');
+  listEl.innerHTML = 'กำลังโหลด...';
+  modal.classList.add('open');
+
+  const { data: members } = await supa.from('shop_members')
+    .select('*, profiles(email, display_name, role)')
+    .eq('shop_id', shopId);
+
+  if(!members?.length) { listEl.innerHTML = '<div class="empty">ยังไม่มี member</div>'; return; }
+  let html = '';
+  members.forEach(m => {
+    const name = m.profiles?.display_name || m.profiles?.email || m.user_id;
+    html += `<div class="admin-panel-card" style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="apc-name">${name}</div>
+          <div class="apc-meta">บทบาท: ${m.role} · สถานะ: ${m.status}</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          ${m.status==='pending'?`<button onclick="approveMember('${m.id}','${shopId}')" style="background:var(--green);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">✅ อนุมัติ</button>`:''}
+          <button onclick="removeMember('${m.id}','${shopId}')" style="background:var(--red-soft);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">✕ ลบ</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  listEl.innerHTML = html;
+}
+
+async function approveMember(memberId, shopId) {
+  await supa.from('shop_members').update({ status:'active' }).eq('id', memberId);
+  openMemberReq(shopId);
+}
+async function removeMember(memberId, shopId) {
+  if(!confirm('ลบ member นี้ออกจากร้าน?')) return;
+  await supa.from('shop_members').delete().eq('id', memberId);
+  openMemberReq(shopId);
+}
+
+// ============ PERMISSIONS ============
+let _permUserId = null;
+let _permShopId = null;
+
+async function openPermForUser(userId, userName) {
+  _permUserId = userId;
+  _permShopId = _currentShop?.id;
+  document.getElementById('perm-modal-name').textContent = userName;
+
+  const { data: existing } = await supa.from('permissions')
+    .select('*').eq('user_id', userId).eq('shop_id', _permShopId);
+
+  const permMap = {};
+  (existing||[]).forEach(p => { permMap[p.feature] = p.enabled; });
+
+  let html = '<div style="margin-bottom:12px;font-size:12px;color:var(--text2);">เปิด/ปิด feature ที่ user คนนี้เข้าถึงได้</div>';
+  FEATURES.forEach(f => {
+    const checked = permMap[f.key] !== undefined ? permMap[f.key] : false;
+    html += `<div class="perm-row">
+      <span class="perm-label">${f.label}</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="perm-${f.key}" ${checked?'checked':''}>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>`;
+  });
+  document.getElementById('perm-modal-body').innerHTML = html;
+  document.getElementById('perm-modal').classList.add('open');
+}
+
+async function savePermissions() {
+  if(!_permUserId || !_permShopId) return;
+  const upserts = FEATURES.map(f => ({
+    shop_id: _permShopId,
+    user_id: _permUserId,
+    feature: f.key,
+    enabled: document.getElementById('perm-'+f.key)?.checked || false
+  }));
+  const { error } = await supa.from('permissions').upsert(upserts, {
+    onConflict: 'shop_id,user_id,feature'
+  });
+  if(error) return alert('บันทึกไม่ได้: ' + error.message);
+  closePermModal();
+  alert('บันทึกสิทธิ์แล้ว');
+}
+
+function closePermModal() {
+  document.getElementById('perm-modal').classList.remove('open');
+  _permUserId = null;
+}
+
+// ============ FACTORY RESET ============
+async function loadResetShopSelect() {
+  const sel = document.getElementById('reset-shop-select');
+  if(!sel) return;
+  const { data: shops } = await supa.from('shops').select('*').eq('owner_id', _currentUser?.id);
+  sel.innerHTML = (shops||[]).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+}
+
+async function doFactoryReset() {
+  const shopId = document.getElementById('reset-shop-select').value;
+  const confirm1 = document.getElementById('reset-confirm-input').value;
+  if(confirm1 !== 'RESET') return alert('กรุณาพิมพ์ RESET ให้ถูกต้อง');
+  if(!shopId) return alert('กรุณาเลือกร้าน');
+  if(!confirm('⚠️ ยืนยันลบข้อมูลทั้งหมดในร้านนี้? ไม่สามารถกู้คืนได้')) return;
+
+  const tables = ['sales','expenses','loans','loan_payments','capital','wages','rents'];
+  for(const t of tables) {
+    await supa.from(t).delete().eq('shop_id', shopId);
+  }
+
+  // ล้าง localStorage ด้วย (settings)
+  Object.values(KEY).forEach(k => localStorage.removeItem(k));
+  localStorage.removeItem('last_buy_date');
+  localStorage.removeItem('last_sale_date');
+
+  document.getElementById('reset-confirm-input').value = '';
+  alert('✅ Factory Reset สำเร็จ ข้อมูลทั้งหมดถูกลบแล้ว');
+  updateDashboard();
+}
 
 // ============ INIT ============
 const d=new Date();
@@ -3241,7 +3714,85 @@ buildSupplierDatalist();
 updateDashboard();
 </script>
 
-<!-- ROW ACTION MODAL -->
+<!-- SHOP SELECT PAGE -->
+<div id="shop-select-page">
+  <div style="width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:40px;margin-bottom:8px;">🏪</div>
+      <div style="font-size:18px;font-weight:700;color:var(--accent);">เลือกร้านค้า</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="shop-select-email"></div>
+    </div>
+    <div id="shop-select-list"></div>
+    <button class="btn btn-outline btn-sm" onclick="supaSignOut()" style="margin-top:16px;width:100%;">ออกจากระบบ</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL PAGE -->
+<div class="page" id="page-admin">
+  <div class="section-title">🛡️ Admin Panel</div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="adminTab(this,'adm-users')">👤 Users</button>
+    <button class="tab-btn" onclick="adminTab(this,'adm-shops')">🏪 Shops</button>
+    <button class="tab-btn" onclick="adminTab(this,'adm-reset')">🗑 Reset</button>
+  </div>
+
+  <!-- TAB: Users -->
+  <div id="adm-users">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">จัดการ user ทั้งหมด</div>
+    <div id="adm-users-list"></div>
+  </div>
+
+  <!-- TAB: Shops -->
+  <div id="adm-shops" style="display:none;">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">จัดการร้านค้าทั้งหมด</div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">+ สร้างร้านใหม่</div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="new-shop-name" placeholder="ชื่อร้าน เช่น ร้าน 01" style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+        <button onclick="adminCreateShop()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">+ สร้าง</button>
+      </div>
+    </div>
+    <div id="adm-shops-list"></div>
+  </div>
+
+  <!-- TAB: Factory Reset -->
+  <div id="adm-reset" style="display:none;">
+    <div style="background:var(--red-soft);border:1.5px solid var(--red);border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:6px;">⚠️ Factory Reset</div>
+      <div style="font-size:12px;color:var(--red);">ลบข้อมูลทั้งหมดในร้านนี้ (sales, expenses, wages, loans, capital, rents) รวมถึง settings ทั้งหมด ไม่สามารถกู้คืนได้</div>
+    </div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">ร้านที่จะ reset:</div>
+    <select id="reset-shop-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);margin-bottom:14px;"></select>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">พิมพ์ <b>RESET</b> เพื่อยืนยัน</div>
+    <input type="text" id="reset-confirm-input" placeholder="พิมพ์ RESET" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);margin-bottom:14px;">
+    <button class="btn btn-red" onclick="doFactoryReset()">🗑 ยืนยัน Factory Reset</button>
+  </div>
+</div>
+
+<!-- PERMISSION MODAL -->
+<div class="modal-overlay" id="perm-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>🔐 จัดการสิทธิ์ — <span id="perm-modal-name"></span></span>
+      <button class="modal-close" onclick="closePermModal()">✕</button>
+    </div>
+    <div id="perm-modal-body"></div>
+    <button class="btn btn-primary" style="margin-top:12px;" onclick="savePermissions()">💾 บันทึกสิทธิ์</button>
+  </div>
+</div>
+
+<!-- MEMBER REQUEST MODAL -->
+<div class="modal-overlay" id="member-req-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>👤 คำขอเข้าร้าน</span>
+      <button class="modal-close" onclick="document.getElementById('member-req-modal').classList.remove('open')">✕</button>
+    </div>
+    <div id="member-req-list"></div>
+  </div>
+</div>
+
+
 <div class="modal-overlay" id="row-action-modal">
   <div class="modal" style="padding:20px 16px 28px;">
     <div class="modal-title">
