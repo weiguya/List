@@ -3174,8 +3174,18 @@ function renderRepLoan() {
 // ============ SUPABASE ============
 const SUPA_URL = 'https://gvwhbyunoeytixetjffz.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2d2hieXVub2V5dGl4ZXRqZmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNTkzOTIsImV4cCI6MjA5NjczNTM5Mn0.iQqZgvCHN9lPgIDFfFjI8EPgfH7dP7BQ2MCWyQVytro';
-const SUPERADMIN_EMAIL = 'weiguya@gmail.com'; // ← เปลี่ยนตรงนี้เป็นอีเมลจริงของคุณ ต้องมีเครื่องหมาย ' ครอบ
-const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+const SUPERADMIN_EMAIL = 'YOUREMAIL@gmail.com'; // ← เปลี่ยนตรงนี้เป็นอีเมลจริงของคุณ ต้องมีเครื่องหมาย ' ครอบ
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
+
+// Timeout wrapper สำหรับ Supabase calls (15วินาที)
+function withTimeout(promise, ms=15000) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('หมดเวลาเชื่อมต่อ กรุณาลองใหม่')), ms)
+  );
+  return Promise.race([promise, timeout]);
+}
 
 let _currentUser = null;
 let _currentProfile = null;
@@ -3224,9 +3234,22 @@ async function doLogin() {
   if(!email || !password) return showLoginError('กรุณากรอกอีเมลและรหัสผ่าน');
   setLoginLoading(true);
   document.getElementById('login-error').classList.remove('show');
-  const { error } = await supa.auth.signInWithPassword({ email, password });
-  setLoginLoading(false);
-  if(error) return showLoginError('เข้าสู่ระบบไม่ได้: ' + (error.message==='Invalid login credentials'?'อีเมลหรือรหัสผ่านไม่ถูกต้อง':error.message));
+  try {
+    const { data, error } = await supa.auth.signInWithPassword({ email, password });
+    if(error) {
+      const msg = error.message;
+      if(msg.includes('Invalid login credentials')) return showLoginError('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      if(msg.includes('Email not confirmed')) return showLoginError('กรุณายืนยันอีเมลก่อนเข้าใช้งาน');
+      if(msg.includes('Too many requests')) return showLoginError('ลองใหม่อีกครั้งในอีกสักครู่');
+      return showLoginError('เข้าสู่ระบบไม่ได้: ' + msg);
+    }
+    // onAuthStateChange จะจัดการต่อ
+  } catch(e) {
+    showLoginError('เชื่อมต่อไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
+    console.error('doLogin error:', e);
+  } finally {
+    setLoginLoading(false);
+  }
 }
 
 async function doRegister() {
@@ -3236,12 +3259,17 @@ async function doRegister() {
   if(password.length < 6) return showLoginError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
   setLoginLoading(true);
   document.getElementById('login-error').classList.remove('show');
-  const { error } = await supa.auth.signUp({ email, password });
-  setLoginLoading(false);
-  if(error) return showLoginError('สมัครไม่ได้: ' + error.message);
-  alert('สมัครสมาชิกสำเร็จ! รอ Admin อนุมัติก่อนเข้าใช้งาน');
-  switchLoginTab('login');
-  document.getElementById('login-email').value = email;
+  try {
+    const { error } = await supa.auth.signUp({ email, password });
+    if(error) return showLoginError('สมัครไม่ได้: ' + error.message);
+    alert('สมัครสมาชิกสำเร็จ!\nรอ Admin อนุมัติก่อนเข้าใช้งาน');
+    switchLoginTab('login');
+    document.getElementById('login-email').value = email;
+  } catch(e) {
+    showLoginError('เชื่อมต่อไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
+  } finally {
+    setLoginLoading(false);
+  }
 }
 
 function supaSignOut() {
@@ -3271,28 +3299,38 @@ supa.auth.onAuthStateChange(async (event, session) => {
 
 async function loadProfileAndRoute(user) {
   try {
-    let { data: profile } = await supa.from('profiles').select('*').eq('id', user.id).single();
+    const isSA = user.email === SUPERADMIN_EMAIL;
 
+    // โหลด profile พร้อม timeout
+    let { data: profile } = await withTimeout(
+      supa.from('profiles').select('*').eq('id', user.id).single()
+    );
+
+    // ยังไม่มี profile → สร้างใหม่
     if(!profile) {
-      const isSA = user.email === SUPERADMIN_EMAIL;
-      const { data: newProf } = await supa.from('profiles').upsert({
-        id: user.id, email: user.email,
-        role: isSA ? 'superadmin' : 'user',
-        status: isSA ? 'active' : 'pending'
-      }, { onConflict: 'id' }).select().single();
+      const { data: newProf } = await withTimeout(
+        supa.from('profiles').upsert({
+          id: user.id, email: user.email,
+          role: isSA ? 'superadmin' : 'user',
+          status: isSA ? 'active' : 'pending'
+        }, { onConflict: 'id' }).select().single()
+      );
       profile = newProf || { id:user.id, email:user.email, role:isSA?'superadmin':'user', status:isSA?'active':'pending' };
     }
 
-    if(user.email === SUPERADMIN_EMAIL && (profile.role !== 'superadmin' || profile.status !== 'active')) {
-      await supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id);
+    // อัปเกรด superadmin ถ้าจำเป็น
+    if(isSA && (profile.role !== 'superadmin' || profile.status !== 'active')) {
+      await withTimeout(
+        supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id)
+      );
       profile.role = 'superadmin'; profile.status = 'active';
     }
     _currentProfile = profile;
-    setLoginLoading(false);
 
+    // เช็คสถานะ
     if(profile.status === 'pending' && profile.role !== 'superadmin') {
       document.getElementById('login-page').classList.remove('show');
-      alert('บัญชีของคุณยังรอ Admin อนุมัติ กรุณารอสักครู่');
+      alert('บัญชีของคุณยังรอ Admin อนุมัติ');
       supaSignOut(); return;
     }
     if(profile.status === 'suspended') {
@@ -3305,37 +3343,44 @@ async function loadProfileAndRoute(user) {
     await showShopSelectOrEnter(user, profile);
 
   } catch(e) {
-    setLoginLoading(false);
     console.error('loadProfileAndRoute error:', e);
+    setLoginLoading(false);
     document.getElementById('login-page').classList.add('show');
-    showLoginError('เกิดข้อผิดพลาด: ' + (e.message||'ไม่ทราบสาเหตุ'));
+    showLoginError(e.message || 'เชื่อมต่อไม่ได้ กรุณาลองใหม่');
+    await supa.auth.signOut();
   }
 }
 
 async function showShopSelectOrEnter(user, profile) {
   let shops = [];
-
-  if(profile?.role === 'superadmin') {
-    // superadmin ดูร้านของตัวเอง (owner) + ร้านที่เป็น member
-    const { data: ownShops } = await supa.from('shops').select('*').eq('owner_id', user.id);
-    shops = (ownShops||[]).map(s => ({...s, myRole:'master'}));
-  } else {
-    // ดูจาก shop_members
-    const { data: memberships } = await supa.from('shop_members')
-      .select('*, shops(*)')
-      .eq('user_id', user.id)
-      .eq('status','active');
-    shops = (memberships||[]).map(m => ({...m.shops, myRole: m.role, memberStatus: m.status}));
+  try {
+    if(profile?.role === 'superadmin') {
+      const { data: ownShops } = await withTimeout(
+        supa.from('shops').select('*').eq('owner_id', user.id)
+      );
+      shops = (ownShops||[]).map(s => ({...s, myRole:'master'}));
+    } else {
+      const { data: memberships } = await withTimeout(
+        supa.from('shop_members').select('*, shops(*)').eq('user_id', user.id).eq('status','active')
+      );
+      shops = (memberships||[]).map(m => ({...m.shops, myRole: m.role, memberStatus: m.status}));
+    }
+  } catch(e) {
+    showLoginError('โหลดข้อมูลร้านไม่ได้: ' + e.message);
+    document.getElementById('login-page').classList.add('show');
+    await supa.auth.signOut();
+    return;
   }
 
   if(!shops.length) {
-    // superadmin ยังไม่มีร้าน → สร้างอัตโนมัติ
     if(profile?.role === 'superadmin') {
-      const { data: newShop } = await supa.from('shops').insert({
-        name: 'ร้านค้า 01',
-        owner_id: user.id,
-        status: 'active'
-      }).select().single();
+      const { data: newShop } = await withTimeout(
+        supa.from('shops').insert({
+          name: 'ร้านค้า 01',
+          owner_id: user.id,
+          status: 'active'
+        }).select().single()
+      );
       shops = [{...newShop, myRole:'master'}];
     } else {
       document.getElementById('shop-select-page').classList.add('show');
