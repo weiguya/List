@@ -3294,6 +3294,16 @@ async function doLogin() {
       if(msg.includes('Too many requests')) return showLoginError('ลองใหม่อีกครั้งในอีกสักครู่');
       return showLoginError('เข้าสู่ระบบไม่ได้: ' + msg);
     }
+    // login สำเร็จ → route เองเลย ไม่รอ onAuthStateChange
+    if(data && data.user) {
+      _currentUser = data.user;
+      _authHandling = true;
+      try {
+        await loadProfileAndRoute(data.user);
+      } finally {
+        _authHandling = false;
+      }
+    }
   } catch(e) {
     showLoginError('เชื่อมต่อไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
     console.error('doLogin error:', e);
