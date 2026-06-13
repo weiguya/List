@@ -396,6 +396,8 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
     <div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div>
     <button class="btn btn-green" onclick="confirmSale()">✅ บันทึกยอดขาย</button>
+    <div class="divider"></div>
+    <div id="sale-list"></div>
     <datalist id="sale-product-datalist"></datalist>
     <input type="hidden" id="sale-product-input">
     <input type="hidden" id="sale-amount">
@@ -1234,7 +1236,6 @@ function renderSuppliersList() {
     </div>`).join('') : '<div style="font-size:12px;color:var(--text2);">ยังไม่มีซัพพลายเออร์</div>';
 }
 function delSupplier(idx) {
-  if(!confirm('ลบซัพพลายเออร์นี้?')) return;
   const list = getSuppliers();
   list.splice(idx,1);
   saveSuppliers(list);
@@ -1568,8 +1569,27 @@ function confirmSale() {
 }
 
 
-function renderSaleList_noop() { /* list removed - see reports */ }
-function renderSaleList() { renderSaleList_noop(); }
+function renderSaleList_noop() { renderSaleList(); }
+function renderSaleList() {
+  const el = document.getElementById('sale-list');
+  if(!el) return;
+  const list = DB.get(KEY.sale).slice().sort((a,b)=>b.ts-a.ts).slice(0,30);
+  if(!list.length){ el.innerHTML='<div class="empty"><div class="empty-icon">💰</div>ยังไม่มียอดขาย</div>'; return; }
+  el.innerHTML = list.map(i=>`
+    <div class="list-item" ondblclick="openEditModal('${KEY.sale}','${i.id}',renderSaleList)" data-longpress="openEditModal('${KEY.sale}','${i.id}',renderSaleList)" style="cursor:pointer;">
+      <div style="flex:1">
+        <div class="item-name">${getMeatEmoji(i.meat,0)} ${i.meat||'ยอดขาย'}${i.note?' · '+i.note:''}</div>
+        <div class="item-meta">${fmtDate(i.date)}${i.qty?` · ${i.qty} × ${fmt(i.unitPrice)}`:''}  </div>
+      </div>
+      <span class="item-amount green">+${fmt(i.amount)}</span>
+    </div>`).join('');
+  // longpress support
+  el.querySelectorAll('[data-longpress]').forEach(el=>{
+    let t;
+    el.addEventListener('touchstart',()=>{ t=setTimeout(()=>eval(el.dataset.longpress),500); },{passive:true});
+    el.addEventListener('touchend',()=>clearTimeout(t),{passive:true});
+  });
+}
 
 // ============ CAPITAL ============
 function addCapital() {
@@ -1899,7 +1919,6 @@ function addItemName() {
 
 function delItemName(typeId,encodedName) {
   const name=decodeURIComponent(encodedName);
-  if(!confirm('ลบ "'+name+'" ?')) return;
   if(typeId===SALE_TYPE_ID){
     saveSaleSkus(getSaleSkus().filter(s=>s.name!==name));
   } else {
@@ -1938,7 +1957,6 @@ function closeEditItemModal() {
 function deleteEditItem() {
   const typeId=document.getElementById('edit-item-old-type').value;
   const name=document.getElementById('edit-item-old-name').value;
-  if(!confirm('ลบ "'+name+'" ?')) return;
   closeEditItemModal();
   if(typeId===SALE_TYPE_ID){
     saveSaleSkus(getSaleSkus().filter(s=>s.name!==name));
@@ -2058,7 +2076,6 @@ function addBuyType() {
   renderBuyTypesList();
 }
 function delBuyType(idx) {
-  if(!confirm('ลบประเภทนี้?')) return;
   const types=getBuyTypes(); types.splice(idx,1);
   localStorage.setItem(KEY.buyTypes,JSON.stringify(types));
   renderBuyTypesList();
@@ -2159,7 +2176,6 @@ function addEmployee() {
 }
 
 function delEmployee(id) {
-  if(!confirm('ลบพนักงานนี้?')) return;
   saveEmployees(getEmployees().filter(e=>e.id!==id));
   renderEmployeeList();
   buildEmpWageSelect();
