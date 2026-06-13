@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ร้านของฉัน</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -388,37 +387,22 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ยอดขาย -->
   <div id="inc-sale" class="inc-section">
-    <div class="form-group">
-      <label>สินค้า</label>
-      <div style="position:relative;">
-        <input type="text" id="sale-product-input" placeholder="พิมหรือกดเลือกสินค้า" autocomplete="off"
-          oninput="onSaleProductInput()"
-          style="width:100%;padding-right:40px;">
-        <datalist id="sale-product-datalist"></datalist>
-        <button onclick="toggleSaleDropdown()" type="button"
-          style="position:absolute;right:0;top:0;height:100%;width:40px;background:none;border:none;border-left:1.5px solid var(--border);cursor:pointer;font-size:16px;color:var(--text2);border-radius:0 10px 10px 0;">▾</button>
-      </div>
-      <div id="sale-dropdown" style="display:none;background:var(--card);border:1.5px solid var(--border);border-radius:10px;margin-top:4px;overflow:hidden;box-shadow:var(--shadow);max-height:220px;overflow-y:auto;"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="form-group"><label>จำนวน (ไม้/ชิ้น)</label>
-        <input type="number" id="sale-qty" placeholder="1" step="0.01" min="0" oninput="calcSaleTotal()">
-      </div>
-      <div class="form-group"><label>ราคา/หน่วย (บาท)</label>
-        <input type="number" id="sale-unit-price" placeholder="0.00" step="0.01" min="0" oninput="calcSaleTotal()" style="background:var(--blue-soft);">
-      </div>
-    </div>
-    <div class="form-group">
-      <label>ยอดขายรวม (บาท)</label>
-      <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--green);" id="sale-total-display">0</div>
-    </div>
-    <div class="form-group" style="margin-top:-6px">
-      <label style="font-size:11px;">แก้ยอดรวมได้เลย (เช่น กรณีแถม / ราคาพิเศษ)</label>
-      <input type="number" id="sale-amount" placeholder="0.00" step="0.01" oninput="onSaleAmountDirect()">
-    </div>
     <div class="form-group"><label>วันที่</label><input type="date" id="sale-date"></div>
+    <div id="sale-rows-wrap"></div>
+    <button onclick="addSaleRow()" type="button" style="width:100%;padding:11px;border-radius:10px;border:1.5px dashed var(--border);background:var(--card2);font-family:'Prompt',sans-serif;font-size:13px;color:var(--accent);cursor:pointer;margin-bottom:10px;">+ เพิ่มรายการ</button>
+    <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:13px;color:var(--green);font-weight:500;">ยอดรวมทั้งหมด</span>
+      <span style="font-size:22px;font-weight:700;color:var(--green);" id="sale-grand-total">฿0</span>
+    </div>
     <div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div>
-    <button class="btn btn-green" onclick="confirmSale()">+ บันทึกยอดขาย</button>
+    <button class="btn btn-green" onclick="confirmSale()">✅ บันทึกยอดขาย</button>
+    <datalist id="sale-product-datalist"></datalist>
+    <input type="hidden" id="sale-product-input">
+    <input type="hidden" id="sale-amount">
+    <input type="hidden" id="sale-qty">
+    <input type="hidden" id="sale-unit-price">
+    <div id="sale-total-display" style="display:none;"></div>
+    <div id="sale-dropdown" style="display:none;"></div>
   </div>
 
   <!-- TAB: รับจากหนี้ -->
@@ -614,43 +598,33 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ผู้บริหาร (ย้ายมาจาก settings) -->
   <div id="fin-admin" class="fin-section" style="display:none">
-    <div style="background:var(--blue-soft);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:var(--text2);border:1px solid var(--border);">
-      💡 เลือกช่วงวันที่ → ระบบคำนวณ % จากยอดขายในช่วงนั้นให้อัตโนมัติ
-    </div>
-    <!-- เลือกผู้บริหาร -->
     <div class="form-group">
       <label>เลือกผู้บริหาร</label>
-      <select id="admin-pay-select" onchange="calcAdminPay()">
+      <select id="admin-pay-select" onchange="renderAdminCal()">
         <option value="">-- เลือกผู้บริหาร --</option>
       </select>
     </div>
-    <!-- เลือกช่วงวันที่ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="admin-pay-from" onchange="calcAdminPay()"></div>
-      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="admin-pay-to" onchange="calcAdminPay()"></div>
+    <div id="admin-rate-display" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+      % ค่าคอม: <b id="admin-rate-val"></b> · คำนวณจากยอดขายแต่ละวัน
     </div>
-    <!-- แสดงผลคำนวณ -->
-    <div id="admin-pay-calc" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
-        <span style="color:var(--text2);">ยอดขายในช่วง</span>
-        <span style="font-weight:600;" id="admin-pay-sale-sum"></span>
+    <div id="admin-wage-cal-wrap" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <button onclick="adminCalPrevMonth()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:4px 14px;cursor:pointer;font-size:16px;">‹</button>
+        <span id="admin-cal-title" style="font-size:14px;font-weight:600;"></span>
+        <button onclick="adminCalNextMonth()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:4px 14px;cursor:pointer;font-size:16px;">›</button>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
-        <span style="color:var(--text2);">% ค่าคอม</span>
-        <span style="font-weight:600;" id="admin-pay-pct"></span>
+      <div id="admin-wage-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px;"></div>
+      <div id="admin-wage-summary" style="display:none;background:var(--green-soft);border:1px solid var(--green);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">วันที่เลือก</div>
+        <div style="font-size:12px;font-weight:500;margin-bottom:8px;" id="admin-wage-sel-days"></div>
+        <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;">
+          <span>ค่าคอมรวม</span><span class="green" id="admin-wage-total"></span>
+        </div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;border-top:1px solid var(--border);padding-top:8px;">
-        <span>ค่าคอมที่จะจ่าย</span>
-        <span class="green" id="admin-pay-amount"></span>
-      </div>
+      <button class="btn btn-green" id="admin-wage-pay-btn" onclick="payAdminWage()" style="display:none;">✅ จ่ายค่าคอมผู้บริหาร</button>
     </div>
-    <!-- คำเตือน -->
-    <div id="admin-pay-warn" style="display:none;background:var(--red-soft);border:1px solid var(--red);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--red);">
-      🚫 <span id="admin-pay-warn-text"></span>
-    </div>
-
-    <button class="btn btn-green" id="admin-pay-btn" onclick="payAdminCom()" style="display:none;">✅ อนุมัติจ่ายค่าคอม</button>
     <div class="divider"></div>
+    <div id="admin-pay-history"></div>
   </div>
 
   <!-- TAB: ค่าเช่า -->
@@ -935,7 +909,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div id="confirm-modal-body"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">
       <button class="btn btn-outline" onclick="closeConfirm()">ยกเลิก</button>
-      <button class="btn btn-green" id="confirm-ok-btn" onclick="alert('btn clicked')">✅ ยืนยัน</button>
+      <button class="btn btn-green" id="confirm-ok-btn">✅ ยืนยัน</button>
     </div>
   </div>
 </div>
@@ -949,137 +923,14 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
-<!-- SHOP SELECT PAGE -->
-<div id="shop-select-page">
-  <div style="width:100%;max-width:380px;">
-    <div style="text-align:center;margin-bottom:24px;">
-      <div style="font-size:40px;margin-bottom:8px;">🏪</div>
-      <div style="font-size:18px;font-weight:700;color:var(--accent);">เลือกร้านค้า</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="shop-select-email"></div>
-    </div>
-    <div id="shop-select-list"></div>
-    <button class="btn btn-outline btn-sm" onclick="supaSignOut()" style="margin-top:16px;width:100%;">ออกจากระบบ</button>
-  </div>
-</div>
-<!-- LOGIN PAGE -->
-<div id="login-page" class="show">
-  <div class="login-box">
-    <div class="login-logo">🏪</div>
-    <div class="login-title">ร้านของฉัน</div>
-    <div class="login-sub">เข้าสู่ระบบเพื่อจัดการร้าน</div>
-    <div class="login-tab">
-      <button class="login-tab-btn active" id="lt-login" onclick="switchLoginTab('login')">เข้าสู่ระบบ</button>
-      <button class="login-tab-btn" id="lt-register" onclick="switchLoginTab('register')">สมัครสมาชิก</button>
-    </div>
-    <div class="login-error" id="login-error"></div>
-    <div id="login-form">
-      <div class="form-group">
-        <label>อีเมล</label>
-        <input type="email" id="login-email" placeholder="example@email.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label>รหัสผ่าน</label>
-        <input type="password" id="login-password" placeholder="รหัสผ่าน" autocomplete="current-password">
-      </div>
-      <button class="btn btn-primary" onclick="doLogin()" style="margin-top:4px;">เข้าสู่ระบบ</button>
-    </div>
-    <div id="register-form" style="display:none;">
-      <div class="form-group">
-        <label>อีเมล</label>
-        <input type="email" id="reg-email" placeholder="example@email.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label>รหัสผ่าน (อย่างน้อย 6 ตัว)</label>
-        <input type="password" id="reg-password" placeholder="รหัสผ่าน" autocomplete="new-password">
-      </div>
-      <button class="btn btn-green" onclick="doRegister()" style="margin-top:4px;">สมัครสมาชิก</button>
-    </div>
-    <div class="login-loading" id="login-loading">⏳ กรุณารอสักครู่...</div>
-  </div>
-</div>
 <script>
 // ============ DATA ============
-// Supabase table map: KEY → table name + field mapping
-// Global auth state (ต้อง declare ก่อน SUPA_TABLE)
-let _currentUser = null;
-let _currentProfile = null;
-let _currentShop = null;
-let _myPerms = {};
-
-const SUPA_TABLE = {
-  shop_sale:     { table:'sales',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, product:r.meat||r.product||'', qty:r.qty||0, unit_price:r.unitPrice||0, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, meat:r.product, qty:Number(r.qty)||0, unitPrice:Number(r.unit_price)||0, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
-  shop_buy:      { table:'expenses',      toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, type:r.type||'', name:r.name||'', supplier:r.supplier||'', qty:r.qty||0, unit_price:r.unitPrice||0, amount:r.price||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, type:r.type||'', name:r.name||'', supplier:r.supplier||'', qty:Number(r.qty)||0, unitPrice:Number(r.unit_price)||0, price:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
-  shop_capital:  { table:'capital',       toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
-  shop_loan:     { table:'loans',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, source:r.source||'', amount:r.amount||0, interest_rate:r.interestRate||0, total_due:r.totalDue||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, source:r.source||'', amount:Number(r.amount)||0, interestRate:Number(r.interest_rate)||0, totalDue:Number(r.total_due)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
-  shop_loanpay:  { table:'loan_payments', toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, loan_id:r.loanId||'', amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, loanId:r.loan_id||'', amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
-  shop_wage:     { table:'wages',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, name:r.name||'', amount:r.amount||0, date:r.date, note:r.note||'', type:r.type||'wage', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, name:r.name||'', amount:Number(r.amount)||0, date:r.date, note:r.note||'', type:r.type||'wage', ts:r.ts||0 }) },
-  shop_rent:     { table:'rents',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
-};
-
-// In-memory cache
-const _cache = {};
-
 const DB = {
-  get: k => {
-    if(_cache[k] !== undefined) return _cache[k];
-    return JSON.parse(localStorage.getItem(k)||'[]');
-  },
-  set: (k,v) => {
-    _cache[k] = v;
-    localStorage.setItem(k, JSON.stringify(v));
-    // sync ไป Supabase ถ้า login แล้วและ key นี้ map กับ table
-    const canSync = !!_currentUser && !!_currentShop && !!SUPA_TABLE[k];
-    if(SUPA_TABLE[k]) {
-      alert('DB.set '+k+'\nuser='+!!_currentUser+'\nshop='+(_currentShop?.id||'null')+'\nsync='+canSync);
-    }
-    if(canSync) {
-      _supaSync(k, v);
-    }
-  },
+  get: k => JSON.parse(localStorage.getItem(k)||'[]'),
+  set: (k,v) => localStorage.setItem(k,JSON.stringify(v)),
   getObj: k => JSON.parse(localStorage.getItem(k)||'{}'),
   setObj: (k,v) => localStorage.setItem(k,JSON.stringify(v))
 };
-
-// Sync array ทั้งหมดไป Supabase (upsert)
-async function _supaSync(k, arr) {
-  const map = SUPA_TABLE[k];
-  if(!map || !_currentShop) {
-    console.warn('_supaSync skip: no map or no shop', k, !!_currentShop);
-    return;
-  }
-  try {
-    const rows = arr.map(map.toRow);
-    console.log('_supaSync', k, '->', map.table, rows.length, 'rows', JSON.stringify(rows[rows.length-1]));
-    const { error } = await supa.from(map.table).upsert(rows, { onConflict: 'id' });
-    if(error) {
-      console.error('_supaSync error', k, error.message, error.code, error.details);
-      const el = document.getElementById('login-error');
-      if(el) { el.textContent = 'Sync error: ' + error.message; el.classList.add('show'); }
-    } else {
-      console.log('_supaSync OK', k);
-    }
-  } catch(e) {
-    console.error('_supaSync exception', k, e.message);
-  }
-}
-
-// โหลดข้อมูลทั้งหมดจาก Supabase เข้า cache
-async function loadAllDataFromSupa() {
-  if(!_currentShop) return;
-  const shopId = _currentShop.id;
-  for(const [k, map] of Object.entries(SUPA_TABLE)) {
-    try {
-      const { data, error } = await supa.from(map.table).select('*').eq('shop_id', shopId).order('ts', { ascending: true });
-      if(!error && data) {
-        _cache[k] = data.map(map.fromRow);
-        localStorage.setItem(k, JSON.stringify(_cache[k]));
-      }
-    } catch(e) {
-      console.warn('loadAllData error', k, e.message);
-    }
-  }
-  console.log('loadAllDataFromSupa done');
-}
 const KEY = {
   buy:'shop_buy', sale:'shop_sale', capital:'shop_capital',
   loan:'shop_loan', loanpay:'shop_loanpay', wage:'shop_wage',
@@ -1276,7 +1127,7 @@ function goPage(id, navBtn) {
   closeSidebar();
   if(id==='page-home') updateDashboard();
   if(id==='page-buy') { buildBuyTypeSelect(); buildSupplierDatalist(); renderBuyList(); const ld=localStorage.getItem('last_buy_date'); if(ld) document.getElementById('buy-date').value=ld; }
-  if(id==='page-income') { buildSaleMeatBtns(); renderSaleList(); renderCapList(); renderLoanStatus(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; }
+  if(id==='page-income') { buildSaleMeatBtns(); renderSaleList(); renderCapList(); renderLoanStatus(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; if(!_saleRows?.length) initSaleRows(); }
   if(id==='page-sale') { buildSaleMeatBtns(); renderSaleList(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; }
   if(id==='page-finance') { buildEmpWageSelect(); buildAdminPaySelect(); renderEmpWageHistory(); renderAdminPayHistory(); }
   if(id==='page-settings') renderSettingsMenu();
@@ -1579,39 +1430,144 @@ function onSaleAmountDirect() {
   document.getElementById('sale-total-display').textContent=v.toLocaleString('th-TH');
 }
 
+// ============ SALE MULTI-ROW ============
+let _saleRows = []; // [{id, meat, qty, unitPrice, amount}]
+
+function initSaleRows() {
+  _saleRows = [];
+  addSaleRow();
+}
+
+function addSaleRow() {
+  const id = 'sr_'+uid();
+  _saleRows.push({id, meat:'', qty:0, unitPrice:0, amount:0});
+  renderSaleRows();
+  // focus ช่องสินค้าของแถวใหม่
+  setTimeout(()=>document.getElementById('sr-meat-'+id)?.focus(), 50);
+}
+
+function removeSaleRow(id) {
+  if(_saleRows.length <= 1) return;
+  _saleRows = _saleRows.filter(r=>r.id!==id);
+  renderSaleRows();
+  calcSaleGrandTotal();
+}
+
+function renderSaleRows() {
+  const skus = getSaleSkus();
+  const wrap = document.getElementById('sale-rows-wrap');
+  if(!wrap) return;
+  wrap.innerHTML = _saleRows.map((r,i) => `
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;position:relative;">
+      ${_saleRows.length>1?`<button onclick="removeSaleRow('${r.id}')" style="position:absolute;top:8px;right:8px;background:var(--red-soft);border:none;color:var(--red);border-radius:6px;width:24px;height:24px;cursor:pointer;font-size:14px;line-height:1;">×</button>`:''}
+      <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">รายการที่ ${i+1}</div>
+      <div class="form-group" style="margin-bottom:8px;">
+        <label style="font-size:11px;">สินค้า</label>
+        <input type="text" id="sr-meat-${r.id}" value="${r.meat}" placeholder="ชื่อสินค้า"
+          list="sale-product-datalist"
+          oninput="onSaleRowMeatInput('${r.id}',this.value)"
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div>
+          <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px;">จำนวน</label>
+          <input type="number" id="sr-qty-${r.id}" value="${r.qty||''}" placeholder="0" step="0.01" min="0"
+            oninput="onSaleRowCalc('${r.id}')"
+            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px;">ราคา/หน่วย</label>
+          <input type="number" id="sr-unit-${r.id}" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
+            oninput="onSaleRowCalc('${r.id}')"
+            style="width:100%;background:var(--blue-soft);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);">
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <label style="font-size:11px;color:var(--text2);">ยอดรวม</label>
+        <input type="number" id="sr-amt-${r.id}" value="${r.amount||''}" placeholder="0.00" step="0.01"
+          oninput="onSaleRowAmtDirect('${r.id}',this.value)"
+          style="width:120px;background:var(--green-soft);border:1.5px solid var(--green);border-radius:8px;padding:8px 10px;font-family:'Prompt',sans-serif;font-size:15px;font-weight:600;color:var(--green);outline:none;text-align:right;">
+      </div>
+    </div>`).join('');
+  calcSaleGrandTotal();
+}
+
+function onSaleRowMeatInput(id, val) {
+  const r = _saleRows.find(r=>r.id===id);
+  if(!r) return;
+  r.meat = val;
+  // auto-fill ราคาถ้าเลือกจาก SKU
+  const skus = getSaleSkus();
+  const match = skus.find(s=>s.name===val);
+  if(match && match.price>0 && !r.unitPrice) {
+    r.unitPrice = match.price;
+    const el = document.getElementById('sr-unit-'+id);
+    if(el) el.value = match.price;
+    onSaleRowCalc(id);
+  }
+}
+
+function onSaleRowCalc(id) {
+  const r = _saleRows.find(r=>r.id===id);
+  if(!r) return;
+  r.qty = parseFloat(document.getElementById('sr-qty-'+id)?.value)||0;
+  r.unitPrice = parseFloat(document.getElementById('sr-unit-'+id)?.value)||0;
+  if(r.qty && r.unitPrice) {
+    r.amount = Math.round(r.qty * r.unitPrice * 100)/100;
+    const el = document.getElementById('sr-amt-'+id);
+    if(el) el.value = r.amount;
+  }
+  calcSaleGrandTotal();
+}
+
+function onSaleRowAmtDirect(id, val) {
+  const r = _saleRows.find(r=>r.id===id);
+  if(r) { r.amount = parseFloat(val)||0; calcSaleGrandTotal(); }
+}
+
+function calcSaleGrandTotal() {
+  const total = _saleRows.reduce((s,r)=>s+(r.amount||0),0);
+  const el = document.getElementById('sale-grand-total');
+  if(el) el.textContent = '฿'+Math.round(total).toLocaleString('th-TH');
+}
+
 function confirmSale() {
-  const productName = document.getElementById('sale-product-input').value.trim();
-  const qty=parseFloat(document.getElementById('sale-qty').value)||0;
-  const unitPrice=parseFloat(document.getElementById('sale-unit-price').value)||0;
-  const amount=parseFloat(document.getElementById('sale-amount').value);
-  const date=document.getElementById('sale-date').value;
-  const note=document.getElementById('sale-note').value.trim();
-  if(!productName) return alert('กรุณาระบุชื่อสินค้า');
-  if(!amount||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  showConfirm('💰 ยืนยันยอดขาย',[
-    ['สินค้า',getMeatEmoji(productName,0)+' '+productName],
-    ['จำนวน × ราคา',qty&&unitPrice?`${qty} × ${unitPrice.toLocaleString('th-TH',{minimumFractionDigits:2})}`:'—'],
-    ['ยอดรวม',fmt(amount)],['วันที่',date],['หมายเหตุ',note||'—'],
-  ],()=>{
-    // auto-add SKU ถ้าเป็นชื่อใหม่
+  const date = document.getElementById('sale-date')?.value;
+  const note = document.getElementById('sale-note')?.value.trim()||'';
+  if(!date) return alert('กรุณาเลือกวันที่');
+  const validRows = _saleRows.filter(r=>r.meat && r.amount>0);
+  if(!validRows.length) return alert('กรุณากรอกสินค้าและยอดขายอย่างน้อย 1 รายการ');
+  const grandTotal = validRows.reduce((s,r)=>s+r.amount,0);
+  const rows = [
+    ['วันที่', fmtDate(date)],
+    ...validRows.map(r=>[getMeatEmoji(r.meat,0)+' '+r.meat, fmt(r.amount)]),
+    ['รวมทั้งหมด', fmt(grandTotal)],
+  ];
+  if(note) rows.push(['หมายเหตุ', note]);
+  showConfirm('💰 ยืนยันยอดขาย', rows, ()=>{
+    const list = DB.get(KEY.sale);
     const skus = getSaleSkus();
-    if(!skus.find(s=>s.name===productName)) {
-      skus.push({id:'sku_'+uid(), name:productName, price:unitPrice||0, emoji:getMeatEmoji(productName, skus.length)});
-      saveSaleSkus(skus);
-      buildSaleProductDatalist();
-    }
-    const list=DB.get(KEY.sale);
-    const skuMatch = getSaleSkus().find(s=>s.name===productName);
-    list.push({id:uid(),amount,qty,unitPrice,meat:productName,skuId:skuMatch?.id||'',date,note,ts:Date.now()});
+    validRows.forEach(r => {
+      // auto-add SKU ถ้าเป็นชื่อใหม่
+      if(!skus.find(s=>s.name===r.meat)) {
+        skus.push({id:'sku_'+uid(),name:r.meat,price:r.unitPrice||0,emoji:getMeatEmoji(r.meat,skus.length)});
+      }
+      list.push({id:uid(),amount:r.amount,qty:r.qty,unitPrice:r.unitPrice,meat:r.meat,date,note,ts:Date.now()});
+    });
+    saveSaleSkus(skus);
     DB.set(KEY.sale,list);
     localStorage.setItem('last_sale_date',date);
-    document.getElementById('sale-product-input').value='';
-    ['sale-amount','sale-qty','sale-unit-price','sale-note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('sale-total-display').textContent='0';
-    _selectedMeat=''; _selectedSku=null;
-    renderSaleList_noop(); updateDashboard();
+    // reset
+    _saleRows = [];
+    addSaleRow();
+    document.getElementById('sale-note').value='';
+    buildSaleProductDatalist();
+    renderSaleList_noop();
+    updateDashboard();
   });
 }
+
+
 function renderSaleList_noop() { /* list removed - see reports */ }
 function renderSaleList() { renderSaleList_noop(); }
 
@@ -2386,107 +2342,176 @@ function renderEmpWageHistory() {
 }
 
 // ============ ADMIN PAYMENT (new - in การเงิน) ============
+// ============ ADMIN PAY (ปฏิทินติ๊กวัน เหมือนพนักงาน) ============
+let _adminSelDays = new Set();
+let _adminCalYear = new Date().getFullYear();
+let _adminCalMonth = new Date().getMonth();
+
 function buildAdminPaySelect() {
-  const sel=document.getElementById('admin-pay-select');
+  const sel = document.getElementById('admin-pay-select');
   if(!sel) return;
-  const admins=getAdmins();
-  sel.innerHTML='<option value="">-- เลือกผู้บริหาร --</option>'
-    +admins.map((a,i)=>`<option value="${i}">${a.name||'ผู้บริหาร '+(i+1)} (${a.pct||0}%)</option>`).join('');
+  const admins = getAdmins();
+  sel.innerHTML = '<option value="">-- เลือกผู้บริหาร --</option>' +
+    admins.map((a,i) => `<option value="${i}">${a.name||'ผู้บริหาร '+(i+1)} (${a.pct||0}%)</option>`).join('');
 }
 
-function calcAdminPay() {
-  const idx=parseInt(document.getElementById('admin-pay-select')?.value);
-  const from=document.getElementById('admin-pay-from')?.value;
-  const to=document.getElementById('admin-pay-to')?.value;
-  const calcEl=document.getElementById('admin-pay-calc');
-  const warnEl=document.getElementById('admin-pay-warn');
-  const payBtn=document.getElementById('admin-pay-btn');
-  if(isNaN(idx)||!from||!to){
-    if(calcEl)calcEl.style.display='none';
-    if(warnEl)warnEl.style.display='none';
-    if(payBtn){payBtn.style.display='none';}
-    return;
-  }
-  const admins=getAdmins();
-  const a=admins[idx];
-  if(!a){return;}
-  const saleSum=DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).reduce((s,i)=>s+i.amount,0);
-  const pct=a.pct||0;
-  const amount=saleSum*pct/100;
-  // ตรวจซ้ำ
-  const existing=DB.get(KEY.adminpay).find(p=>p.adminIdx===idx&&p.from===from&&p.to===to);
-  if(existing){
-    if(warnEl){warnEl.style.display='block';document.getElementById('admin-pay-warn-text').textContent=`ช่วงวันที่ ${from} – ${to} จ่ายให้ ${a.name||'ผู้บริหาร '+(idx+1)} ไปแล้วเมื่อ ${fmtDateFull(existing.paidDate)}`;}
-    if(calcEl)calcEl.style.display='none';
-    if(payBtn)payBtn.style.display='none';
-    return;
-  }
-  if(warnEl)warnEl.style.display='none';
-  if(calcEl){
-    calcEl.style.display='block';
-    document.getElementById('admin-pay-sale-sum').textContent=fmt(saleSum);
-    document.getElementById('admin-pay-pct').textContent=pct+'%';
-    document.getElementById('admin-pay-amount').textContent=fmt(amount);
-  }
-  if(payBtn){
-    payBtn.style.display='block';
-    payBtn.disabled=amount<=0;
-    payBtn.style.opacity=amount>0?'1':'0.45';
-    payBtn.textContent=amount>0?'✅ อนุมัติจ่ายค่าคอม':'⚠️ ยอดขายในช่วงนี้ = 0 (ไม่มีค่าคอม)';
-  }
+function getAdminPaidDays(adminIdx) {
+  const pays = DB.get(KEY.adminpay).filter(p => p.adminIdx === adminIdx);
+  const days = new Set();
+  pays.forEach(p => { (p.days||[]).forEach(d => days.add(d)); });
+  return days;
 }
 
-function payAdminCom() {
-  const idx=parseInt(document.getElementById('admin-pay-select')?.value);
-  const from=document.getElementById('admin-pay-from')?.value;
-  const to=document.getElementById('admin-pay-to')?.value;
-  if(isNaN(idx)||!from||!to) return;
-  const admins=getAdmins();
-  const a=admins[idx];
-  const saleSum=DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).reduce((s,i)=>s+i.amount,0);
-  const amount=saleSum*(a.pct||0)/100;
-  if(!amount) return alert('ยอดค่าคอมเป็น 0');
+function renderAdminCal() {
+  const idx = parseInt(document.getElementById('admin-pay-select')?.value);
+  const wrap = document.getElementById('admin-wage-cal-wrap');
+  const rateDisplay = document.getElementById('admin-rate-display');
+  if(isNaN(idx)) {
+    if(wrap) wrap.style.display='none';
+    if(rateDisplay) rateDisplay.style.display='none';
+    return;
+  }
+  const a = getAdmins()[idx];
+  if(!a) return;
+  document.getElementById('admin-rate-val').textContent = (a.pct||0) + '%';
+  rateDisplay.style.display = 'block';
+  wrap.style.display = 'block';
+  _adminSelDays = new Set();
+  _adminCalYear = new Date().getFullYear();
+  _adminCalMonth = new Date().getMonth();
+  drawAdminCal();
+  renderAdminPayHistory();
+}
+
+function drawAdminCal() {
+  const idx = parseInt(document.getElementById('admin-pay-select')?.value);
+  const paidDays = !isNaN(idx) ? getAdminPaidDays(idx) : new Set();
+  const a = getAdmins()[idx];
+  const pct = a?.pct || 0;
+  const sales = DB.get(KEY.sale);
+  const y = _adminCalYear, m = _adminCalMonth;
+  document.getElementById('admin-cal-title').textContent =
+    new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  const firstDay = new Date(y,m,1).getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const todayStr = today();
+  let html = '';
+  ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d => {
+    html += `<div style="text-align:center;font-size:10px;font-weight:600;color:var(--text2);padding:3px 0;">${d}</div>`;
+  });
+  for(let i=0;i<firstDay;i++) html += '<div></div>';
+  for(let d=1;d<=daysInMonth;d++) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isPaid = paidDays.has(ds);
+    const isSel = _adminSelDays.has(ds);
+    const isFuture = ds > todayStr;
+    const daySale = sales.filter(s=>s.date===ds).reduce((s,x)=>s+x.amount,0);
+    const com = Math.round(daySale * pct / 100);
+    let bg='var(--card2)', color='var(--text)', border='1px solid var(--border)', cursor='pointer', opacity='1';
+    if(isPaid){bg='var(--green-soft)';color='var(--green)';border='1px solid var(--green)';cursor='not-allowed';}
+    else if(isFuture){opacity='0.35';cursor='default';}
+    else if(isSel){bg='var(--accent)';color='#fff';border='1px solid var(--accent)';}
+    const clickable = !isPaid && !isFuture;
+    html += `<div onclick="${clickable?`toggleAdminDay('${ds}')`:''}" style="text-align:center;padding:5px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:11px;opacity:${opacity};">
+      <div style="font-weight:${isSel||isPaid?600:400}">${d}</div>
+      ${com>0?`<div style="font-size:8px;line-height:1.2;margin-top:1px;">${com>=1000?(com/1000).toFixed(1)+'k':com}</div>`:''}
+      ${isPaid?'<div style="font-size:8px;">✓</div>':''}
+    </div>`;
+  }
+  document.getElementById('admin-wage-cal').innerHTML = html;
+  updateAdminWageSummary();
+}
+
+function toggleAdminDay(ds) {
+  if(_adminSelDays.has(ds)) _adminSelDays.delete(ds);
+  else _adminSelDays.add(ds);
+  drawAdminCal();
+}
+function adminCalPrevMonth() {
+  _adminCalMonth--; if(_adminCalMonth<0){_adminCalMonth=11;_adminCalYear--;} drawAdminCal();
+}
+function adminCalNextMonth() {
+  _adminCalMonth++; if(_adminCalMonth>11){_adminCalMonth=0;_adminCalYear++;} drawAdminCal();
+}
+
+function updateAdminWageSummary() {
+  const idx = parseInt(document.getElementById('admin-pay-select')?.value);
+  const a = getAdmins()[idx];
+  const summary = document.getElementById('admin-wage-summary');
+  const payBtn = document.getElementById('admin-wage-pay-btn');
+  if(!a || _adminSelDays.size===0) {
+    if(summary) summary.style.display='none';
+    if(payBtn) payBtn.style.display='none';
+    return;
+  }
+  const days = Array.from(_adminSelDays).sort();
+  const sales = DB.get(KEY.sale);
+  const total = Math.round(days.reduce((s,ds) => {
+    const daySale = sales.filter(x=>x.date===ds).reduce((ss,x)=>ss+x.amount,0);
+    return s + daySale*(a.pct||0)/100;
+  }, 0));
+  if(summary) {
+    summary.style.display='block';
+    document.getElementById('admin-wage-sel-days').textContent = days.map(d=>fmtDate(d)).join(', ')+` (${days.length} วัน)`;
+    document.getElementById('admin-wage-total').textContent = fmt(total);
+  }
+  if(payBtn) payBtn.style.display = total>0?'block':'none';
+}
+
+function payAdminWage() {
+  const idx = parseInt(document.getElementById('admin-pay-select')?.value);
+  const a = getAdmins()[idx];
+  if(!a || _adminSelDays.size===0) return alert('เลือกวันที่ก่อน');
+  const days = Array.from(_adminSelDays).sort();
+  const sales = DB.get(KEY.sale);
+  const total = Math.round(days.reduce((s,ds) => {
+    const daySale = sales.filter(x=>x.date===ds).reduce((ss,x)=>ss+x.amount,0);
+    return s + daySale*(a.pct||0)/100;
+  }, 0));
   showConfirm('✅ ยืนยันจ่ายค่าคอมผู้บริหาร',[
-    ['ผู้รับ',a.name||'ผู้บริหาร '+(idx+1)],
-    ['ช่วงวันที่',`${from} – ${to}`],
-    ['ยอดขายในช่วง',fmt(saleSum)],
-    ['%',`${a.pct||0}%`],
-    ['ค่าคอม',fmt(amount)],
+    ['ผู้รับ', a.name||'ผู้บริหาร '+(idx+1)],
+    ['จำนวนวัน', days.length+' วัน'],
+    ['วันแรก–สุดท้าย', fmtDate(days[0])+' – '+fmtDate(days[days.length-1])],
+    ['% ค่าคอม', (a.pct||0)+'%'],
+    ['ค่าคอมรวม', fmt(total)],
   ],()=>{
-    // บันทึก adminpay
-    const pays=DB.get(KEY.adminpay);
-    pays.push({id:uid(),adminIdx:idx,adminName:a.name,from,to,saleSum,pct:a.pct,amount,paidDate:today(),ts:Date.now()});
+    const pays = DB.get(KEY.adminpay);
+    pays.push({id:uid(),adminIdx:idx,adminName:a.name,days,pct:a.pct,amount:total,paidDate:today(),ts:Date.now()});
     DB.set(KEY.adminpay,pays);
-    // บันทึกลง wage (รายงาน)
-    const wages=DB.get(KEY.wage);
-    wages.push({id:uid(),name:`👔 ${a.name||'ผู้บริหาร '+(idx+1)} (ค่าคอม ${fmtDate(from)}–${fmtDate(to)})`,amount,date:today(),ts:Date.now()});
+    const wages = DB.get(KEY.wage);
+    wages.push({id:uid(),name:`👔 ${a.name||'ผู้บริหาร '+(idx+1)} (ค่าคอม ${fmtDate(days[0])}–${fmtDate(days[days.length-1])})`,amount:total,date:today(),ts:Date.now()});
     DB.set(KEY.wage,wages);
-    // reset UI
-    document.getElementById('admin-pay-select').value='';
-    document.getElementById('admin-pay-from').value='';
-    document.getElementById('admin-pay-to').value='';
-    document.getElementById('admin-pay-calc').style.display='none';
-    document.getElementById('admin-pay-btn').style.display='none';
+    _adminSelDays = new Set();
+    drawAdminCal();
     renderAdminPayHistory();
     updateDashboard();
-    alert(`จ่ายค่าคอม ${a.name||'ผู้บริหาร '+(idx+1)} ${fmt(amount)} แล้ว ✓`);
+    alert('จ่ายค่าคอม '+fmt(total)+' บาท แล้ว ✓');
   });
 }
 
 function renderAdminPayHistory() {
-  const el=document.getElementById('admin-pay-history');
+  const el = document.getElementById('admin-pay-history');
   if(!el) return;
-  const pays=DB.get(KEY.adminpay).sort((a,b)=>b.paidDate.localeCompare(a.paidDate));
+  const idx = parseInt(document.getElementById('admin-pay-select')?.value);
+  const pays = isNaN(idx) ? DB.get(KEY.adminpay) :
+    DB.get(KEY.adminpay).filter(p=>p.adminIdx===idx);
+  pays.sort((a,b)=>b.ts-a.ts);
   if(!pays.length){el.innerHTML='<div class="empty"><div class="empty-icon">👔</div>ยังไม่มีประวัติ</div>';return;}
-  el.innerHTML=pays.slice(0,20).map(p=>`
+  el.innerHTML = '<div style="font-size:13px;font-weight:600;margin-bottom:8px;">ประวัติการจ่าย</div>' +
+    pays.slice(0,15).map(p=>`
     <div class="list-item">
       <div style="flex:1">
         <div class="item-name">👔 ${p.adminName||'ผู้บริหาร'}</div>
-        <div class="item-meta">${fmtDate(p.from)}–${fmtDate(p.to)} · จ่ายวันที่ ${fmtDateFull(p.paidDate)}</div>
+        <div class="item-meta">${p.days?.length||0} วัน · ${p.pct||0}% · จ่าย ${fmtDate(p.paidDate)}</div>
       </div>
       <span class="item-amount green">${fmt(p.amount)}</span>
     </div>`).join('');
 }
+
+// compat stubs
+function calcAdminPay(){}
+function payAdminCom(){}
+
 
 // ============ DASHBOARD TABS ============
 let _dashPeriod='day';
@@ -3294,339 +3319,25 @@ function renderRepLoan() {
 }
 
 
-// ============ SUPABASE ============
-const SUPA_URL = 'https://gvwhbyunoeytixetjffz.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2d2hieXVub2V5dGl4ZXRqZmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNTkzOTIsImV4cCI6MjA5NjczNTM5Mn0.iQqZgvCHN9lPgIDFfFjI8EPgfH7dP7BQ2MCWyQVytro';
-const SUPERADMIN_EMAIL = 'weiguya@gmail.com';
-const supa = supabase.createClient(SUPA_URL, SUPA_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true }
-});
 
-// Timeout wrapper สำหรับ Supabase DB queries (30วินาที)
-// หมายเหตุ: ไม่ใช้กับ auth.signIn เพราะมี timeout ในตัวอยู่แล้ว
-function withTimeout(promise, ms=30000) {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('โหลดข้อมูลช้าเกินไป กรุณาลองใหม่')), ms)
-  );
-  return Promise.race([promise, timeout]);
-}
-
-// _currentUser, _currentProfile, _currentShop, _myPerms declared above near SUPA_TABLE
-
-// ============ FEATURES LIST ============
+// ============ LOCAL MODE (ไม่ใช้ Supabase) ============
+let _currentUser = { id:'local', email:'local@app' };
+let _currentProfile = { role:'superadmin', status:'active' };
+let _currentShop = { id:'local', name:'ร้านของฉัน', myRole:'master' };
+let _myPerms = {};
 const FEATURES = [
-  { key:'sale_add',       label:'💰 บันทึกยอดขาย' },
-  { key:'buy_add',        label:'💸 บันทึกรายจ่าย' },
-  { key:'sale_view',      label:'📊 ดูยอดขายรวม' },
-  { key:'report_income',  label:'📋 ดูรายงานรายรับ' },
-  { key:'report_expense', label:'📋 ดูรายงานรายจ่าย' },
-  { key:'report_movement',label:'📋 ดูรายงานเคลื่อนไหว' },
-  { key:'report_wages',   label:'👷 ดูรายงานค่าแรง/คอม/เช่า' },
-  { key:'report_loan',    label:'🏦 ดูรายงานเงินกู้' },
-  { key:'wage_view',      label:'👷 ดูค่าแรงตัวเอง' },
-  { key:'capital_view',   label:'💵 ดูเงินทุน' },
-  { key:'loan_view',      label:'🏦 ดูเงินกู้/หนี้' },
-  { key:'finance_page',   label:'💳 เข้าหน้าการเงิน' },
-  { key:'settings_page',  label:'⚙️ เข้าหน้าตั้งค่า' },
-  { key:'dashboard_cash', label:'💳 ดูเงินคงเหลือจริง' },
+  {key:'sale_add',label:'💰 ยอดขาย'},{key:'buy_add',label:'💸 รายจ่าย'},
+  {key:'sale_view',label:'📊 ยอดขาย'},{key:'report_income',label:'📋 รายรับ'},
+  {key:'report_expense',label:'📋 รายจ่าย'},{key:'report_movement',label:'📋 เคลื่อนไหว'},
+  {key:'report_wages',label:'👷 ค่าแรง'},{key:'report_loan',label:'🏦 เงินกู้'},
+  {key:'wage_view',label:'👷 ค่าแรง'},{key:'capital_view',label:'💵 เงินทุน'},
+  {key:'loan_view',label:'🏦 เงินกู้'},{key:'finance_page',label:'💳 การเงิน'},
+  {key:'settings_page',label:'⚙️ ตั้งค่า'},{key:'dashboard_cash',label:'💳 เงินคงเหลือ'},
 ];
-
-// ============ AUTH UI ============
-function switchLoginTab(tab) {
-  document.getElementById('login-form').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('register-form').style.display = tab==='register' ? 'block' : 'none';
-  document.getElementById('lt-login').classList.toggle('active', tab==='login');
-  document.getElementById('lt-register').classList.toggle('active', tab==='register');
-  document.getElementById('login-error').classList.remove('show');
-}
-function showLoginError(msg) {
-  const el = document.getElementById('login-error');
-  el.textContent = msg; el.classList.add('show');
-}
-function setLoginLoading(on) {
-  const el = document.getElementById('login-loading');
-  if(on) el.innerHTML = '⏳ กำลังเชื่อมต่อ...<br><span style="font-size:11px;opacity:0.7">ครั้งแรกอาจใช้เวลา 10-15 วินาที</span>';
-  el.classList.toggle('show', on);
-  document.getElementById('login-form').style.opacity = on ? '0.4' : '1';
-  document.getElementById('register-form').style.opacity = on ? '0.4' : '1';
-}
-
-async function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  if(!email || !password) return showLoginError('กรุณากรอกอีเมลและรหัสผ่าน');
-  setLoginLoading(true);
-  document.getElementById('login-error').classList.remove('show');
-  try {
-    const { data, error } = await supa.auth.signInWithPassword({ email, password });
-    if(error) {
-      const msg = error.message;
-      if(msg.includes('Invalid login credentials')) return showLoginError('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
-      if(msg.includes('Email not confirmed')) return showLoginError('กรุณายืนยันอีเมลก่อนเข้าใช้งาน');
-      if(msg.includes('Too many requests')) return showLoginError('ลองใหม่อีกครั้งในอีกสักครู่');
-      return showLoginError('เข้าสู่ระบบไม่ได้: ' + msg);
-    }
-    // login สำเร็จ → route เองเลย ไม่รอ onAuthStateChange
-    if(data && data.user) {
-      _currentUser = data.user;
-      _authHandling = true;
-      try {
-        await loadProfileAndRoute(data.user);
-      } finally {
-        _authHandling = false;
-      }
-    }
-  } catch(e) {
-    showLoginError('เชื่อมต่อไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
-    console.error('doLogin error:', e);
-  } finally {
-    setLoginLoading(false);
-  }
-}
-
-async function doRegister() {
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  if(!email || !password) return showLoginError('กรุณากรอกอีเมลและรหัสผ่าน');
-  if(password.length < 6) return showLoginError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
-  setLoginLoading(true);
-  document.getElementById('login-error').classList.remove('show');
-  try {
-    const { error } = await supa.auth.signUp({ email, password });
-    if(error) return showLoginError('สมัครไม่ได้: ' + error.message);
-    alert('สมัครสมาชิกสำเร็จ!\nรอ Admin อนุมัติก่อนเข้าใช้งาน');
-    switchLoginTab('login');
-    document.getElementById('login-email').value = email;
-  } catch(e) {
-    showLoginError('เชื่อมต่อไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
-  } finally {
-    setLoginLoading(false);
-  }
-}
-
-function supaSignOut() {
-  _currentShop = null; _myPerms = {};
-  supa.auth.signOut();
-}
-
-function showUserMenu() {
-  const role = _currentProfile?.role || '';
-  const shopName = _currentShop?.name || '—';
-  const msg = `ร้าน: ${shopName}\nอีเมล: ${_currentUser?.email}\nบทบาท: ${role}\n\nต้องการออกจากระบบ?`;
-  if(confirm(msg)) supaSignOut();
-}
-
-// ============ AUTH STATE ============
-// Global error display สำหรับ debug บนมือถือ
-window.onerror = function(msg, src, line, col, err) {
-  const el = document.getElementById('login-error');
-  if(el) { el.textContent = '❌ ' + msg + ' (line ' + line + ')'; el.classList.add('show'); }
-  console.error('GLOBAL ERROR:', msg, line, err);
-  return false;
-};
-window.onunhandledrejection = function(e) {
-  const el = document.getElementById('login-error');
-  if(el) { el.textContent = '❌ Promise: ' + (e.reason?.message || e.reason); el.classList.add('show'); }
-  console.error('UNHANDLED PROMISE:', e.reason);
-};
-
-// helper ป้องกัน null
-function safeClass(id, action, cls) {
-  const el = document.getElementById(id);
-  if(el) el.classList[action](cls); else console.warn('element not found:', id);
-}
-
-let _authHandling = false;
-let _lastAuthEvent = null;
-supa.auth.onAuthStateChange(async (event, session) => {
-  console.log('onAuthStateChange:', event, session?.user?.email);
-
-  if(event === 'INITIAL_SESSION' && _lastAuthEvent === 'INITIAL_SESSION') {
-    console.log('duplicate INITIAL_SESSION, skip');
-    return;
-  }
-  _lastAuthEvent = event;
-
-  if(session && session.user) {
-    if(_authHandling) { console.log('auth already handling, skip'); return; }
-    _authHandling = true;
-    _currentUser = session.user;
-    try {
-      await loadProfileAndRoute(session.user);
-    } finally {
-      _authHandling = false;
-    }
-  } else {
-    _authHandling = false;
-    _currentUser = null; _currentProfile = null; _currentShop = null; _myPerms = {};
-    safeClass('login-page', 'add', 'show');
-    safeClass('shop-select-page', 'remove', 'show');
-    const chip = document.getElementById('user-chip');
-    if(chip) chip.style.display = 'none';
-  }
-});
-
-async function loadProfileAndRoute(user) {
-  setLoginLoading(true);
-  try {
-    const isSA = user.email === SUPERADMIN_EMAIL;
-    // ข้าม profiles query — ใช้ user object โดยตรงเพื่อหลีกเลี่ยง RLS hang
-    const profile = {
-      id: user.id,
-      email: user.email,
-      role: isSA ? 'superadmin' : 'user',
-      status: isSA ? 'active' : 'pending'
-    };
-    _currentProfile = profile;
-
-    // เช็คสถานะ — ไม่ signOut แค่แจ้งแล้วออก
-    if(profile.status === 'pending' && profile.role !== 'superadmin') {
-      setLoginLoading(false);
-      alert('บัญชีของคุณยังรอ Admin อนุมัติ');
-      supaSignOut(); return;
-    }
-    if(profile.status === 'suspended') {
-      setLoginLoading(false);
-      alert('บัญชีของคุณถูกระงับการใช้งาน');
-      supaSignOut(); return;
-    }
-
-    document.getElementById('login-page').classList.remove('show');
-    await showShopSelectOrEnter(user, profile);
-
-  } catch(e) {
-    console.error('loadProfileAndRoute error:', e);
-    setLoginLoading(false);
-    // แสดง error ชัดเจน ไม่ signOut เพื่อไม่ให้ loop
-    showLoginError('เกิดข้อผิดพลาด: ' + (e.message || 'กรุณาลองใหม่'));
-  } finally {
-    setLoginLoading(false);
-  }
-}
-
-async function showShopSelectOrEnter(user, profile) {
-  let shops = [];
-  try {
-    if(profile?.role === 'superadmin') {
-      const { data: ownShops, error: shopErr } = await supa.from('shops').select('*').eq('owner_id', user.id);
-      if(shopErr) {
-        showLoginError('โหลดร้านไม่ได้: ' + shopErr.message);
-        document.getElementById('login-page').classList.add('show');
-        setLoginLoading(false);
-        return; // ไม่ signOut → ไม่ loop
-      }
-      shops = (ownShops||[]).map(s => ({...s, myRole:'master'}));
-    } else {
-      const { data: memberships, error: memErr } = await supa.from('shop_members')
-        .select('*, shops(*)').eq('user_id', user.id).eq('status','active');
-      if(memErr) {
-        showLoginError('โหลดสิทธิ์ไม่ได้: ' + memErr.message);
-        document.getElementById('login-page').classList.add('show');
-        setLoginLoading(false);
-        return; // ไม่ signOut → ไม่ loop
-      }
-      shops = (memberships||[]).map(m => ({...m.shops, myRole: m.role, memberStatus: m.status}));
-    }
-  } catch(e) {
-    showLoginError('โหลดข้อมูลร้านไม่ได้: ' + e.message);
-    document.getElementById('login-page').classList.add('show');
-    setLoginLoading(false);
-    return; // ไม่ signOut → ไม่ loop
-  }
-
-  if(!shops.length) {
-    if(profile?.role === 'superadmin') {
-      // ลอง insert ร้านใหม่ แต่ถ้าพังก็ไม่ crash
-      const { data: newShop, error: insertErr } = await supa.from('shops').insert({
-        name: 'ร้านค้า 01',
-        owner_id: user.id,
-        status: 'active'
-      }).select().single();
-      if(insertErr || !newShop) {
-        // insert ไม่ได้ → ลอง query อีกครั้ง (อาจมีอยู่แล้ว)
-        const { data: retry } = await supa.from('shops').select('*').eq('owner_id', user.id).limit(1);
-        if(retry && retry.length) {
-          shops = retry.map(s => ({...s, myRole:'master'}));
-        } else {
-          showLoginError('สร้างร้านไม่ได้ กรุณาติดต่อผู้ดูแล');
-          document.getElementById('login-page').classList.add('show');
-          setLoginLoading(false);
-          return;
-        }
-      } else {
-        shops = [{...newShop, myRole:'master'}];
-      }
-    } else {
-      document.getElementById('shop-select-page').classList.add('show');
-      document.getElementById('shop-select-email').textContent = user.email;
-      document.getElementById('shop-select-list').innerHTML =
-        '<div style="text-align:center;padding:32px 16px;color:var(--text2);font-size:13px;"><div style="font-size:36px;margin-bottom:8px;">⏳</div>ยังไม่ได้รับสิทธิ์เข้าร้านใด<br>กรุณารอ Admin เพิ่มคุณเข้าร้าน</div>';
-      setLoginLoading(false);
-      return;
-    }
-  }
-
-  if(shops.length === 1) {
-    await enterShop(shops[0], profile);
-  } else {
-    showShopSelectScreen(shops, profile);
-  }
-}
-
-function showShopSelectScreen(shops, profile) {
-  document.getElementById('shop-select-page').classList.add('show');
-  document.getElementById('shop-select-email').textContent = _currentUser?.email;
-  let html = '';
-  shops.forEach(shop => {
-    const suspended = shop.status === 'suspended';
-    html += `<div class="shop-card ${suspended?'suspended':''}" onclick="${suspended?'alert(\"ร้านนี้ถูกระงับชั่วคราว\")':'enterShopById(\"'+shop.id+'\")'}">
-      <div class="sc-name">🏪 ${shop.name}</div>
-      <div class="sc-role">บทบาท: ${shop.myRole==='master'?'Master (เจ้าของ)':'Staff'}</div>
-      <span class="sc-status ${shop.status}">${shop.status==='active'?'เปิดใช้งาน':shop.status==='suspended'?'ระงับชั่วคราว':'รอดำเนินการ'}</span>
-    </div>`;
-  });
-  document.getElementById('shop-select-list').innerHTML = html;
-}
-
-async function enterShopById(shopId) {
-  const { data: shop } = await supa.from('shops').select('*').eq('id', shopId).single();
-  if(!shop) return alert('ไม่พบข้อมูลร้าน');
-  const role = shop.owner_id === _currentUser.id ? 'master' : 'staff';
-  await enterShop({...shop, myRole: role}, _currentProfile);
-}
-
-async function enterShop(shop, profile) {
-  _currentShop = shop;
-  document.getElementById('shop-select-page').classList.remove('show');
-
-  // โหลด permissions ของ user นี้ในร้านนี้
-  if(shop.myRole === 'staff') {
-    const { data: perms } = await supa.from('permissions')
-      .select('*').eq('shop_id', shop.id).eq('user_id', _currentUser.id);
-    _myPerms = {};
-    (perms||[]).forEach(p => { _myPerms[p.feature] = p.enabled; });
-  } else {
-    // master/superadmin เข้าถึงทุก feature
-    _myPerms = Object.fromEntries(FEATURES.map(f => [f.key, true]));
-  }
-
-  // อัปเดต topbar
-  const chip = document.getElementById('user-chip');
-  chip.style.display = 'flex';
-  const short = (_currentUser.email||'').split('@')[0];
-  document.getElementById('user-email-short').textContent =
-    (short.length > 8 ? short.slice(0,8)+'…' : short) + ' · ' + shop.name;
-
-  // ถ้า superadmin → เพิ่ม admin menu ใน sidebar
-  updateSidebarForRole(profile, shop);
-
-  // บล็อก/ซ่อน menu ตาม permission
-  applyPermissionToSidebar();
-
-  // โหลดข้อมูลจาก Supabase แล้วค่อย render
-  loadAllDataFromSupa().then(() => {
-    updateDashboard();
-  });
+function supaSignOut() { if(confirm('Reload?')) location.reload(); }
+function showUserMenu() { if(confirm('Reload?')) location.reload(); }
+function applyPermissionToSidebar() {
+  _myPerms = Object.fromEntries(FEATURES.map(f=>[f.key,true]));
 }
 
 function updateSidebarForRole(profile, shop) {
@@ -3690,341 +3401,6 @@ function adminTab(btn, tabId) {
   if(tabId === 'adm-reset') loadResetShopSelect();
 }
 
-async function loadAdminPanel() {
-  loadAdminUsers();
-  loadResetShopSelect();
-}
-
-async function loadAdminUsers() {
-  const el = document.getElementById('adm-users-list');
-  if(!el) return;
-  el.innerHTML = '<div style="font-size:12px;color:var(--text2);">กำลังโหลด...</div>';
-
-  const { data: profiles } = await supa.from('profiles').select('*').order('created_at');
-  if(!profiles?.length) { el.innerHTML = '<div class="empty">ยังไม่มี user</div>'; return; }
-
-  let html = '';
-  for(const p of profiles) {
-    const roleColor = p.role==='superadmin'?'superadmin':p.role==='master'?'master':p.status==='pending'?'pending':'staff';
-    const roleLabel = p.role==='superadmin'?'Super Admin':p.role==='master'?'Master':p.status==='pending'?'รอ Approve':'Staff';
-    html += `<div class="admin-panel-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
-        <div>
-          <div class="apc-name">${p.display_name||p.email}</div>
-          <div class="apc-meta">${p.email}</div>
-          <div style="margin-top:4px;">
-            <span class="role-badge ${roleColor}">${roleLabel}</span>
-            ${p.status==='suspended'?'<span class="role-badge" style="background:var(--red-soft);color:var(--red);margin-left:4px;">ระงับ</span>':''}
-          </div>
-        </div>
-      </div>
-      ${p.status==='pending' && p.role!=='superadmin' ? `
-        <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button onclick="approveUser('${p.id}')" style="flex:1;background:var(--green);border:none;color:#fff;border-radius:8px;padding:8px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;">✅ อนุมัติ</button>
-          <button onclick="rejectUser('${p.id}')" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:8px;padding:8px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;">❌ ปฏิเสธ</button>
-        </div>` : ''}
-      ${p.id !== _currentUser?.id ? `
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          ${p.status==='active' ? `<button onclick="suspendUser('${p.id}')" style="background:var(--yellow-soft);border:1px solid var(--yellow);color:var(--yellow);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">⏸ ระงับ</button>` : ''}
-          ${p.status==='suspended' ? `<button onclick="unsuspendUser('${p.id}')" style="background:var(--green-soft);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">▶ ปลดระงับ</button>` : ''}
-          <button onclick="openPermForUser('${p.id}','${(p.display_name||p.email).replace(/'/g,'')}')" style="background:var(--blue-soft);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">🔐 จัดการสิทธิ์</button>
-          <button onclick="setUserMaster('${p.id}')" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 12px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">👑 ตั้งเป็น Master</button>
-        </div>` : '<div style="font-size:11px;color:var(--text2);">— บัญชีของคุณ —</div>'}
-    </div>`;
-  }
-  el.innerHTML = html;
-}
-
-async function approveUser(userId) {
-  await supa.from('profiles').update({ status:'active', role:'staff' }).eq('id', userId);
-  loadAdminUsers();
-  alert('อนุมัติแล้ว');
-}
-async function rejectUser(userId) {
-  if(!confirm('ปฏิเสธและลบ user นี้?')) return;
-  await supa.from('profiles').delete().eq('id', userId);
-  loadAdminUsers();
-}
-async function suspendUser(userId) {
-  await supa.from('profiles').update({ status:'suspended' }).eq('id', userId);
-  loadAdminUsers();
-}
-async function unsuspendUser(userId) {
-  await supa.from('profiles').update({ status:'active' }).eq('id', userId);
-  loadAdminUsers();
-}
-async function setUserMaster(userId) {
-  await supa.from('profiles').update({ role:'master' }).eq('id', userId);
-  loadAdminUsers();
-}
-
-async function loadAdminShops() {
-  const el = document.getElementById('adm-shops-list');
-  if(!el) return;
-  el.innerHTML = '<div style="font-size:12px;color:var(--text2);">กำลังโหลด...</div>';
-  const { data: shops } = await supa.from('shops').select('*').order('created_at');
-  if(!shops?.length) { el.innerHTML = '<div class="empty">ยังไม่มีร้าน</div>'; return; }
-  let html = '';
-  shops.forEach(shop => {
-    html += `<div class="admin-panel-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <div class="apc-name">🏪 ${shop.name}</div>
-          <div class="apc-meta">สร้าง ${new Date(shop.created_at).toLocaleDateString('th-TH')}</div>
-          <span class="sc-status ${shop.status}" style="margin-top:4px;">${shop.status==='active'?'เปิด':'ระงับ'}</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          ${shop.status==='active' ? `<button onclick="suspendShop('${shop.id}')" style="background:var(--yellow-soft);border:1px solid var(--yellow);color:var(--yellow);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">⏸ ระงับ</button>` : `<button onclick="unsuspendShop('${shop.id}')" style="background:var(--green-soft);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">▶ เปิด</button>`}
-          <button onclick="openMemberReq('${shop.id}')" style="background:var(--blue-soft);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">👤 Members</button>
-        </div>
-      </div>
-    </div>`;
-  });
-  el.innerHTML = html;
-}
-
-async function adminCreateShop() {
-  const name = document.getElementById('new-shop-name').value.trim();
-  if(!name) return alert('กรุณากรอกชื่อร้าน');
-  const { error } = await supa.from('shops').insert({ name, owner_id: _currentUser.id, status:'active' });
-  if(error) return alert('เกิดข้อผิดพลาด: ' + error.message);
-  document.getElementById('new-shop-name').value = '';
-  loadAdminShops();
-  loadResetShopSelect();
-  alert('สร้างร้านสำเร็จ');
-}
-
-async function suspendShop(shopId) {
-  await supa.from('shops').update({ status:'suspended' }).eq('id', shopId);
-  loadAdminShops();
-}
-async function unsuspendShop(shopId) {
-  await supa.from('shops').update({ status:'active' }).eq('id', shopId);
-  loadAdminShops();
-}
-
-async function openMemberReq(shopId) {
-  const modal = document.getElementById('member-req-modal');
-  const listEl = document.getElementById('member-req-list');
-  listEl.innerHTML = 'กำลังโหลด...';
-  modal.classList.add('open');
-
-  const { data: members } = await supa.from('shop_members')
-    .select('*, profiles(email, display_name, role)')
-    .eq('shop_id', shopId);
-
-  if(!members?.length) { listEl.innerHTML = '<div class="empty">ยังไม่มี member</div>'; return; }
-  let html = '';
-  members.forEach(m => {
-    const name = m.profiles?.display_name || m.profiles?.email || m.user_id;
-    html += `<div class="admin-panel-card" style="margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <div class="apc-name">${name}</div>
-          <div class="apc-meta">บทบาท: ${m.role} · สถานะ: ${m.status}</div>
-        </div>
-        <div style="display:flex;gap:6px;">
-          ${m.status==='pending'?`<button onclick="approveMember('${m.id}','${shopId}')" style="background:var(--green);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">✅ อนุมัติ</button>`:''}
-          <button onclick="removeMember('${m.id}','${shopId}')" style="background:var(--red-soft);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:6px 10px;font-family:'Prompt',sans-serif;font-size:11px;cursor:pointer;">✕ ลบ</button>
-        </div>
-      </div>
-    </div>`;
-  });
-  listEl.innerHTML = html;
-}
-
-async function approveMember(memberId, shopId) {
-  await supa.from('shop_members').update({ status:'active' }).eq('id', memberId);
-  openMemberReq(shopId);
-}
-async function removeMember(memberId, shopId) {
-  if(!confirm('ลบ member นี้ออกจากร้าน?')) return;
-  await supa.from('shop_members').delete().eq('id', memberId);
-  openMemberReq(shopId);
-}
-
-// ============ PERMISSIONS ============
-let _permUserId = null;
-let _permShopId = null;
-
-async function openPermForUser(userId, userName) {
-  _permUserId = userId;
-  _permShopId = _currentShop?.id;
-  document.getElementById('perm-modal-name').textContent = userName;
-
-  const { data: existing } = await supa.from('permissions')
-    .select('*').eq('user_id', userId).eq('shop_id', _permShopId);
-
-  const permMap = {};
-  (existing||[]).forEach(p => { permMap[p.feature] = p.enabled; });
-
-  let html = '<div style="margin-bottom:12px;font-size:12px;color:var(--text2);">เปิด/ปิด feature ที่ user คนนี้เข้าถึงได้</div>';
-  FEATURES.forEach(f => {
-    const checked = permMap[f.key] !== undefined ? permMap[f.key] : false;
-    html += `<div class="perm-row">
-      <span class="perm-label">${f.label}</span>
-      <label class="toggle-switch">
-        <input type="checkbox" id="perm-${f.key}" ${checked?'checked':''}>
-        <span class="toggle-slider"></span>
-      </label>
-    </div>`;
-  });
-  document.getElementById('perm-modal-body').innerHTML = html;
-  document.getElementById('perm-modal').classList.add('open');
-}
-
-async function savePermissions() {
-  if(!_permUserId || !_permShopId) return;
-  const upserts = FEATURES.map(f => ({
-    shop_id: _permShopId,
-    user_id: _permUserId,
-    feature: f.key,
-    enabled: document.getElementById('perm-'+f.key)?.checked || false
-  }));
-  const { error } = await supa.from('permissions').upsert(upserts, {
-    onConflict: 'shop_id,user_id,feature'
-  });
-  if(error) return alert('บันทึกไม่ได้: ' + error.message);
-  closePermModal();
-  alert('บันทึกสิทธิ์แล้ว');
-}
-
-function closePermModal() {
-  document.getElementById('perm-modal').classList.remove('open');
-  _permUserId = null;
-}
-
-// ============ FACTORY RESET ============
-async function loadResetShopSelect() {
-  const sel = document.getElementById('reset-shop-select');
-  if(!sel) return;
-  const { data: shops } = await supa.from('shops').select('*').eq('owner_id', _currentUser?.id);
-  sel.innerHTML = (shops||[]).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-}
-
-async function doFactoryReset() {
-  const shopId = document.getElementById('reset-shop-select').value;
-  const confirm1 = document.getElementById('reset-confirm-input').value;
-  if(confirm1 !== 'RESET') return alert('กรุณาพิมพ์ RESET ให้ถูกต้อง');
-  if(!shopId) return alert('กรุณาเลือกร้าน');
-  if(!confirm('⚠️ ยืนยันลบข้อมูลทั้งหมดในร้านนี้? ไม่สามารถกู้คืนได้')) return;
-
-  const tables = ['sales','expenses','loans','loan_payments','capital','wages','rents'];
-  for(const t of tables) {
-    await supa.from(t).delete().eq('shop_id', shopId);
-  }
-
-  // ล้าง localStorage ด้วย (settings)
-  Object.values(KEY).forEach(k => localStorage.removeItem(k));
-  localStorage.removeItem('last_buy_date');
-  localStorage.removeItem('last_sale_date');
-
-  document.getElementById('reset-confirm-input').value = '';
-  alert('✅ Factory Reset สำเร็จ ข้อมูลทั้งหมดถูกลบแล้ว');
-  updateDashboard();
-}
-
-// ============ INIT ============
-const d=new Date();
-const dateStr=d.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short',year:'2-digit'});
-document.getElementById('topDate').textContent=dateStr;
-document.getElementById('sidebar-date').textContent=dateStr;
-document.querySelectorAll('input[type=date]').forEach(el=>el.value=today());
-document.querySelectorAll('input[type=month]').forEach(el=>el.value=thisMonth());
-document.getElementById('tl-from').value=thisMonth()+'-01';
-document.getElementById('tl-to').value=today();
-document.getElementById('ri-from').value=thisMonth()+'-01';
-document.getElementById('ri-to').value=today();
-document.getElementById('re-from').value=thisMonth()+'-01';
-document.getElementById('re-to').value=today();
-document.getElementById('rw-from').value=thisMonth()+'-01';
-document.getElementById('rw-to').value=today();
-buildSaleMeatBtns();
-buildBuyTypeSelect();
-buildSupplierDatalist();
-updateDashboard();
 </script>
-
-
-<!-- ADMIN PANEL PAGE -->
-<div class="page" id="page-admin">
-  <div class="section-title">🛡️ Admin Panel</div>
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="adminTab(this,'adm-users')">👤 Users</button>
-    <button class="tab-btn" onclick="adminTab(this,'adm-shops')">🏪 Shops</button>
-    <button class="tab-btn" onclick="adminTab(this,'adm-reset')">🗑 Reset</button>
-  </div>
-
-  <!-- TAB: Users -->
-  <div id="adm-users">
-    <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">จัดการ user ทั้งหมด</div>
-    <div id="adm-users-list"></div>
-  </div>
-
-  <!-- TAB: Shops -->
-  <div id="adm-shops" style="display:none;">
-    <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">จัดการร้านค้าทั้งหมด</div>
-    <div style="margin-bottom:14px;">
-      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">+ สร้างร้านใหม่</div>
-      <div style="display:flex;gap:8px;">
-        <input type="text" id="new-shop-name" placeholder="ชื่อร้าน เช่น ร้าน 01" style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
-        <button onclick="adminCreateShop()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">+ สร้าง</button>
-      </div>
-    </div>
-    <div id="adm-shops-list"></div>
-  </div>
-
-  <!-- TAB: Factory Reset -->
-  <div id="adm-reset" style="display:none;">
-    <div style="background:var(--red-soft);border:1.5px solid var(--red);border-radius:12px;padding:16px;margin-bottom:16px;">
-      <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:6px;">⚠️ Factory Reset</div>
-      <div style="font-size:12px;color:var(--red);">ลบข้อมูลทั้งหมดในร้านนี้ (sales, expenses, wages, loans, capital, rents) รวมถึง settings ทั้งหมด ไม่สามารถกู้คืนได้</div>
-    </div>
-    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">ร้านที่จะ reset:</div>
-    <select id="reset-shop-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);margin-bottom:14px;"></select>
-    <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">พิมพ์ <b>RESET</b> เพื่อยืนยัน</div>
-    <input type="text" id="reset-confirm-input" placeholder="พิมพ์ RESET" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);margin-bottom:14px;">
-    <button class="btn btn-red" onclick="doFactoryReset()">🗑 ยืนยัน Factory Reset</button>
-  </div>
-</div>
-
-<!-- PERMISSION MODAL -->
-<div class="modal-overlay" id="perm-modal">
-  <div class="modal">
-    <div class="modal-title">
-      <span>🔐 จัดการสิทธิ์ — <span id="perm-modal-name"></span></span>
-      <button class="modal-close" onclick="closePermModal()">✕</button>
-    </div>
-    <div id="perm-modal-body"></div>
-    <button class="btn btn-primary" style="margin-top:12px;" onclick="savePermissions()">💾 บันทึกสิทธิ์</button>
-  </div>
-</div>
-
-<!-- MEMBER REQUEST MODAL -->
-<div class="modal-overlay" id="member-req-modal">
-  <div class="modal">
-    <div class="modal-title">
-      <span>👤 คำขอเข้าร้าน</span>
-      <button class="modal-close" onclick="document.getElementById('member-req-modal').classList.remove('open')">✕</button>
-    </div>
-    <div id="member-req-list"></div>
-  </div>
-</div>
-
-
-<div class="modal-overlay" id="row-action-modal">
-  <div class="modal" style="padding:20px 16px 28px;">
-    <div class="modal-title">
-      <span id="ram-title">รายการ</span>
-      <button class="modal-close" onclick="closeRowAction()">✕</button>
-    </div>
-    <div id="ram-info" style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.9;"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button id="ram-edit-btn" class="btn btn-primary" onclick="ramDoEdit()">✏️ แก้ไข</button>
-      <button class="btn btn-red" onclick="ramDoDelete()">🗑 ลบ</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
