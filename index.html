@@ -1000,6 +1000,12 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <script>
 // ============ DATA ============
 // Supabase table map: KEY → table name + field mapping
+// Global auth state (ต้อง declare ก่อน SUPA_TABLE)
+let _currentUser = null;
+let _currentProfile = null;
+let _currentShop = null;
+let _myPerms = {};
+
 const SUPA_TABLE = {
   shop_sale:     { table:'sales',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, product:r.meat||r.product||'', qty:r.qty||0, unit_price:r.unitPrice||0, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, meat:r.product, qty:Number(r.qty)||0, unitPrice:Number(r.unit_price)||0, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
   shop_buy:      { table:'expenses',      toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, type:r.type||'', name:r.name||'', supplier:r.supplier||'', qty:r.qty||0, unit_price:r.unitPrice||0, amount:r.price||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, type:r.type||'', name:r.name||'', supplier:r.supplier||'', qty:Number(r.qty)||0, unitPrice:Number(r.unit_price)||0, price:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
@@ -3306,10 +3312,7 @@ function withTimeout(promise, ms=30000) {
   return Promise.race([promise, timeout]);
 }
 
-let _currentUser = null;
-let _currentProfile = null;
-let _currentShop = null; // { id, name, role } ร้านที่กำลังใช้งาน
-let _myPerms = {}; // { feature: true/false }
+// _currentUser, _currentProfile, _currentShop, _myPerms declared above near SUPA_TABLE
 
 // ============ FEATURES LIST ============
 const FEATURES = [
