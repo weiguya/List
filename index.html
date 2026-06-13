@@ -1033,12 +1033,23 @@ const DB = {
 // Sync array ทั้งหมดไป Supabase (upsert)
 async function _supaSync(k, arr) {
   const map = SUPA_TABLE[k];
-  if(!map || !_currentShop) return;
+  if(!map || !_currentShop) {
+    console.warn('_supaSync skip: no map or no shop', k, !!_currentShop);
+    return;
+  }
   try {
     const rows = arr.map(map.toRow);
-    await supa.from(map.table).upsert(rows, { onConflict: 'id' });
+    console.log('_supaSync', k, '->', map.table, rows.length, 'rows', JSON.stringify(rows[rows.length-1]));
+    const { error } = await supa.from(map.table).upsert(rows, { onConflict: 'id' });
+    if(error) {
+      console.error('_supaSync error', k, error.message, error.code, error.details);
+      const el = document.getElementById('login-error');
+      if(el) { el.textContent = 'Sync error: ' + error.message; el.classList.add('show'); }
+    } else {
+      console.log('_supaSync OK', k);
+    }
   } catch(e) {
-    console.warn('supaSync error', k, e.message);
+    console.error('_supaSync exception', k, e.message);
   }
 }
 
