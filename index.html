@@ -3396,44 +3396,15 @@ supa.auth.onAuthStateChange(async (event, session) => {
 
 async function loadProfileAndRoute(user) {
   setLoginLoading(true);
-  function dbg(msg) {
-    const el = document.getElementById('login-error');
-    if(el){ el.textContent = msg; el.classList.add('show'); }
-  }
   try {
     const isSA = user.email === SUPERADMIN_EMAIL;
-    dbg('STEP1: query profiles...');
-
-    let { data: profile, error: profErr } = await supa
-      .from('profiles').select('*').eq('id', user.id).single();
-    dbg('STEP2: got profile=' + (profile?'yes':'no') + ' err=' + (profErr?profErr.code:'none'));
-
-
-    if(profErr && profErr.code !== 'PGRST116') {
-      setLoginLoading(false);
-      showLoginError('โหลด profile ไม่ได้: ' + profErr.message + ' (code: ' + profErr.code + ')');
-      return;
-    }
-
-    if(!profile) {
-      const { data: newProf, error: upsertErr } = await supa.from('profiles').upsert({
-          id: user.id, email: user.email,
-          role: isSA ? 'superadmin' : 'user',
-          status: isSA ? 'active' : 'pending'
-        }, { onConflict: 'id' }).select().single();
-      if(upsertErr) {
-        setLoginLoading(false);
-        showLoginError('สร้าง profile ไม่ได้: ' + upsertErr.message);
-        return;
-      }
-      profile = newProf || { id:user.id, email:user.email, role:isSA?'superadmin':'user', status:isSA?'active':'pending' };
-    }
-
-
-    if(isSA && (profile.role !== 'superadmin' || profile.status !== 'active')) {
-      await supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id);
-      profile.role = 'superadmin'; profile.status = 'active';
-    }
+    // ข้าม profiles query — ใช้ user object โดยตรงเพื่อหลีกเลี่ยง RLS hang
+    const profile = {
+      id: user.id,
+      email: user.email,
+      role: isSA ? 'superadmin' : 'user',
+      status: isSA ? 'active' : 'pending'
+    };
     _currentProfile = profile;
 
     // เช็คสถานะ — ไม่ signOut แค่แจ้งแล้วออก
