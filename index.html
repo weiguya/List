@@ -3386,20 +3386,25 @@ supa.auth.onAuthStateChange(async (event, session) => {
 
 async function loadProfileAndRoute(user) {
   setLoginLoading(true);
+  function dbg(msg) {
+    const el = document.getElementById('login-error');
+    if(el){ el.textContent = msg; el.classList.add('show'); }
+  }
   try {
     const isSA = user.email === SUPERADMIN_EMAIL;
+    dbg('STEP1: query profiles...');
+
     let { data: profile, error: profErr } = await supa
       .from('profiles').select('*').eq('id', user.id).single();
+    dbg('STEP2: got profile=' + (profile?'yes':'no') + ' err=' + (profErr?profErr.code:'none'));
 
-    // PGRST116 = not found (ปกติ ถ้า user ใหม่), อื่นๆ = error จริง
+
     if(profErr && profErr.code !== 'PGRST116') {
-      // แสดง error แต่ไม่ signOut → ให้ user ลองใหม่เองได้
       setLoginLoading(false);
       showLoginError('โหลด profile ไม่ได้: ' + profErr.message + ' (code: ' + profErr.code + ')');
       return;
     }
 
-    // ยังไม่มี profile → สร้างใหม่
     if(!profile) {
       const { data: newProf, error: upsertErr } = await supa.from('profiles').upsert({
           id: user.id, email: user.email,
@@ -3414,7 +3419,7 @@ async function loadProfileAndRoute(user) {
       profile = newProf || { id:user.id, email:user.email, role:isSA?'superadmin':'user', status:isSA?'active':'pending' };
     }
 
-    // อัปเกรด superadmin ถ้าจำเป็น
+
     if(isSA && (profile.role !== 'superadmin' || profile.status !== 'active')) {
       await supa.from('profiles').update({ role:'superadmin', status:'active' }).eq('id', user.id);
       profile.role = 'superadmin'; profile.status = 'active';
