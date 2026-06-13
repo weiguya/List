@@ -999,12 +999,66 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 </div>
 <script>
 // ============ DATA ============
+// Supabase table map: KEY → table name + field mapping
+const SUPA_TABLE = {
+  shop_sale:     { table:'sales',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, product:r.meat||r.product||'', qty:r.qty||0, unit_price:r.unitPrice||0, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, meat:r.product, qty:Number(r.qty)||0, unitPrice:Number(r.unit_price)||0, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
+  shop_buy:      { table:'expenses',      toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, type:r.type||'', name:r.name||'', supplier:r.supplier||'', qty:r.qty||0, unit_price:r.unitPrice||0, amount:r.price||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, type:r.type||'', name:r.name||'', supplier:r.supplier||'', qty:Number(r.qty)||0, unitPrice:Number(r.unit_price)||0, price:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
+  shop_capital:  { table:'capital',       toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
+  shop_loan:     { table:'loans',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, source:r.source||'', amount:r.amount||0, interest_rate:r.interestRate||0, total_due:r.totalDue||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, source:r.source||'', amount:Number(r.amount)||0, interestRate:Number(r.interest_rate)||0, totalDue:Number(r.total_due)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
+  shop_loanpay:  { table:'loan_payments', toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, loan_id:r.loanId||'', amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, loanId:r.loan_id||'', amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
+  shop_wage:     { table:'wages',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, name:r.name||'', amount:r.amount||0, date:r.date, note:r.note||'', type:r.type||'wage', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, name:r.name||'', amount:Number(r.amount)||0, date:r.date, note:r.note||'', type:r.type||'wage', ts:r.ts||0 }) },
+  shop_rent:     { table:'rents',         toRow: r=>({ id:r.id, shop_id:_currentShop?.id, user_id:_currentUser?.id, amount:r.amount||0, date:r.date, note:r.note||'', ts:r.ts||Date.now() }), fromRow: r=>({ id:r.id, amount:Number(r.amount)||0, date:r.date, note:r.note||'', ts:r.ts||0 }) },
+};
+
+// In-memory cache
+const _cache = {};
+
 const DB = {
-  get: k => JSON.parse(localStorage.getItem(k)||'[]'),
-  set: (k,v) => localStorage.setItem(k,JSON.stringify(v)),
+  get: k => {
+    if(_cache[k] !== undefined) return _cache[k];
+    return JSON.parse(localStorage.getItem(k)||'[]');
+  },
+  set: (k,v) => {
+    _cache[k] = v;
+    localStorage.setItem(k, JSON.stringify(v));
+    // sync ไป Supabase ถ้า login แล้วและ key นี้ map กับ table
+    if(_currentUser && _currentShop && SUPA_TABLE[k]) {
+      _supaSync(k, v);
+    }
+  },
   getObj: k => JSON.parse(localStorage.getItem(k)||'{}'),
   setObj: (k,v) => localStorage.setItem(k,JSON.stringify(v))
 };
+
+// Sync array ทั้งหมดไป Supabase (upsert)
+async function _supaSync(k, arr) {
+  const map = SUPA_TABLE[k];
+  if(!map || !_currentShop) return;
+  try {
+    const rows = arr.map(map.toRow);
+    await supa.from(map.table).upsert(rows, { onConflict: 'id' });
+  } catch(e) {
+    console.warn('supaSync error', k, e.message);
+  }
+}
+
+// โหลดข้อมูลทั้งหมดจาก Supabase เข้า cache
+async function loadAllDataFromSupa() {
+  if(!_currentShop) return;
+  const shopId = _currentShop.id;
+  for(const [k, map] of Object.entries(SUPA_TABLE)) {
+    try {
+      const { data, error } = await supa.from(map.table).select('*').eq('shop_id', shopId).order('ts', { ascending: true });
+      if(!error && data) {
+        _cache[k] = data.map(map.fromRow);
+        localStorage.setItem(k, JSON.stringify(_cache[k]));
+      }
+    } catch(e) {
+      console.warn('loadAllData error', k, e.message);
+    }
+  }
+  console.log('loadAllDataFromSupa done');
+}
 const KEY = {
   buy:'shop_buy', sale:'shop_sale', capital:'shop_capital',
   loan:'shop_loan', loanpay:'shop_loanpay', wage:'shop_wage',
@@ -3551,7 +3605,10 @@ async function enterShop(shop, profile) {
   // บล็อก/ซ่อน menu ตาม permission
   applyPermissionToSidebar();
 
-  updateDashboard();
+  // โหลดข้อมูลจาก Supabase แล้วค่อย render
+  loadAllDataFromSupa().then(() => {
+    updateDashboard();
+  });
 }
 
 function updateSidebarForRole(profile, shop) {
