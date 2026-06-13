@@ -1798,7 +1798,6 @@ function renderRentList() {
 
 // ============ DELETE ============
 function delItem(key,id,cb) {
-  if(!confirm('ลบรายการนี้?')) return;
   DB.set(key,DB.get(key).filter(i=>i.id!==id));
   cb(); updateDashboard();
 }
