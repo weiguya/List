@@ -1022,7 +1022,12 @@ const DB = {
     _cache[k] = v;
     localStorage.setItem(k, JSON.stringify(v));
     // sync ไป Supabase ถ้า login แล้วและ key นี้ map กับ table
-    if(_currentUser && _currentShop && SUPA_TABLE[k]) {
+    const canSync = !!_currentUser && !!_currentShop && !!SUPA_TABLE[k];
+    if(SUPA_TABLE[k]) {
+      const el = document.getElementById('login-error');
+      if(el) { el.textContent = 'DB.set '+k+' user='+!!_currentUser+' shop='+(_currentShop?.id||'null')+' sync='+canSync; el.classList.add('show'); }
+    }
+    if(canSync) {
       _supaSync(k, v);
     }
   },
