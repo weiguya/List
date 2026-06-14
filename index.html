@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 07</title>
+<title>ร้านของฉัน 08</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 07</div>
+      <div class="s-title">🏪 ร้านของฉัน 08</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -1154,11 +1154,7 @@ function getSaleSkus() {
   return [];
 }
 
-function skuEmoji(name){
-  const skus=getSaleSkus();
-  const s=skus.find(x=>x.name===name);
-  return s?.emoji||getMeatEmoji(name,0);
-}
+function skuEmoji(name){ return getMeatEmoji(name,0); }
 function saveSaleSkus(arr) {
   const all=getItemNames();
   all[SALE_TYPE_ID]=arr;
@@ -1291,11 +1287,7 @@ function getSaleSkus() {
   return cats.map((c,i)=>({id:'sku_'+uid(), name:c, price:0, emoji:getMeatEmoji(c,i)}));
 }
 
-function skuEmoji(name){
-  const skus=getSaleSkus();
-  const s=skus.find(x=>x.name===name);
-  return s?.emoji||getMeatEmoji(name,0);
-}
+function skuEmoji(name){ return getMeatEmoji(name,0); }
 function saveSaleSkus(arr) { localStorage.setItem(KEY.saleSkus, JSON.stringify(arr)); }
 function getBuyTypes() {
   const s = localStorage.getItem(KEY.buyTypes);
@@ -1457,8 +1449,17 @@ function delSupplier(idx) {
 // ============ DYNAMIC CATEGORIES ============
 const MEAT_EMOJIS = ['🐷','🐔','🥩','🐟','🍖','🍗'];
 function getMeatEmoji(name,idx) {
-  const map = {หมู:'🐷',ไก่:'🐔',เนื้อ:'🥩',ปลา:'🐟'};
-  return map[name] || MEAT_EMOJIS[idx%MEAT_EMOJIS.length] || '🍽️';
+  const exact = {หมู:'🐷',ไก่:'🐔',เนื้อ:'🥩',ปลา:'🐟',กุ้ง:'🦐',หอย:'🦪',ปู:'🦀'};
+  if(exact[name]) return exact[name];
+  // partial match — ถ้าชื่อมีคำเหล่านี้อยู่
+  if(name.includes('หมู')) return '🐷';
+  if(name.includes('ไก่')) return '🐔';
+  if(name.includes('เนื้อ')) return '🥩';
+  if(name.includes('ปลา')) return '🐟';
+  if(name.includes('กุ้ง')) return '🦐';
+  if(name.includes('ปู')) return '🦀';
+  if(name.includes('หอย')) return '🦪';
+  return MEAT_EMOJIS[idx%MEAT_EMOJIS.length] || '🍽️';
 }
 
 
@@ -1811,7 +1812,8 @@ function onSaleRowMeatInput(id, val) {
   const r = _saleRows.find(r=>r.id===id);
   if(!r) return;
   r.meat = val;
-  // filter dropdown
+  // เปิด dropdown เมื่อพิมพ์
+  showSaleRowDd(id);
   filterSaleRowDd(id, val);
   // auto-fill ราคาถ้าพิมพ์ตรงกับ SKU
   const skus = getSaleSkus();
