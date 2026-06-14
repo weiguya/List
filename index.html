@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 014</title>
+<title>ร้านของฉัน 015</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,18 +255,16 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 014</div>
+      <div class="s-title">🏪 ร้านของฉัน 015</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <nav class="sidebar-menu">
-    <div class="sidebar-section-label">หน้าหลัก</div>
     <button class="sidebar-item active" id="nav-page-home" onclick="goPage('page-home',this)">
-      <span class="s-ico">🏠</span>Dashboard
+      <span class="s-ico">🏠</span>Home
     </button>
     <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">บันทึก</div>
     <button class="sidebar-item" id="nav-page-income" onclick="goPage('page-income',this)">
       <span class="s-ico">💚</span>รายรับ
     </button>
@@ -274,12 +272,10 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <span class="s-ico">💸</span>รายจ่าย
     </button>
     <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">การเงิน</div>
     <button class="sidebar-item" id="nav-page-finance" onclick="goPage('page-finance',this)">
       <span class="s-ico">💳</span>การเงิน
     </button>
     <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">วิเคราะห์</div>
     <button class="sidebar-item" id="nav-page-report" onclick="toggleReportSubmenu(this)">
       <span class="s-ico">📊</span>
       <span class="sidebar-sub-toggle" id="report-sub-toggle">รายงาน <span class="s-arrow">▶</span></span>
@@ -307,7 +303,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <button class="menu-btn" onclick="openSidebar()">
       <span></span><span></span><span></span>
     </button>
-    <h1 id="topbar-title">🏪 Dashboard</h1>
+    <h1 id="topbar-title">🏠 Home</h1>
   </div>
   <button class="user-chip" id="user-chip" onclick="showUserMenu()" style="display:none;">👤 <span id="user-email-short"></span></button><span class="topdate" id="topDate"></span>
 </div>
@@ -914,7 +910,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <div style="display:flex;gap:8px;align-items:center;">
         <select id="new-item-unit"
           style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;">
-          <option value="">-- หน่วยนับ (บังคับ) --</option>
+          <option value="">-- หน่วยนับ --</option>
         </select>
       </div>
       <button onclick="addItemName()"
@@ -1357,7 +1353,7 @@ function closeSidebar() {
 
 // ============ NAVIGATION ============
 const PAGE_TITLES = {
-  'page-home':'🏪 Dashboard','page-sale':'💰 ยอดขาย','page-buy':'💸 รายจ่าย','page-income':'💚 รายรับ',
+  'page-home':'🏠 Home','page-sale':'💰 ยอดขาย','page-buy':'💸 รายจ่าย','page-income':'💚 รายรับ',
   'page-finance':'💳 การเงิน','page-settings':'⚙️ ตั้งค่า',
   'page-rep-income':'💚 รายงานรายรับ','page-rep-expense':'💸 รายงานรายจ่าย','page-rep-movement':'📋 การเคลื่อนไหว',
   'page-rep-wages':'👷 ค่าแรง/คอม/เช่า',
@@ -1732,8 +1728,12 @@ function closeAdminPayDD() {
   if(dd) dd.style.display='none';
 }
 
-// Close all dropdowns when clicking outside
+// Close dropdowns only on real tap, not scroll
+let _touchMoved = false;
+document.addEventListener('touchstart', ()=>{ _touchMoved=false; }, {passive:true});
+document.addEventListener('touchmove', ()=>{ _touchMoved=true; }, {passive:true});
 document.addEventListener('click', e=>{
+  if(_touchMoved) return; // เลื่อนอยู่ ไม่ปิด
   const pairs = [
     ['buy-type-dd','buy-type-display'],
     ['buy-name-dd','buy-name-display'],
@@ -2695,7 +2695,7 @@ function deleteUnit(idx) {
 
 function populateUnitSelects() {
   const units=getStoredUnits();
-  const opts='<option value="">-- หน่วยนับ (บังคับ) --</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join('');
+  const opts='<option value="">-- หน่วยนับ --</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join('');
   const newSel=document.getElementById('new-item-unit');
   if(newSel) newSel.innerHTML=opts;
 }
