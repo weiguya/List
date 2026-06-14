@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 011</title>
+<title>ร้านของฉัน 013</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 011</div>
+      <div class="s-title">🏪 ร้านของฉัน 013</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -558,13 +558,13 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div style="display:flex;gap:8px;align-items:flex-start;">
       <div style="flex:1;min-width:0;position:relative;">
         <div style="position:relative;">
-          <input type="text" id="buy-name-input" placeholder="เลือก / พิมพ์ชื่อสินค้า"
-            oninput="onBuyNameInput(this.value)"
-            onclick="showBuyNameDD()"
-            autocomplete="off"
-            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
+          <div id="buy-name-display" onclick="toggleBuyNameDD()"
+            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;user-select:none;min-height:48px;display:flex;align-items:center;box-sizing:border-box;">
+            -- เลือกสินค้า --
+          </div>
           <span onclick="toggleBuyNameDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
         </div>
+        <input type="hidden" id="buy-name-input">
         <select id="buy-name-select" style="display:none;"></select>
         <datalist id="buy-name-datalist"></datalist>
         <div id="buy-name-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:180px;overflow-y:auto;"></div>
@@ -1374,6 +1374,10 @@ function goPage(id, navBtn) {
   if(navBtn) navBtn.classList.add('active');
   document.getElementById('topbar-title').textContent = PAGE_TITLES[id]||'';
   closeSidebar();
+  // push history for back button support
+  if(history.state?.pageId !== id) {
+    history.pushState({pageId:id}, '', '');
+  }
   if(id==='page-home') updateDashboard();
   if(id==='page-buy') { buildBuyTypeSelect(); buildSupplierDatalist(); renderBuyList(); const ld=localStorage.getItem('last_buy_date'); if(ld) document.getElementById('buy-date').value=ld; }
   if(id==='page-income') { buildSaleMeatBtns(); renderSaleList(); renderCapList(); renderLoanStatus(); const ld=localStorage.getItem('last_sale_date'); if(ld) document.getElementById('sale-date').value=ld; if(!_saleRows?.length) initSaleRows(); }
@@ -1387,6 +1391,29 @@ function goPage(id, navBtn) {
   if(id==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
   if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-units','set-profit','set-admin','set-employees','set-backup'].includes(id)) renderSubSetting(id);
 }
+
+// Back button / swipe back support
+window.addEventListener('popstate', e=>{
+  const pageId = e.state?.pageId;
+  if(pageId && document.getElementById(pageId)) {
+    // go back without pushing new history
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.getElementById('topbar-title').textContent = PAGE_TITLES[pageId]||'';
+    const navId = Object.keys(PAGE_TITLES).indexOf(pageId);
+    document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+    const nb = document.getElementById('nav-'+pageId);
+    if(nb) nb.classList.add('active');
+    if(pageId==='page-home') updateDashboard();
+    if(pageId==='page-buy') { buildBuyTypeSelect(); buildSupplierDatalist(); renderBuyList(); }
+    if(pageId==='page-income') { buildSaleMeatBtns(); renderSaleList(); if(!_saleRows?.length) initSaleRows(); }
+    if(pageId==='page-finance') { buildEmpWageSelect(); buildAdminPaySelect(); renderEmpWageHistory(); renderAdminPayHistory(); }
+    if(pageId==='page-rep-income') { initRepDates(); renderRepIncome(); }
+    if(pageId==='page-rep-expense') { initRepDates(); renderRepExpense(); }
+    if(pageId==='page-rep-movement') { initRepDates(); renderTimeline(); }
+    if(pageId==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
+  }
+});
 
 function toggleReportSubmenu(btn) {
   const sub = document.getElementById('sidebar-sub-report');
@@ -1470,6 +1497,20 @@ function buildSupplierSelect() {
   const list = getSuppliers();
   sel.innerHTML = '<option value="">-- เลือกร้าน --</option>'
     + list.map(s=>`<option value="${s}">${s}</option>`).join('');
+  // reset display
+  const disp = document.getElementById('buy-supplier-display');
+  if(disp) { disp.textContent = '-- เลือกร้าน (ถ้ามี) --'; disp.style.color = 'var(--text2)'; }
+  // build custom DD items
+  const dd = document.getElementById('buy-supplier-dd');
+  if(dd) {
+    const items = ['-- ไม่ระบุ --', ...list];
+    dd.innerHTML = items.map(s=>`
+      <div onmousedown="event.preventDefault();selectBuySupplier('${s==='-- ไม่ระบุ --'?'':s}','${s}')"
+        ontouchend="event.preventDefault();selectBuySupplier('${s==='-- ไม่ระบุ --'?'':s}','${s}');event.stopPropagation();"
+        style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
+        ${s}
+      </div>`).join('');
+  }
 }
 function addSupplierFromInput() { /* disabled - manage in settings */ }
 function onSupplierInput(el) {}
@@ -1587,6 +1628,8 @@ function buildBuyNameDDItems(filter) {
 function selectBuyName(name) {
   const inp = document.getElementById('buy-name-input');
   if(inp) inp.value = name;
+  const disp = document.getElementById('buy-name-display');
+  if(disp) { disp.textContent = name; disp.style.color = 'var(--text)'; }
   closeBuyNameDD();
   autoFillBuyUnit(name);
 }
@@ -1923,22 +1966,22 @@ function renderSaleRows() {
         <span style="font-size:10px;font-weight:700;color:var(--text2);flex:1;">#${i+1}</span>
         ${_saleRows.length>1?`<button type="button" onclick="removeSaleRow('${r.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;opacity:0.7;">×</button>`:''}
       </div>
-      <!-- ช่องสินค้า: กล่องเดียวมีลูกศร -->
+      <!-- ช่องสินค้า: dropdown only -->
       <div style="position:relative;padding:8px 8px 0;">
         <div style="position:relative;">
-          <input type="text" id="sr-meat-${r.id}" value="${r.meat}" placeholder="เลือกสินค้า..."
-            oninput="onSaleRowMeatInput('${r.id}',this.value)"
-            onclick="showSaleRowDd('${r.id}')"
-            autocomplete="off"
-            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:7px;padding:7px 32px 7px 10px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);cursor:pointer;">
+          <div id="sr-meat-display-${r.id}" onclick="toggleSaleRowDd('${r.id}')"
+            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:7px;padding:7px 32px 7px 10px;font-family:'Prompt',sans-serif;font-size:13px;color:${r.meat?'var(--text)':'var(--text2)'};cursor:pointer;user-select:none;min-height:36px;display:flex;align-items:center;">
+            ${r.meat||'-- เลือกสินค้า --'}
+          </div>
+          <input type="hidden" id="sr-meat-${r.id}" value="${r.meat}">
           <span onclick="toggleSaleRowDd('${r.id}')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:18px;cursor:pointer;pointer-events:all;user-select:none;line-height:1;">▾</span>
         </div>
         <!-- dropdown list -->
         <div id="sr-dd-${r.id}" style="display:none;position:absolute;left:8px;right:8px;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:8px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:180px;overflow-y:auto;">
           ${skus.length===0
-            ? `<div style="padding:10px 12px;font-size:12px;color:var(--text2);">ยังไม่มีสินค้าในระบบ</div>`
-            : skus.map(s=>`<div onmousedown="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}')"
-              ontouchend="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
+            ? `<div style="padding:10px 12px;font-size:12px;color:var(--text2);">ยังไม่มีสินค้า — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting('set-itemnames')">ไปตั้งค่า</span></div>`
+            : skus.map(s=>`<div onmousedown="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\'")}')"
+              ontouchend="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\'")}');event.stopPropagation();"
               style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
               <span>${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
               <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
@@ -2017,8 +2060,10 @@ function selectSaleRowProduct(id, name) {
   const r = _saleRows.find(r=>r.id===id);
   if(!r) return;
   r.meat = name;
-  const el = document.getElementById('sr-meat-'+id);
-  if(el) el.value = name;
+  const hiddenEl = document.getElementById('sr-meat-'+id);
+  if(hiddenEl) hiddenEl.value = name;
+  const dispEl = document.getElementById('sr-meat-display-'+id);
+  if(dispEl) { dispEl.textContent = name; dispEl.style.color = 'var(--text)'; }
   const dd = document.getElementById('sr-dd-'+id);
   if(dd) dd.style.display='none';
   // auto-fill ราคา
