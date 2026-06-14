@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 05</title>
+<title>ร้านของฉัน 06</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 05</div>
+      <div class="s-title">🏪 ร้านของฉัน 06</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -1141,8 +1141,17 @@ function getItemUnits() {
   return s?JSON.parse(s):{};
 }
 function saveItemUnits(obj){ localStorage.setItem(KEY.itemUnits,JSON.stringify(obj)); }
-function getUnit(name){ return (getItemUnits()[name]||''); }
-function nameWithUnit(name){ const u=getUnit(name); return u?`${name} (${u})`:name; }
+function _unitKey(name, typeId){ return typeId ? `${typeId}::${name}` : name; }
+function getUnit(name, typeId){
+  const units=getItemUnits();
+  // ถ้ามี typeId ให้หาแบบ specific ก่อน ถ้าไม่เจอ fallback ไป name-only (legacy)
+  if(typeId){
+    const specific=units[_unitKey(name,typeId)];
+    if(specific) return specific;
+  }
+  return units[name]||'';
+}
+function nameWithUnit(name, typeId){ const u=getUnit(name,typeId); return u?`${name} (${u})`:name; }
 // ประเภทที่บังคับเลือกจาก list (ไม่ให้พิมพ์เอง)
 const FORCED_SELECT_TYPES = ['material','supply'];
 
@@ -1199,7 +1208,7 @@ function autoFillBuyUnit(name) {
   if(!unitRow||!unitSel) return;
   const typeId=document.getElementById('buy-type').value;
   if(typeId==='transport') return;
-  const u=getUnit(name);
+  const u=getUnit(name, typeId);
   if(u){
     // มีหน่วยนับในระบบ — แสดง badge ซ่อน dropdown
     unitSel.value='';
@@ -1456,7 +1465,7 @@ function confirmBuy() {
   const date = document.getElementById('buy-date').value;
   const unit = type!=='transport'?(()=>{
     const name=getBuyNameValue();
-    const u=getUnit(name);
+    const u=getUnit(name, type);
     if(u) return u;
     return document.getElementById('buy-unit-select')?.value||'';
   })():'';
@@ -1657,13 +1666,13 @@ function renderSaleRows() {
             : skus.map(s=>`<div onmousedown="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}')"
               ontouchend="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
               style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-              <span>${getMeatEmoji(s.name,0)} ${s.name}${getUnit(s.name)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name)}</span>`:''}</span>
+              <span>${getMeatEmoji(s.name,0)} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
               <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
             </div>`).join('')
           }
         </div>
       </div>
-      ${r.meat&&getUnit(r.meat)?`<div style="padding:2px 8px 0;"><span style="font-size:10px;background:var(--blue-soft);color:var(--accent);border-radius:5px;padding:2px 7px;">หน่วย: ${getUnit(r.meat)}</span></div>`:''}
+      ${r.meat&&getUnit(r.meat,SALE_TYPE_ID)?`<div style="padding:2px 8px 0;"><span style="font-size:10px;background:var(--blue-soft);color:var(--accent);border-radius:5px;padding:2px 7px;">หน่วย: ${getUnit(r.meat,SALE_TYPE_ID)}</span></div>`:''}
       <!-- จำนวน | ราคา/หน่วย | ยอด -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:6px 8px 8px;">
         <div>
@@ -1723,7 +1732,7 @@ function filterSaleRowDd(id, filter) {
       onmousedown="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}')"
       ontouchend="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
       style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-      <span>${getMeatEmoji(s.name,0)} ${s.name}${getUnit(s.name)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name)}</span>`:''}</span>
+      <span>${getMeatEmoji(s.name,0)} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
       <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
     </div>`).join('');
   }
@@ -2169,7 +2178,7 @@ function renderItemNamesList() {
       const priceVal=t.id===SALE_TYPE_ID&&item.price>0?`฿${fmt(item.price)}`:'—';
       const priceColor=t.id===SALE_TYPE_ID&&item.price>0?'var(--green)':'var(--text2)';
       const shortLabel=t.label.replace(/^[^\s]+\s/,'');
-      const u=getUnit(item.name);
+      const u=getUnit(item.name, t.id);
       html+=`<div style="display:grid;grid-template-columns:1fr 72px 72px 80px;gap:4px;align-items:center;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 10px;margin-bottom:5px;cursor:pointer;"
         ondblclick="openEditItemModal('${t.id}','${encodeURIComponent(item.name)}',${t.id===SALE_TYPE_ID?item.price||0:0})"
         ontouchstart="startItemLongPress('${t.id}','${encodeURIComponent(item.name)}',${t.id===SALE_TYPE_ID?item.price||0:0},event)"
@@ -2212,7 +2221,7 @@ function addItemName() {
   }
   // บันทึกหน่วยนับ
   const units=getItemUnits();
-  units[name]=unit;
+  if(unit) units[_unitKey(name,typeId)]=unit;
   saveItemUnits(units);
   document.getElementById('new-item-name').value='';
   document.getElementById('new-item-price').value='';
@@ -2253,7 +2262,7 @@ function openEditItemModal(typeId,encodedName,price) {
   // populate unit select
   const unitSel=document.getElementById('edit-item-unit');
   const allUnits=getStoredUnits();
-  const curUnit=getUnit(name);
+  const curUnit=getUnit(name, typeId);
   unitSel.innerHTML='<option value="">-- ไม่มีหน่วยนับ --</option>'+allUnits.map(u=>`<option value="${u}"${u===curUnit?' selected':''}>${u}</option>`).join('');
   document.getElementById('edit-item-modal').style.display='flex';
 }
@@ -2274,7 +2283,10 @@ function deleteEditItem() {
     saveItemNames(all);
   }
   // ลบ unit ด้วย
-  const units=getItemUnits(); delete units[name]; saveItemUnits(units);
+  const units=getItemUnits();
+  delete units[_unitKey(name,typeId)];
+  delete units[name]; // legacy cleanup
+  saveItemUnits(units);
   renderItemNamesList();
   buildBuyTypeSelect();
   buildSaleProductDatalist();
@@ -2309,8 +2321,11 @@ function saveEditItem() {
   }
   // อัปเดตหน่วยนับ (ลบชื่อเก่า เพิ่มชื่อใหม่)
   const units=getItemUnits();
-  if(oldName!==newName) delete units[oldName];
-  if(newUnit) units[newName]=newUnit; else delete units[newName];
+  // ลบ key เก่า (ทั้ง format ใหม่และ legacy)
+  delete units[_unitKey(oldName,oldType)];
+  delete units[oldName];
+  // บันทึก key ใหม่
+  if(newUnit) units[_unitKey(newName,newType)]=newUnit;
   saveItemUnits(units);
   closeEditItemModal();
   renderItemNamesList();
@@ -3013,7 +3028,7 @@ function renderRepIncome() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{ const _u=getUnit(i.meat); items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${_u?' ('+_u+')':''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id}); });
+  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{ const _u=getUnit(i.meat,SALE_TYPE_ID); items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${_u?' ('+_u+')':''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id}); });
   if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากเงินกู้',label:i.source||'เงินกู้'+(i.interestRate>0?' ('+i.interestRate+'%/ปี)':''),detail:i.totalDue?`ยอดที่ต้องชำระรวม: ${fmt(i.totalDue)}`:'',amount:i.amount,color:'blue',key:KEY.loan,id:i.id}));
   if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue',key:KEY.capital,id:i.id}));
 
