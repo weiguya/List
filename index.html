@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 01</title>
+<title>ร้านของฉัน 02</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -246,7 +246,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 01</div>
+      <div class="s-title">🏪 ร้านของฉัน 02</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -334,10 +334,13 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="value red" id="d-loan">0</div>
       <div style="font-size:10px;color:var(--text2);margin-top:2px;">ยอดชำระทั้งหมด: <span id="d-loan-due" class="red">0</span></div>
     </div>
-    <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;cursor:pointer;" onclick="goReportTab('rep-movement',document.getElementById('nav-rep-movement'));">
+    <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;">
       <div class="label" style="color:rgba(255,255,255,0.75);">💳 เงินคงเหลือในบัญชีจริง</div>
-      <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;">0</div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้ · แตะดูเคลื่อนไหว →</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;filter:blur(6px);transition:filter 0.3s;">0</div>
+        <button id="cashbal-show-btn" onclick="showCashBalance()" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:5px 12px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;">👁 แสดง</button>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้</div>
     </div>
     <div class="stat-card full" style="cursor:pointer;" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);">
       <div class="label">💵 เงินทุนที่ใส่เข้ามา</div>
@@ -522,10 +525,19 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div class="form-group">
     <label>ชื่อสินค้า</label>
-    <select id="buy-name-select" style="display:none;width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;"></select>
-    <input type="text" id="buy-name-input" placeholder="พิมพ์ชื่อสินค้า"
-      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
-    <datalist id="buy-name-datalist"></datalist>
+    <div style="display:flex;gap:8px;align-items:flex-start;">
+      <div style="flex:1;min-width:0;">
+        <select id="buy-name-select" style="display:none;width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;"></select>
+        <input type="text" id="buy-name-input" placeholder="พิมพ์ชื่อสินค้า"
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
+        <datalist id="buy-name-datalist"></datalist>
+      </div>
+      <div id="buy-unit-row" style="flex:0 0 110px;">
+        <select id="buy-unit-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 10px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;">
+          <option value="">หน่วย</option>
+        </select>
+      </div>
+    </div>
     <div id="buy-name-empty-msg" style="display:none;margin-top:8px;background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);">
       ⚠️ ยังไม่มีสินค้าในประเภทนี้ — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting('set-itemnames')">ไปตั้งค่าก่อน</span>
     </div>
@@ -540,14 +552,6 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="form-group"><label>จำนวน</label><input type="number" id="buy-qty" placeholder="1" step="0.01" min="0" oninput="calcBuyTotal()"></div>
     <div class="form-group"><label>ราคา/หน่วย (บาท)</label><input type="number" id="buy-unit-price" placeholder="0.00" step="0.01" min="0" oninput="calcBuyTotal()"></div>
   </div>
-  <div class="form-group" id="buy-unit-row">
-    <label>หน่วยนับ</label>
-    <select id="buy-unit-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;">
-      <option value="">-- เลือกหน่วยนับ --</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label>ราคารวม</label>
     <div style="background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--accent);" id="buy-total-display">0</div>
   </div>
   <div class="form-group"><label>วันที่</label><input type="date" id="buy-date"></div>
@@ -846,6 +850,19 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 </div>
 
+<!-- Modal ยืนยันดูยอดคงเหลือ -->
+<div id="cashbal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border-radius:16px;padding:24px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+    <div style="font-size:28px;margin-bottom:8px;">🔒</div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px;">ยืนยันการดูยอดเงิน</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px;">ต้องการดูยอดคงเหลือในบัญชีจริงหรือไม่?</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="confirmShowCashBalance()" style="flex:1;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">✅ ยืนยัน</button>
+      <button onclick="document.getElementById('cashbal-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal แก้ไขสินค้า -->
 <div id="edit-item-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:var(--card);border-radius:16px;padding:20px;width:88%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
@@ -1137,7 +1154,6 @@ function buildItemNameSelect(typeId){
 function onBuyTypeChange(){
   const typeId=document.getElementById('buy-type').value;
   buildItemNameSelect(typeId);
-  // แสดง/ซ่อน หน่วยนับ — ซ่อนเฉพาะ transport
   const unitRow=document.getElementById('buy-unit-row');
   const unitSel=document.getElementById('buy-unit-select');
   if(unitRow && unitSel){
@@ -1146,7 +1162,7 @@ function onBuyTypeChange(){
     } else {
       unitRow.style.display='block';
       const units=getStoredUnits();
-      unitSel.innerHTML='<option value="">-- เลือกหน่วยนับ --</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join('');
+      unitSel.innerHTML='<option value="">หน่วย</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join('');
     }
   }
 }
@@ -2104,7 +2120,6 @@ function addItemName() {
   const price=parseFloat(document.getElementById('new-item-price')?.value)||0;
   const unit=document.getElementById('new-item-unit')?.value||'';
   if(!name||!typeId) return alert('กรุณากรอกชื่อสินค้าและเลือกประเภท');
-  if(!unit) return alert('กรุณาเลือกหน่วยนับ');
   if(typeId===SALE_TYPE_ID){
     const skus=getSaleSkus();
     if(skus.find(s=>s.name===name)) return alert('มีสินค้านี้อยู่แล้ว');
@@ -3283,6 +3298,26 @@ function getWeekRange() {
   return {wFrom:mon.toISOString().slice(0,10), wTo:sun.toISOString().slice(0,10)};
 }
 
+let _cashBalVisible = false;
+function showCashBalance() {
+  document.getElementById('cashbal-modal').style.display='flex';
+}
+function confirmShowCashBalance() {
+  document.getElementById('cashbal-modal').style.display='none';
+  const el=document.getElementById('d-cashbal');
+  const btn=document.getElementById('cashbal-show-btn');
+  if(el) el.style.filter='none';
+  if(btn){ btn.textContent='🔒 ซ่อน'; btn.onclick=hideCashBalance; }
+  _cashBalVisible=true;
+}
+function hideCashBalance() {
+  const el=document.getElementById('d-cashbal');
+  const btn=document.getElementById('cashbal-show-btn');
+  if(el) el.style.filter='blur(6px)';
+  if(btn){ btn.textContent='👁 แสดง'; btn.onclick=showCashBalance; }
+  _cashBalVisible=false;
+}
+
 function updateDashboard() {
   const td=today(), tm=thisMonth();
   const profitMonth=_profitViewMonth||tm;
@@ -3372,6 +3407,9 @@ function updateDashboard() {
   ac('d-sale',periodSale,'green'); ac('d-profit',monthProfit,monthProfit>=0?'green':'red');
   ac('d-buy',periodBuy,'yellow'); ac('d-loan',loanRemain,'red');
   ac('d-capital',capitalTotal,'blue'); ac('d-cashbal',cashBal,cashBal>=0?'':'red');
+  // รักษา blur state
+  const cashEl=document.getElementById('d-cashbal');
+  if(cashEl && !_cashBalVisible) cashEl.style.filter='blur(6px)';
 
   // 7-day chart (ยอดเงิน)
   const days7=[];
