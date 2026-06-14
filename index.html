@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 06</title>
+<title>ร้านของฉัน 07</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 06</div>
+      <div class="s-title">🏪 ร้านของฉัน 07</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -793,6 +793,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="smi-body"><div class="smi-title">สำรองข้อมูล</div><div class="smi-sub">Export ข้อมูลทั้งหมดเป็นไฟล์</div></div>
     <span class="smi-arrow">›</span>
   </div>
+  <div onclick="openFactoryReset()" class="set-menu-item" style="border-color:var(--red);background:var(--red-soft);">
+    <span class="smi-ico">🔴</span>
+    <div class="smi-body"><div class="smi-title" style="color:var(--red);">รีเซ็ตข้อมูลทั้งหมด</div><div class="smi-sub" style="color:var(--red);opacity:0.8;">ล้างทุกรายการ — ไม่สามารถกู้คืนได้</div></div>
+    <span class="smi-arrow" style="color:var(--red);">›</span>
+  </div>
 </div>
 
 
@@ -866,6 +871,26 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
       <button onclick="addItemName()"
         style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสินค้า</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal รีเซ็ตข้อมูลทั้งหมด -->
+<div id="factory-reset-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border-radius:16px;padding:24px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.35);">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:36px;">⚠️</div>
+      <div style="font-size:16px;font-weight:700;color:var(--red);margin-top:6px;">รีเซ็ตข้อมูลทั้งหมด</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:8px;line-height:1.6;">จะล้างข้อมูลทุกรายการที่บันทึกไว้<br>รายรับ รายจ่าย เงินกู้ ค่าแรง ค่าเช่า<br>พนักงาน ผู้บริหาร ชื่อสินค้า หน่วยนับ<br><strong>ไม่สามารถกู้คืนได้</strong></div>
+    </div>
+    <div style="background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--red);text-align:center;">
+      พิมพ์ <strong>รีเซ็ต</strong> เพื่อยืนยัน
+    </div>
+    <input id="factory-reset-confirm-input" type="text" placeholder="พิมพ์ รีเซ็ต"
+      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);box-sizing:border-box;margin-bottom:14px;text-align:center;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button onclick="execFactoryReset()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">🗑️ รีเซ็ตเลย</button>
+      <button onclick="document.getElementById('factory-reset-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1128,6 +1153,12 @@ function getSaleSkus() {
   }
   return [];
 }
+
+function skuEmoji(name){
+  const skus=getSaleSkus();
+  const s=skus.find(x=>x.name===name);
+  return s?.emoji||getMeatEmoji(name,0);
+}
 function saveSaleSkus(arr) {
   const all=getItemNames();
   all[SALE_TYPE_ID]=arr;
@@ -1258,6 +1289,12 @@ function getSaleSkus() {
   // migrate: ถ้ามี saleCats เดิม ให้สร้าง SKU จากนั้น
   const cats = getSaleCats();
   return cats.map((c,i)=>({id:'sku_'+uid(), name:c, price:0, emoji:getMeatEmoji(c,i)}));
+}
+
+function skuEmoji(name){
+  const skus=getSaleSkus();
+  const s=skus.find(x=>x.name===name);
+  return s?.emoji||getMeatEmoji(name,0);
 }
 function saveSaleSkus(arr) { localStorage.setItem(KEY.saleSkus, JSON.stringify(arr)); }
 function getBuyTypes() {
@@ -1536,7 +1573,7 @@ function renderSaleDropdown(filter) {
     dd.innerHTML = filtered.map(s=>`
       <div onclick="selectSaleProduct('${s.name}')"
         style="padding:11px 14px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-        <span>${getMeatEmoji(s.name,0)} ${s.name}</span>
+        <span>${s.emoji||'🍽️'} ${s.name}</span>
         <span style="font-size:12px;color:var(--text2);">${s.price>0?fmt(s.price)+' บาท':'—'}</span>
       </div>`).join('');
   }
@@ -1653,8 +1690,6 @@ function renderSaleRows() {
         <div style="position:relative;">
           <input type="text" id="sr-meat-${r.id}" value="${r.meat}" placeholder="เลือกสินค้า..."
             oninput="onSaleRowMeatInput('${r.id}',this.value)"
-            onclick="showSaleRowDd('${r.id}')"
-            onfocus="showSaleRowDd('${r.id}')"
             autocomplete="off"
             style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:7px;padding:7px 32px 7px 10px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);cursor:pointer;">
           <span onclick="toggleSaleRowDd('${r.id}')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:11px;cursor:pointer;pointer-events:all;user-select:none;">▾</span>
@@ -1666,7 +1701,7 @@ function renderSaleRows() {
             : skus.map(s=>`<div onmousedown="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}')"
               ontouchend="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
               style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-              <span>${getMeatEmoji(s.name,0)} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
+              <span>${s.emoji||'🍽️'} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
               <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
             </div>`).join('')
           }
@@ -1732,7 +1767,7 @@ function filterSaleRowDd(id, filter) {
       onmousedown="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}')"
       ontouchend="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
       style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-      <span>${getMeatEmoji(s.name,0)} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
+      <span>${s.emoji||'🍽️'} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
       <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
     </div>`).join('');
   }
@@ -1822,7 +1857,7 @@ function confirmSale() {
   const grandTotal = validRows.reduce((s,r)=>s+r.amount,0);
   const rows = [
     ['วันที่', fmtDate(date)],
-    ...validRows.map(r=>[getMeatEmoji(r.meat,0)+' '+r.meat, fmt(r.amount)]),
+    ...validRows.map(r=>[skuEmoji(r.meat)+' '+r.meat, fmt(r.amount)]),
     ['รวมทั้งหมด', fmt(grandTotal)],
   ];
   if(note) rows.push(['หมายเหตุ', note]);
@@ -1873,7 +1908,7 @@ function renderSaleList() {
         data-longpress="openEditModal('${KEY.sale}','${i.id}',renderSaleList)"
         style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;">
         <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${getMeatEmoji(i.meat,0)} ${i.meat||'ยอดขาย'}${i.note?' <span style="font-size:11px;color:var(--text2);">· '+i.note+'</span>':''}</div>
+          <div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${skuEmoji(i.meat)} ${i.meat||'ยอดขาย'}${i.note?' <span style="font-size:11px;color:var(--text2);">· '+i.note+'</span>':''}</div>
           ${i.qty?`<div style="font-size:10px;color:var(--text2);">${i.qty} × ${fmt(i.unitPrice)}</div>`:''}
         </div>
         <span style="font-size:13px;font-weight:600;color:var(--green);white-space:nowrap;margin-left:8px;">+${fmt(i.amount)}</span>
@@ -3028,7 +3063,7 @@ function renderRepIncome() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{ const _u=getUnit(i.meat,SALE_TYPE_ID); items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${_u?' ('+_u+')':''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id}); });
+  if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{ const _u=getUnit(i.meat,SALE_TYPE_ID); items.push({date:i.date,ts:i.ts||0,cat:'💰 ยอดขาย',label:`${skuEmoji(i.meat)} ${i.meat||''}${_u?' ('+_u+')':''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id}); });
   if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'🏦 รับจากเงินกู้',label:i.source||'เงินกู้'+(i.interestRate>0?' ('+i.interestRate+'%/ปี)':''),detail:i.totalDue?`ยอดที่ต้องชำระรวม: ${fmt(i.totalDue)}`:'',amount:i.amount,color:'blue',key:KEY.loan,id:i.id}));
   if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'💵 รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue',key:KEY.capital,id:i.id}));
 
@@ -3160,6 +3195,27 @@ function renderRepIncome() {
 
 // ============ REPORT: รายจ่าย ============
 function chkRe(id){ const e=document.getElementById(id); return e?e.checked:true; }
+function openFactoryReset() {
+  document.getElementById('factory-reset-confirm-input').value='';
+  document.getElementById('factory-reset-modal').style.display='flex';
+}
+
+function execFactoryReset() {
+  const val = document.getElementById('factory-reset-confirm-input').value.trim();
+  if(val !== 'รีเซ็ต') return alert('กรุณาพิมพ์คำว่า "รีเซ็ต" ให้ถูกต้อง');
+  // ล้างเฉพาะข้อมูลที่บันทึก — ไม่แตะโครงสร้าง (buyTypes, suppliers, profitCfg)
+  const dataToClear = [
+    KEY.buy, KEY.sale, KEY.capital, KEY.loan, KEY.loanpay,
+    KEY.wage, KEY.rent, KEY.admin, KEY.adminpay, KEY.empwagepay,
+    KEY.employees, KEY.itemNames, KEY.saleSkus, KEY.itemUnits,
+    'shop_unit_list', 'last_sale_date', 'last_buy_date'
+  ];
+  dataToClear.forEach(k => localStorage.removeItem(k));
+  document.getElementById('factory-reset-modal').style.display='none';
+  alert('✅ ล้างข้อมูลทั้งหมดเรียบร้อยแล้ว');
+  location.reload();
+}
+
 function renderRepExpense() {
   const from=document.getElementById('re-from')?.value;
   const to=document.getElementById('re-to')?.value;
@@ -3319,7 +3375,7 @@ function renderTimeline() {
   if(!el) return;
   if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
   let items=[];
-  if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💰 ยอดขาย',label:`${getMeatEmoji(i.meat,0)} ${i.meat||''}${i.note?' · '+i.note:''}`,amount:i.amount,key:KEY.sale,id:i.id}));
+  if(chk('tl-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💰 ยอดขาย',label:`${skuEmoji(i.meat)} ${i.meat||''}${i.note?' · '+i.note:''}`,amount:i.amount,key:KEY.sale,id:i.id}));
   if(chk('tl-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'💵 รับทุน',label:i.note||'เงินทุน',amount:i.amount,key:KEY.capital,id:i.id}));
   if(chk('tl-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'in',cat:'🏦 รับจากเงินกู้',label:i.source||'เงินกู้'+(i.interestRate>0?' ('+i.interestRate+'%/ปี)':''),amount:i.amount,key:KEY.loan,id:i.id}));
   if(chk('tl-c-buy')) DB.get(KEY.buy).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,kind:'out',cat:'💸 ซื้อของ',label:i.name,amount:i.price,key:KEY.buy,id:i.id}));
