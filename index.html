@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 02</title>
+<title>ร้านของฉัน 03</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -246,7 +246,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 02</div>
+      <div class="s-title">🏪 ร้านของฉัน 03</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -552,6 +552,8 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="form-group"><label>จำนวน</label><input type="number" id="buy-qty" placeholder="1" step="0.01" min="0" oninput="calcBuyTotal()"></div>
     <div class="form-group"><label>ราคา/หน่วย (บาท)</label><input type="number" id="buy-unit-price" placeholder="0.00" step="0.01" min="0" oninput="calcBuyTotal()"></div>
   </div>
+  <div class="form-group">
+    <label>ราคารวม</label>
     <div style="background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:600;color:var(--accent);" id="buy-total-display">0</div>
   </div>
   <div class="form-group"><label>วันที่</label><input type="date" id="buy-date"></div>
@@ -1127,6 +1129,7 @@ function buildItemNameSelect(typeId){
       selEl.disabled=false;
       emptyMsg.style.display='none';
       if(confirmBtn) confirmBtn.disabled=false;
+      selEl.onchange=()=>autoFillBuyUnit(selEl.value);
     } else {
       selEl.innerHTML='<option value="">ยังไม่มีสินค้าในประเภทนี้</option>';
       selEl.disabled=true;
@@ -1149,6 +1152,39 @@ function buildItemNameSelect(typeId){
       const allSug=[...new Set([...names,...historyNames])];
       dl.innerHTML=allSug.map(n=>`<option value="${n}">`).join('');
     }
+    inpEl.oninput=()=>autoFillBuyUnit(inpEl.value);
+  }
+}
+
+function autoFillBuyUnit(name) {
+  const unitRow=document.getElementById('buy-unit-row');
+  const unitSel=document.getElementById('buy-unit-select');
+  const unitDisplay=document.getElementById('buy-unit-display');
+  if(!unitRow||!unitSel) return;
+  const typeId=document.getElementById('buy-type').value;
+  if(typeId==='transport') return;
+  const u=getUnit(name);
+  if(u){
+    // มีหน่วยนับในระบบ — แสดง badge ซ่อน dropdown
+    unitSel.value='';
+    unitRow.style.display='none';
+    if(!unitDisplay){
+      const badge=document.createElement('div');
+      badge.id='buy-unit-display';
+      badge.style.cssText='display:inline-block;background:var(--blue-soft);color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:600;margin-top:4px;';
+      badge.textContent='หน่วย: '+u;
+      const nameGroup=document.getElementById('buy-name-input')?.closest('.form-group')||document.getElementById('buy-name-select')?.closest('.form-group');
+      if(nameGroup) nameGroup.appendChild(badge);
+    } else {
+      unitDisplay.textContent='หน่วย: '+u;
+      unitDisplay.style.display='inline-block';
+    }
+  } else {
+    // ไม่มีหน่วยนับ — แสดง dropdown ให้เลือกเอง
+    unitRow.style.display='block';
+    const units=getStoredUnits();
+    unitSel.innerHTML='<option value="">หน่วย</option>'+units.map(uu=>`<option value="${uu}">${uu}</option>`).join('');
+    if(unitDisplay) unitDisplay.style.display='none';
   }
 }
 function onBuyTypeChange(){
@@ -1382,9 +1418,13 @@ function confirmBuy() {
   const unitPrice = parseFloat(document.getElementById('buy-unit-price').value);
   const price = qty*unitPrice;
   const date = document.getElementById('buy-date').value;
-  const unit = type!=='transport'?(document.getElementById('buy-unit-select')?.value||''):'';
+  const unit = type!=='transport'?(()=>{
+    const name=getBuyNameValue();
+    const u=getUnit(name);
+    if(u) return u;
+    return document.getElementById('buy-unit-select')?.value||'';
+  })():'';
   if(!name||!unitPrice||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
-  if(type!=='transport'&&!unit) return alert('กรุณาเลือกหน่วยนับ');
   const types = getBuyTypes();
   const typeLabel = (types.find(t=>t.id===type)||{}).label||type;
   showConfirm('🛒 ยืนยันการซื้อของ',[
@@ -1408,6 +1448,8 @@ function confirmBuy() {
     clearBuyNameField();
     ['buy-supplier','buy-qty','buy-unit-price'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
     const us=document.getElementById('buy-unit-select'); if(us) us.value='';
+    const ud=document.getElementById('buy-unit-display'); if(ud) ud.style.display='none';
+    const unitRow=document.getElementById('buy-unit-row'); if(unitRow) unitRow.style.display='block';
     document.getElementById('buy-total-display').textContent='0';
     updateDashboard();
   });
