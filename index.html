@@ -1261,7 +1261,7 @@ function toggleBuyUnitDD() {
     dd.innerHTML = units.length
       ? ['-- ไม่มี --',...units].map(u=>`
           <div onmousedown="event.preventDefault();selectBuyUnit('${u==='-- ไม่มี --'?'':u}','${u}')"
-            ontouchend="event.preventDefault();selectBuyUnit('${u==='-- ไม่มี --'?'':u}','${u}');event.stopPropagation();"
+            ontouchend="_ddSelect(event,()=>selectBuyUnit('${u==='-- ไม่มี --'?'':u}','${u}'));"
             style="padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);">${u}</div>`).join('')
       : '<div style="padding:10px 14px;font-size:12px;color:var(--text2);">ยังไม่มีหน่วย — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting(\'set-units\')">ตั้งค่า</span></div>';
     dd.style.display='block';
@@ -1501,7 +1501,7 @@ function buildSupplierSelect() {
     const items = ['-- ไม่ระบุ --', ...list];
     dd.innerHTML = items.map(s=>`
       <div onmousedown="event.preventDefault();selectBuySupplier('${s==='-- ไม่ระบุ --'?'':s}','${s}')"
-        ontouchend="event.preventDefault();selectBuySupplier('${s==='-- ไม่ระบุ --'?'':s}','${s}');event.stopPropagation();"
+        ontouchend="_ddSelect(event,()=>selectBuySupplier('${s==='-- ไม่ระบุ --'?'':s}','${s}'));"
         style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
         ${s}
       </div>`).join('');
@@ -1614,7 +1614,7 @@ function buildBuyNameDDItems(filter) {
   if(!all.length) { dd.style.display='none'; return; }
   dd.innerHTML = all.map(n=>`
     <div onmousedown="event.preventDefault();selectBuyName('${n.replace(/'/g,"\\'")}')\"
-      ontouchend="event.preventDefault();selectBuyName('${n.replace(/'/g,"\\'")}');event.stopPropagation();"
+      ontouchend="_ddSelect(event,()=>selectBuyName('${n.replace(/'/g,"\\'")}'));"
       style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
       <span>${n}</span>
       ${getUnit(n,typeId)?`<span style="font-size:11px;color:var(--text2);background:var(--card2);border-radius:5px;padding:1px 6px;">${getUnit(n,typeId)}</span>`:''}
@@ -1642,7 +1642,7 @@ function buildBuySupplierDD() {
   const items = ['-- ไม่ระบุ --', ...suppliers];
   dd.innerHTML = items.map(s=>{
     const val = s==='-- ไม่ระบุ --'?'':s;
-    return `<div onmousedown="event.preventDefault();selectBuySupplier('${val.replace(/'/g,"\'")}','${s.replace(/'/g,"\'")}');" ontouchend="event.preventDefault();selectBuySupplier('${val.replace(/'/g,"\'")}','${s.replace(/'/g,"\'")}');event.stopPropagation();" style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">${s}</div>`;
+    return `<div onmousedown="event.preventDefault();selectBuySupplier('${val.replace(/'/g,"\'")}','${s.replace(/'/g,"\'")}');" ontouchend="_ddSelect(event,()=>selectBuySupplier('${val.replace(/'/g,"\'")}','${s.replace(/'/g,"\'")}'));" style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">${s}</div>`;
   }).join('');
 }
 function selectBuySupplier(val, label) {
@@ -1672,7 +1672,7 @@ function buildEmpWageDD() {
   sel.innerHTML = '<option value="">-- เลือกพนักงาน --</option>' + emps.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
   dd.innerHTML = emps.length ? emps.map(e=>`
     <div onmousedown="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")}')\"
-      ontouchend="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")}');event.stopPropagation();"
+      ontouchend="_ddSelect(event,()=>selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")}'));"
       style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
       ${e.name}
     </div>`).join('')
@@ -1704,7 +1704,7 @@ function buildAdminPayDD() {
   const opts = [...sel.options].filter(o=>o.value);
   dd.innerHTML = opts.length ? opts.map(o=>`
     <div onmousedown="event.preventDefault();selectAdminPay('${o.value}','${o.text.replace(/'/g,"\\'")}')\"
-      ontouchend="event.preventDefault();selectAdminPay('${o.value}','${o.text.replace(/'/g,"\\'")}');event.stopPropagation();"
+      ontouchend="_ddSelect(event,()=>selectAdminPay('${o.value}','${o.text.replace(/'/g,"\\'")}'));"
       style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
       ${o.text}
     </div>`).join('')
@@ -1734,6 +1734,15 @@ let _touchMoved = false;
 document.addEventListener('touchstart', e=>{ _touchStartY=e.touches[0].clientY; _touchMoved=false; }, {passive:true});
 document.addEventListener('touchmove', e=>{ if(Math.abs(e.touches[0].clientY-_touchStartY)>8) _touchMoved=true; }, {passive:true});
 document.addEventListener('touchend', ()=>{ setTimeout(()=>{ _touchMoved=false; },300); }, {passive:true});
+
+// helper — เรียกใน ontouchend ของ dropdown item
+// ถ้านิ้วเลื่อน (scroll) จะไม่ทำอะไร
+function _ddSelect(e, fn) {
+  if(_touchMoved) { e.preventDefault(); e.stopPropagation(); return; }
+  e.preventDefault();
+  e.stopPropagation();
+  fn();
+}
 document.addEventListener('click', e=>{
   if(_touchMoved) return; // เลื่อนอยู่ ไม่ปิด
   const pairs = [
@@ -1985,7 +1994,7 @@ function renderSaleRows() {
           ${skus.length===0
             ? `<div style="padding:10px 12px;font-size:12px;color:var(--text2);">ยังไม่มีสินค้า — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting('set-itemnames')">ไปตั้งค่า</span></div>`
             : skus.map(s=>`<div onmousedown="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\'")}')"
-              ontouchend="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\'")}');event.stopPropagation();"
+              ontouchend="_ddSelect(event,()=>selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\'")}'));"
               style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
               <span>${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
               <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
@@ -2049,7 +2058,7 @@ function filterSaleRowDd(id, filter) {
   } else {
     dd.innerHTML = filtered.map(s=>`<div
       onmousedown="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}')"
-      ontouchend="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
+      ontouchend="_ddSelect(event,()=>selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}'));"
       style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
       <span>${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
       <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
@@ -2908,7 +2917,7 @@ function buildEmpWageSelect() {
   if(dd) {
     dd.innerHTML = emps.length ? emps.map(e=>`
       <div onmousedown="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")} (${fmt(e.rate)}/วัน)')\"
-        ontouchend="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")} (${fmt(e.rate)}/วัน)');event.stopPropagation();"
+        ontouchend="_ddSelect(event,()=>selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")} (${fmt(e.rate)}/วัน)'));"
         style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
         ${e.name} <span style="font-size:12px;color:var(--text2);">${fmt(e.rate)}/วัน</span>
       </div>`).join('')
