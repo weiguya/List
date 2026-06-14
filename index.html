@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 013</title>
+<title>ร้านของฉัน 014</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 013</div>
+      <div class="s-title">🏪 ร้านของฉัน 014</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -569,10 +569,14 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
         <datalist id="buy-name-datalist"></datalist>
         <div id="buy-name-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:180px;overflow-y:auto;"></div>
       </div>
-      <div id="buy-unit-row" style="flex:0 0 110px;">
-        <select id="buy-unit-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 10px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;">
-          <option value="">หน่วย</option>
-        </select>
+      <div id="buy-unit-row" style="flex:0 0 100px;position:relative;">
+        <div onclick="toggleBuyUnitDD()"
+          id="buy-unit-display-btn"
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 8px;font-family:'Prompt',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;text-align:center;box-sizing:border-box;min-height:48px;display:flex;align-items:center;justify-content:space-between;">
+          <span id="buy-unit-display-text">หน่วย</span><span style="font-size:16px;">▾</span>
+        </div>
+        <select id="buy-unit-select" style="display:none;"></select>
+        <div id="buy-unit-dd" style="display:none;position:absolute;right:0;top:calc(100% + 2px);min-width:120px;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:160px;overflow-y:auto;"></div>
       </div>
     </div>
     <div id="buy-unit-display" style="display:none;margin-top:4px;"></div>
@@ -1227,94 +1231,89 @@ function nameWithUnit(name, typeId){ const u=getUnit(name,typeId); return u?`${n
 const FORCED_SELECT_TYPES = ['material','supply'];
 
 function buildItemNameSelect(typeId){
-  const selEl=document.getElementById('buy-name-select');
-  const inpEl=document.getElementById('buy-name-input');
+  const selEl=document.getElementById('buy-name-select'); // hidden, ไม่แสดงแล้ว
   const emptyMsg=document.getElementById('buy-name-empty-msg');
   const confirmBtn=document.querySelector('#page-buy .btn-primary');
-  if(!selEl||!inpEl) return;
+  const dispEl=document.getElementById('buy-name-display');
+  const hiddenEl=document.getElementById('buy-name-input');
+
+  // reset
+  if(selEl) selEl.style.display='none';
+  if(dispEl){ dispEl.textContent='-- เลือกสินค้า --'; dispEl.style.color='var(--text2)'; }
+  if(hiddenEl) hiddenEl.value='';
+  if(emptyMsg) emptyMsg.style.display='none';
 
   const names=getItemNamesForType(typeId);
-  const isForced=FORCED_SELECT_TYPES.includes(typeId);
+  const hist=[...new Set(DB.get(KEY.buy).filter(b=>b.type===typeId&&b.name).map(b=>b.name))];
+  const all=[...new Set([...names,...hist])];
 
-  if(isForced){
-    // แสดง select ซ่อน input
-    inpEl.style.display='none';
-    selEl.style.display='block';
-    if(names.length){
-      selEl.innerHTML='<option value="">-- เลือกสินค้า --</option>'+names.map(n=>`<option value="${n}">${n}</option>`).join('');
-      selEl.disabled=false;
-      emptyMsg.style.display='none';
-      if(confirmBtn) confirmBtn.disabled=false;
-      selEl.onchange=()=>autoFillBuyUnit(selEl.value);
-    } else {
-      selEl.innerHTML='<option value="">ยังไม่มีสินค้าในประเภทนี้</option>';
-      selEl.disabled=true;
-      emptyMsg.style.display='block';
-      if(confirmBtn) confirmBtn.disabled=true;
-    }
-  } else {
-    // แสดง input ซ่อน select
-    selEl.style.display='none';
-    inpEl.style.display='block';
-    inpEl.value='';
-    emptyMsg.style.display='none';
+  if(all.length){
     if(confirmBtn) confirmBtn.disabled=false;
-    // ใส่ datalist — รวมชื่อที่ตั้งค่าไว้ + ประวัติที่เคยซื้อในประเภทนี้
-    const dl=document.getElementById('buy-name-datalist');
-    if(dl) {
-      const historyNames=[...new Set(
-        DB.get(KEY.buy).filter(b=>b.type===typeId&&b.name).map(b=>b.name)
-      )];
-      const allSug=[...new Set([...names,...historyNames])];
-      dl.innerHTML=allSug.map(n=>`<option value="${n}">`).join('');
-    }
-    inpEl.oninput=()=>autoFillBuyUnit(inpEl.value);
+    buildBuyNameDDItems('');
+  } else {
+    if(emptyMsg) emptyMsg.style.display='block';
+    if(confirmBtn) confirmBtn.disabled=true;
   }
+  // reset unit
+  autoFillBuyUnit('');
+}
+function toggleBuyUnitDD() {
+  const dd = document.getElementById('buy-unit-dd');
+  if(!dd) return;
+  if(dd.style.display==='none'||!dd.style.display) {
+    const units = getStoredUnits();
+    dd.innerHTML = units.length
+      ? ['-- ไม่มี --',...units].map(u=>`
+          <div onmousedown="event.preventDefault();selectBuyUnit('${u==='-- ไม่มี --'?'':u}','${u}')"
+            ontouchend="event.preventDefault();selectBuyUnit('${u==='-- ไม่มี --'?'':u}','${u}');event.stopPropagation();"
+            style="padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);">${u}</div>`).join('')
+      : '<div style="padding:10px 14px;font-size:12px;color:var(--text2);">ยังไม่มีหน่วย — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting(\'set-units\')">ตั้งค่า</span></div>';
+    dd.style.display='block';
+  } else {
+    dd.style.display='none';
+  }
+}
+function selectBuyUnit(val, label) {
+  const sel = document.getElementById('buy-unit-select');
+  const txt = document.getElementById('buy-unit-display-text');
+  const dd = document.getElementById('buy-unit-dd');
+  if(sel) sel.value = val;
+  if(txt) { txt.textContent = label||'หน่วย'; }
+  if(dd) dd.style.display='none';
+}
+function getBuyUnitValue() {
+  return document.getElementById('buy-unit-select')?.value||
+    (document.getElementById('buy-unit-display-text')?.textContent==='หน่วย'?'':document.getElementById('buy-unit-display-text')?.textContent||'');
 }
 
 function autoFillBuyUnit(name) {
   const unitRow=document.getElementById('buy-unit-row');
-  const unitSel=document.getElementById('buy-unit-select');
-  const unitDisplay=document.getElementById('buy-unit-display');
-  if(!unitRow||!unitSel) return;
+  const txt=document.getElementById('buy-unit-display-text');
+  const sel=document.getElementById('buy-unit-select');
+  if(!unitRow) return;
   const typeId=document.getElementById('buy-type').value;
-  if(typeId==='transport') return;
+  if(typeId==='transport'){ unitRow.style.display='none'; return; }
+  unitRow.style.display='block';
   const u=getUnit(name, typeId);
   if(u){
-    // มีหน่วยนับในระบบ — แสดง badge ซ่อน dropdown
-    unitSel.value='';
-    unitRow.style.display='none';
-    if(!unitDisplay){
-      const badge=document.createElement('div');
-      badge.id='buy-unit-display';
-      badge.style.cssText='display:inline-block;background:var(--blue-soft);color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:600;margin-top:4px;';
-      badge.textContent='หน่วย: '+u;
-      const nameGroup=document.getElementById('buy-name-input')?.closest('.form-group')||document.getElementById('buy-name-select')?.closest('.form-group');
-      if(nameGroup) nameGroup.appendChild(badge);
-    } else {
-      unitDisplay.textContent='หน่วย: '+u;
-      unitDisplay.style.display='inline-block';
-    }
+    if(txt) txt.textContent=u;
+    if(sel) sel.value=u;
   } else {
-    // ไม่มีหน่วยนับ — แสดง dropdown ให้เลือกเอง
-    unitRow.style.display='block';
-    const units=getStoredUnits();
-    unitSel.innerHTML='<option value="">หน่วย</option>'+units.map(uu=>`<option value="${uu}">${uu}</option>`).join('');
-    if(unitDisplay) unitDisplay.style.display='none';
+    if(txt) txt.textContent='หน่วย';
+    if(sel) sel.value='';
   }
 }
 function onBuyTypeChange(){
   const typeId=document.getElementById('buy-type').value;
   buildItemNameSelect(typeId);
   const unitRow=document.getElementById('buy-unit-row');
-  const unitSel=document.getElementById('buy-unit-select');
-  if(unitRow && unitSel){
+  if(unitRow){
     if(typeId==='transport'){
       unitRow.style.display='none';
     } else {
       unitRow.style.display='block';
-      const units=getStoredUnits();
-      unitSel.innerHTML='<option value="">หน่วย</option>'+units.map(u=>`<option value="${u}">${u}</option>`).join('');
+      const txt=document.getElementById('buy-unit-display-text');
+      if(txt) txt.textContent='หน่วย';
     }
   }
 }
@@ -1636,18 +1635,19 @@ function selectBuyName(name) {
 
 // Buy supplier custom dropdown
 function buildBuySupplierDD() {
-  const suppliers = DB.get(KEY.suppliers)||[];
+  const suppliers = getSuppliers();
   const dd = document.getElementById('buy-supplier-dd');
   const sel = document.getElementById('buy-supplier');
-  if(!dd||!sel) return;
-  const items = [{id:'',name:'-- ไม่ระบุ --'},...suppliers];
-  sel.innerHTML = items.map(s=>`<option value="${s.name||''}">${s.name||'-- ไม่ระบุ --'}</option>`).join('');
-  dd.innerHTML = items.map(s=>`
-    <div onmousedown="event.preventDefault();selectBuySupplier('${(s.name||'').replace(/'/g,"\\'")}','${(s.name||'-- ไม่ระบุ --').replace(/'/g,"\\'")}')\"
-      ontouchend="event.preventDefault();selectBuySupplier('${(s.name||'').replace(/'/g,"\\'")}','${(s.name||'-- ไม่ระบุ --').replace(/'/g,"\\'")}');event.stopPropagation();"
-      style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
-      ${s.name||'-- ไม่ระบุ --'}
-    </div>`).join('');
+  if(!dd) return;
+  if(sel){
+    sel.innerHTML = '<option value="">-- เลือกร้าน --</option>'
+      + suppliers.map(s=>`<option value="${s}">${s}</option>`).join('');
+  }
+  const items = ['-- ไม่ระบุ --', ...suppliers];
+  dd.innerHTML = items.map(s=>{
+    const val = s==='-- ไม่ระบุ --'?'':s;
+    return `<div onmousedown="event.preventDefault();selectBuySupplier('${val.replace(/'/g,"\'")}','${s.replace(/'/g,"\'")}');" ontouchend="event.preventDefault();selectBuySupplier('${val.replace(/'/g,"\'")}','${s.replace(/'/g,"\'")}');event.stopPropagation();" style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">${s}</div>`;
+  }).join('');
 }
 function selectBuySupplier(val, label) {
   const sel = document.getElementById('buy-supplier');
@@ -1736,8 +1736,9 @@ function closeAdminPayDD() {
 document.addEventListener('click', e=>{
   const pairs = [
     ['buy-type-dd','buy-type-display'],
-    ['buy-name-dd','buy-name-input'],
+    ['buy-name-dd','buy-name-display'],
     ['buy-supplier-dd','buy-supplier-display'],
+    ['buy-unit-dd','buy-unit-display-btn'],
     ['emp-wage-dd','emp-wage-display'],
     ['admin-pay-dd','admin-pay-display'],
   ];
@@ -1785,7 +1786,8 @@ function confirmBuy() {
     const name=getBuyNameValue();
     const u=getUnit(name, type);
     if(u) return u;
-    return document.getElementById('buy-unit-select')?.value||'';
+    const txt=document.getElementById('buy-unit-display-text')?.textContent||'';
+    return txt==='หน่วย'?'':txt;
   })():'';
   if(!name||!unitPrice||!date) return alert('กรุณากรอกข้อมูลให้ครบ');
   const types = getBuyTypes();
@@ -2029,9 +2031,7 @@ function toggleSaleRowDd(id) {
   if(!dd) return;
   if(dd.style.display==='none'||!dd.style.display) {
     showSaleRowDd(id);
-    // filter ตาม text ปัจจุบัน
-    const val = document.getElementById('sr-meat-'+id)?.value||'';
-    filterSaleRowDd(id, val);
+    filterSaleRowDd(id, ''); // แสดงทั้งหมดเสมอ
   } else {
     dd.style.display='none';
   }
