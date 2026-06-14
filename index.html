@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onion 02</title>
+<title>Onion 03</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 Onion 02</div>
+      <div class="s-title">🏪 Onion 03</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -1729,9 +1729,11 @@ function closeAdminPayDD() {
 }
 
 // Close dropdowns only on real tap, not scroll
+let _touchStartY = 0;
 let _touchMoved = false;
-document.addEventListener('touchstart', ()=>{ _touchMoved=false; }, {passive:true});
-document.addEventListener('touchmove', ()=>{ _touchMoved=true; }, {passive:true});
+document.addEventListener('touchstart', e=>{ _touchStartY=e.touches[0].clientY; _touchMoved=false; }, {passive:true});
+document.addEventListener('touchmove', e=>{ if(Math.abs(e.touches[0].clientY-_touchStartY)>8) _touchMoved=true; }, {passive:true});
+document.addEventListener('touchend', ()=>{ setTimeout(()=>{ _touchMoved=false; },300); }, {passive:true});
 document.addEventListener('click', e=>{
   if(_touchMoved) return; // เลื่อนอยู่ ไม่ปิด
   const pairs = [
@@ -4267,12 +4269,21 @@ function adminTab(btn, tabId) {
 
 // init เมื่อโหลดหน้าเสร็จ
 document.addEventListener('DOMContentLoaded', ()=>{
+  // set active dash tab
+  _dashPeriod = 'day';
+  const dayBtn = document.querySelector('#page-home .tab-btn');
+  if(dayBtn) {
+    document.querySelectorAll('#page-home .tab-btn').forEach(b=>b.classList.remove('active'));
+    dayBtn.classList.add('active');
+  }
   updateDashboard();
-  // ตั้ง sidebar date
+  // sidebar date
   const sd = document.getElementById('sidebar-date');
   if(sd) sd.textContent = new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
-  // push initial history state
+  // initial history state
   history.replaceState({pageId:'page-home'}, '', '');
+  // apply sens masks on load
+  _applySensAll();
 });
 </script>
 </body>
