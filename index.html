@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 03</title>
+<title>ร้านของฉัน 04</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -235,6 +235,26 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.3s;}
 .toggle-switch input:checked + .toggle-slider{background:var(--accent);}
 .toggle-switch input:checked + .toggle-slider:before{transform:translateX(20px);}
+/* Sensitive number mask */
+.sens-masked { position:relative; display:inline-block; }
+.sens-masked::after {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--text) 0px, var(--text) 6px,
+    transparent 6px, transparent 10px
+  );
+  border-radius:4px;
+  opacity:0.85;
+}
+.stat-card.full .sens-masked::after {
+  background: repeating-linear-gradient(
+    90deg,
+    #fff 0px, #fff 6px,
+    transparent 6px, transparent 10px
+  );
+}
 </style>
 </head>
 <body>
@@ -246,7 +266,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 03</div>
+      <div class="s-title">🏪 ร้านของฉัน 04</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -321,7 +341,10 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
     <div class="stat-card" id="d-profit-card" style="cursor:pointer;" onclick="openProfitDetail()">
       <div class="label" id="d-profit-label" style="display:flex;align-items:center;gap:4px;">📈 กำไร <span id="d-profit-month-tag" style="font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;"></span></div>
-      <div class="value" id="d-profit">0</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="value" id="d-profit" style="transition:filter 0.3s;">0</div>
+        <button id="profit-show-btn" onclick="event.stopPropagation();toggleSensitive('profit')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'Prompt',sans-serif;">👁</button>
+      </div>
       <div style="font-size:10px;color:var(--text2);margin-top:3px;" id="d-profit-formula">—</div>
     </div>
     <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-expense',document.getElementById('nav-rep-expense'));setTimeout(()=>{['re-c-wage','re-c-rent','re-c-loanpay'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const b=document.getElementById('re-c-buy');if(b)b.checked=true;renderRepExpense();},200);">
@@ -331,20 +354,26 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
     <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));">
       <div class="label">🏦 หนี้คงเหลือ (ต้น+ดอก)</div>
-      <div class="value red" id="d-loan">0</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="value red" id="d-loan" style="transition:filter 0.3s;">0</div>
+        <button id="loan-show-btn" onclick="event.stopPropagation();toggleSensitive('loan')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'Prompt',sans-serif;">👁</button>
+      </div>
       <div style="font-size:10px;color:var(--text2);margin-top:2px;">ยอดชำระทั้งหมด: <span id="d-loan-due" class="red">0</span></div>
     </div>
     <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;">
       <div class="label" style="color:rgba(255,255,255,0.75);">💳 เงินคงเหลือในบัญชีจริง</div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;filter:blur(6px);transition:filter 0.3s;">0</div>
-        <button id="cashbal-show-btn" onclick="showCashBalance()" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:5px 12px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;">👁 แสดง</button>
+        <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;transition:filter 0.3s;">0</div>
+        <button id="cashbal-show-btn" onclick="toggleSensitive('cashbal')" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:5px 12px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;">👁 แสดง</button>
       </div>
       <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้</div>
     </div>
     <div class="stat-card full" style="cursor:pointer;" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);">
       <div class="label">💵 เงินทุนที่ใส่เข้ามา</div>
-      <div class="value blue" id="d-capital">0</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="value blue" id="d-capital" style="transition:filter 0.3s;">0</div>
+        <button id="capital-show-btn" onclick="event.stopPropagation();toggleSensitive('capital')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'Prompt',sans-serif;">👁</button>
+      </div>
       <div style="font-size:10px;color:var(--text2);margin-top:2px;">แตะดูรายละเอียด →</div>
     </div>
   </div>
@@ -848,6 +877,24 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
       <button onclick="addItemName()"
         style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสินค้า</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ยืนยันลบรายการ -->
+<div class="modal-overlay" id="delete-confirm-modal">
+  <div class="modal" style="padding-bottom:24px;">
+    <div class="modal-title">
+      <span>🗑️ ยืนยันการลบ</span>
+      <button class="modal-close" onclick="document.getElementById('delete-confirm-modal').classList.remove('open')">✕</button>
+    </div>
+    <div style="background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;color:var(--red);text-align:center;font-weight:600;">
+      ⚠️ ลบรายการนี้แล้วจะไม่สามารถกู้คืนได้
+    </div>
+    <div id="del-confirm-info" style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.7;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="btn btn-red" onclick="execDelete()" style="display:flex;align-items:center;justify-content:center;gap:6px;">🗑️ ลบเลย</button>
+      <button class="btn btn-outline" onclick="document.getElementById('delete-confirm-modal').classList.remove('open')">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -3340,26 +3387,77 @@ function getWeekRange() {
   return {wFrom:mon.toISOString().slice(0,10), wTo:sun.toISOString().slice(0,10)};
 }
 
-let _cashBalVisible = false;
-function showCashBalance() {
-  document.getElementById('cashbal-modal').style.display='flex';
-}
-function confirmShowCashBalance() {
-  document.getElementById('cashbal-modal').style.display='none';
-  const el=document.getElementById('d-cashbal');
-  const btn=document.getElementById('cashbal-show-btn');
-  if(el) el.style.filter='none';
-  if(btn){ btn.textContent='🔒 ซ่อน'; btn.onclick=hideCashBalance; }
-  _cashBalVisible=true;
-}
-function hideCashBalance() {
-  const el=document.getElementById('d-cashbal');
-  const btn=document.getElementById('cashbal-show-btn');
-  if(el) el.style.filter='blur(6px)';
-  if(btn){ btn.textContent='👁 แสดง'; btn.onclick=showCashBalance; }
-  _cashBalVisible=false;
+// ============ SENSITIVE NUMBERS (blur/mask toggle) ============
+const _sensState = { cashbal:false, profit:false, loan:false, capital:false };
+
+function _applyMask(id, visible) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  if(visible) {
+    el.classList.remove('sens-masked');
+    el.style.filter = 'none';
+  } else {
+    el.classList.add('sens-masked');
+    el.style.filter = 'none';
+  }
 }
 
+function toggleSensitive(key) {
+  if(!_sensState[key]) {
+    // ต้องยืนยันก่อนแสดง
+    document.getElementById('cashbal-modal').dataset.key = key;
+    document.getElementById('cashbal-modal').style.display = 'flex';
+  } else {
+    _sensState[key] = false;
+    _applySensAll();
+  }
+}
+
+function confirmShowCashBalance() {
+  document.getElementById('cashbal-modal').style.display = 'none';
+  const key = document.getElementById('cashbal-modal').dataset.key || 'cashbal';
+  _sensState[key] = true;
+  _applySensAll();
+}
+
+function hideCashBalance() { /* legacy compat */ toggleSensitive('cashbal'); }
+function showCashBalance() { toggleSensitive('cashbal'); }
+
+function _applySensAll() {
+  const ids = { cashbal:'d-cashbal', profit:'d-profit', loan:'d-loan', capital:'d-capital' };
+  const btnIds = { cashbal:'cashbal-show-btn', profit:'profit-show-btn', loan:'loan-show-btn', capital:'capital-show-btn' };
+  const isCashbal = { cashbal:true };
+  Object.keys(_sensState).forEach(key=>{
+    const visible = _sensState[key];
+    _applyMask(ids[key], visible);
+    const btn = document.getElementById(btnIds[key]);
+    if(btn) {
+      if(isCashbal[key]) {
+        btn.textContent = visible ? '🔒 ซ่อน' : '👁 แสดง';
+        btn.onclick = () => toggleSensitive(key);
+      } else {
+        btn.textContent = visible ? '🔒' : '👁';
+      }
+    }
+  });
+}
+
+// ============ DELETE CONFIRM ============
+function ramDoDelete() {
+  closeRowAction();
+  // แสดง confirm modal พร้อมข้อมูลรายการ
+  document.getElementById('del-confirm-info').innerHTML =
+    document.getElementById('ram-info').innerHTML;
+  document.getElementById('delete-confirm-modal').classList.add('open');
+}
+
+function execDelete() {
+  document.getElementById('delete-confirm-modal').classList.remove('open');
+  const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
+  delItem(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
+}
+
+let _cashBalVisible = false;
 function updateDashboard() {
   const td=today(), tm=thisMonth();
   const profitMonth=_profitViewMonth||tm;
@@ -3449,9 +3547,8 @@ function updateDashboard() {
   ac('d-sale',periodSale,'green'); ac('d-profit',monthProfit,monthProfit>=0?'green':'red');
   ac('d-buy',periodBuy,'yellow'); ac('d-loan',loanRemain,'red');
   ac('d-capital',capitalTotal,'blue'); ac('d-cashbal',cashBal,cashBal>=0?'':'red');
-  // รักษา blur state
-  const cashEl=document.getElementById('d-cashbal');
-  if(cashEl && !_cashBalVisible) cashEl.style.filter='blur(6px)';
+  // apply sensitive masks
+  _applySensAll();
 
   // 7-day chart (ยอดเงิน)
   const days7=[];
