@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 08</title>
+<title>ร้านของฉัน 10</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 08</div>
+      <div class="s-title">🏪 ร้านของฉัน 10</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -1574,7 +1574,7 @@ function renderSaleDropdown(filter) {
     dd.innerHTML = filtered.map(s=>`
       <div onclick="selectSaleProduct('${s.name}')"
         style="padding:11px 14px;font-size:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-        <span>${s.emoji||'🍽️'} ${s.name}</span>
+        <span>${s.name}</span>
         <span style="font-size:12px;color:var(--text2);">${s.price>0?fmt(s.price)+' บาท':'—'}</span>
       </div>`).join('');
   }
@@ -1691,6 +1691,7 @@ function renderSaleRows() {
         <div style="position:relative;">
           <input type="text" id="sr-meat-${r.id}" value="${r.meat}" placeholder="เลือกสินค้า..."
             oninput="onSaleRowMeatInput('${r.id}',this.value)"
+            onclick="showSaleRowDd('${r.id}')"
             autocomplete="off"
             style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:7px;padding:7px 32px 7px 10px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);cursor:pointer;">
           <span onclick="toggleSaleRowDd('${r.id}')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:11px;cursor:pointer;pointer-events:all;user-select:none;">▾</span>
@@ -1702,7 +1703,7 @@ function renderSaleRows() {
             : skus.map(s=>`<div onmousedown="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}')"
               ontouchend="event.preventDefault();selectSaleRowProduct('${r.id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
               style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-              <span>${s.emoji||'🍽️'} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
+              <span>${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
               <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
             </div>`).join('')
           }
@@ -1768,7 +1769,7 @@ function filterSaleRowDd(id, filter) {
       onmousedown="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}')"
       ontouchend="event.preventDefault();selectSaleRowProduct('${id}','${s.name.replace(/'/g,"\\'")}');event.stopPropagation();"
       style="padding:9px 12px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
-      <span>${s.emoji||'🍽️'} ${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
+      <span>${s.name}${getUnit(s.name,SALE_TYPE_ID)?` <span style="font-size:10px;color:var(--text2);background:var(--card2);border-radius:4px;padding:1px 4px;">${getUnit(s.name,SALE_TYPE_ID)}</span>`:''}</span>
       <span style="font-size:11px;color:var(--text2);font-weight:600;">${s.price>0?fmt(s.price):'—'}</span>
     </div>`).join('');
   }
