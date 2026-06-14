@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 04</title>
+<title>ร้านของฉัน 05</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -236,25 +236,14 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .toggle-switch input:checked + .toggle-slider{background:var(--accent);}
 .toggle-switch input:checked + .toggle-slider:before{transform:translateX(20px);}
 /* Sensitive number mask */
-.sens-masked { position:relative; display:inline-block; }
-.sens-masked::after {
-  content:'';
-  position:absolute; inset:0;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--text) 0px, var(--text) 6px,
-    transparent 6px, transparent 10px
-  );
-  border-radius:4px;
-  opacity:0.85;
+.sens-masked { color: transparent !important; }
+.sens-masked::before {
+  content: '−';
+  color: var(--text);
+  font-size: inherit;
+  font-weight: inherit;
 }
-.stat-card.full .sens-masked::after {
-  background: repeating-linear-gradient(
-    90deg,
-    #fff 0px, #fff 6px,
-    transparent 6px, transparent 10px
-  );
-}
+.stat-card.full .sens-masked::before { color: #fff; }
 </style>
 </head>
 <body>
@@ -266,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 04</div>
+      <div class="s-title">🏪 ร้านของฉัน 05</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -342,7 +331,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="stat-card" id="d-profit-card" style="cursor:pointer;" onclick="openProfitDetail()">
       <div class="label" id="d-profit-label" style="display:flex;align-items:center;gap:4px;">📈 กำไร <span id="d-profit-month-tag" style="font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;"></span></div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="value" id="d-profit" style="transition:filter 0.3s;">0</div>
+        <div class="value" id="d-profit">0</div>
         <button id="profit-show-btn" onclick="event.stopPropagation();toggleSensitive('profit')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'Prompt',sans-serif;">👁</button>
       </div>
       <div style="font-size:10px;color:var(--text2);margin-top:3px;" id="d-profit-formula">—</div>
@@ -355,7 +344,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));">
       <div class="label">🏦 หนี้คงเหลือ (ต้น+ดอก)</div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="value red" id="d-loan" style="transition:filter 0.3s;">0</div>
+        <div class="value red" id="d-loan">0</div>
         <button id="loan-show-btn" onclick="event.stopPropagation();toggleSensitive('loan')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'Prompt',sans-serif;">👁</button>
       </div>
       <div style="font-size:10px;color:var(--text2);margin-top:2px;">ยอดชำระทั้งหมด: <span id="d-loan-due" class="red">0</span></div>
@@ -363,7 +352,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="stat-card full" style="background:linear-gradient(135deg,#1a2a6c 0%,#2563eb 100%);border-color:#2563eb;">
       <div class="label" style="color:rgba(255,255,255,0.75);">💳 เงินคงเหลือในบัญชีจริง</div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;transition:filter 0.3s;">0</div>
+        <div class="value" id="d-cashbal" style="color:#fff;font-size:24px;">0</div>
         <button id="cashbal-show-btn" onclick="toggleSensitive('cashbal')" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:5px 12px;font-family:'Prompt',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;">👁 แสดง</button>
       </div>
       <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:4px;">ทุน + กู้ + ยอดขาย − ซื้อของ − ค่าแรง − ค่าเช่า − จ่ายหนี้</div>
@@ -371,7 +360,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="stat-card full" style="cursor:pointer;" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);">
       <div class="label">💵 เงินทุนที่ใส่เข้ามา</div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="value blue" id="d-capital" style="transition:filter 0.3s;">0</div>
+        <div class="value blue" id="d-capital">0</div>
         <button id="capital-show-btn" onclick="event.stopPropagation();toggleSensitive('capital')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:'Prompt',sans-serif;">👁</button>
       </div>
       <div style="font-size:10px;color:var(--text2);margin-top:2px;">แตะดูรายละเอียด →</div>
@@ -3395,10 +3384,8 @@ function _applyMask(id, visible) {
   if(!el) return;
   if(visible) {
     el.classList.remove('sens-masked');
-    el.style.filter = 'none';
   } else {
     el.classList.add('sens-masked');
-    el.style.filter = 'none';
   }
 }
 
