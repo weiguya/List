@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 10</title>
+<title>ร้านของฉัน 011</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 10</div>
+      <div class="s-title">🏪 ร้านของฉัน 011</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -537,18 +537,37 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- PAGE: รายจ่าย -->
 <div class="page" id="page-buy">
   <div class="section-title">💸 บันทึกรายจ่าย</div>
+
+  <!-- ประเภทสินค้า custom dropdown -->
   <div class="form-group">
     <label>ประเภทสินค้า</label>
-    <select id="buy-type" onchange="onBuyTypeChange()"></select>
+    <div style="position:relative;">
+      <div id="buy-type-display" onclick="toggleBuyTypeDD()"
+        style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text);cursor:pointer;box-sizing:border-box;position:relative;user-select:none;">
+        -- เลือกประเภท --
+      </div>
+      <span onclick="toggleBuyTypeDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
+      <select id="buy-type" style="display:none;" onchange="onBuyTypeChange()"></select>
+      <div id="buy-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);overflow:hidden;"></div>
+    </div>
   </div>
+
+  <!-- ชื่อสินค้า -->
   <div class="form-group">
     <label>ชื่อสินค้า</label>
     <div style="display:flex;gap:8px;align-items:flex-start;">
-      <div style="flex:1;min-width:0;">
-        <select id="buy-name-select" style="display:none;width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;"></select>
-        <input type="text" id="buy-name-input" placeholder="พิมพ์ชื่อสินค้า"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
+      <div style="flex:1;min-width:0;position:relative;">
+        <div style="position:relative;">
+          <input type="text" id="buy-name-input" placeholder="เลือก / พิมพ์ชื่อสินค้า"
+            oninput="onBuyNameInput(this.value)"
+            onclick="showBuyNameDD()"
+            autocomplete="off"
+            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;box-sizing:border-box;">
+          <span onclick="toggleBuyNameDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
+        </div>
+        <select id="buy-name-select" style="display:none;"></select>
         <datalist id="buy-name-datalist"></datalist>
+        <div id="buy-name-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:180px;overflow-y:auto;"></div>
       </div>
       <div id="buy-unit-row" style="flex:0 0 110px;">
         <select id="buy-unit-select" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 10px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;">
@@ -556,16 +575,26 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
         </select>
       </div>
     </div>
+    <div id="buy-unit-display" style="display:none;margin-top:4px;"></div>
     <div id="buy-name-empty-msg" style="display:none;margin-top:8px;background:var(--yellow-soft);border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);">
-      ⚠️ ยังไม่มีสินค้าในประเภทนี้ — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting('set-itemnames')">ไปตั้งค่าก่อน</span>
+      ยังไม่มีสินค้าในประเภทนี้ — <span style="text-decoration:underline;cursor:pointer;" onclick="goSubSetting('set-itemnames')">ไปตั้งค่าก่อน</span>
     </div>
   </div>
+
+  <!-- ร้าน/ซัพพลายเออร์ custom dropdown -->
   <div class="form-group">
     <label>ร้าน/ซัพพลายเออร์</label>
-    <select id="buy-supplier" style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;">
-      <option value="">-- เลือกร้าน --</option>
-    </select>
+    <div style="position:relative;">
+      <div id="buy-supplier-display" onclick="toggleBuySupplierDD()"
+        style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
+        -- เลือกร้าน (ถ้ามี) --
+      </div>
+      <span onclick="toggleBuySupplierDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
+      <select id="buy-supplier" style="display:none;"></select>
+      <div id="buy-supplier-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:160px;overflow-y:auto;"></div>
+    </div>
   </div>
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
     <div class="form-group"><label>จำนวน</label><input type="number" id="buy-qty" placeholder="1" step="0.01" min="0" oninput="calcBuyTotal()"></div>
     <div class="form-group"><label>ราคา/หน่วย (บาท)</label><input type="number" id="buy-unit-price" placeholder="0.00" step="0.01" min="0" oninput="calcBuyTotal()"></div>
@@ -589,12 +618,19 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ค่าแรงพนักงาน (ระบบใหม่) -->
   <div id="fin-emp" class="fin-section">
-    <!-- เลือกพนักงาน -->
     <div class="form-group">
       <label>เลือกพนักงาน</label>
-      <select id="emp-wage-select" onchange="renderEmpWageCal()">
-        <option value="">-- เลือกพนักงาน --</option>
-      </select>
+      <div style="position:relative;">
+        <div id="emp-wage-display" onclick="toggleEmpWageDD()"
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
+          -- เลือกพนักงาน --
+        </div>
+        <span onclick="toggleEmpWageDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
+        <select id="emp-wage-select" style="display:none;" onchange="renderEmpWageCal()">
+          <option value="">-- เลือกพนักงาน --</option>
+        </select>
+        <div id="emp-wage-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:200px;overflow-y:auto;"></div>
+      </div>
     </div>
     <div id="emp-wage-rate-display" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--text2);">
       ค่าแรง: <span id="emp-wage-rate-val" style="font-weight:700;color:var(--accent);"></span> / วัน
@@ -630,9 +666,17 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div id="fin-admin" class="fin-section" style="display:none">
     <div class="form-group">
       <label>เลือกผู้บริหาร</label>
-      <select id="admin-pay-select" onchange="renderAdminCal()">
-        <option value="">-- เลือกผู้บริหาร --</option>
-      </select>
+      <div style="position:relative;">
+        <div id="admin-pay-display" onclick="toggleAdminPayDD()"
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
+          -- เลือกผู้บริหาร --
+        </div>
+        <span onclick="toggleAdminPayDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
+        <select id="admin-pay-select" style="display:none;" onchange="renderAdminCal()">
+          <option value="">-- เลือกผู้บริหาร --</option>
+        </select>
+        <div id="admin-pay-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:200px;overflow-y:auto;"></div>
+      </div>
     </div>
     <div id="admin-rate-display" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
       % ค่าคอม: <b id="admin-rate-val"></b> · คำนวณจากยอดขายแต่ละวัน
@@ -1419,7 +1463,7 @@ function getSuppliers() {
 function saveSuppliers(arr) {
   localStorage.setItem(KEY.suppliers, JSON.stringify(arr));
 }
-function buildSupplierDatalist() { buildSupplierSelect(); }
+function buildSupplierDatalist() { buildSupplierSelect(); buildBuySupplierDD(); }
 function buildSupplierSelect() {
   const sel = document.getElementById('buy-supplier');
   if(!sel) return;
@@ -1467,8 +1511,201 @@ function buildBuyTypeSelect() {
   const types = getBuyTypes();
   const sel = document.getElementById('buy-type');
   sel.innerHTML = types.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
-  if(sel.value) buildItemNameSelect(sel.value);
+  // build custom dropdown items
+  const dd = document.getElementById('buy-type-dd');
+  if(dd) {
+    dd.innerHTML = types.map(t=>`
+      <div onclick="selectBuyType('${t.id}','${t.label.replace(/'/g,"\\'")}')\"
+        style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
+        ${t.label}
+      </div>`).join('');
+  }
+  // set default
+  if(sel.value) {
+    const def = types[0];
+    if(def) selectBuyType(def.id, def.label, true);
+  }
 }
+
+function selectBuyType(id, label, silent) {
+  const sel = document.getElementById('buy-type');
+  const disp = document.getElementById('buy-type-display');
+  if(sel) sel.value = id;
+  if(disp) { disp.textContent = label; disp.style.color = 'var(--text)'; }
+  closeBuyTypeDD();
+  if(!silent) onBuyTypeChange();
+}
+
+function toggleBuyTypeDD() {
+  const dd = document.getElementById('buy-type-dd');
+  if(!dd) return;
+  dd.style.display = dd.style.display === 'none' || !dd.style.display ? 'block' : 'none';
+}
+function closeBuyTypeDD() {
+  const dd = document.getElementById('buy-type-dd');
+  if(dd) dd.style.display = 'none';
+}
+
+// Buy name custom dropdown
+function showBuyNameDD() {
+  const dd = document.getElementById('buy-name-dd');
+  if(dd) dd.style.display = 'block';
+}
+function toggleBuyNameDD() {
+  const dd = document.getElementById('buy-name-dd');
+  if(!dd) return;
+  dd.style.display = dd.style.display === 'none' || !dd.style.display ? 'block' : 'none';
+  if(dd.style.display === 'block') buildBuyNameDDItems('');
+}
+function closeBuyNameDD() {
+  const dd = document.getElementById('buy-name-dd');
+  if(dd) dd.style.display = 'none';
+}
+function onBuyNameInput(val) {
+  autoFillBuyUnit(val);
+  buildBuyNameDDItems(val);
+  showBuyNameDD();
+}
+function buildBuyNameDDItems(filter) {
+  const dd = document.getElementById('buy-name-dd');
+  if(!dd) return;
+  const typeId = document.getElementById('buy-type').value;
+  const names = typeId === SALE_TYPE_ID
+    ? getSaleSkus().map(s=>s.name)
+    : (getItemNames()[typeId]||[]);
+  const hist = [...new Set(DB.get(KEY.buy).filter(b=>b.type===typeId&&b.name).map(b=>b.name))];
+  const all = [...new Set([...names,...hist])].filter(n=>!filter||n.includes(filter));
+  if(!all.length) { dd.style.display='none'; return; }
+  dd.innerHTML = all.map(n=>`
+    <div onmousedown="event.preventDefault();selectBuyName('${n.replace(/'/g,"\\'")}')\"
+      ontouchend="event.preventDefault();selectBuyName('${n.replace(/'/g,"\\'")}');event.stopPropagation();"
+      style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <span>${n}</span>
+      ${getUnit(n,typeId)?`<span style="font-size:11px;color:var(--text2);background:var(--card2);border-radius:5px;padding:1px 6px;">${getUnit(n,typeId)}</span>`:''}
+    </div>`).join('');
+}
+function selectBuyName(name) {
+  const inp = document.getElementById('buy-name-input');
+  if(inp) inp.value = name;
+  closeBuyNameDD();
+  autoFillBuyUnit(name);
+}
+
+// Buy supplier custom dropdown
+function buildBuySupplierDD() {
+  const suppliers = DB.get(KEY.suppliers)||[];
+  const dd = document.getElementById('buy-supplier-dd');
+  const sel = document.getElementById('buy-supplier');
+  if(!dd||!sel) return;
+  const items = [{id:'',name:'-- ไม่ระบุ --'},...suppliers];
+  sel.innerHTML = items.map(s=>`<option value="${s.name||''}">${s.name||'-- ไม่ระบุ --'}</option>`).join('');
+  dd.innerHTML = items.map(s=>`
+    <div onmousedown="event.preventDefault();selectBuySupplier('${(s.name||'').replace(/'/g,"\\'")}','${(s.name||'-- ไม่ระบุ --').replace(/'/g,"\\'")}')\"
+      ontouchend="event.preventDefault();selectBuySupplier('${(s.name||'').replace(/'/g,"\\'")}','${(s.name||'-- ไม่ระบุ --').replace(/'/g,"\\'")}');event.stopPropagation();"
+      style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
+      ${s.name||'-- ไม่ระบุ --'}
+    </div>`).join('');
+}
+function selectBuySupplier(val, label) {
+  const sel = document.getElementById('buy-supplier');
+  const disp = document.getElementById('buy-supplier-display');
+  if(sel) sel.value = val;
+  if(disp) { disp.textContent = label; disp.style.color = val ? 'var(--text)' : 'var(--text2)'; }
+  closeBuySupplierDD();
+}
+function toggleBuySupplierDD() {
+  const dd = document.getElementById('buy-supplier-dd');
+  if(!dd) return;
+  if(dd.style.display==='none'||!dd.style.display) { buildBuySupplierDD(); dd.style.display='block'; }
+  else dd.style.display='none';
+}
+function closeBuySupplierDD() {
+  const dd = document.getElementById('buy-supplier-dd');
+  if(dd) dd.style.display = 'none';
+}
+
+// Finance: emp wage custom dropdown
+function buildEmpWageDD() {
+  const emps = DB.get(KEY.employees)||[];
+  const dd = document.getElementById('emp-wage-dd');
+  const sel = document.getElementById('emp-wage-select');
+  if(!dd||!sel) return;
+  sel.innerHTML = '<option value="">-- เลือกพนักงาน --</option>' + emps.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  dd.innerHTML = emps.length ? emps.map(e=>`
+    <div onmousedown="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")}')\"
+      ontouchend="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")}');event.stopPropagation();"
+      style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
+      ${e.name}
+    </div>`).join('')
+    : '<div style="padding:11px 14px;font-size:13px;color:var(--text2);">ยังไม่มีพนักงาน</div>';
+}
+function selectEmpWage(id, name) {
+  const sel = document.getElementById('emp-wage-select');
+  const disp = document.getElementById('emp-wage-display');
+  if(sel) { sel.value = id; sel.dispatchEvent(new Event('change')); }
+  if(disp) { disp.textContent = name; disp.style.color = 'var(--text)'; }
+  closeEmpWageDD();
+}
+function toggleEmpWageDD() {
+  const dd = document.getElementById('emp-wage-dd');
+  if(!dd) return;
+  if(dd.style.display==='none'||!dd.style.display) { buildEmpWageDD(); dd.style.display='block'; }
+  else dd.style.display='none';
+}
+function closeEmpWageDD() {
+  const dd = document.getElementById('emp-wage-dd');
+  if(dd) dd.style.display='none';
+}
+
+// Finance: admin pay custom dropdown
+function buildAdminPayDD() {
+  const sel = document.getElementById('admin-pay-select');
+  const dd = document.getElementById('admin-pay-dd');
+  if(!sel||!dd) return;
+  const opts = [...sel.options].filter(o=>o.value);
+  dd.innerHTML = opts.length ? opts.map(o=>`
+    <div onmousedown="event.preventDefault();selectAdminPay('${o.value}','${o.text.replace(/'/g,"\\'")}')\"
+      ontouchend="event.preventDefault();selectAdminPay('${o.value}','${o.text.replace(/'/g,"\\'")}');event.stopPropagation();"
+      style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
+      ${o.text}
+    </div>`).join('')
+    : '<div style="padding:11px 14px;font-size:13px;color:var(--text2);">ยังไม่มีผู้บริหาร</div>';
+}
+function selectAdminPay(val, label) {
+  const sel = document.getElementById('admin-pay-select');
+  const disp = document.getElementById('admin-pay-display');
+  if(sel) { sel.value = val; sel.dispatchEvent(new Event('change')); }
+  if(disp) { disp.textContent = label; disp.style.color = 'var(--text)'; }
+  closeAdminPayDD();
+}
+function toggleAdminPayDD() {
+  const dd = document.getElementById('admin-pay-dd');
+  if(!dd) return;
+  if(dd.style.display==='none'||!dd.style.display) { buildAdminPayDD(); dd.style.display='block'; }
+  else dd.style.display='none';
+}
+function closeAdminPayDD() {
+  const dd = document.getElementById('admin-pay-dd');
+  if(dd) dd.style.display='none';
+}
+
+// Close all dropdowns when clicking outside
+document.addEventListener('click', e=>{
+  const pairs = [
+    ['buy-type-dd','buy-type-display'],
+    ['buy-name-dd','buy-name-input'],
+    ['buy-supplier-dd','buy-supplier-display'],
+    ['emp-wage-dd','emp-wage-display'],
+    ['admin-pay-dd','admin-pay-display'],
+  ];
+  pairs.forEach(([ddId, anchorId])=>{
+    const dd = document.getElementById(ddId);
+    const anchor = document.getElementById(anchorId);
+    if(dd && anchor && !dd.contains(e.target) && !anchor.contains(e.target)) {
+      dd.style.display='none';
+    }
+  });
+});
 
 // ============ BUY ============
 function calcBuyTotal() {
@@ -1694,7 +1931,7 @@ function renderSaleRows() {
             onclick="showSaleRowDd('${r.id}')"
             autocomplete="off"
             style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:7px;padding:7px 32px 7px 10px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);cursor:pointer;">
-          <span onclick="toggleSaleRowDd('${r.id}')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:11px;cursor:pointer;pointer-events:all;user-select:none;">▾</span>
+          <span onclick="toggleSaleRowDd('${r.id}')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:18px;cursor:pointer;pointer-events:all;user-select:none;line-height:1;">▾</span>
         </div>
         <!-- dropdown list -->
         <div id="sr-dd-${r.id}" style="display:none;position:absolute;left:8px;right:8px;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:8px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:180px;overflow-y:auto;">
@@ -2618,6 +2855,17 @@ function buildEmpWageSelect() {
   const emps=getEmployees();
   sel.innerHTML='<option value="">-- เลือกพนักงาน --</option>'
     +emps.map(e=>`<option value="${e.id}">${e.name} (${fmt(e.rate)}/วัน)</option>`).join('');
+  // rebuild custom DD
+  const dd=document.getElementById('emp-wage-dd');
+  if(dd) {
+    dd.innerHTML = emps.length ? emps.map(e=>`
+      <div onmousedown="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")} (${fmt(e.rate)}/วัน)')\"
+        ontouchend="event.preventDefault();selectEmpWage('${e.id}','${e.name.replace(/'/g,"\\'")} (${fmt(e.rate)}/วัน)');event.stopPropagation();"
+        style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">
+        ${e.name} <span style="font-size:12px;color:var(--text2);">${fmt(e.rate)}/วัน</span>
+      </div>`).join('')
+      : '<div style="padding:11px 14px;font-size:13px;color:var(--text2);">ยังไม่มีพนักงาน</div>';
+  }
 }
 
 // ============ EMPLOYEE WAGE CALENDAR ============
