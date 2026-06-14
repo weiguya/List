@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ร้านของฉัน 015</title>
+<title>Onion 02</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -236,14 +236,14 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .toggle-switch input:checked + .toggle-slider{background:var(--accent);}
 .toggle-switch input:checked + .toggle-slider:before{transform:translateX(20px);}
 /* Sensitive number mask */
-.sens-masked { color: transparent !important; }
+.sens-masked { color: transparent !important; user-select:none; }
 .sens-masked::before {
-  content: '−';
-  color: var(--text);
-  font-size: inherit;
-  font-weight: inherit;
+  content: '████';
+  color: var(--card);
+  font-size: 0.75em;
+  letter-spacing: 2px;
 }
-.stat-card.full .sens-masked::before { color: #fff; }
+.stat-card.full .sens-masked::before { color: rgba(255,255,255,0.05); }
 </style>
 </head>
 <body>
@@ -255,7 +255,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div class="s-title">🏪 ร้านของฉัน 015</div>
+      <div class="s-title">🏪 Onion 02</div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
@@ -2081,12 +2081,13 @@ function selectSaleRowProduct(id, name) {
   setTimeout(()=>document.getElementById('sr-qty-'+id)?.focus(), 50);
 }
 
-// ปิด dropdown เมื่อ tap/click นอกกล่อง
+// ปิด dropdown เมื่อ tap/click นอกกล่อง — ไม่ปิดถ้ากำลัง scroll
 document.addEventListener('click', e=>{
+  if(_touchMoved) return;
   const insideDd = e.target.closest('[id^="sr-dd-"]');
-  const insideInput = e.target.closest('[id^="sr-meat-"]');
-  const insideArrow = e.target.dataset && e.target.dataset.srarrow;
-  if(!insideDd && !insideInput && !insideArrow) {
+  const insideDisplay = e.target.closest('[id^="sr-meat-display-"]');
+  const insideArrow = e.target.closest('[id^="sr-meat-"]');
+  if(!insideDd && !insideDisplay && !insideArrow) {
     document.querySelectorAll('[id^="sr-dd-"]').forEach(dd=>dd.style.display='none');
   }
 });
@@ -4264,6 +4265,15 @@ function adminTab(btn, tabId) {
   if(tabId === 'adm-reset') loadResetShopSelect();
 }
 
+// init เมื่อโหลดหน้าเสร็จ
+document.addEventListener('DOMContentLoaded', ()=>{
+  updateDashboard();
+  // ตั้ง sidebar date
+  const sd = document.getElementById('sidebar-date');
+  if(sd) sd.textContent = new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  // push initial history state
+  history.replaceState({pageId:'page-home'}, '', '');
+});
 </script>
 </body>
 </html>
