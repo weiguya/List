@@ -3,16 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onion 040</title>
+<title>Onion 041</title>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#f0f4ff; --card:#fff; --card2:#f5f7ff; --border:#dde3f5;
+  --bg:#f0f4ff; --card:#fff; --card2:#f5f7ff;
   --accent:#4575f3; --green:#10a372; --green-soft:#d4f5e9;
   --red:#e05252; --red-soft:#fde8e8; --yellow:#d97706; --yellow-soft:#fef3c7;
   --purple:#7c5cbf; --blue-soft:#ddeaff;
   --text:#1e2240; --text2:#6b74a8;
-  --shadow:0 2px 12px rgba(69,117,243,0.08); --radius:16px;
+  --border:#c0c9e6;
+  --shadow:0 2px 12px rgba(69,117,243,0.08);
+  --shadow-card:0 6px 24px rgba(69,117,243,0.18), 0 2px 6px rgba(69,117,243,0.11);
+  --radius:16px;
   --sidebar-w:270px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -55,14 +58,14 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
 /* STATS GRID */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-card);}
 .stat-card .label{font-size:11px;color:var(--text2);margin-bottom:4px;}
 .stat-card .value{font-size:20px;font-weight:600;}
 .stat-card.full{grid-column:1/-1;}
 .green{color:var(--green);} .red{color:var(--red);} .yellow{color:var(--yellow);} .blue{color:var(--accent);} .purple{color:var(--purple);}
 
 /* CHART */
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow);}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-card);}
 .chart-card h3{font-size:13px;color:var(--text2);margin-bottom:12px;}
 .bar-row{margin-bottom:10px;}
 .bar-row .bar-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between;}
@@ -71,7 +74,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
 /* NAV GRID (dashboard shortcuts) */
 .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.nav-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;text-align:center;cursor:pointer;transition:background 0.2s,transform 0.1s;user-select:none;box-shadow:var(--shadow);}
+.nav-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 14px;text-align:center;cursor:pointer;transition:background 0.2s,transform 0.1s;user-select:none;box-shadow:var(--shadow-card);}
 .nav-card:active{transform:scale(0.97);background:var(--blue-soft);}
 .nav-card .nav-icon{font-size:28px;margin-bottom:6px;}
 .nav-card .nav-title{font-size:14px;font-weight:500;}
@@ -81,10 +84,12 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .section-title{font-size:16px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 
 /* FORM */
-.form-group{margin-bottom:14px;}
+.form-group{margin-bottom:12px;}
 .form-group label{font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Prompt',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
 .form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(69,117,243,0.1);background:#fff;}
+.form-card{background:#fff;border:1px solid var(--border);border-left:3px solid rgba(69,117,243,0.25);border-radius:14px;padding:14px 14px 4px;margin-bottom:12px;box-shadow:var(--shadow-card);}
+.form-card .form-group{margin-bottom:10px;}
 
 /* BUTTONS */
 .btn{width:100%;padding:14px;border-radius:12px;border:none;font-family:'Prompt',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity 0.2s,transform 0.1s;}
@@ -96,7 +101,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .btn-sm{width:auto;padding:8px 16px;font-size:13px;}
 
 /* LIST ITEMS */
-.list-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 6px rgba(69,117,243,0.06);}
+.list-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-card);}
 .item-name{font-size:14px;font-weight:500;}
 .item-meta{font-size:11px;color:var(--text2);margin-top:2px;}
 .item-amount{font-size:15px;font-weight:600;}
@@ -109,14 +114,14 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
 
 /* REPORT */
-.report-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);}
+.report-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-card);}
 .report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;}
 .report-row:last-child{border-bottom:none;}
 .report-row .r-label{color:var(--text2);}
 .report-total{display:flex;justify-content:space-between;padding:12px 0 0;font-size:16px;font-weight:600;}
 
 /* LOAN */
-.loan-box{background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.loan-box{background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-card);}
 .loan-progress .bar-track{height:12px;}
 
 /* MISC */
@@ -124,7 +129,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .empty{text-align:center;padding:40px 16px;color:var(--text2);font-size:14px;}
 .empty .empty-icon{font-size:40px;margin-bottom:8px;}
 .filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-.filter-row input,.filter-row select{flex:1;min-width:100px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;}
+.filter-row input,.filter-row select{flex:1;min-width:100px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;justify-content:center;}
@@ -152,16 +157,16 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .chk-label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:4px 8px;background:var(--card2);border:1px solid var(--border);border-radius:8px;}
 .chk-label input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;}
 /* SETTINGS */
-.set-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);}
+.set-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card);}
 .set-section h3{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
 .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-.tag-chip{display:flex;align-items:center;gap:6px;background:var(--card2);border:1.5px solid var(--border);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:500;}
+.tag-chip{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:500;}
 .tag-chip .chip-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0;line-height:1;}
 .tag-add{display:flex;gap:8px;}
-.tag-add input{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);}
+.tag-add input{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);}
 .tag-add button{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;}
 /* SETTINGS MENU LIST */
-.set-menu-item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:background 0.15s;}
+.set-menu-item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow-card);transition:background 0.15s;}
 .set-menu-item:active{background:var(--blue-soft);}
 .set-menu-item .smi-ico{font-size:22px;width:32px;text-align:center;}
 .set-menu-item .smi-body{flex:1;}
@@ -178,7 +183,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .sidebar-sub-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;}
 .sidebar-sub-toggle .s-arrow{font-size:11px;transition:transform 0.2s;color:rgba(255,255,255,0.7);}
 .sidebar-sub-toggle.open .s-arrow{transform:rotate(90deg);}
-.admin-card{background:var(--blue-soft);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
+.admin-card{background:var(--blue-soft);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-card);}
 .admin-card .admin-label{font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;}
 .admin-payout-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
 .payout-btn{background:var(--green);border:none;color:#fff;border-radius:8px;padding:6px 14px;font-family:'Prompt',sans-serif;font-size:12px;font-weight:500;cursor:pointer;}
@@ -188,7 +193,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 /* LOGIN PAGE */
 #login-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
 #login-page.show{display:flex;}
-.login-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(69,117,243,0.12);}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;width:100%;max-width:380px;box-shadow:var(--shadow-card);}
 .login-logo{font-size:40px;text-align:center;margin-bottom:8px;}
 .login-title{font-size:20px;font-weight:700;text-align:center;color:var(--accent);margin-bottom:4px;}
 .login-sub{font-size:12px;color:var(--text2);text-align:center;margin-bottom:22px;}
@@ -205,7 +210,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 /* SHOP SELECT SCREEN */
 #shop-select-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:9998;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
 #shop-select-page.show{display:flex;}
-.shop-card{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:20px 18px;margin-bottom:12px;width:100%;max-width:380px;cursor:pointer;transition:border-color 0.2s,transform 0.1s;box-shadow:var(--shadow);}
+.shop-card{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:20px 18px;margin-bottom:12px;width:100%;max-width:380px;cursor:pointer;transition:border-color 0.2s,transform 0.1s;box-shadow:var(--shadow-card);}
 .shop-card:active{transform:scale(0.98);border-color:var(--accent);}
 .shop-card.suspended{opacity:0.5;cursor:not-allowed;}
 .shop-card .sc-name{font-size:16px;font-weight:700;color:var(--text);}
@@ -216,7 +221,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .sc-status.pending{background:var(--yellow-soft);color:var(--yellow);}
 
 /* ADMIN PANEL */
-.admin-panel-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.admin-panel-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-card);}
 .admin-panel-card .apc-name{font-size:14px;font-weight:600;}
 .admin-panel-card .apc-meta{font-size:11px;color:var(--text2);margin-top:2px;}
 .role-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;}
@@ -406,15 +411,15 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ยอดขาย -->
   <div id="inc-sale" class="inc-section">
-    <div class="form-group"><label>วันที่</label><input type="date" id="sale-date"></div>
+    <div class="form-card"><div class="form-group"><label>วันที่</label><input type="date" id="sale-date"></div></div>
     <div id="sale-rows-wrap"></div>
-    <button onclick="addSaleRow()" type="button" style="width:100%;padding:11px;border-radius:10px;border:1.5px dashed var(--border);background:var(--card2);font-family:'Prompt',sans-serif;font-size:13px;color:var(--accent);cursor:pointer;margin-bottom:10px;">+ เพิ่มรายการ</button>
-    <div style="background:var(--green-soft);border:1.5px solid var(--green);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <button onclick="addSaleRow()" type="button" style="width:100%;padding:11px;border-radius:10px;border:1.5px dashed #b8c6e8;background:#fff;font-family:'Prompt',sans-serif;font-size:13px;color:var(--accent);cursor:pointer;margin-bottom:12px;">+ เพิ่มรายการ</button>
+    <div style="background:var(--green-soft);border:1px solid rgba(16,163,114,0.35);border-radius:12px;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;box-shadow:0 2px 10px rgba(16,163,114,0.12);">
       <span style="font-size:13px;color:var(--green);font-weight:500;">ยอดรวมทั้งหมด</span>
       <span style="font-size:22px;font-weight:700;color:var(--green);" id="sale-grand-total">฿0</span>
     </div>
-    <div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:10px;">
+    <div class="form-card"><div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:12px;box-shadow:var(--shadow-card);">
       <span style="font-size:12px;color:var(--text2);">เลขออเดอร์ที่จะได้</span>
       <span id="sale-order-preview" style="font-size:12px;font-weight:700;color:var(--accent);letter-spacing:0.5px;">SL-...</span>
     </div>
@@ -435,12 +440,16 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <button class="tab-btn" onclick="loanTab(this,'loan-out')">- จ่ายคืน</button>
     </div>
     <div id="loan-in">
-      <div class="form-group"><label>จำนวนเงินที่กู้ (บาท)</label><input type="number" id="loan-amount" placeholder="0.00" step="0.01" oninput="calcLoanTotal()"></div>
-      <div class="form-group"><label>อัตราดอกเบี้ย (% ต่อปี)</label>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <input type="number" id="loan-interest" placeholder="0.00" step="0.01" min="0" max="100" style="flex:1;" oninput="calcLoanTotal()">
-          <span style="font-size:13px;color:var(--text2);white-space:nowrap;">% / ปี</span>
+      <div class="form-card">
+        <div class="form-group"><label>จำนวนเงินที่กู้ (บาท)</label><input type="number" id="loan-amount" placeholder="0.00" step="0.01" oninput="calcLoanTotal()"></div>
+        <div class="form-group"><label>อัตราดอกเบี้ย (% ต่อปี)</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="number" id="loan-interest" placeholder="0.00" step="0.01" min="0" max="100" style="flex:1;" oninput="calcLoanTotal()">
+            <span style="font-size:13px;color:var(--text2);white-space:nowrap;">% / ปี</span>
+          </div>
         </div>
+        <div class="form-group"><label>แหล่งเงินกู้</label><input type="text" id="loan-source" placeholder="เช่น ธนาคาร / ญาติ"></div>
+        <div class="form-group"><label>วันที่กู้</label><input type="date" id="loan-date"></div>
       </div>
       <div class="form-group" id="loan-total-preview" style="display:none;">
         <label>ยอดรวมที่ต้องชำระ (ดอกเบี้ยทบต้น 1 ปี)</label>
@@ -456,17 +465,16 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
           </div>
         </div>
       </div>
-      <div class="form-group"><label>แหล่งเงินกู้</label><input type="text" id="loan-source" placeholder="เช่น ธนาคาร / ญาติ"></div>
-      <div class="form-group"><label>วันที่กู้</label><input type="date" id="loan-date"></div>
       <button class="btn btn-primary" onclick="addLoan()">+ บันทึกรับเงินกู้</button>
     </div>
     <div id="loan-out" style="display:none">
-      <!-- ขั้นตอนที่ 1: เลือกสัญญา -->
+      <div class="form-card">
       <div class="form-group">
         <label>เลือกสัญญาที่จะจ่ายคืน</label>
         <select id="loanpay-contract-select" onchange="onLoanContractSelect()">
           <option value="">-- เลือกสัญญา --</option>
         </select>
+      </div>
       </div>
       <!-- แสดงข้อมูลสัญญาที่เลือก -->
       <div id="loanpay-contract-info" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;">
@@ -501,9 +509,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
       <!-- ขั้นตอนที่ 2: กรอกจำนวนที่จ่าย -->
       <div id="loanpay-fields" style="display:none;">
+        <div class="form-card">
         <div class="form-group"><label>จำนวนที่จ่ายคืน (บาท)</label><input type="number" id="loanpay-amount" placeholder="0.00" step="0.01"></div>
         <div class="form-group"><label>วันที่</label><input type="date" id="loanpay-date"></div>
         <div class="form-group"><label>หมายเหตุ</label><input type="text" id="loanpay-note" placeholder="เช่น งวดที่ 1"></div>
+        </div>
         <button class="btn btn-red" onclick="addLoanPay()">- บันทึกการจ่ายคืน</button>
       </div>
       <!-- กรณียังไม่มีสัญญา -->
@@ -528,9 +538,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: รับจากทุน -->
   <div id="inc-capital" class="inc-section" style="display:none">
+    <div class="form-card">
     <div class="form-group"><label>จำนวนเงินทุนที่เพิ่ม (บาท)</label><input type="number" id="cap-amount" placeholder="0.00" step="0.01"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="cap-date"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="cap-note" placeholder="เช่น เงินลงทุนเริ่มต้น"></div>
+    </div>
     <button class="btn btn-primary" onclick="addCapital()">+ บันทึกเงินทุน</button>
     <div class="divider"></div>
   </div>
@@ -541,7 +553,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="section-title">💸 บันทึกรายจ่าย</div>
 
   <!-- Header: วันที่ + ซัพพลายเออร์ -->
-  <div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card);">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div class="form-group" style="margin:0;">
         <label>วันที่</label>
@@ -574,7 +586,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div id="buy-rows-wrap"></div>
 
   <!-- ปุ่มเพิ่มรายการ -->
-  <button onclick="addBuyRow()" style="width:100%;background:var(--card);border:1.5px dashed var(--accent);color:var(--accent);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;margin-bottom:12px;">+ เพิ่มรายการ</button>
+  <button onclick="addBuyRow()" style="width:100%;background:#fff;border:1.5px dashed #b8c6e8;color:var(--accent);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;margin-bottom:12px;">+ เพิ่มรายการ</button>
 
   <!-- ปุ่มบันทึก -->
   <button class="btn btn-primary" onclick="confirmBuyBill()">บันทึกบิลนี้</button>
@@ -609,6 +621,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ค่าแรงพนักงาน (ระบบใหม่) -->
   <div id="fin-emp" class="fin-section">
+    <div class="form-card">
     <div class="form-group">
       <label>เลือกพนักงาน</label>
       <div style="position:relative;">
@@ -623,6 +636,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
         <div id="emp-wage-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:200px;overflow-y:auto;"></div>
       </div>
     </div>
+    </div><!-- end form-card -->
     <div id="emp-wage-rate-display" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--text2);">
       ค่าแรง: <span id="emp-wage-rate-val" style="font-weight:700;color:var(--accent);"></span> / วัน
     </div>
@@ -655,6 +669,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ผู้บริหาร (ย้ายมาจาก settings) -->
   <div id="fin-admin" class="fin-section" style="display:none">
+    <div class="form-card">
     <div class="form-group">
       <label>เลือกผู้บริหาร</label>
       <div style="position:relative;">
@@ -669,6 +684,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
         <div id="admin-pay-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:200px;overflow-y:auto;"></div>
       </div>
     </div>
+    </div><!-- end form-card -->
     <div id="admin-rate-display" style="display:none;background:var(--blue-soft);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
       % ค่าคอม: <b id="admin-rate-val"></b> · คำนวณจากยอดขายแต่ละวัน
     </div>
@@ -694,9 +710,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 
   <!-- TAB: ค่าเช่า -->
   <div id="fin-other" class="fin-section" style="display:none">
+    <div class="form-card">
     <div class="form-group"><label>ค่าเช่า (บาท)</label><input type="number" id="rent-amount" placeholder="0.00" step="0.01"></div>
     <div class="form-group"><label>วันที่จ่าย</label><input type="date" id="rent-date"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="rent-note" placeholder="เช่น ค่าเช่าเดือน ม.ค."></div>
+    </div><!-- end form-card -->
     <button class="btn btn-primary" onclick="addRent()">+ บันทึกค่าเช่า</button>
     <div class="divider"></div>
   </div>
@@ -705,11 +723,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- PAGE: รายงาน รายรับ -->
 <div class="page" id="page-rep-income">
   <div class="section-title">💚 รายงานรายรับ</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="ri-from" onchange="renderRepIncome()"></div>
-    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="ri-to" onchange="renderRepIncome()"></div>
-  </div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow-card);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="ri-from" onchange="renderRepIncome()"></div>
+      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="ri-to" onchange="renderRepIncome()"></div>
+    </div>
     <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">แสดงประเภท</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       <label class="chk-label"><input type="checkbox" id="ri-c-sale" checked onchange="onRiSaleFilterChange()"> ยอดขาย</label>
@@ -737,12 +755,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <div class="page" id="page-rep-expense">
   <div class="section-title">💸 รายงานรายจ่าย</div>
   <!-- วันที่ -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="re-from" onchange="renderRepExpense()"></div>
-    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="re-to" onchange="renderRepExpense()"></div>
-  </div>
-  <!-- Filter card รวม -->
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow-card);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="re-from" onchange="renderRepExpense()"></div>
+      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="re-to" onchange="renderRepExpense()"></div>
+    </div>
     <!-- แถว 1: แสดงประเภท (checkbox กระชับ) -->
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">
       <label class="chk-label" style="padding:4px 10px;"><input type="checkbox" id="re-c-buy" checked onchange="renderRepExpense()"> ซื้อของ</label>
@@ -792,11 +809,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- PAGE: รายงาน เคลื่อนไหว -->
 <div class="page" id="page-rep-movement">
   <div class="section-title">📋 การเคลื่อนไหว</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="tl-from" onchange="renderTimeline()"></div>
-    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="tl-to" onchange="renderTimeline()"></div>
-  </div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow-card);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="tl-from" onchange="renderTimeline()"></div>
+      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="tl-to" onchange="renderTimeline()"></div>
+    </div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       <label class="chk-label"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> ยอดขาย</label>
       <label class="chk-label"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> รับทุน</label>
@@ -813,11 +830,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 <!-- PAGE: รายงาน ค่าแรง/คอม/เช่า -->
 <div class="page" id="page-rep-wages">
   <div class="section-title">รายงานค่าแรง / ค่าคอม / ค่าเช่า</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-    <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="rw-from" onchange="renderRepWages()"></div>
-    <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="rw-to" onchange="renderRepWages()"></div>
-  </div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow-card);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div class="form-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="rw-from" onchange="renderRepWages()"></div>
+      <div class="form-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="rw-to" onchange="renderRepWages()"></div>
+    </div>
     <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">แสดงประเภท</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       <label class="chk-label"><input type="checkbox" id="rw-c-wage" checked onchange="renderRepWages()"> ค่าแรงพนักงาน</label>
@@ -1057,6 +1074,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <div style="font-size:15px;font-weight:700;margin-bottom:16px;">แก้ไขสินค้า</div>
     <input type="hidden" id="edit-item-old-type">
     <input type="hidden" id="edit-item-old-name">
+    <div class="form-card">
     <div class="form-group"><label>ชื่อสินค้า</label>
       <input type="text" id="edit-item-name"
         style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
@@ -1083,6 +1101,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
         <div id="edit-item-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 4px 20px rgba(69,117,243,0.18);max-height:190px;overflow-y:auto;"></div>
       </div>
     </div>
+    </div><!-- end form-card -->
     <div style="display:flex;gap:10px;margin-top:4px;">
       <button onclick="saveEditItem()"
         style="flex:2;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">💾 บันทึก</button>
@@ -2164,10 +2183,10 @@ function renderSaleRows() {
   const wrap = document.getElementById('sale-rows-wrap');
   if(!wrap) return;
   wrap.innerHTML = _saleRows.map((r,i) => `
-    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:10px;margin-bottom:6px;overflow:visible;position:relative;">
+    <div style="background:#fff;border:1px solid var(--border);border-left:3px solid rgba(69,117,243,0.25);border-radius:12px;margin-bottom:10px;overflow:visible;position:relative;box-shadow:0 2px 8px rgba(69,117,243,0.09),0 1px 3px rgba(69,117,243,0.06);">
       <!-- Row header -->
-      <div style="display:flex;align-items:center;background:var(--card2);padding:4px 8px 4px 10px;border-bottom:1px solid var(--border);border-radius:8px 8px 0 0;">
-        <span style="font-size:10px;font-weight:700;color:var(--text2);flex:1;">#${i+1}</span>
+      <div style="display:flex;align-items:center;background:var(--blue-soft);padding:5px 8px 5px 12px;border-bottom:1px solid var(--border);border-radius:11px 11px 0 0;">
+        <span style="font-size:11px;font-weight:700;color:var(--accent);flex:1;">#${i+1}</span>
         ${_saleRows.length>1?`<button type="button" onclick="removeSaleRow('${r.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;opacity:0.7;">×</button>`:''}
       </div>
       <!-- ช่องสินค้า: dropdown only -->
@@ -3523,42 +3542,56 @@ function openEditModal(key,id,cb) {
   document.getElementById('edit-modal-title').textContent=titles[key]||'แก้ไข';
   let body='';
   if(key===KEY.sale) body=`
+    <div class="form-card">
     <div class="form-group"><label>ยอดรวม (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
     <div class="form-group"><label>จำนวน</label><input type="number" id="e-qty" value="${item.qty||''}" step="0.01" oninput="calcEditSale()"></div>
     <div class="form-group"><label>ราคา/หน่วย</label><input type="number" id="e-unit" value="${item.unitPrice||''}" step="0.01" oninput="calcEditSale()"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
-    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>`;
+    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
+    </div>`;
   else if(key===KEY.buy) {
     const types=getBuyTypes();
     body=`
+    <div class="form-card">
     <div class="form-group"><label>ชื่อสินค้า</label><input type="text" id="e-name" value="${item.name}"></div>
     <div class="form-group"><label>ร้าน/ซัพ</label><input type="text" id="e-supplier" value="${item.supplier||''}"></div>
     <div class="form-group"><label>ประเภท</label><select id="e-type">${types.map(t=>`<option value="${t.id}"${t.id===item.type?' selected':''}>${t.label}</option>`).join('')}</select></div>
     <div class="form-group"><label>จำนวน</label><input type="number" id="e-qty" value="${item.qty||1}" step="0.01" oninput="calcEditBuy()"></div>
     <div class="form-group"><label>ราคา/หน่วย</label><input type="number" id="e-unit" value="${item.unitPrice||item.price}" step="0.01" oninput="calcEditBuy()"></div>
     <div class="form-group"><label>ราคารวม (บาท)</label><input type="number" id="e-price" value="${item.price}" step="0.01"></div>
-    <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>`;
+    <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
+    </div>`;
   }
   else if(key===KEY.capital) body=`
+    <div class="form-card">
     <div class="form-group"><label>จำนวน (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
-    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>`;
+    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
+    </div>`;
   else if(key===KEY.loan) body=`
+    <div class="form-card">
     <div class="form-group"><label>จำนวน (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
     <div class="form-group"><label>แหล่งเงินกู้</label><input type="text" id="e-source" value="${item.source||''}"></div>
-    <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>`;
+    <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
+    </div>`;
   else if(key===KEY.loanpay) body=`
+    <div class="form-card">
     <div class="form-group"><label>จำนวน (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
-    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>`;
+    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
+    </div>`;
   else if(key===KEY.wage) body=`
+    <div class="form-card">
     <div class="form-group"><label>ชื่อพนักงาน</label><input type="text" id="e-name" value="${item.name}"></div>
     <div class="form-group"><label>จำนวน (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
-    <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>`;
+    <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
+    </div>`;
   else if(key===KEY.rent) body=`
+    <div class="form-card">
     <div class="form-group"><label>จำนวน (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
-    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>`;
+    <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
+    </div>`;
   document.getElementById('edit-modal-body').innerHTML=body;
   document.getElementById('edit-modal').classList.add('open');
 }
@@ -3608,7 +3641,7 @@ function renderRepIncome() {
       const pctRound=Math.round(pct);
       const barColor=pct>=100?'var(--green)':pct>=50?'var(--accent)':'var(--red)';
       loanSummaryHtml=`
-      <div style="background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow);">
+      <div style="background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card);">
         <div style="font-size:13px;font-weight:600;margin-bottom:10px;">สรุปสถานะเงินกู้ทั้งหมด</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
           <div style="background:var(--card);border-radius:8px;padding:8px 10px;">
@@ -3661,7 +3694,7 @@ function renderRepIncome() {
   let html='';
   if(loanSummaryHtml) html+=loanSummaryHtml;
   if(items.length>0){
-    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
+    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-card);">
     <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
     <span style="font-size:16px;font-weight:700;color:var(--green);">${fmt(total)}</span>
   </div>`;
@@ -3839,13 +3872,12 @@ function renderBuyRows() {
     const showUnit = r.type && r.type !== 'transport';
     const total = (parseFloat(r.qty)||0) * (parseFloat(r.unitPrice)||0);
 
-    return `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:10px;margin-bottom:8px;box-shadow:var(--shadow);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:600;color:var(--text2);">รายการที่ ${idx+1}</span>
-        ${_buyRows.length>1?`<button onclick="removeBuyRow('${r.id}')" style="background:var(--red-soft);border:1.5px solid var(--red);color:var(--red);border-radius:7px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:'Prompt',sans-serif;">ลบ</button>`:''}
+    return `<div style="background:#fff;border:1px solid var(--border);border-left:3px solid rgba(69,117,243,0.25);border-radius:12px;margin-bottom:10px;overflow:visible;position:relative;box-shadow:0 2px 8px rgba(69,117,243,0.09),0 1px 3px rgba(69,117,243,0.06);">
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);padding:5px 8px 5px 12px;border-bottom:1px solid var(--border);border-radius:11px 11px 0 0;">
+        <span style="font-size:11px;font-weight:700;color:var(--accent);">รายการที่ ${idx+1}</span>
+        ${_buyRows.length>1?`<button onclick="removeBuyRow('${r.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;opacity:0.7;">×</button>`:''}
       </div>
-
-      <!-- แถว 1: ประเภท | ชื่อสินค้า | หน่วย -->
+      <div style="padding:10px;">
       <div style="display:grid;grid-template-columns:100px 1fr 75px;gap:6px;margin-bottom:6px;">
         <div>
           <label style="font-size:10px;color:var(--text2);">ประเภท</label>
@@ -3909,6 +3941,7 @@ function renderBuyRows() {
             ${total>0?fmt(total):'0'}
           </div>
         </div>
+      </div>
       </div>
     </div>`;
   }).join('');
@@ -4084,7 +4117,7 @@ function renderRepExpense() {
   if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ไม่มีรายการในช่วงนี้</div>';return;}
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   const total=items.reduce((s,i)=>s+i.amount,0);
-  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);">
+  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-card);">
     <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
     <span style="font-size:16px;font-weight:700;color:var(--red);">${fmt(total)}</span>
   </div>`;
@@ -4219,7 +4252,7 @@ function renderRepWages() {
 
   let html='';
 
-  html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;box-shadow:var(--shadow);">
+  html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px;box-shadow:var(--shadow-card);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
       <span style="font-size:13px;color:var(--text2);">${fmtDateFull(from)} — ${fmtDateFull(to)} (${items.length} รายการ)</span>
       <span style="font-size:16px;font-weight:700;color:var(--red);">−${fmt(total)}</span>
@@ -4288,7 +4321,7 @@ function renderTimeline() {
   const tOut=items.filter(i=>i.kind==='out').reduce((s,i)=>s+i.amount,0);
   const net=tIn-tOut;
 
-  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;box-shadow:var(--shadow);">
+  let html=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;box-shadow:var(--shadow-card);">
     <div style="text-align:center;border-right:1px solid var(--border);">
       <div style="font-size:10px;color:var(--text2);">รับเข้า</div>
       <div style="font-size:14px;font-weight:700;color:var(--green);">${fmt(tIn)}</div>
@@ -4705,7 +4738,7 @@ function renderRepLoan() {
   let html='';
 
   // สรุปรวม
-  html+=`<div style="background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow);">
+  html+=`<div style="background:var(--blue-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow-card);">
     <div style="font-size:13px;font-weight:700;margin-bottom:10px;">สรุปภาพรวม</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
       <div style="background:var(--card);border-radius:10px;padding:10px 12px;">
@@ -4745,7 +4778,7 @@ function renderRepLoan() {
   loans.sort((a,b)=>a.date.localeCompare(b.date)).forEach((ln,i)=>{
     const due=ln.totalDue||ln.amount;
     const interest=due-ln.amount;
-    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow);">
+    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow-card);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
         <div>
           <div style="font-size:14px;font-weight:600;">${ln.source||'เงินกู้ #'+(i+1)}</div>
@@ -4785,7 +4818,7 @@ function renderRepLoan() {
     const remainForThis=Math.max(0,due-paidForThis);
     const pctThis=due>0?Math.min(100,paidForThis/due*100):0;
     const barCol=pctThis>=100?'var(--green)':pctThis>=50?'var(--accent)':'var(--red)';
-    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);">
+    html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-card);">
       <div style="background:var(--card2);padding:10px 14px;border-bottom:1px solid var(--border);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
           <div style="font-size:13px;font-weight:700;">${ln.source||'เงินกู้ #'+(li+1)}</div>
