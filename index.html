@@ -337,13 +337,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
     <div class="stat-card" id="d-profit-card" style="position:relative;">
       <button id="profit-show-btn" onclick="toggleSensitive('profit')" style="position:absolute;top:8px;right:8px;background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:6px;width:26px;height:26px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">👁</button>
-      <div class="label" id="d-profit-label" style="display:flex;align-items:center;gap:4px;">กำไร <span id="d-profit-month-tag" style="font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;cursor:pointer;" onclick="openProfitMonthPicker()">—</span></div>
-      <div class="value" id="d-profit" style="cursor:pointer;" onclick="openProfitMonthPicker()">0</div>
-      <div style="font-size:10px;color:var(--text2);margin-top:3px;" id="d-profit-formula">—</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
-        <span style="font-size:10px;color:var(--accent);cursor:pointer;" onclick="openProfitMonthPicker()">เลือกเดือน ▾</span>
-        <span style="font-size:10px;color:var(--text2);cursor:pointer;" onclick="openProfitDetail()">ดูรายละเอียด →</span>
+      <div class="label" id="d-profit-label" style="display:flex;align-items:center;gap:4px;">กำไร
+        <span id="d-profit-month-tag" onclick="openProfitMonthPicker()" style="font-size:11px;background:var(--accent);color:#fff;padding:2px 10px;border-radius:10px;cursor:pointer;font-weight:600;letter-spacing:0.3px;">—</span>
       </div>
+      <div class="value" id="d-profit">0</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px;" id="d-profit-formula">—</div>
     </div>
     <div class="stat-card" style="cursor:pointer;" onclick="goReportTab('rep-expense',document.getElementById('nav-rep-expense'));setTimeout(()=>{['re-c-wage','re-c-rent','re-c-loanpay'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const b=document.getElementById('re-c-buy');if(b)b.checked=true;renderRepExpense();},200);">
       <div class="label" id="d-buy-label">ซื้อของวันนี้</div>
@@ -396,7 +394,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
       <label>เดือน</label>
       <input type="month" id="profit-month-picker" onchange="setProfitMonth(this.value)">
     </div>
-    <button class="btn btn-outline btn-sm" onclick="setProfitMonth(null)" style="margin-top:8px;">↩ กลับเดือนปัจจุบัน</button>
+    <button class="btn btn-outline btn-sm" onclick="setProfitMonth(null)" style="margin-top:8px;">↩ ไหลตาม period อัตโนมัติ</button>
   </div>
 </div>
 
@@ -4480,15 +4478,32 @@ function updateDashboard() {
     ? buys.reduce((s,i)=>s+i.price,0)
     : buys.filter(i=>i.date>=periodFrom&&i.date<=periodTo).reduce((s,i)=>s+i.price,0);
 
-  // กำไร - ใช้ profitMonth (อาจต่างจาก period)
-  const pmSale=sales.filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
-  const monthWage=DB.get(KEY.wage).filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
-  const monthRent=DB.get(KEY.rent).filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
-  const monthLoanPay=DB.get(KEY.loanpay).filter(i=>i.date.slice(0,7)===profitMonth).reduce((s,i)=>s+i.amount,0);
+  // กำไร - ถ้ามี _profitViewMonth ใช้นั้น ไม่งั้นไหลตาม period
+  let profitFrom, profitTo, profitLabel;
+  if(_profitViewMonth) {
+    profitFrom = _profitViewMonth+'-01';
+    const lastDay=new Date(new Date(_profitViewMonth).getFullYear(),new Date(_profitViewMonth).getMonth()+1,0).getDate();
+    profitTo = _profitViewMonth+'-'+String(lastDay).padStart(2,'0');
+    const pmDate=new Date(_profitViewMonth+'-01');
+    profitLabel=pmDate.toLocaleDateString('th-TH',{month:'short',year:'2-digit'});
+  } else {
+    profitFrom = periodFrom; profitTo = periodTo;
+    if(period==='day') profitLabel=new Date(td).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+    else if(period==='week') profitLabel=`${fmtDate(periodFrom).slice(0,5)}–${fmtDate(periodTo).slice(0,5)}`;
+    else if(period==='month') profitLabel=new Date(tm+'-01').toLocaleDateString('th-TH',{month:'short',year:'2-digit'});
+    else profitLabel='ทั้งหมด';
+  }
+
+  const pmSale = period==='all' && !_profitViewMonth
+    ? sales.reduce((s,i)=>s+i.amount,0)
+    : sales.filter(i=>i.date>=profitFrom&&i.date<=profitTo).reduce((s,i)=>s+i.amount,0);
+  const monthWage=DB.get(KEY.wage).filter(i=>i.date>=profitFrom&&i.date<=profitTo).reduce((s,i)=>s+i.amount,0);
+  const monthRent=DB.get(KEY.rent).filter(i=>i.date>=profitFrom&&i.date<=profitTo).reduce((s,i)=>s+i.amount,0);
+  const monthLoanPay=DB.get(KEY.loanpay).filter(i=>i.date>=profitFrom&&i.date<=profitTo).reduce((s,i)=>s+i.amount,0);
   const admins=getAdmins();
   const adminCom=admins.reduce((s,a)=>s+pmSale*(a.pct||0)/100,0);
   const pcfg=getProfitCfg();
-  const pmBuyDeduct=buys.filter(i=>i.date.slice(0,7)===profitMonth&&pcfg.buyTypeIds.includes(i.type)).reduce((s,i)=>s+i.price,0);
+  const pmBuyDeduct=buys.filter(i=>i.date>=profitFrom&&i.date<=profitTo&&pcfg.buyTypeIds.includes(i.type)).reduce((s,i)=>s+i.price,0);
   const monthProfit=pmSale - pmBuyDeduct
     - (pcfg.wage?monthWage:0)
     - (pcfg.rent?monthRent:0)
@@ -4516,11 +4531,7 @@ function updateDashboard() {
 
   // อัปเดต profit month tag
   const pmTag=document.getElementById('d-profit-month-tag');
-  if(pmTag){
-    const pmDate=new Date(profitMonth+'-01');
-    const pmLabel=pmDate.toLocaleDateString('th-TH',{month:'short',year:'2-digit'});
-    pmTag.textContent=pmLabel;
-  }
+  if(pmTag) pmTag.textContent=profitLabel;
 
   // สูตร hint สำหรับ d-profit
   const allBuyTypes=getBuyTypes();
