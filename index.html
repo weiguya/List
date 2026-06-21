@@ -1023,7 +1023,8 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
     <div id="recipe-meta-info" style="font-size:11px;color:var(--text2);margin-bottom:8px;"></div>
     <div class="rcp-btnrow">
-      <button class="rcp-btn rcp-btn-soft" id="recipe-select-toggle-btn" onclick="toggleRecipeSelectMode()">เลือก</button>
+      <button class="rcp-btn rcp-btn-soft" id="recipe-edit-toggle-btn" onclick="toggleRecipeEditMode()">แก้ไข</button>
+      <button class="rcp-btn rcp-btn-soft" id="recipe-select-toggle-btn" onclick="toggleRecipeSelectMode()">ลบ</button>
       <button class="rcp-btn rcp-btn-soft" id="recipe-compact-toggle-btn" onclick="toggleRecipeCompactMode()">มุมมอง</button>
     </div>
     <div id="recipe-select-actions" style="display:none;margin-bottom:10px;">
@@ -3329,6 +3330,7 @@ function renderRecipePage() {
   const actionsBar = document.getElementById('recipe-select-actions');
   const metaEl = document.getElementById('recipe-meta-info');
   _recipeSelectMode = false;
+  _recipeEditMode = false;
   _recipeSelectedRows.clear();
   const backBtn = document.getElementById('recipe-page-backbtn');
   if(!formulas.length) {
@@ -3360,10 +3362,11 @@ function renderRecipePage() {
   kgOptions.sort((a,b)=>a-b);
   kgSel.innerHTML = kgOptions.map(k=>`<option value="${k}"${k===curKg?' selected':''}>${k} กก.${k===baseKg?' (ฐาน)':''}</option>`).join('');
 
-  metaEl.textContent = `น้ำหนักฐานของสูตรนี้ = ${baseKg} กก. — ${Math.abs(curKg-baseKg)<1e-9 ? 'แก้ไขเป้าหมาย ML ได้ที่น้ำหนักฐานเท่านั้น (ค่านี้จะถูกล็อกเป็นสูตรหลัก)' : 'เป้าหมาย ML คำนวณสัดส่วนอัตโนมัติจากฐาน ดูอย่างเดียว'}`;
+  metaEl.textContent = `น้ำหนักฐานของสูตรนี้ = ${baseKg} กก. — ${Math.abs(curKg-baseKg)<1e-9 ? 'แก้ไขเป้าหมาย ML ได้ที่น้ำหนักฐานเท่านั้น (กดปุ่ม "แก้ไข" ก่อน)' : 'เป้าหมาย ML คำนวณสัดส่วนอัตโนมัติจากฐาน ดูอย่างเดียว'}`;
 
   _recipeWorkingCounts = {};
   _recipeHighlightRowId = null;
+  _autoCalcRecipeSpoons(recipe, curKg);
   renderRecipeTable(curId, curKg);
 }
 
@@ -3398,8 +3401,10 @@ function renderRecipeTable(recipeId, kg) {
   const baseKg = recipe.baseKg || 1;
   const ratio = baseKg>0 ? (kg/baseKg) : 1;
   const isBase = Math.abs(kg-baseKg) < 1e-9;
-  const selMode = _recipeSelectMode;
-  const highlightRowId = selMode ? null : _recipeHighlightRowId;
+  const selMode = _recipeSelectMode; // โหมดลบ
+  const editMode = _recipeEditMode; // โหมดแก้ไข
+  const browseMode = !selMode && !editMode;
+  const highlightRowId = browseMode ? _recipeHighlightRowId : null;
   let highlightedSpoonIds = new Set();
   if(highlightRowId && recipe.rows) {
     const hRow = recipe.rows.find(r=>r.id===highlightRowId);
@@ -3412,11 +3417,13 @@ function renderRecipeTable(recipeId, kg) {
     }
   }
 
-  // sync select-mode toolbar UI
-  const toggleBtn = document.getElementById('recipe-select-toggle-btn');
+  // sync toolbar UI
+  const editBtn = document.getElementById('recipe-edit-toggle-btn');
+  const delBtn = document.getElementById('recipe-select-toggle-btn');
   const actionsBar = document.getElementById('recipe-select-actions');
   const countEl = document.getElementById('recipe-selected-count');
-  if(toggleBtn) toggleBtn.textContent = selMode ? 'ยกเลิกเลือก' : 'เลือก';
+  if(editBtn) editBtn.classList.toggle('rcp-btn-active', editMode);
+  if(delBtn) delBtn.classList.toggle('rcp-btn-active', selMode);
   if(actionsBar) actionsBar.style.display = selMode ? '' : 'none';
   if(countEl) countEl.textContent = _recipeSelectedRows.size;
 
@@ -3449,7 +3456,7 @@ function renderRecipeTable(recipeId, kg) {
       spoons.forEach(sp=>{ const c=parseFloat(counts[sp.id]); if(!isNaN(c)) actualMl += c*sp.ml; });
       const hasAnyCount = Object.keys(counts).length>0;
       const mismatch = hasTarget && hasAnyCount && Math.abs(actualMl-targetScaled) > 0.05;
-      const dis = selMode ? 'disabled' : '';
+      const fieldsDis = (selMode || editMode) ? 'disabled' : '';
       const checked = _recipeSelectedRows.has(row.id);
       const rowHi = (row.id === highlightRowId);
       const rowHiCls = rowHi ? ' rcp-hl-row' : '';
@@ -3458,13 +3465,13 @@ function renderRecipeTable(recipeId, kg) {
       if(selMode) {
         html += `<div class="rcp-cell rcp-col-check"><input type="checkbox" class="rcp-checkbox" ${checked?'checked':''} onchange="toggleRecipeRowSelected('${row.id}')"></div>`;
       }
-      if(selMode) {
+      if(editMode) {
         html += `<div class="rcp-cell rcp-col-name"><input class="rcp-field rcp-name-field" value="${_escHtml(row.name)}" onchange="editRecipeRowField('${row.id}','name',this.value)" placeholder="ชื่อวัตถุดิบ"></div>`;
       } else {
         html += `<div class="rcp-cell rcp-col-name${rowHiCls}" onclick="toggleRecipeRowHighlight('${row.id}')"><div class="rcp-field rcp-name-field rcp-name-display">${_escHtml(row.name)}</div></div>`;
       }
-      if(isBase) {
-        html += `<div class="rcp-cell rcp-col-target${rowHiCls}"><input class="rcp-field" ${dis} type="number" step="0.01" min="0" value="${hasTarget?targetBase:''}" onchange="editRecipeRowField('${row.id}','targetMl',this.value)" placeholder="ml"></div>`;
+      if(isBase && editMode) {
+        html += `<div class="rcp-cell rcp-col-target${rowHiCls}"><input class="rcp-field" type="number" step="0.01" min="0" value="${hasTarget?targetBase:''}" onchange="editRecipeRowField('${row.id}','targetMl',this.value)" placeholder="ml"></div>`;
       } else {
         html += `<div class="rcp-cell rcp-col-target${rowHiCls}"><div class="rcp-field rcp-readonly">${hasTarget?_fmtNum(targetScaled):'-'}</div></div>`;
       }
@@ -3472,7 +3479,7 @@ function renderRecipeTable(recipeId, kg) {
         const v = counts[sp.id];
         const hasV = !(v===undefined||v===null||v==='');
         const colHi = highlightedSpoonIds.has(sp.id) ? ' rcp-hl-col' : '';
-        html += `<div class="rcp-cell rcp-col-spoon${rowHiCls}${colHi}"><input class="rcp-field${hasV?' rcp-field-filled':''}" ${dis} type="number" min="0" step="1" value="${hasV?v:''}" onchange="editRecipeSpoonCount('${row.id}','${sp.id}',this.value)" placeholder="0"></div>`;
+        html += `<div class="rcp-cell rcp-col-spoon${rowHiCls}${colHi}"><input class="rcp-field${hasV?' rcp-field-filled':''}" ${fieldsDis} type="number" min="0" step="1" value="${hasV?v:''}" onchange="editRecipeSpoonCount('${row.id}','${sp.id}',this.value)" placeholder="0"></div>`;
       });
       html += '<div class="rcp-add-col-cell"></div>';
       const isMatch = hasTarget && hasAnyCount && !mismatch;
@@ -3481,8 +3488,8 @@ function renderRecipeTable(recipeId, kg) {
     });
   }
 
-  if(!selMode) {
-    // แถวว่างท้ายตาราง สำหรับพิมพ์ชื่อเพิ่มวัตถุดิบใหม่อัตโนมัติ
+  if(editMode) {
+    // แถวว่างท้ายตาราง สำหรับพิมพ์ชื่อเพิ่มวัตถุดิบใหม่อัตโนมัติ (เฉพาะโหมดแก้ไข)
     html += '<div class="rcp-row rcp-row-newrow">';
     html += `<div class="rcp-cell rcp-col-name"><input class="rcp-field rcp-name-field rcp-field-newrow" value="" onchange="commitNewRecipeRow(this.value); this.value='';" placeholder="+ พิมพ์ชื่อวัตถุดิบใหม่..."></div>`;
     html += `<div class="rcp-cell rcp-col-target"><div class="rcp-field rcp-readonly" style="opacity:0.4;">-</div></div>`;
@@ -3491,7 +3498,7 @@ function renderRecipeTable(recipeId, kg) {
     html += '<div class="rcp-cell rcp-col-actual"></div>';
     html += '</div>';
   } else if(!recipe.rows || !recipe.rows.length) {
-    html += '<div class="rcp-row"><div class="rcp-cell" style="width:100%;color:var(--text2);font-size:12px;padding:14px 8px;">ยังไม่มีวัตถุดิบ</div></div>';
+    html += '<div class="rcp-row"><div class="rcp-cell" style="width:100%;color:var(--text2);font-size:12px;padding:14px 8px;">ยังไม่มีวัตถุดิบ — กดปุ่ม "แก้ไข" เพื่อเพิ่มรายการ</div></div>';
   }
 
   html += '</div></div>';
@@ -3499,7 +3506,7 @@ function renderRecipeTable(recipeId, kg) {
 }
 
 function toggleRecipeRowHighlight(rowId) {
-  if(_recipeSelectMode) return;
+  if(_recipeSelectMode || _recipeEditMode) return;
   _recipeHighlightRowId = (_recipeHighlightRowId === rowId) ? null : rowId;
   const sel = document.getElementById('recipe-select');
   if(!sel || !sel.value) return;
@@ -3533,7 +3540,13 @@ function editRecipeRowField(rowId, field, value) {
     row.targetMl = (value===''||isNaN(n)) ? null : n;
   }
   saveRecipeFormulas(formulas);
-  renderRecipeTable(sel.value, parseFloat(document.getElementById('recipe-kg-select').value));
+  const kg = parseFloat(document.getElementById('recipe-kg-select').value);
+  if(field==='targetMl') {
+    const target = _recipeRowTargetScaled(row, recipe, kg);
+    if(target!==null) _recipeWorkingCounts[rowId] = calcOptimalSpoonCombo(target, getRecipeSpoons());
+    else delete _recipeWorkingCounts[rowId];
+  }
+  renderRecipeTable(sel.value, kg);
 }
 
 function editRecipeSpoonCount(rowId, spoonId, value) {
@@ -3555,14 +3568,24 @@ function toggleRecipeCompactMode() {
 }
 
 /* ---- โหมดเลือก / ลบหลายแถว ---- */
-let _recipeSelectMode = false;
+let _recipeSelectMode = false; // โหมดลบ (ติ๊กเลือกแล้วลบ)
+let _recipeEditMode = false; // โหมดแก้ไข (เพิ่ม/แก้ชื่อวัตถุดิบ/แก้เป้าหมาย ML)
 let _recipeSelectedRows = new Set();
 
 function toggleRecipeSelectMode() {
   const sel = document.getElementById('recipe-select');
   if(!sel || !sel.value) return;
   _recipeSelectMode = !_recipeSelectMode;
+  if(_recipeSelectMode) _recipeEditMode = false;
   _recipeSelectedRows.clear();
+  _recipeHighlightRowId = null;
+  renderRecipeTable(sel.value, parseFloat(document.getElementById('recipe-kg-select').value));
+}
+function toggleRecipeEditMode() {
+  const sel = document.getElementById('recipe-select');
+  if(!sel || !sel.value) return;
+  _recipeEditMode = !_recipeEditMode;
+  if(_recipeEditMode) { _recipeSelectMode = false; _recipeSelectedRows.clear(); }
   _recipeHighlightRowId = null;
   renderRecipeTable(sel.value, parseFloat(document.getElementById('recipe-kg-select').value));
 }
@@ -3721,21 +3744,12 @@ function calcOptimalSpoonCombo(targetMl, spoons) {
   Object.entries(chosenCounts).forEach(([i,c])=>{ result[valid[i].id]=c; });
   return result;
 }
-function calcAllRecipeSpoons() {
-  const sel = document.getElementById('recipe-select');
-  if(!sel || !sel.value) return;
-  const kg = parseFloat(document.getElementById('recipe-kg-select').value);
-  const formulas = getRecipeFormulas();
-  const recipe = formulas.find(f=>f.id===sel.value);
-  if(!recipe) return;
+function _autoCalcRecipeSpoons(recipe, kg) {
   const spoons = getRecipeSpoons();
-  let any=false;
   recipe.rows.forEach(row=>{
     const target = _recipeRowTargetScaled(row, recipe, kg);
-    if(target!==null) { _recipeWorkingCounts[row.id] = calcOptimalSpoonCombo(target, spoons); any=true; }
+    if(target!==null) _recipeWorkingCounts[row.id] = calcOptimalSpoonCombo(target, spoons);
   });
-  if(!any) showToast('ยังไม่มีเป้าหมาย ML ในสูตรนี้ (กรอกที่น้ำหนักฐานก่อน)');
-  renderRecipeTable(sel.value, kg);
 }
 
 let _editingSpoonId=null;
