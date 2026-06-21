@@ -308,6 +308,12 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 .rcp-row-selected{background:var(--blue-soft);}
 .rcp-row-newrow .rcp-field-newrow{border-style:dashed;color:var(--text2);font-weight:500;}
 .rcp-row-newrow .rcp-field-newrow:focus{color:var(--text);border-style:solid;border-color:var(--accent);}
+.rcp-name-display{cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.rcp-name-display:active{opacity:0.65;}
+.rcp-row.rcp-row-active{box-shadow:inset 3px 0 0 var(--purple);}
+.rcp-cell.rcp-hl-row{background:rgba(124,92,191,0.10);}
+.rcp-cell.rcp-hl-col{background:rgba(124,92,191,0.10);}
+.rcp-cell.rcp-hl-row.rcp-hl-col{background:rgba(124,92,191,0.24);}
 .rcp-actual-val{font-size:12px;font-weight:700;color:var(--text);padding:2px 5px;border-radius:6px;display:inline-block;}
 .rcp-actual-val.rcp-mismatch{color:var(--red);background:var(--red-soft);}
 .rcp-actual-val.rcp-match{color:var(--green);background:var(--green-soft);}
@@ -3318,6 +3324,7 @@ function _abbrevSpoonLabel(label) {
 }
 
 let _recipeWorkingCounts = {}; // {rowId:{spoonId:count}} — ค่าจำนวนช้อนชั่วคราวของมุมมองปัจจุบัน (ไม่บันทึกถาวร)
+let _recipeHighlightRowId = null; // แถววัตถุดิบที่ถูกแตะไฮไลท์อยู่ (โหมดปกติ ไม่ใช่โหมดเลือก)
 
 function renderRecipePage() {
   const formulas = getRecipeFormulas();
@@ -3357,6 +3364,7 @@ function renderRecipePage() {
   metaEl.textContent = `น้ำหนักฐานของสูตรนี้ = ${baseKg} กก. — ${Math.abs(curKg-baseKg)<1e-9 ? 'แก้ไขเป้าหมาย ML ได้ที่น้ำหนักฐานเท่านั้น (ค่านี้จะถูกล็อกเป็นสูตรหลัก)' : 'เป้าหมาย ML คำนวณสัดส่วนอัตโนมัติจากฐาน ดูอย่างเดียว'}`;
 
   _recipeWorkingCounts = {};
+  _recipeHighlightRowId = null;
   renderRecipeTable(curId, curKg);
 }
 
@@ -3392,6 +3400,18 @@ function renderRecipeTable(recipeId, kg) {
   const ratio = baseKg>0 ? (kg/baseKg) : 1;
   const isBase = Math.abs(kg-baseKg) < 1e-9;
   const selMode = _recipeSelectMode;
+  const highlightRowId = selMode ? null : _recipeHighlightRowId;
+  let highlightedSpoonIds = new Set();
+  if(highlightRowId && recipe.rows) {
+    const hRow = recipe.rows.find(r=>r.id===highlightRowId);
+    if(hRow) {
+      const hCounts = _recipeWorkingCounts[hRow.id] || {};
+      spoons.forEach(sp=>{
+        const v = hCounts[sp.id];
+        if(!(v===undefined||v===null||v==='')) highlightedSpoonIds.add(sp.id);
+      });
+    }
+  }
 
   // sync select-mode toolbar UI
   const toggleBtn = document.getElementById('recipe-select-toggle-btn');
@@ -3413,7 +3433,8 @@ function renderRecipeTable(recipeId, kg) {
   html += '<div class="rcp-cell rcp-col-name"><div class="rcp-head-cell" style="text-align:left;">วัตถุดิบ</div></div>';
   html += '<div class="rcp-cell rcp-col-target"><div class="rcp-head-cell">เป้าหมาย<br>ML</div></div>';
   spoons.forEach(sp=>{
-    html += `<div class="rcp-cell rcp-col-spoon"><button class="rcp-spoon-head-btn" onclick="openRecipeSpoonModal('${sp.id}')"><span class="rcp-spoon-label">${_escHtml(_abbrevSpoonLabel(sp.label))}</span><span class="rcp-spoon-ml">(${_fmtNum(sp.ml)} ml)</span></button></div>`;
+    const colHi = highlightedSpoonIds.has(sp.id) ? ' rcp-hl-col' : '';
+    html += `<div class="rcp-cell rcp-col-spoon${colHi}"><button class="rcp-spoon-head-btn" onclick="openRecipeSpoonModal('${sp.id}')"><span class="rcp-spoon-label">${_escHtml(_abbrevSpoonLabel(sp.label))}</span><span class="rcp-spoon-ml">(${_fmtNum(sp.ml)} ml)</span></button></div>`;
   });
   html += '<div class="rcp-add-col-cell"><button class="rcp-add-col-btn" onclick="openRecipeSpoonModal(null)" title="เพิ่มขนาดช้อน">+</button></div>';
   html += '<div class="rcp-cell rcp-col-actual"><div class="rcp-head-cell">ML<br>จริง</div></div>';
@@ -3431,25 +3452,32 @@ function renderRecipeTable(recipeId, kg) {
       const mismatch = hasTarget && hasAnyCount && Math.abs(actualMl-targetScaled) > 0.05;
       const dis = selMode ? 'disabled' : '';
       const checked = _recipeSelectedRows.has(row.id);
+      const rowHi = (row.id === highlightRowId);
+      const rowHiCls = rowHi ? ' rcp-hl-row' : '';
 
-      html += `<div class="rcp-row${checked?' rcp-row-selected':''}" data-row-id="${row.id}">`;
+      html += `<div class="rcp-row${checked?' rcp-row-selected':''}${rowHi?' rcp-row-active':''}" data-row-id="${row.id}">`;
       if(selMode) {
         html += `<div class="rcp-cell rcp-col-check"><input type="checkbox" class="rcp-checkbox" ${checked?'checked':''} onchange="toggleRecipeRowSelected('${row.id}')"></div>`;
       }
-      html += `<div class="rcp-cell rcp-col-name"><input class="rcp-field rcp-name-field" ${dis} value="${_escHtml(row.name)}" onchange="editRecipeRowField('${row.id}','name',this.value)" placeholder="ชื่อวัตถุดิบ"></div>`;
-      if(isBase) {
-        html += `<div class="rcp-cell rcp-col-target"><input class="rcp-field" ${dis} type="number" step="0.01" min="0" value="${hasTarget?targetBase:''}" onchange="editRecipeRowField('${row.id}','targetMl',this.value)" placeholder="ml"></div>`;
+      if(selMode) {
+        html += `<div class="rcp-cell rcp-col-name"><input class="rcp-field rcp-name-field" value="${_escHtml(row.name)}" onchange="editRecipeRowField('${row.id}','name',this.value)" placeholder="ชื่อวัตถุดิบ"></div>`;
       } else {
-        html += `<div class="rcp-cell rcp-col-target"><div class="rcp-field rcp-readonly">${hasTarget?_fmtNum(targetScaled):'-'}</div></div>`;
+        html += `<div class="rcp-cell rcp-col-name${rowHiCls}" onclick="toggleRecipeRowHighlight('${row.id}')"><div class="rcp-field rcp-name-field rcp-name-display">${_escHtml(row.name)}</div></div>`;
+      }
+      if(isBase) {
+        html += `<div class="rcp-cell rcp-col-target${rowHiCls}"><input class="rcp-field" ${dis} type="number" step="0.01" min="0" value="${hasTarget?targetBase:''}" onchange="editRecipeRowField('${row.id}','targetMl',this.value)" placeholder="ml"></div>`;
+      } else {
+        html += `<div class="rcp-cell rcp-col-target${rowHiCls}"><div class="rcp-field rcp-readonly">${hasTarget?_fmtNum(targetScaled):'-'}</div></div>`;
       }
       spoons.forEach(sp=>{
         const v = counts[sp.id];
         const hasV = !(v===undefined||v===null||v==='');
-        html += `<div class="rcp-cell rcp-col-spoon"><input class="rcp-field${hasV?' rcp-field-filled':''}" ${dis} type="number" min="0" step="1" value="${hasV?v:''}" onchange="editRecipeSpoonCount('${row.id}','${sp.id}',this.value)" placeholder="0"></div>`;
+        const colHi = highlightedSpoonIds.has(sp.id) ? ' rcp-hl-col' : '';
+        html += `<div class="rcp-cell rcp-col-spoon${rowHiCls}${colHi}"><input class="rcp-field${hasV?' rcp-field-filled':''}" ${dis} type="number" min="0" step="1" value="${hasV?v:''}" onchange="editRecipeSpoonCount('${row.id}','${sp.id}',this.value)" placeholder="0"></div>`;
       });
       html += '<div class="rcp-add-col-cell"></div>';
       const isMatch = hasTarget && hasAnyCount && !mismatch;
-      html += `<div class="rcp-cell rcp-col-actual"><div class="rcp-actual-val${mismatch?' rcp-mismatch':''}${isMatch?' rcp-match':''}">${hasAnyCount?_fmtNum(actualMl):'-'}</div>${hasTarget?`<div class="rcp-actual-sub">${mismatch?'≠':(hasAnyCount?'=':'')} เป้า ${_fmtNum(targetScaled)}</div>`:''}</div>`;
+      html += `<div class="rcp-cell rcp-col-actual${rowHiCls}"><div class="rcp-actual-val${mismatch?' rcp-mismatch':''}${isMatch?' rcp-match':''}">${hasAnyCount?_fmtNum(actualMl):'-'}</div>${hasTarget?`<div class="rcp-actual-sub">${mismatch?'≠':(hasAnyCount?'=':'')} เป้า ${_fmtNum(targetScaled)}</div>`:''}</div>`;
       html += '</div>';
     });
   }
@@ -3469,6 +3497,14 @@ function renderRecipeTable(recipeId, kg) {
 
   html += '</div></div>';
   container.innerHTML = html;
+}
+
+function toggleRecipeRowHighlight(rowId) {
+  if(_recipeSelectMode) return;
+  _recipeHighlightRowId = (_recipeHighlightRowId === rowId) ? null : rowId;
+  const sel = document.getElementById('recipe-select');
+  if(!sel || !sel.value) return;
+  renderRecipeTable(sel.value, parseFloat(document.getElementById('recipe-kg-select').value));
 }
 
 function commitNewRecipeRow(value) {
@@ -3528,6 +3564,7 @@ function toggleRecipeSelectMode() {
   if(!sel || !sel.value) return;
   _recipeSelectMode = !_recipeSelectMode;
   _recipeSelectedRows.clear();
+  _recipeHighlightRowId = null;
   renderRecipeTable(sel.value, parseFloat(document.getElementById('recipe-kg-select').value));
 }
 function toggleRecipeRowSelected(rowId) {
