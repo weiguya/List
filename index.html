@@ -369,6 +369,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
 /* Dropdown แบบจิ้มแล้วเลือก (ไม่ใช่ popup เต็มจอ) สำหรับตารางบันทึกรายจ่าย */
 #buyrow-select-dd{display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:9999;box-shadow:0 4px 20px rgba(69,117,243,0.18);width:210px;max-width:calc(100vw - 16px);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -1522,8 +1523,11 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="section-title"><button class="back-btn" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">สำรองข้อมูล</button></div>
   <div class="set-section">
     <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">ข้อมูลทั้งหมดเก็บอยู่ในเครื่องของคุณ ถ้าล้างแคชหรือเปลี่ยนเครื่อง ข้อมูลจะหาย — กด Export เพื่อบันทึกไฟล์สำรองก่อน</p>
-    <button class="export-btn" onclick="exportData()">📥 Export ข้อมูลทั้งหมด (บันทึกเป็นไฟล์)</button>
-    <div style="font-size:11px;color:var(--text2);">ไฟล์ที่ได้สามารถส่งให้ตัวเองทาง Line หรือเก็บใน Google Drive ได้เลย</div>
+    <button class="export-btn" onclick="exportExcel()" style="background:var(--green-soft);border-color:var(--green);color:var(--green);margin-bottom:8px;">📊 Export Excel (.xlsx) — รายรับ / รายจ่าย / สรุป</button>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:16px;">เปิดได้ทันทีใน Google Sheets หรือ Microsoft Excel บนมือถือ</div>
+    <div class="divider"></div>
+    <button class="export-btn" onclick="exportData()" style="margin-top:12px;">📥 Export JSON (สำรองข้อมูลฉบับเต็ม)</button>
+    <div style="font-size:11px;color:var(--text2);">ใช้สำหรับ restore ข้อมูลกลับเข้าแอพ หรือย้ายเครื่อง</div>
   </div>
 </div>
 
@@ -4838,6 +4842,106 @@ function setProfitMonth(m) {
 }
 
 // ============ EXPORT ============
+function exportExcel() {
+  if(typeof XLSX === 'undefined') { showToast('กำลังโหลด Excel library... ลองใหม่อีกครั้ง'); return; }
+  const wb = XLSX.utils.book_new();
+  const sales  = DB.get(KEY.sale).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const buys   = DB.get(KEY.buy).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const wages  = DB.get(KEY.wage).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const rents  = DB.get(KEY.rent).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const loanpays = DB.get(KEY.loanpay).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const buyTypes = getBuyTypes();
+  const typeLabel = id => { const t=buyTypes.find(t=>t.id===id); return t?t.label:id||''; };
+
+  // ---- Sheet 1: รายรับ ----
+  const saleRows = [['#','วันที่','ประเภทสินค้า','จำนวน (ไม้)','ราคา/หน่วย (฿)','ยอดรวม (฿)','หมายเหตุ']];
+  sales.forEach((s,i)=>{
+    saleRows.push([i+1, fmtDateFull(s.date), s.meat||s.name||'', s.qty||0, s.unitPrice||0, s.amount||0, s.note||'']);
+  });
+  const totalSale = sales.reduce((t,s)=>t+(s.amount||0),0);
+  saleRows.push(['','','','','รวมยอดขาย', totalSale,'']);
+  const ws1 = XLSX.utils.aoa_to_sheet(saleRows);
+  ws1['!cols'] = [{wch:5},{wch:12},{wch:18},{wch:13},{wch:16},{wch:14},{wch:22}];
+  _xlsxStyleHeader(ws1, 0, saleRows[0].length, '166534');
+  _xlsxStyleTotal(ws1, saleRows.length-1, 5, saleRows.length-1, 4);
+  XLSX.utils.book_append_sheet(wb, ws1, 'รายรับ');
+
+  // ---- Sheet 2: รายจ่าย (ซื้อของ) ----
+  const buyRows = [['#','วันที่','ประเภท','ชื่อสินค้า','ร้าน/ซัพพลายเออร์','จำนวน','ราคา/หน่วย (฿)','รวม (฿)','หมายเหตุ']];
+  buys.forEach((b,i)=>{
+    buyRows.push([i+1, fmtDateFull(b.date), typeLabel(b.type), b.name||'', b.supplier||'', b.qty||0, b.unitPrice||0, b.price||0, b.note||'']);
+  });
+  const totalBuy = buys.reduce((t,b)=>t+(b.price||0),0);
+  buyRows.push(['','','','','','','รวมค่าของ', totalBuy,'']);
+  const ws2 = XLSX.utils.aoa_to_sheet(buyRows);
+  ws2['!cols'] = [{wch:5},{wch:12},{wch:16},{wch:22},{wch:20},{wch:10},{wch:16},{wch:14},{wch:18}];
+  _xlsxStyleHeader(ws2, 0, buyRows[0].length, '92400E');
+  _xlsxStyleTotal(ws2, buyRows.length-1, 7, buyRows.length-1, 6);
+  XLSX.utils.book_append_sheet(wb, ws2, 'รายจ่าย-ซื้อของ');
+
+  // ---- Sheet 3: ค่าแรง ----
+  const wageRows = [['#','วันที่','พนักงาน','ค่าแรง (฿)','หมายเหตุ']];
+  wages.forEach((w,i)=>{ wageRows.push([i+1, fmtDateFull(w.date), w.name||'', w.amount||0, w.note||'']); });
+  const totalWage = wages.reduce((t,w)=>t+(w.amount||0),0);
+  wageRows.push(['','','','รวมค่าแรง', totalWage,'']); // note col adjusted
+  wageRows[wageRows.length-1] = ['','','รวมค่าแรง', totalWage,''];
+  const ws3 = XLSX.utils.aoa_to_sheet(wageRows);
+  ws3['!cols'] = [{wch:5},{wch:12},{wch:20},{wch:14},{wch:24}];
+  _xlsxStyleHeader(ws3, 0, wageRows[0].length, '3730A3');
+  _xlsxStyleTotal(ws3, wageRows.length-1, 3, wageRows.length-1, 2);
+  XLSX.utils.book_append_sheet(wb, ws3, 'ค่าแรง');
+
+  // ---- Sheet 4: ค่าเช่า ----
+  const rentRows = [['#','วันที่','ค่าเช่า (฿)','หมายเหตุ']];
+  rents.forEach((r,i)=>{ rentRows.push([i+1, fmtDateFull(r.date), r.amount||0, r.note||'']); });
+  const totalRent = rents.reduce((t,r)=>t+(r.amount||0),0);
+  rentRows.push(['','รวมค่าเช่า', totalRent,'']);
+  const ws4 = XLSX.utils.aoa_to_sheet(rentRows);
+  ws4['!cols'] = [{wch:5},{wch:12},{wch:14},{wch:28}];
+  _xlsxStyleHeader(ws4, 0, rentRows[0].length, '7C3AED');
+  _xlsxStyleTotal(ws4, rentRows.length-1, 2, rentRows.length-1, 1);
+  XLSX.utils.book_append_sheet(wb, ws4, 'ค่าเช่า');
+
+  // ---- Sheet 5: สรุป ----
+  const totalExpense = totalBuy + totalWage + totalRent + loanpays.reduce((t,l)=>t+(l.amount||0),0);
+  const profit = totalSale - totalExpense;
+  const summaryRows = [
+    ['📊 สรุปภาพรวม',''],
+    ['รายการ','จำนวน (฿)'],
+    ['รายรับรวมทั้งหมด', totalSale],
+    ['รายจ่ายรวมทั้งหมด (ซื้อของ + ค่าแรง + ค่าเช่า + จ่ายหนี้)', totalExpense],
+    ['  • ค่าของ/วัตถุดิบ', totalBuy],
+    ['  • ค่าแรง', totalWage],
+    ['  • ค่าเช่า', totalRent],
+    ['  • จ่ายคืนหนี้', loanpays.reduce((t,l)=>t+(l.amount||0),0)],
+    ['กำไรเบื้องต้น', profit],
+    ['',''],
+    ['Export วันที่', fmtDateFull(today())],
+    ['จำนวนรายการรายรับ', sales.length + ' บิล'],
+    ['จำนวนรายการรายจ่าย', buys.length + ' รายการ'],
+  ];
+  const ws5 = XLSX.utils.aoa_to_sheet(summaryRows);
+  ws5['!cols'] = [{wch:44},{wch:20}];
+  _xlsxStyleHeader(ws5, 0, 2, '1E3A5F');
+  _xlsxStyleHeader(ws5, 1, 2, '2563EB');
+  XLSX.utils.book_append_sheet(wb, ws5, 'สรุป');
+
+  // download
+  const fname = 'Onion_'+today()+'.xlsx';
+  XLSX.writeFile(wb, fname);
+  showToast('Export Excel เรียบร้อย: '+fname);
+}
+
+function _xlsxStyleHeader(ws, rowIdx, cols, colorHex) {
+  // SheetJS doesn't support cell styles in free version — we rely on structure/freeze instead
+  // Freeze header row
+  ws['!freeze'] = {xSplit:0, ySplit:1};
+}
+
+function _xlsxStyleTotal(ws, rowIdx, valCol, rowIdx2, labelCol) {
+  // no-op: SheetJS CE doesn't support styles; formatting handled by column widths
+}
+
 function exportData() {
   const data={};
   Object.values(KEY).forEach(k=>{ const v=localStorage.getItem(k); if(v) data[k]=JSON.parse(v); });
