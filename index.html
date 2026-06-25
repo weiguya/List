@@ -528,7 +528,7 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
     <!-- SVG chart area -->
     <div style="position:relative;width:100%;">
       <svg id="lc-svg" width="100%" style="overflow:visible;display:block;"></svg>
-      <div id="lc-tooltip" style="display:none;position:absolute;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px;font-size:11px;z-index:99;box-shadow:0 4px 16px rgba(69,117,243,0.18);pointer-events:auto;min-width:140px;"></div>
+      <div id="lc-tooltip" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px;font-size:11px;z-index:9999;box-shadow:0 4px 16px rgba(69,117,243,0.25);pointer-events:auto;min-width:150px;max-width:200px;"></div>
     </div>
     <div id="lc-xlabels" style="display:flex;margin-top:4px;overflow:hidden;"></div>
   </div>
@@ -6711,7 +6711,8 @@ function renderLineChart() {
       const incLbl=_lcMode==='amount'?fmt(iv)+'฿':iv+' ไม้';
       const expLbl=fmt(ev)+'฿';
       const profit=iv-ev;
-      hitAreas+=`<rect x="${Math.max(PAD.left,cx-10)}" y="${PAD.top}" width="20" height="${cH+4}" fill="transparent" style="cursor:pointer;" onmousedown="showLCTooltip2(event,'${safeKey}','${incLbl}',${p.income.bills},'${expLbl}',${profit})" ontouchstart="showLCTooltip2(event,'${safeKey}','${incLbl}',${p.income.bills},'${expLbl}',${profit})"/>`;
+      const hitX = Math.max(PAD.left, cx-15);
+      hitAreas+=`<rect x="${hitX}" y="${PAD.top}" width="30" height="${cH+4}" fill="transparent" style="cursor:pointer;" onmousedown="showLCTooltip2(event,'${safeKey}','${incLbl}',${p.income.bills},'${expLbl}',${profit})" ontouchstart="showLCTooltip2(event,'${safeKey}','${incLbl}',${p.income.bills},'${expLbl}',${profit})"/>`;
     });
     svgInner += dots + hitAreas;
   }
@@ -6745,83 +6746,103 @@ function renderLineChart() {
   if(summary) summary.innerHTML=sumHTML;
 }
 
-function showLCTooltip2(ev, key, incLbl, bills, expLbl, profit) {
-  ev.stopPropagation();
-  const tt = document.getElementById('lc-tooltip');
-  if(!tt) return;
-  if(_lcTooltipActive && tt.dataset.key === key) { hideLCTooltip(); return; }
-  tt.dataset.key = key;
-  const profitColor = profit>=0?'var(--green)':'var(--red)';
-  const showExp = _lcView==='both'||_lcView==='expense';
-  const showInc = _lcView==='both'||_lcView==='income';
-  tt.innerHTML=`<div style="font-weight:700;color:var(--accent);margin-bottom:4px;">${_fmtLcKey(key)}</div>
-    ${showInc?`<div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:var(--text2);">รายรับ</span><span style="font-weight:600;color:var(--green);">${incLbl}</span></div>`:''}
-    ${showInc?`<div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:var(--text2);">จำนวนบิล</span><span style="font-weight:600;">${bills} บิล</span></div>`:''}
-    ${showExp?`<div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:var(--text2);">รายจ่าย</span><span style="font-weight:600;color:var(--red);">${expLbl}</span></div>`:''}
-    ${_lcView==='both'&&_lcMode==='amount'?`<div style="display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--border);margin-top:3px;padding-top:3px;"><span style="color:var(--text2);">กำไร</span><span style="font-weight:700;color:${profitColor};">${profit>=0?'+':''}${fmt(profit)}฿</span></div>`:''}
-    <div style="text-align:right;margin-top:4px;font-size:9px;color:var(--text2);">กดปิด ✕</div>`;
-  tt.style.display='block';
-  tt.onclick = (e)=>{ e.stopPropagation(); hideLCTooltip(); };
-  _lcTooltipActive = true;
-  const card=document.getElementById('linechart-card');
-  const cardRect=card?card.getBoundingClientRect():{left:0,top:0};
-  let x=(ev.touches?ev.touches[0].clientX:ev.clientX)-cardRect.left;
-  let y=(ev.touches?ev.touches[0].clientY:ev.clientY)-cardRect.top;
-  if(card&&x+160>card.offsetWidth) x-=165;
-  if(y<80) y=80;
-  tt.style.left=(x+4)+'px'; tt.style.top=(y-70)+'px';
-}
-
-
 function _thMonthShort(m){return['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m]||'';}
 function _fmtLcKey(key){
   if(key.length===7){const p=key.split('-');return _thMonthShort(parseInt(p[1]))+' '+p[0];}
   const d=new Date(key);return d.getDate()+' '+_thMonthShort(d.getMonth()+1)+' '+d.getFullYear();}
+// ============ LINE CHART TOOLTIP (unified, touch-safe) ============
 let _lcTooltipActive = false;
+let _lcTooltipKey = '';
+let _lcTouchHandled = false; // prevent ghost mouse event after touch
 
-function showLCTooltip(ev, key, valLbl, bills, avgBill) {
+function _lcBuildTooltipHTML(key, incLbl, bills, expLbl, profit) {
+  const profitColor = profit>=0?'var(--green)':'var(--red)';
+  const showExp = _lcView==='both'||_lcView==='expense';
+  const showInc = _lcView==='both'||_lcView==='income';
+  return `<div style="font-weight:700;color:var(--accent);margin-bottom:5px;font-size:12px;">${_fmtLcKey(key)}</div>
+    ${showInc?`<div style="display:flex;justify-content:space-between;gap:14px;"><span style="color:var(--text2);">รายรับ</span><span style="font-weight:600;color:var(--green);">${incLbl}</span></div>`:''}
+    ${showInc&&bills?`<div style="display:flex;justify-content:space-between;gap:14px;"><span style="color:var(--text2);">บิล</span><span style="font-weight:600;">${bills}</span></div>`:''}
+    ${showExp?`<div style="display:flex;justify-content:space-between;gap:14px;"><span style="color:var(--text2);">รายจ่าย</span><span style="font-weight:600;color:var(--red);">${expLbl}</span></div>`:''}
+    ${_lcView==='both'&&_lcMode==='amount'?`<div style="display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--border);margin-top:4px;padding-top:4px;"><span style="color:var(--text2);">กำไร</span><span style="font-weight:700;color:${profitColor};">${profit>=0?'+':''}${fmt(profit)}฿</span></div>`:''}
+    <div style="text-align:center;margin-top:5px;font-size:9px;color:var(--text2);opacity:0.7;">แตะเพื่อปิด</div>`;
+}
+
+function _lcPositionTooltip(clientX, clientY) {
+  const tt = document.getElementById('lc-tooltip');
+  const card = document.getElementById('linechart-card');
+  if(!tt||!card) return;
+  const cardRect = card.getBoundingClientRect();
+  // position relative to card, account for scroll
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+  // use fixed positioning to avoid scroll issues
+  let fx = clientX + 12;
+  let fy = clientY - tt.offsetHeight - 12;
+  const ttW = 165, ttH = 140;
+  // clamp horizontal
+  if(fx + ttW > window.innerWidth - 8) fx = clientX - ttW - 8;
+  if(fx < 8) fx = 8;
+  // clamp vertical
+  if(fy < 8) fy = clientY + 20;
+  if(fy + ttH > window.innerHeight - 8) fy = window.innerHeight - ttH - 8;
+  tt.style.position = 'fixed';
+  tt.style.left = fx + 'px';
+  tt.style.top = fy + 'px';
+}
+
+function showLCTooltip2(ev, key, incLbl, bills, expLbl, profit) {
+  // Touch guard: if touch already handled this event, skip mouse
+  if(ev.type==='mousedown' && _lcTouchHandled) { _lcTouchHandled=false; return; }
+  if(ev.type==='touchstart') { _lcTouchHandled=true; ev.preventDefault(); }
   ev.stopPropagation();
+
   const tt = document.getElementById('lc-tooltip');
   if(!tt) return;
-  // ถ้า tooltip นี้แสดงอยู่แล้วกับ key เดิม = ปิด
-  if(_lcTooltipActive && tt.dataset.key === key) {
-    hideLCTooltip(); return;
-  }
-  tt.dataset.key = key;
-  tt.innerHTML=`<div style="font-weight:700;color:var(--accent);margin-bottom:4px;">${_fmtLcKey(key)}</div>
-    <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:var(--text2);">ยอด</span><span style="font-weight:600;">${valLbl}</span></div>
-    <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:var(--text2);">จำนวนบิล</span><span style="font-weight:600;">${bills} บิล</span></div>
-    <div style="display:flex;justify-content:space-between;gap:12px;"><span style="color:var(--text2);">เฉลี่ย/บิล</span><span style="font-weight:600;">${avgBill}฿</span></div>
-    <div style="text-align:right;margin-top:4px;font-size:9px;color:var(--text2);">กดที่นี่เพื่อปิด ✕</div>`;
-  tt.style.display='block';
-  tt.onclick = (e)=>{ e.stopPropagation(); hideLCTooltip(); };
+
+  // Toggle: tap same point again = close
+  if(_lcTooltipActive && _lcTooltipKey===key) { hideLCTooltip(); return; }
+
+  _lcTooltipKey = key;
   _lcTooltipActive = true;
-  const card = document.getElementById('linechart-card');
-  const cardRect = card ? card.getBoundingClientRect() : {left:0,top:0};
-  let x=(ev.touches?ev.touches[0].clientX:ev.clientX)-cardRect.left;
-  let y=(ev.touches?ev.touches[0].clientY:ev.clientY)-cardRect.top;
-  if(card&&x+150>card.offsetWidth) x-=155;
-  if(y<70) y=70;
-  tt.style.left=(x+4)+'px'; tt.style.top=(y-65)+'px';
+  tt.innerHTML = _lcBuildTooltipHTML(key, incLbl, bills, expLbl, profit);
+  tt.style.display = 'block';
+  tt.style.pointerEvents = 'auto';
+  tt.onclick = (e)=>{ e.stopPropagation(); hideLCTooltip(); };
+
+  const clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+  const clientY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+  // First show, then position (need offsetHeight)
+  requestAnimationFrame(()=>_lcPositionTooltip(clientX, clientY));
 }
 
-function hideLCTooltip(){
-  const tt=document.getElementById('lc-tooltip');
-  if(tt){tt.style.display='none'; tt.dataset.key='';}
-  _lcTooltipActive=false;
+// Keep old name as alias for compatibility
+function showLCTooltip(ev, key, valLbl, bills, avgBill) {
+  showLCTooltip2(ev, key, valLbl, bills, '—', 0);
 }
 
-// ปิด tooltip เมื่อกดที่อื่น
-document.addEventListener('click', e=>{
-  if(!_lcTooltipActive) return;
-  const tt=document.getElementById('lc-tooltip');
-  if(tt && !tt.contains(e.target)) hideLCTooltip();
-});
+function hideLCTooltip() {
+  const tt = document.getElementById('lc-tooltip');
+  if(tt) { tt.style.display='none'; }
+  _lcTooltipActive = false;
+  _lcTooltipKey = '';
+}
+
+// Close on outside tap/click — with delay to avoid immediate re-open
+let _lcCloseGuard = false;
 document.addEventListener('touchstart', e=>{
   if(!_lcTooltipActive) return;
-  const tt=document.getElementById('lc-tooltip');
-  if(tt && !tt.contains(e.target)) hideLCTooltip();
-},{passive:true});
+  const tt = document.getElementById('lc-tooltip');
+  if(tt && tt.contains(e.target)) return;
+  if(_lcCloseGuard) return;
+  hideLCTooltip();
+}, {passive:true});
+
+document.addEventListener('click', e=>{
+  if(!_lcTooltipActive) return;
+  const tt = document.getElementById('lc-tooltip');
+  if(tt && tt.contains(e.target)) return;
+  hideLCTooltip();
+});
 
 
 function ac(id,val,colorClass) {
