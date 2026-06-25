@@ -488,15 +488,9 @@ body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 
   <div class="chart-card">
-    <h3 id="chart7day-title">ยอดขาย 7 วันย้อนหลัง (฿)</h3>
-    <div id="chart7day" style="display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:8px;"></div>
+    <h3 id="chart7day-title">ยอดขาย 7 วันย้อนหลัง</h3>
+    <div id="chart7day" style="display:flex;align-items:flex-end;gap:4px;height:90px;padding-top:8px;"></div>
     <div id="chart7day-labels" style="display:flex;gap:4px;margin-top:4px;"></div>
-  </div>
-
-  <div class="chart-card">
-    <h3 id="chart7day-qty-title">จำนวนขาย 7 วันย้อนหลัง (ไม้/ชิ้น)</h3>
-    <div id="chart7day-qty" style="display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:8px;"></div>
-    <div id="chart7day-qty-labels" style="display:flex;gap:4px;margin-top:4px;"></div>
   </div>
 
   <div class="chart-card">
@@ -6517,28 +6511,15 @@ function updateDashboard() {
   const total7sale = days7.reduce((s,d)=>s+d.v,0);
   const total7qty  = days7.reduce((s,d)=>s+d.q,0);
   const t7El = document.getElementById('chart7day-title');
-  if(t7El) t7El.textContent = `ยอดขาย 7 วันย้อนหลัง — รวม ${fmt(total7sale)} ฿`;
-  const q7El = document.getElementById('chart7day-qty-title');
-  if(q7El) q7El.textContent = `จำนวนขาย 7 วันย้อนหลัง — รวม ${total7qty} ไม้`;
+  if(t7El) t7El.textContent = `ยอดขาย 7 วันย้อนหลัง — รวม ${fmt(total7sale)} ฿ / ${total7qty} ไม้`;
   document.getElementById('chart7day').innerHTML=days7.map(d=>`
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;">
-      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.v>0?fmt(d.v)+'฿':'—'}</div>
+      <div style="font-size:9px;color:var(--text2);white-space:nowrap;text-align:center;">${d.v>0?fmt(d.v)+'฿':'—'}</div>
+      ${d.q>0?`<div style="font-size:8px;color:var(--yellow);font-weight:600;white-space:nowrap;">(${d.q})</div>`:''}
       <div style="width:100%;background:${d.ds===td?'var(--green)':'var(--accent)'};border-radius:4px 4px 0 0;opacity:${d.ds===td?1:0.65};height:${Math.max(d.v/maxD*70,d.v>0?5:2)}px;transition:height 0.8s ease;"></div>
     </div>`).join('');
   document.getElementById('chart7day-labels').innerHTML=days7.map(d=>`
     <div style="flex:1;text-align:center;font-size:10px;color:${d.ds===td?'var(--accent)':'var(--text2)'};font-weight:${d.ds===td?600:400}">${d.lbl}</div>`).join('');
-
-  // 7-day chart (จำนวนไม้/ชิ้น)
-  const maxQ=Math.max(...days7.map(d=>d.q),1);
-  const qtyEl=document.getElementById('chart7day-qty');
-  const qtyLblEl=document.getElementById('chart7day-qty-labels');
-  if(qtyEl) qtyEl.innerHTML=days7.map(d=>`
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;">
-      <div style="font-size:9px;color:var(--text2);white-space:nowrap;">${d.q>0?d.q+'':'—'}</div>
-      <div style="width:100%;background:${d.ds===td?'var(--purple)':'var(--yellow)'};border-radius:4px 4px 0 0;opacity:${d.ds===td?1:0.65};height:${Math.max(d.q/maxQ*70,d.q>0?5:2)}px;transition:height 0.8s ease;"></div>
-    </div>`).join('');
-  if(qtyLblEl) qtyLblEl.innerHTML=days7.map(d=>`
-    <div style="flex:1;text-align:center;font-size:10px;color:${d.ds===td?'var(--purple)':'var(--text2)'};font-weight:${d.ds===td?600:400}">${d.lbl}</div>`).join('');
 
   // bar chart — ใช้ค่าของ profitMonth เสมอ (pmSale, pmBuyDeduct ถูก declare แล้ว)
   // monthWage/monthRent/monthLoanPay ถูก declare ด้านบนแล้ว (filter by profitMonth)
