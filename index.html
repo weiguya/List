@@ -3588,8 +3588,7 @@ function renderRecipePage() {
   const baseKg = recipe.baseKg || 1;
   // ตัวเลือกน้ำหนัก: 3 ขีด - 9 ขีด (0.3-0.9 กก.) แล้ว 1 กก. - 10 กก.
   let kgOptions = [];
-  for(let i=3; i<=9; i++) kgOptions.push(Math.round(i*10)/100); // 0.3, 0.4, ... 0.9
-  for(let i=1; i<=10; i++) kgOptions.push(i); // 1, 2, ... 10
+  for(let i=1; i<=50; i++) kgOptions.push(Math.round(i*100)/1000); // 0.1, 0.2, ... 5.0 kg
   if(!kgOptions.some(k=>Math.abs(k-baseKg)<1e-9)) kgOptions.push(baseKg);
   let curKg = (state.kgByRecipe && state.kgByRecipe[curId]) ? state.kgByRecipe[curId] : baseKg;
   if(!kgOptions.some(k=>Math.abs(k-curKg)<1e-9)) kgOptions.push(curKg);
