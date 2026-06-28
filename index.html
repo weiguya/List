@@ -1538,7 +1538,7 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
   <div class="modal" style="padding-bottom:24px;">
     <div class="modal-title">
       <span>ยืนยันการลบ</span>
-      <button class="modal-close" onclick="document.getElementById('delete-confirm-modal').classList.remove('open')"></button>
+      <button class="modal-close" onclick="document.getElementById('delete-confirm-modal').classList.remove('open')">✕</button>
     </div>
     <div style="background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;color:var(--red);text-align:center;font-weight:600;">
       ลบรายการนี้แล้วจะไม่สามารถกู้คืนได้
@@ -1743,7 +1743,7 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
 <!-- EDIT MODAL -->
 <div class="modal-overlay" id="edit-modal">
   <div class="modal">
-    <div class="modal-title"><span id="edit-modal-title">แก้ไขรายการ</span><button class="modal-close" onclick="closeEditModal()"></button></div>
+    <div class="modal-title"><span id="edit-modal-title">แก้ไขรายการ</span><button class="modal-close" onclick="closeEditModal()">✕</button></div>
     <div id="edit-modal-body"></div>
     <button class="btn btn-primary" style="margin-top:8px" onclick="saveEdit()"> บันทึก</button>
   </div>
@@ -2887,7 +2887,7 @@ function buildSaleRowHtml(r, idx) {
         oninput="onSaleRowAmtDirect('${r.id}',this.value)">
     </div>
     <div class="br-cell br-col-del">
-      ${_saleRows.length>1?`<button class="br-del-btn" onclick="removeSaleRow('${r.id}')"></button>`:''}
+      ${_saleRows.length>1?`<button class="br-del-btn" onclick="removeSaleRow('${r.id}')">✕</button>`:''}
     </div>
   </div>`;
 }
@@ -3282,8 +3282,8 @@ function renderWageList() {
     <div><div class="item-name">${i.name}</div><div class="item-meta">${i.date}</div></div>
     <div style="display:flex;align-items:center;gap:4px">
       <span class="item-amount yellow">${fmt(i.amount)}</span>
-      <button class="item-edit" onclick="openEditModal('${KEY.wage}','${i.id}',renderWageList)"></button>
-      <button class="item-del" onclick="delItem('${KEY.wage}','${i.id}',renderWageList)"></button>
+      <button class="item-edit" onclick="openEditModal('${KEY.wage}','${i.id}',renderWageList)" style="font-size:11px;font-weight:600;font-family:'Anuphan','Inter',sans-serif;">แก้ไข</button>
+      <button class="item-del" onclick="delItem('${KEY.wage}','${i.id}',renderWageList)" style="font-size:11px;font-weight:600;font-family:'Anuphan','Inter',sans-serif;">ลบ</button>
     </div></div>`).join('');
 }
 
@@ -3651,7 +3651,7 @@ function renderUnitsList() {
   el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;">'
     +units.map((u,i)=>`<div style="display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1.5px solid var(--border);border-radius:20px;padding:6px 10px 6px 14px;">
       <span style="font-size:13px;font-weight:500;">${u}</span>
-      <button onmousedown="event.preventDefault();askDeleteUnit(${i},'${u.replace(/'/g,"\'")}')" ontouchend="_ddSelect(event,()=>askDeleteUnit(${i},'${u.replace(/'/g,"\'")}'))" style="background:none;border:none;color:var(--red);font-size:15px;cursor:pointer;line-height:1;padding:0 2px;"></button>
+      <button onmousedown="event.preventDefault();askDeleteUnit(${i},'${u.replace(/'/g,"\'")}')" ontouchend="_ddSelect(event,()=>askDeleteUnit(${i},'${u.replace(/'/g,"\'")}'))" style="background:none;border:none;color:var(--red);font-size:11px;font-weight:600;font-family:'Anuphan','Inter',sans-serif;cursor:pointer;padding:0 4px;">ลบ</button>
     </div>`).join('')
     +'</div>';
 }
@@ -4482,7 +4482,7 @@ function renderRecipeFormulaList() {
         <div class="recipe-card-name">${_escHtml(f.name)}</div>
         <div class="recipe-card-meta"><span class="recipe-card-kgpill">${_fmtNum(f.baseKg)} กก. ฐาน</span><span>${ingCount} วัตถุดิบ</span></div>
       </div>
-      <button class="recipe-card-editbtn" onclick="event.stopPropagation();openEditRecipeModal('${f.id}')"></button>
+      <button class="recipe-card-editbtn" onclick="event.stopPropagation();openEditRecipeModal('${f.id}')">แก้ไข</button>
       <span class="recipe-card-arrow">›</span>
     </div>`;
   }).join('');
@@ -4655,7 +4655,7 @@ function renderAdminCards() {
   document.getElementById('admin-cards').innerHTML=admins.map((a,i)=>{
     const com=monthSale*(a.pct||0)/100;
     return`<div class="admin-card" style="position:relative;">
-      <button onclick="openEditAdminModal(${i})" style="position:absolute;top:8px;right:8px;background:none;border:none;font-size:15px;cursor:pointer;color:var(--text2);"></button>
+      <button onclick="openEditAdminModal(${i})" style="position:absolute;top:8px;right:8px;background:#eef2ff;border:1px solid #c0c9e6;border-radius:7px;padding:3px 9px;font-family:'Anuphan','Inter',sans-serif;font-size:11px;font-weight:600;cursor:pointer;color:var(--accent);">แก้ไข</button>
       <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding-right:28px;">
         <div>
           <div class="admin-label">ชื่อ</div>
@@ -4806,7 +4806,7 @@ function renderEmployeeList() {
         <div class="item-name">${e.name}</div>
         <div class="item-meta">ค่าแรง ${fmt(e.rate)} / วัน</div>
       </div>
-      <button class="item-edit" onclick="openEditEmpModal('${e.id}')" style="margin-right:4px;"></button>
+      <button class="item-edit" onclick="openEditEmpModal('${e.id}')" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'Anuphan','Inter',sans-serif;">แก้ไข</button>
     </div>`).join('');
 }
 
@@ -6081,7 +6081,7 @@ function buildBuyRowHtml(r, idx, types) {
       <div id="brt-${r.id}" class="br-field br-total">${total>0?fmt(total):'0'}</div>
     </div>
     <div class="br-cell br-col-del">
-      ${_buyRows.length>1?`<button class="br-del-btn" onclick="removeBuyRow('${r.id}')"></button>`:''}
+      ${_buyRows.length>1?`<button class="br-del-btn" onclick="removeBuyRow('${r.id}')">✕</button>`:''}
     </div>
   </div>`;
 }
