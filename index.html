@@ -1224,7 +1224,7 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
     <div class="form-group"><label>ค่าแรง (บาท/วัน)</label><input type="number" id="edit-emp-rate" placeholder="บาท/วัน" min="0" step="0.01"></div>
     <div class="form-group"><label>สีปฏิทิน</label>
       <div style="display:flex;align-items:center;gap:8px;">
-        <input type="color" id="edit-emp-color" value="#4575f3" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
+        <input type="color" id="edit-emp-color" value="#f9a8d4" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
         <div style="display:flex;gap:5px;">
           <span onclick="document.getElementById('edit-emp-color').value='#4575f3'" style="width:20px;height:20px;border-radius:50%;background:#4575f3;cursor:pointer;display:inline-block;"></span>
           <span onclick="document.getElementById('edit-emp-color').value='#10a372'" style="width:20px;height:20px;border-radius:50%;background:#10a372;cursor:pointer;display:inline-block;"></span>
@@ -1263,6 +1263,12 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
     <input type="hidden" id="edit-admin-idx">
     <div class="form-group"><label>ชื่อผู้บริหาร</label><input type="text" id="edit-admin-name" placeholder="ชื่อ"></div>
     <div class="form-group"><label>% ค่าคอมจากยอดขาย</label><input type="number" id="edit-admin-pct" placeholder="%" min="0" max="100" step="0.1"></div>
+    <div class="form-group"><label>สีปฏิทิน</label>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <input type="color" id="edit-admin-color" value="#a5f3fc" style="width:32px;height:28px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
+        <div style="display:flex;gap:4px;flex-wrap:wrap;max-width:220px;"><span onclick="document.getElementById('edit-admin-color').value='#f9a8d4'" style="width:18px;height:18px;border-radius:50%;background:#f9a8d4;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#fca5a5'" style="width:18px;height:18px;border-radius:50%;background:#fca5a5;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#fdba74'" style="width:18px;height:18px;border-radius:50%;background:#fdba74;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#fde68a'" style="width:18px;height:18px;border-radius:50%;background:#fde68a;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#bbf7d0'" style="width:18px;height:18px;border-radius:50%;background:#bbf7d0;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#6ee7b7'" style="width:18px;height:18px;border-radius:50%;background:#6ee7b7;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#a5f3fc'" style="width:18px;height:18px;border-radius:50%;background:#a5f3fc;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#93c5fd'" style="width:18px;height:18px;border-radius:50%;background:#93c5fd;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#c4b5fd'" style="width:18px;height:18px;border-radius:50%;background:#c4b5fd;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#f0abfc'" style="width:18px;height:18px;border-radius:50%;background:#f0abfc;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#d9f99d'" style="width:18px;height:18px;border-radius:50%;background:#d9f99d;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#fef9c3'" style="width:18px;height:18px;border-radius:50%;background:#fef9c3;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#e0f2fe'" style="width:18px;height:18px;border-radius:50%;background:#e0f2fe;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#fce7f3'" style="width:18px;height:18px;border-radius:50%;background:#fce7f3;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#ede9fe'" style="width:18px;height:18px;border-radius:50%;background:#ede9fe;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#dcfce7'" style="width:18px;height:18px;border-radius:50%;background:#dcfce7;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#fff7ed'" style="width:18px;height:18px;border-radius:50%;background:#fff7ed;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('edit-admin-color').value='#f0fdf4'" style="width:18px;height:18px;border-radius:50%;background:#f0fdf4;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span></div>
+      </div>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <button onclick="saveEditAdmin()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Anuphan','Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
       <button onclick="document.getElementById('edit-admin-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Anuphan','Inter',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
@@ -1660,14 +1666,9 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
       <label style="font-size:12px;color:var(--text2);font-weight:600;">สีปฏิทิน</label>
-      <input type="color" id="new-emp-color" value="#4575f3" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
-      <div style="display:flex;gap:5px;">
-        <span onclick="document.getElementById('new-emp-color').value='#4575f3'" style="width:20px;height:20px;border-radius:50%;background:#4575f3;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
-        <span onclick="document.getElementById('new-emp-color').value='#10a372'" style="width:20px;height:20px;border-radius:50%;background:#10a372;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
-        <span onclick="document.getElementById('new-emp-color').value='#f97316'" style="width:20px;height:20px;border-radius:50%;background:#f97316;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
-        <span onclick="document.getElementById('new-emp-color').value='#e05252'" style="width:20px;height:20px;border-radius:50%;background:#e05252;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
-        <span onclick="document.getElementById('new-emp-color').value='#7c5cbf'" style="width:20px;height:20px;border-radius:50%;background:#7c5cbf;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
-        <span onclick="document.getElementById('new-emp-color').value='#0891b2'" style="width:20px;height:20px;border-radius:50%;background:#0891b2;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+      <input type="color" id="new-emp-color" value="#f9a8d4" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
+      <div style="display:flex;gap:4px;flex-wrap:wrap;max-width:220px;">
+        <span onclick="document.getElementById('new-emp-color').value='#f9a8d4'" style="width:18px;height:18px;border-radius:50%;background:#f9a8d4;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#fca5a5'" style="width:18px;height:18px;border-radius:50%;background:#fca5a5;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#fdba74'" style="width:18px;height:18px;border-radius:50%;background:#fdba74;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#fde68a'" style="width:18px;height:18px;border-radius:50%;background:#fde68a;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#bbf7d0'" style="width:18px;height:18px;border-radius:50%;background:#bbf7d0;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#6ee7b7'" style="width:18px;height:18px;border-radius:50%;background:#6ee7b7;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#a5f3fc'" style="width:18px;height:18px;border-radius:50%;background:#a5f3fc;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#93c5fd'" style="width:18px;height:18px;border-radius:50%;background:#93c5fd;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#c4b5fd'" style="width:18px;height:18px;border-radius:50%;background:#c4b5fd;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#f0abfc'" style="width:18px;height:18px;border-radius:50%;background:#f0abfc;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#d9f99d'" style="width:18px;height:18px;border-radius:50%;background:#d9f99d;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#fef9c3'" style="width:18px;height:18px;border-radius:50%;background:#fef9c3;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#e0f2fe'" style="width:18px;height:18px;border-radius:50%;background:#e0f2fe;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#fce7f3'" style="width:18px;height:18px;border-radius:50%;background:#fce7f3;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#ede9fe'" style="width:18px;height:18px;border-radius:50%;background:#ede9fe;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#dcfce7'" style="width:18px;height:18px;border-radius:50%;background:#dcfce7;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#fff7ed'" style="width:18px;height:18px;border-radius:50%;background:#fff7ed;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#f0fdf4'" style="width:18px;height:18px;border-radius:50%;background:#f0fdf4;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span>
       </div>
     </div>
     <button onclick="addEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Anuphan','Inter',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มพนักงาน</button>
@@ -4698,6 +4699,8 @@ function openEditAdminModal(idx) {
   document.getElementById('edit-admin-idx').value = idx;
   document.getElementById('edit-admin-name').value = a.name||'';
   document.getElementById('edit-admin-pct').value = a.pct||'';
+  const colorEl = document.getElementById('edit-admin-color');
+  if(colorEl) colorEl.value = a.color||'#a5f3fc';
   document.getElementById('edit-admin-modal').style.display = 'flex';
 }
 
@@ -4705,12 +4708,14 @@ function saveEditAdmin() {
   const idx = parseInt(document.getElementById('edit-admin-idx').value);
   const newName = document.getElementById('edit-admin-name').value.trim();
   const newPct = parseFloat(document.getElementById('edit-admin-pct').value)||0;
+  const newColor = document.getElementById('edit-admin-color')?.value||'#a5f3fc';
   if(!newName) { showToast('กรุณากรอกชื่อ'); return; }
   const s = DB.getObj(KEY.admin);
   const admins = getAdmins();
   const oldName = admins[idx]?.name||'';
   admins[idx].name = newName;
   admins[idx].pct = newPct;
+  admins[idx].color = newColor;
   s.list = admins;
   DB.setObj(KEY.admin, s);
   // propagate ชื่อใหม่ใน adminpay
@@ -4970,11 +4975,11 @@ function drawEmpCal() {
     else if(isToday){border='2px solid var(--accent)';}
     const clickable=!!empId&&!isPaid&&!isFuture;
     const amtLbl=dayAmt>=1000?(dayAmt/1000).toFixed(1)+'k':dayAmt>0?String(dayAmt):'';
-    const dotsHtml=dotsOnDay.length>0?`<div style="display:flex;justify-content:center;gap:2px;margin-top:2px;">${dotsOnDay.slice(0,4).map(c=>`<span style="width:4px;height:4px;border-radius:50%;background:${c};display:inline-block;flex-shrink:0;"></span>`).join('')}</div>`:'';
-    html+=`<div onclick="${clickable?`toggleEmpDay('${ds}')`:''}" style="text-align:center;padding:5px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:12px;opacity:${opacity};">
+    const dotsHtml=dotsOnDay.length>0?`<div style="position:absolute;top:2px;right:2px;display:flex;gap:1px;">${dotsOnDay.slice(0,3).map(c=>`<span style="width:4px;height:4px;border-radius:50%;background:${c};display:inline-block;flex-shrink:0;"></span>`).join('')}</div>`:'';
+    html+=`<div onclick="${clickable?`toggleEmpDay('${ds}')`:''}" style="position:relative;text-align:center;padding:5px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:12px;opacity:${opacity};">
+      ${dotsHtml}
       <div style="font-weight:${isSel||isPaid?600:400};">${d}</div>
       ${hasSale?`<div style="font-size:7px;line-height:1.2;margin-top:1px;">${dayQty>0?dayQty+' ไม้':''}<br>${amtLbl}฿</div>`:''}
-      ${dotsHtml}
     </div>`;
   }
   document.getElementById('emp-wage-cal').innerHTML=html;
@@ -5146,16 +5151,26 @@ function drawAdminCal() {
     const com = Math.round(daySale * pct / 100);
     const hasSale = daySale > 0;
     let bg='var(--card2)', color='var(--text)', border='1px solid var(--border)', cursor='pointer', opacity='1';
-    if(isPaid){bg='var(--green-soft)';color='var(--green)';border='1px solid var(--green)';cursor='not-allowed';}
+    const selAdminColor = a?.color||'#a5f3fc';
+    // จุดสีทุก admin ที่จ่ายในวันนั้น (ไม่ต้องเลือก)
+    const allAdmins = getAdmins();
+    const adminDotsOnDay = [];
+    DB.get(KEY.adminpay).forEach(p=>{
+      const ad=allAdmins.find((_,i)=>i===p.adminIdx);
+      const c=ad?.color||'#a5f3fc';
+      if((p.days||[]).includes(ds) && !adminDotsOnDay.includes(c)) adminDotsOnDay.push(c);
+    });
+    if(isPaid){bg=selAdminColor+'33';color=selAdminColor.replace(/^#/,'');color='#0e7490';border=`1px solid ${selAdminColor}`;cursor='not-allowed';}
     else if(isFuture){opacity='0.35';cursor='default';}
-    else if(isSel){bg='var(--accent)';color='#fff';border='1px solid var(--accent)';}
+    else if(isSel){bg=selAdminColor;color='#1e293b';border=`1px solid ${selAdminColor}`;}
     else if(hasSale){bg='#FFF7ED';color='#C2410C';border='1px solid #FED7AA';}
     const clickable = hasAdmin && !isPaid && !isFuture;
     const comLbl = com>=1000?(com/1000).toFixed(1)+'k':com>0?String(com):'';
-    html += `<div onclick="${clickable?`toggleAdminDay('${ds}')`:''}" style="text-align:center;padding:5px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:11px;opacity:${opacity};">
+    const adminDotsHtml = adminDotsOnDay.length>0?`<div style="position:absolute;top:2px;right:2px;display:flex;gap:1px;">${adminDotsOnDay.slice(0,3).map(c=>`<span style="width:4px;height:4px;border-radius:50%;background:${c};display:inline-block;flex-shrink:0;border:0.5px solid rgba(0,0,0,0.1);"></span>`).join('')}</div>`:'';
+    html += `<div onclick="${clickable?`toggleAdminDay('${ds}')`:''}" style="position:relative;text-align:center;padding:5px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:11px;opacity:${opacity};">
+      ${adminDotsHtml}
       <div style="font-weight:${isSel||isPaid?600:400};">${d}</div>
       ${hasSale?`<div style="font-size:7px;line-height:1.2;margin-top:1px;">${dayQty>0?dayQty+' ไม้':''}<br>${comLbl?comLbl+'฿':''}</div>`:''}
-      ${isPaid?'<div style="font-size:8px;"></div>':''}
     </div>`;
   }
   document.getElementById('admin-wage-cal').innerHTML = html;
