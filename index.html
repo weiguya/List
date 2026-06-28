@@ -4654,7 +4654,7 @@ function renderAdminCards() {
   const monthSale=DB.get(KEY.sale).filter(i=>i.date.slice(0,7)===thisMonth()).reduce((s,i)=>s+i.amount,0);
   document.getElementById('admin-cards').innerHTML=admins.map((a,i)=>{
     const com=monthSale*(a.pct||0)/100;
-    return`<div class="admin-card" style="position:relative;cursor:pointer;" onclick="openEditAdminModal(${i})">
+    return`<div class="admin-card" style="position:relative;cursor:pointer;" ondblclick="openEditAdminModal(${i})" data-last-tap="0" ontouchend="(function(el){var now=Date.now();if(now-parseInt(el.dataset.lastTap||0)<350)openEditAdminModal(${i});el.dataset.lastTap=now;})(this)">
       <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;">
         <div>
           <div class="admin-label">ชื่อ</div>
