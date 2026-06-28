@@ -6848,7 +6848,9 @@ function _openChart7SkuDD(slot, ev) {
   dd.style.top = (rect.bottom+4)+'px';
   dd.style.display = 'flex';
   const inp = document.getElementById('chart7-sku-search');
-  if(inp){ inp.value=''; setTimeout(()=>inp.focus(),100); }
+  if(inp){ inp.value=''; }
+  // reset touchMoved เพื่อให้กด item ใน dropdown ได้ทันที
+  setTimeout(()=>{ _touchMoved = false; }, 50);
 }
 
 function _buildChart7SkuDD(q) {
@@ -6856,7 +6858,7 @@ function _buildChart7SkuDD(q) {
   if(!list) return;
   const isB = _chart7ActiveSlot === 'B';
   const currentFilter = isB ? _chart7SkuFilterB : _chart7SkuFilter;
-  const baseSkus = isB ? ['__none__', '', ...getSaleSkus().map(s=>s.name)] : ['', ...getSaleSkus().map(s=>s.name)];
+  const baseSkus = isB ? ['__none__', ...getSaleSkus().map(s=>s.name)] : ['', ...getSaleSkus().map(s=>s.name)];
   const skus = q ? baseSkus.filter(n=>n==='__none__'||n.toLowerCase().includes(q.toLowerCase())) : baseSkus;
   const color = isB?'#f97316':'var(--accent)';
   list.innerHTML = skus.map(n=>{
@@ -6879,7 +6881,7 @@ function _selectChart7Sku(name) {
     const lbl = document.getElementById('chart7-skuB-label');
     const chip = document.getElementById('chart7-skuB-chip');
     const active = _chart7SkuFilterB !== '';
-    if(lbl) { lbl.textContent = active?_chart7SkuFilterB:'เปรียบเทียบ'; lbl.style.color = active?'#f97316':'var(--text2)'; }
+    if(lbl) { lbl.textContent = 'เทียบ'; lbl.style.color = active?'#f97316':'var(--text2)'; }
     if(chip) chip.style.borderColor = active?'#f97316':'var(--border)';
   } else {
     _chart7SkuFilter = name;
