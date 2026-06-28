@@ -280,7 +280,7 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
 .br-row:last-child{border-bottom:none;}
 .br-row.br-head{background:var(--blue-soft);}
 .br-cell{padding:6px 4px;display:flex;align-items:center;box-sizing:border-box;flex-shrink:0;}
-.br-head-cell{font-size:9px;font-weight:700;color:var(--accent);justify-content:center;text-align:center;line-height:1.2;}
+.br-head-cell{font-size:11px;font-weight:700;color:var(--accent);justify-content:center;text-align:center;line-height:1.2;}
 .br-col-num{width:30px;position:sticky;left:0;z-index:2;background:#fff;border-right:1px solid var(--border);flex-direction:column;justify-content:center;align-items:center;gap:2px;}
 .br-row.br-head .br-col-num{background:var(--blue-soft);}
 .br-col-type{width:84px;}
@@ -995,7 +995,7 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
       <button class="btn btn-green" id="admin-wage-pay-btn" onclick="payAdminWage()" style="display:none;">จ่ายค่าคอมผู้บริหาร</button>
     </div>
     <div class="divider"></div>
-    <div id="admin-pay-history"></div>
+    <div id="admin-pay-history" style="display:none;"></div>
   </div>
 
   <!-- TAB: ค่าเช่า -->
@@ -1054,6 +1054,7 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">
       <label class="chk-label" style="padding:4px 8px;"><input type="checkbox" id="re-c-buy" checked onchange="renderRepExpense()"> ซื้อของ</label>
       <label class="chk-label" style="padding:4px 8px;"><input type="checkbox" id="re-c-wage" checked onchange="renderRepExpense()"> ค่าแรง</label>
+      <label class="chk-label" style="padding:4px 8px;"><input type="checkbox" id="re-c-admincom" checked onchange="renderRepExpense()"> ค่าคอม</label>
       <label class="chk-label" style="padding:4px 8px;"><input type="checkbox" id="re-c-rent" checked onchange="renderRepExpense()"> ค่าเช่า</label>
       <label class="chk-label" style="padding:4px 8px;"><input type="checkbox" id="re-c-loanpay" checked onchange="renderRepExpense()"> จ่ายหนี้</label>
     </div>
@@ -1221,6 +1222,19 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
     <input type="hidden" id="edit-emp-id">
     <div class="form-group"><label>ชื่อพนักงาน</label><input type="text" id="edit-emp-name" placeholder="ชื่อพนักงาน"></div>
     <div class="form-group"><label>ค่าแรง (บาท/วัน)</label><input type="number" id="edit-emp-rate" placeholder="บาท/วัน" min="0" step="0.01"></div>
+    <div class="form-group"><label>สีปฏิทิน</label>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="color" id="edit-emp-color" value="#4575f3" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
+        <div style="display:flex;gap:5px;">
+          <span onclick="document.getElementById('edit-emp-color').value='#4575f3'" style="width:20px;height:20px;border-radius:50%;background:#4575f3;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#10a372'" style="width:20px;height:20px;border-radius:50%;background:#10a372;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#f97316'" style="width:20px;height:20px;border-radius:50%;background:#f97316;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#e05252'" style="width:20px;height:20px;border-radius:50%;background:#e05252;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#7c5cbf'" style="width:20px;height:20px;border-radius:50%;background:#7c5cbf;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#0891b2'" style="width:20px;height:20px;border-radius:50%;background:#0891b2;cursor:pointer;display:inline-block;"></span>
+        </div>
+      </div>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <button onclick="saveEditEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Anuphan','Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
       <button onclick="document.getElementById('edit-emp-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Anuphan','Inter',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
@@ -1643,6 +1657,18 @@ body{font-family:'Anuphan','Inter',sans-serif;background:var(--bg);color:var(--t
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
       <input type="text" id="new-emp-name" placeholder="ชื่อพนักงาน" style="flex:1;min-width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Anuphan','Inter',sans-serif;font-size:13px;outline:none;color:var(--text);">
       <input type="number" id="new-emp-rate" placeholder="บาท/วัน" step="0.01" min="0" style="width:110px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Anuphan','Inter',sans-serif;font-size:13px;outline:none;color:var(--text);">
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <label style="font-size:12px;color:var(--text2);font-weight:600;">สีปฏิทิน</label>
+      <input type="color" id="new-emp-color" value="#4575f3" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
+      <div style="display:flex;gap:5px;">
+        <span onclick="document.getElementById('new-emp-color').value='#4575f3'" style="width:20px;height:20px;border-radius:50%;background:#4575f3;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+        <span onclick="document.getElementById('new-emp-color').value='#10a372'" style="width:20px;height:20px;border-radius:50%;background:#10a372;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+        <span onclick="document.getElementById('new-emp-color').value='#f97316'" style="width:20px;height:20px;border-radius:50%;background:#f97316;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+        <span onclick="document.getElementById('new-emp-color').value='#e05252'" style="width:20px;height:20px;border-radius:50%;background:#e05252;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+        <span onclick="document.getElementById('new-emp-color').value='#7c5cbf'" style="width:20px;height:20px;border-radius:50%;background:#7c5cbf;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+        <span onclick="document.getElementById('new-emp-color').value='#0891b2'" style="width:20px;height:20px;border-radius:50%;background:#0891b2;cursor:pointer;display:inline-block;border:2px solid transparent;"></span>
+      </div>
     </div>
     <button onclick="addEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-family:'Anuphan','Inter',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มพนักงาน</button>
   </div>
@@ -4745,10 +4771,11 @@ function saveEmployees(arr){ localStorage.setItem(KEY.employees,JSON.stringify(a
 function addEmployee() {
   const name=document.getElementById('new-emp-name')?.value.trim();
   const rate=parseFloat(document.getElementById('new-emp-rate')?.value)||0;
+  const color=document.getElementById('new-emp-color')?.value||'#4575f3';
   if(!name||!rate) { showToast('กรุณากรอกชื่อและค่าแรง/วัน'); return; }
   const emps=getEmployees();
   if(emps.find(e=>e.name===name)) { showToast('มีพนักงานชื่อนี้แล้ว'); return; }
-  emps.push({id:uid(),name,rate});
+  emps.push({id:uid(),name,rate,color});
   saveEmployees(emps);
   document.getElementById('new-emp-name').value='';
   document.getElementById('new-emp-rate').value='';
@@ -4769,6 +4796,7 @@ function renderEmployeeList() {
   if(!emps.length){el.innerHTML='<div style="font-size:12px;color:var(--text2);">ยังไม่มีพนักงาน</div>';return;}
   el.innerHTML=emps.map(e=>`
     <div class="list-item" style="margin-bottom:8px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:${e.color||'#4575f3'};flex-shrink:0;margin-right:10px;"></div>
       <div style="flex:1">
         <div class="item-name">${e.name}</div>
         <div class="item-meta">ค่าแรง ${fmt(e.rate)} / วัน</div>
@@ -4783,6 +4811,8 @@ function openEditEmpModal(id) {
   document.getElementById('edit-emp-id').value = id;
   document.getElementById('edit-emp-name').value = emp.name;
   document.getElementById('edit-emp-rate').value = emp.rate;
+  const colorEl = document.getElementById('edit-emp-color');
+  if(colorEl) colorEl.value = emp.color||'#4575f3';
   document.getElementById('edit-emp-modal').style.display = 'flex';
 }
 
@@ -4790,6 +4820,7 @@ function saveEditEmployee() {
   const id = document.getElementById('edit-emp-id').value;
   const newName = document.getElementById('edit-emp-name').value.trim();
   const newRate = parseFloat(document.getElementById('edit-emp-rate').value)||0;
+  const newColor = document.getElementById('edit-emp-color')?.value||'#4575f3';
   if(!newName||!newRate) { showToast('กรุณากรอกข้อมูลให้ครบ'); return; }
   const emps = getEmployees();
   const emp = emps.find(e=>e.id===id);
@@ -4797,6 +4828,7 @@ function saveEditEmployee() {
   const oldName = emp.name;
   emp.name = newName;
   emp.rate = newRate;
+  emp.color = newColor;
   saveEmployees(emps);
   // propagate ชื่อใหม่ไปใน empwagepay
   if(oldName !== newName) {
@@ -4886,7 +4918,6 @@ function getEmpPaidDays(empId) {
 function drawEmpCal() {
   const empId=document.getElementById('emp-wage-select')?.value;
   const paidDays=empId?getEmpPaidDays(empId):new Set();
-  // ซ่อน/แสดง summary และปุ่มจ่ายตาม empId
   const summaryEl=document.getElementById('emp-wage-summary');
   const payBtn=document.getElementById('emp-wage-pay-btn');
   const warnEl=document.getElementById('emp-wage-warn');
@@ -4902,6 +4933,19 @@ function drawEmpCal() {
   const daysInMonth=new Date(y,m+1,0).getDate();
   const todayStr=today();
   const allSales=DB.get(KEY.sale);
+  const allEmps=getEmployees();
+  // map: date → [colors] ของทุกคนที่ถูกจ่ายวันนั้น
+  const paidColorMap={};
+  DB.get(KEY.empwagepay).forEach(p=>{
+    const emp=allEmps.find(e=>e.id===p.empId);
+    const c=emp?.color||'#10a372';
+    (p.days||[]).forEach(d=>{
+      if(!paidColorMap[d]) paidColorMap[d]=[];
+      if(!paidColorMap[d].includes(c)) paidColorMap[d].push(c);
+    });
+  });
+  const selEmp=allEmps.find(e=>e.id===empId);
+  const selColor=selEmp?.color||'#10a372';
   let html='';
   ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d=>{
     html+=`<div style="text-align:center;font-size:10px;font-weight:600;color:var(--text2);padding:3px 0;">${d}</div>`;
@@ -4917,18 +4961,20 @@ function drawEmpCal() {
     const dayAmt=daySales.reduce((s,x)=>s+x.amount,0);
     const dayQty=daySales.reduce((s,x)=>s+(x.qty||0),0);
     const hasSale=dayAmt>0;
+    const dotsOnDay=paidColorMap[ds]||[];
     let bg='var(--card2)', color='var(--text)', border='1px solid var(--border)', cursor='pointer', opacity='1';
-    if(isPaid){bg='var(--green-soft)';color='var(--green)';border='1px solid var(--green)';cursor='not-allowed';}
+    if(isPaid){bg=selColor+'22';color=selColor;border=`1px solid ${selColor}`;cursor='not-allowed';}
     else if(isFuture){opacity='0.4';cursor='not-allowed';}
-    else if(isSel){bg='var(--accent)';color='#fff';border='1px solid var(--accent)';}
+    else if(isSel){bg=selColor;color='#fff';border=`1px solid ${selColor}`;}
     else if(hasSale){bg='#FFF7ED';color='#C2410C';border='1px solid #FED7AA';}
     else if(isToday){border='2px solid var(--accent)';}
     const clickable=!!empId&&!isPaid&&!isFuture;
     const amtLbl=dayAmt>=1000?(dayAmt/1000).toFixed(1)+'k':dayAmt>0?String(dayAmt):'';
+    const dotsHtml=dotsOnDay.length>0?`<div style="display:flex;justify-content:center;gap:2px;margin-top:2px;">${dotsOnDay.slice(0,4).map(c=>`<span style="width:4px;height:4px;border-radius:50%;background:${c};display:inline-block;flex-shrink:0;"></span>`).join('')}</div>`:'';
     html+=`<div onclick="${clickable?`toggleEmpDay('${ds}')`:''}" style="text-align:center;padding:5px 2px;border-radius:8px;background:${bg};color:${color};border:${border};cursor:${cursor};font-size:12px;opacity:${opacity};">
       <div style="font-weight:${isSel||isPaid?600:400};">${d}</div>
       ${hasSale?`<div style="font-size:7px;line-height:1.2;margin-top:1px;">${dayQty>0?dayQty+' ไม้':''}<br>${amtLbl}฿</div>`:''}
-      ${isPaid?'<div style="font-size:7px;line-height:1;margin-top:1px;"></div>':''}
+      ${dotsHtml}
     </div>`;
   }
   document.getElementById('emp-wage-cal').innerHTML=html;
@@ -6327,17 +6373,18 @@ function renderRepExpense() {
         const lbl = p.empName+(p.days&&p.days.length?' (ค่าแรง '+fmtDate(p.days[0])+(p.days.length>1?'–'+fmtDate(p.days[p.days.length-1]):'')+')'  :'');
         items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าแรง',label:lbl,detail:'',amount:p.total||0,key:KEY.empwagepay,id:p.id,orderId:p.orderId||null,editMode:'del'});
       });
-      // แสดง adminpay โดยตรงด้วย
-      const adminpayIds = new Set();
-      DB.get(KEY.adminpay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
-        adminpayIds.add(p.orderId);
-        const lbl = (p.adminName||'ผู้บริหาร')+(p.days&&p.days.length?' (ค่าคอม '+fmtDate(p.days[0])+(p.days.length>1?'–'+fmtDate(p.days[p.days.length-1]):'')+')'  :'');
-        items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าแรง',label:lbl,detail:'',amount:p.amount||0,key:KEY.adminpay,id:p.id,orderId:p.orderId||null,editMode:'del'});
-      });
-      // fallback: wage record เก่าที่ไม่มี empwagepay/adminpay คู่กัน
+      // fallback: wage record เก่าที่ไม่มี empwagepay คู่กัน
+      const adminpayIdsForWage = new Set(DB.get(KEY.adminpay).map(p=>p.orderId));
       DB.get(KEY.wage).filter(i=>i.date>=from&&i.date<=to).forEach(i=>{
-        if(i.orderId && (empwagepayIds.has(i.orderId)||adminpayIds.has(i.orderId))) return; // ข้ามถ้ามี record โดยตรงแล้ว
+        if(i.orderId && (empwagepayIds.has(i.orderId)||adminpayIdsForWage.has(i.orderId))) return;
         items.push({date:i.date,ts:i.ts||0,cat:'ค่าแรง',label:i.name,detail:'',amount:i.amount,key:KEY.wage,id:i.id,orderId:i.orderId||null});
+      });
+    }
+    if(chkRe('re-c-admincom')) {
+      // แสดง adminpay แยกต่างหาก
+      DB.get(KEY.adminpay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
+        const lbl = (p.adminName||'ผู้บริหาร')+(p.days&&p.days.length?' (ค่าคอม '+fmtDate(p.days[0])+(p.days.length>1?'–'+fmtDate(p.days[p.days.length-1]):'')+')'  :'');
+        items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าคอม',label:lbl,detail:'',amount:p.amount||0,key:KEY.adminpay,id:p.id,orderId:p.orderId||null,editMode:'del'});
       });
     }
     if(chkRe('re-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount,key:KEY.rent,id:i.id}));
