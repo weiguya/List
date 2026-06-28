@@ -5634,20 +5634,6 @@ function openEditModalWithPin(key, id, cb) {
   });
 }
 
-// log หลัง saveEdit
-const _origSaveEdit = window.saveEdit;
-
-function saveEditWithLog() {
-  const before = window._editLogBefore||'';
-  const cat = window._editLogCat||'รายการ';
-  // เรียก saveEdit เดิม
-  saveEdit();
-  // log หลังบันทึก
-  writeLog('แก้ไข', cat, 'แก้ไข'+cat, before, 'บันทึกใหม่');
-  window._editLogBefore = '';
-  window._editLogCat = '';
-}
-
 // init PIN on load
 initOwnerPin();
 
@@ -5666,7 +5652,7 @@ let _editKey,_editId,_editCb;
 function openEditModal(key,id,cb) {
   const list=DB.get(key); const item=list.find(i=>i.id===id); if(!item) return;
   _editKey=key; _editId=id; _editCb=cb;
-  const titles={[KEY.sale]:'แก้ไขยอดขาย',[KEY.buy]:'แก้ไขการซื้อของ',[KEY.capital]:'แก้ไขเงินทุน',[KEY.loan]:'แก้ไขเงินกู้',[KEY.wage]:'แก้ไขค่าแรง',[KEY.rent]:'แก้ไขค่าเช่า',[KEY.loanpay]:'แก้ไขจ่ายคืนหนี้'};
+  const titles={[KEY.sale]:'แก้ไขยอดขาย',[KEY.buy]:'แก้ไขการซื้อของ',[KEY.capital]:'แก้ไขเงินทุน',[KEY.loan]:'แก้ไขเงินกู้',[KEY.wage]:'แก้ไขค่าแรง',[KEY.rent]:'แก้ไขค่าเช่า',[KEY.loanpay]:'แก้ไขจ่ายคืนหนี้',[KEY.empwagepay]:'แก้ไขค่าแรงพนักงาน',[KEY.adminpay]:'แก้ไขค่าคอมผู้บริหาร'};
   document.getElementById('edit-modal-title').textContent=titles[key]||'แก้ไข';
   let body='';
   if(key===KEY.sale) body=`
@@ -5731,6 +5717,18 @@ function openEditModal(key,id,cb) {
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
     </div>`;
+  else if(key===KEY.empwagepay) body=`
+    <div class="form-card">
+    <div class="form-group"><label>พนักงาน</label><input type="text" disabled value="${item.empName||''}"></div>
+    <div class="form-group"><label>ยอดจ่าย (บาท)</label><input type="number" id="e-amount" value="${item.total||item.amount||0}" step="0.01"></div>
+    <div class="form-group"><label>วันที่จ่าย</label><input type="date" id="e-date" value="${item.paidDate||''}"></div>
+    </div>`;
+  else if(key===KEY.adminpay) body=`
+    <div class="form-card">
+    <div class="form-group"><label>ผู้บริหาร</label><input type="text" disabled value="${item.adminName||''}"></div>
+    <div class="form-group"><label>ยอดจ่าย (บาท)</label><input type="number" id="e-amount" value="${item.amount||0}" step="0.01"></div>
+    <div class="form-group"><label>วันที่จ่าย</label><input type="date" id="e-date" value="${item.paidDate||''}"></div>
+    </div>`;
   document.getElementById('edit-modal-body').innerHTML=body;
   document.getElementById('edit-modal').classList.add('open');
 }
@@ -5740,6 +5738,10 @@ function closeEditModal(){document.getElementById('edit-modal').classList.remove
 function saveEdit() {
   const list=DB.get(_editKey); const idx=list.findIndex(i=>i.id===_editId); if(idx===-1) return;
   const item=list[idx]; const g=id=>document.getElementById(id)?.value;
+  // เก็บค่าก่อนแก้ไขสำหรับ log
+  const beforeAmt = item.amount||0;
+  const beforeDate = item.date||'';
+  const beforeName = item.name||item.empName||item.adminName||item.note||'';
   if(_editKey===KEY.sale){item.qty=parseFloat(g('e-qty'))||0;item.unitPrice=parseFloat(g('e-unit'))||0;item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
   else if(_editKey===KEY.buy){item.name=g('e-name');item.supplier=g('e-supplier')||'';item.type=g('e-type');item.qty=parseFloat(g('e-qty'))||1;item.unitPrice=parseFloat(g('e-unit'))||0;item.price=parseFloat(g('e-price'))||0;item.date=g('e-date');}
   else if(_editKey===KEY.capital){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
@@ -5747,7 +5749,15 @@ function saveEdit() {
   else if(_editKey===KEY.loanpay){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
   else if(_editKey===KEY.wage){item.name=g('e-name');item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');}
   else if(_editKey===KEY.rent){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
-  list[idx]=item; DB.set(_editKey,list); closeEditModal(); _editCb(); updateDashboard();
+  else if(_editKey===KEY.empwagepay){item.total=parseFloat(g('e-amount'))||0;item.amount=item.total;item.paidDate=g('e-date');}
+  else if(_editKey===KEY.adminpay){item.amount=parseFloat(g('e-amount'))||0;item.paidDate=g('e-date');}
+  list[idx]=item; DB.set(_editKey,list);
+  // writeLog
+  const catMap={[KEY.sale]:'รายรับ',[KEY.buy]:'รายจ่าย',[KEY.wage]:'ค่าแรง',[KEY.rent]:'ค่าเช่า',[KEY.loanpay]:'จ่ายหนี้',[KEY.capital]:'เงินทุน',[KEY.loan]:'เงินกู้',[KEY.empwagepay]:'ค่าแรง',[KEY.adminpay]:'ค่าคอม'};
+  const cat=catMap[_editKey]||'รายการ';
+  writeLog('แก้ไข', cat, (window._editLogBefore||beforeName||cat), `${fmt(beforeAmt)} ฿ (${beforeDate})`, `${fmt(item.amount||item.total||0)} ฿ (${item.date||item.paidDate||''})`);
+  window._editLogBefore=''; window._editLogCat='';
+  closeEditModal(); _editCb(); updateDashboard();
 }
 
 // ============ REPORT ============
@@ -6597,7 +6607,7 @@ function renderRepExpense() {
       DB.get(KEY.empwagepay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
         empwagepayIds.add(p.orderId);
         const lbl = p.empName+(p.days&&p.days.length?' (ค่าแรง '+fmtDate(p.days[0])+(p.days.length>1?'–'+fmtDate(p.days[p.days.length-1]):'')+')'  :'');
-        items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าแรง',label:lbl,detail:'',amount:p.total||0,key:KEY.empwagepay,id:p.id,orderId:p.orderId||null,editMode:'del'});
+        items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าแรง',label:lbl,detail:'',amount:p.total||0,key:KEY.empwagepay,id:p.id,orderId:p.orderId||null,editMode:'edit'});
       });
       // fallback: wage record เก่าที่ไม่มี empwagepay คู่กัน
       const adminpayIdsForWage = new Set(DB.get(KEY.adminpay).map(p=>p.orderId));
@@ -6610,7 +6620,7 @@ function renderRepExpense() {
       // แสดง adminpay แยกต่างหาก
       DB.get(KEY.adminpay).filter(p=>p.paidDate>=from&&p.paidDate<=to).forEach(p=>{
         const lbl = (p.adminName||'ผู้บริหาร')+(p.days&&p.days.length?' (ค่าคอม '+fmtDate(p.days[0])+(p.days.length>1?'–'+fmtDate(p.days[p.days.length-1]):'')+')'  :'');
-        items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าคอม',label:lbl,detail:'',amount:p.amount||0,key:KEY.adminpay,id:p.id,orderId:p.orderId||null,editMode:'del'});
+        items.push({date:p.paidDate,ts:p.ts||0,cat:'ค่าคอม',label:lbl,detail:'',amount:p.amount||0,key:KEY.adminpay,id:p.id,orderId:p.orderId||null,editMode:'edit'});
       });
     }
     if(chkRe('re-c-rent')) DB.get(KEY.rent).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'ค่าเช่า',label:i.note||'ค่าเช่า',detail:'',amount:i.amount,key:KEY.rent,id:i.id}));
@@ -6725,7 +6735,7 @@ function renderRepWages() {
         label:`${p.empName} (${p.days?p.days.length:'-'} วัน)`,
         detail:p.days&&p.days.length?`${fmtDate(p.days[0])}–${fmtDate(p.days[p.days.length-1])}` :'',
         amount:p.total, color:'yellow', type:'wage',
-        key:KEY.empwagepay, id:p.id, editMode:'del'
+        key:KEY.empwagepay, id:p.id, editMode:'edit'
       });
     });
   }
@@ -6738,7 +6748,7 @@ function renderRepWages() {
         label:`${p.adminName||'ผู้บริหาร'} (${p.pct||0}%)`,
         detail:`ยอดขาย ${fmt(p.saleSum)} · ช่วง ${fmtDate(p.from)}–${fmtDate(p.to)}`,
         amount:p.amount, color:'purple', type:'adminpay',
-        key:KEY.adminpay, id:p.id, editMode:'del'
+        key:KEY.adminpay, id:p.id, editMode:'edit'
       });
     });
   }
@@ -6987,7 +6997,7 @@ function execDelete() {
     return;
   }
   const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
-  delItem(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
+  delItemWithPin(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
 }
 
 let _cashBalVisible = false;
@@ -7805,14 +7815,14 @@ function attachRowLongpress(container) {
 function ramDoEdit() {
   closeRowAction();
   const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
-  openEditModal(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
+  openEditModalWithPin(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
 }
 
 function ramDoDelete() {
   closeRowAction();
-  _pendingDeleteMode = null; // เคลียร์โหมดลบทั้งบิล กันชนกับการลบรายการเดี่ยว
+  _pendingDeleteMode = null;
   const cbMap = { renderRepIncome, renderRepExpense, renderRepWages, renderTimeline };
-  delItem(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
+  delItemWithPin(_ramKey, _ramId, cbMap[_ramCb] || (()=>{}));
 }
 
 // ============ PROFIT DETAIL (กดที่ card กำไร) ============
