@@ -4654,9 +4654,8 @@ function renderAdminCards() {
   const monthSale=DB.get(KEY.sale).filter(i=>i.date.slice(0,7)===thisMonth()).reduce((s,i)=>s+i.amount,0);
   document.getElementById('admin-cards').innerHTML=admins.map((a,i)=>{
     const com=monthSale*(a.pct||0)/100;
-    return`<div class="admin-card" style="position:relative;">
-      <button onclick="openEditAdminModal(${i})" style="position:absolute;top:8px;right:8px;background:#eef2ff;border:1px solid #c0c9e6;border-radius:7px;padding:3px 9px;font-family:'Anuphan','Inter',sans-serif;font-size:11px;font-weight:600;cursor:pointer;color:var(--accent);">แก้ไข</button>
-      <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding-right:28px;">
+    return`<div class="admin-card" style="position:relative;cursor:pointer;" onclick="openEditAdminModal(${i})">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;">
         <div>
           <div class="admin-label">ชื่อ</div>
           <div style="font-size:14px;font-weight:700;color:var(--text);">${a.name||'(ยังไม่ได้ตั้งชื่อ)'}</div>
@@ -4672,7 +4671,7 @@ function renderAdminCards() {
           <div style="font-size:16px;font-weight:600;color:var(--green);">${fmt(com)}</div>
           <div style="font-size:10px;color:var(--text2);">จากยอดขาย ${fmt(monthSale)} × ${a.pct||0}%</div>
         </div>
-        <button class="payout-btn" onclick="payoutAdmin(${i},${com})" style="background:var(--accent);">→ ไปหน้าการเงิน</button>
+        <button class="payout-btn" onclick="event.stopPropagation();payoutAdmin(${i},${com})" style="background:var(--accent);">→ ไปหน้าการเงิน</button>
       </div>
     </div>`}).join('');
 }
