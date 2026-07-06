@@ -816,6 +816,18 @@ applyTheme(getCurrentTheme(), false);
           </div>
         </div>
       </div>
+      <div class="form-group" style="margin:0 0 10px;">
+        <label>สถานที่ขาย</label>
+        <div style="position:relative;">
+          <div id="sale-location-display" onclick="toggleSaleLocationDD()"
+            style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'Kanit',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+            -- เลือกสถานที่ --
+          </div>
+          <span onclick="toggleSaleLocationDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
+          <select id="sale-location" style="display:none;"></select>
+          <div id="sale-location-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:160px;overflow-y:auto;"></div>
+        </div>
+      </div>
       <div style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:10px 14px;">
         <div>
           <div style="font-size:13px;font-weight:600;color:var(--accent-text);">ยอดรวมทั้งหมด</div>
@@ -1210,6 +1222,15 @@ applyTheme(getCurrentTheme(), false);
       </div>
     </div>
   </div>
+  <!-- LOCATION FILTER: แสดงเฉพาะเมื่อติ๊ก ยอดขาย -->
+  <div id="ri-loc-filter-wrap" style="margin-bottom:10px;">
+    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:3px;">สถานที่ขาย</div>
+    <div id="ri-loc-trigger" onclick="toggleRiLocDD(event)"
+      style="background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:7px 24px 7px 8px;font-size:12px;color:var(--text);cursor:pointer;user-select:none;min-height:34px;display:flex;align-items:center;position:relative;">
+      <span id="ri-loc-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ทั้งหมด</span>
+      <span style="position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text2);pointer-events:none;">▾</span>
+    </div>
+  </div>
   <!-- PRODUCT FILTER: แสดงเฉพาะเมื่อติ๊ก ยอดขาย -->
   <div id="ri-product-filter-wrap" style="margin-bottom:12px;">
     <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">กรองสินค้า</div>
@@ -1227,11 +1248,13 @@ applyTheme(getCurrentTheme(), false);
     <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--blue-soft);border-bottom:2px solid var(--border);">
       <div style="flex:0 0 52px;font-size:10px;font-weight:700;color:var(--text2);">วันที่</div>
       <div style="flex:1;font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="flex:0 0 60px;font-size:10px;font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
       <div style="font-size:10px;font-weight:700;color:var(--yellow);white-space:nowrap;min-width:42px;text-align:right;">Qty</div>
       <div style="font-size:10px;font-weight:700;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">ยอด</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
+  <div id="ri-loc-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.22);overflow-y:auto;max-height:220px;"></div>
   <div id="rep-income-output"></div>
   <button class="rep-back-to-top-btn" onclick="scrollToTopFast()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span>กลับขึ้นข้างบน</span></button>
 </div>
@@ -1589,6 +1612,10 @@ applyTheme(getCurrentTheme(), false);
     <div class="smi-body"><div class="smi-title">ซัพพลายเออร์ / ร้านค้า</div></div>
     <span class="smi-arrow">›</span>
   </div>
+  <div onclick="goSubSetting('set-locations')" class="set-menu-item">
+    <div class="smi-body"><div class="smi-title">สถานที่ขาย / ตลาด</div></div>
+    <span class="smi-arrow">›</span>
+  </div>
   <div onclick="goSubSetting('set-buytypes')" class="set-menu-item">
     <div class="smi-body"><div class="smi-title">ประเภทการซื้อ</div></div>
     <span class="smi-arrow">›</span>
@@ -1675,6 +1702,18 @@ applyTheme(getCurrentTheme(), false);
     <div class="tag-add">
       <input type="text" id="new-supplier" placeholder="เพิ่มร้านค้า เช่น ตลาดไท">
       <button onclick="addSupplierFromSettings()">+ เพิ่ม</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUB: สถานที่ขาย / ตลาด -->
+<div class="page" id="set-locations">
+  <div class="section-title"><button class="back-btn" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">สถานที่ขาย</button></div>
+  <div class="set-section">
+    <div class="tag-list" id="locations-list"></div>
+    <div class="tag-add">
+      <input type="text" id="new-location" placeholder="เพิ่มสถานที่ เช่น ตลาดนัดคลองถม">
+      <button onclick="addLocationFromSettings()">+ เพิ่ม</button>
     </div>
   </div>
 </div>
@@ -2092,7 +2131,7 @@ function makeKEY(sid) {
     loan:`${sid}_loan`, loanpay:`${sid}_loanpay`, wage:`${sid}_wage`,
     rent:`${sid}_rent`, admin:`${sid}_admin`,
     saleCats:`${sid}_sale_cats`, saleSkus:`${sid}_sale_skus`,
-    buyTypes:`${sid}_buy_types`, suppliers:`${sid}_suppliers`,
+    buyTypes:`${sid}_buy_types`, suppliers:`${sid}_suppliers`, locations:`${sid}_locations`,
     profitCfg:`${sid}_profit_cfg`, itemNames:`${sid}_item_names`,
     employees:`${sid}_employees`, adminpay:`${sid}_adminpay`,
     empwagepay:`${sid}_empwagepay`, itemUnits:`${sid}_item_units`,
@@ -2447,7 +2486,7 @@ const PAGE_TITLES = {
   'page-rep-log':'ประวัติการแก้ไข',
   'page-rep-loan':'รายงานเงินกู้',
   'page-recipe':'จัดการสูตร',
-  'set-salecats':'สินค้าขาย','set-suppliers':'ซัพพลายเออร์','set-buytypes':'ประเภทการซื้อ',
+  'set-salecats':'สินค้าขาย','set-suppliers':'ซัพพลายเออร์','set-locations':'สถานที่ขาย','set-buytypes':'ประเภทการซื้อ',
   'set-itemnames':'ชื่อสินค้า','set-units':'หน่วยนับ','set-profit':'การคำนวณกำไร','set-admin':'ค่าคอมผู้บริหาร','set-employees':'พนักงาน','set-backup':'สำรองข้อมูล',
   'set-recipeformulas':'จัดการสูตร'
 };
@@ -2465,8 +2504,8 @@ function goPage(id, navBtn) {
   }
   if(id==='page-home') updateDashboard();
   if(id==='page-buy') { buildBuyTypeSelect(); buildSupplierDatalist(); renderBuyList(); initBuyRows(); previewBuyOrder(); document.getElementById('buy-date').value=today(); }
-  if(id==='page-income') { buildSaleMeatBtns(); renderSaleList(); renderCapList(); renderLoanStatus(); initSaleRows(); previewSaleOrder(); document.getElementById('sale-date').value=today(); }
-  if(id==='page-sale') { buildSaleMeatBtns(); renderSaleList(); document.getElementById('sale-date').value=today(); }
+  if(id==='page-income') { buildSaleMeatBtns(); buildSaleLocationDD(); renderSaleList(); renderCapList(); renderLoanStatus(); initSaleRows(); previewSaleOrder(); document.getElementById('sale-date').value=today(); }
+  if(id==='page-sale') { buildSaleMeatBtns(); buildSaleLocationDD(); renderSaleList(); document.getElementById('sale-date').value=today(); }
   if(id==='page-finance') {
     buildEmpWageSelect(); buildAdminPaySelect(); renderEmpWageHistory(); renderAdminPayHistory();
     const rentEl=document.getElementById('rent-date'); if(rentEl) rentEl.value=today();
@@ -2490,7 +2529,7 @@ function goPage(id, navBtn) {
   if(id==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
   if(id==='page-rep-log') { renderAuditLog(); }
   if(id==='page-recipe') renderRecipePage();
-  if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-units','set-profit','set-admin','set-employees','set-backup','set-recipeformulas'].includes(id)) renderSubSetting(id);
+  if(['set-salecats','set-suppliers','set-locations','set-buytypes','set-itemnames','set-units','set-profit','set-admin','set-employees','set-backup','set-recipeformulas'].includes(id)) renderSubSetting(id);
 }
 
 // Back button / swipe back support
@@ -2507,7 +2546,7 @@ window.addEventListener('popstate', e=>{
     if(nb) nb.classList.add('active');
     if(pageId==='page-home') updateDashboard();
     if(pageId==='page-buy') { buildBuyTypeSelect(); buildSupplierDatalist(); renderBuyList(); }
-    if(pageId==='page-income') { buildSaleMeatBtns(); renderSaleList(); if(!_saleRows?.length) initSaleRows(); }
+    if(pageId==='page-income') { buildSaleMeatBtns(); buildSaleLocationDD(); renderSaleList(); if(!_saleRows?.length) initSaleRows(); }
     if(pageId==='page-finance') { buildEmpWageSelect(); buildAdminPaySelect(); renderEmpWageHistory(); renderAdminPayHistory(); _empSelDays=new Set();_empCalYear=new Date().getFullYear();_empCalMonth=new Date().getMonth(); const _ed2=document.getElementById('emp-wage-display');if(_ed2){_ed2.textContent='-- เลือกพนักงาน --';_ed2.style.color='var(--text2)';}const _es2=document.getElementById('emp-wage-select');if(_es2)_es2.value='';const _er2=document.getElementById('emp-wage-rate-display');if(_er2)_er2.style.display='none'; drawEmpCal(); }
     if(pageId==='page-settings') renderSettingsMenu();
     if(pageId==='page-rep-income') { initRepDates(); renderRepIncome(); }
@@ -2516,7 +2555,7 @@ window.addEventListener('popstate', e=>{
     if(pageId==='page-rep-wages') { initRepWagesDates(); renderRepWages(); }
     if(pageId==='page-rep-loan') renderRepLoan();
     if(pageId==='page-recipe') renderRecipePage();
-    if(['set-salecats','set-suppliers','set-buytypes','set-itemnames','set-units',
+    if(['set-salecats','set-suppliers','set-locations','set-buytypes','set-itemnames','set-units',
         'set-profit','set-admin','set-employees','set-backup','set-recipeformulas'].includes(pageId)) renderSubSetting(pageId);
   }
 });
@@ -2644,6 +2683,73 @@ function buildSupplierSelect() {
       </div>`).join('');
   }
 }
+// ============ LOCATION (สถานที่ขาย/ตลาด) ============
+function getLocations() {
+  const s = localStorage.getItem(KEY.locations);
+  return s ? JSON.parse(s) : [];
+}
+function saveLocations(arr) {
+  localStorage.setItem(KEY.locations, JSON.stringify(arr));
+}
+function renderLocationsList() {
+  const el = document.getElementById('locations-list');
+  if(!el) return;
+  const list = getLocations();
+  el.innerHTML = list.length ? list.map((s,i)=>`<span class="tag-chip">${s}
+      <button class="chip-del" onclick="delLocation(${i})">×</button></span>`).join('')
+    : '<div style="font-size:12px;color:var(--text2);">ยังไม่มีสถานที่ กรอกเพิ่มด้านล่าง</div>';
+}
+function delLocation(idx) {
+  const list = getLocations();
+  list.splice(idx,1);
+  saveLocations(list);
+  renderLocationsList();
+  buildSaleLocationDD();
+}
+function addLocationFromSettings() {
+  const val = document.getElementById('new-location').value.trim();
+  if(!val) return;
+  const list = getLocations();
+  if(!list.includes(val)) list.push(val);
+  saveLocations(list);
+  document.getElementById('new-location').value='';
+  renderLocationsList();
+  buildSaleLocationDD();
+}
+// Sale location custom dropdown
+function buildSaleLocationDD() {
+  const locations = getLocations();
+  const dd = document.getElementById('sale-location-dd');
+  const sel = document.getElementById('sale-location');
+  if(!dd) return;
+  if(sel){
+    sel.innerHTML = '<option value="">-- เลือกสถานที่ --</option>'
+      + locations.map(s=>`<option value="${s}">${s}</option>`).join('');
+  }
+  const items = ['-- ไม่ระบุ --', ...locations];
+  dd.innerHTML = items.map(s=>{
+    const val = s==='-- ไม่ระบุ --'?'':s;
+    return `<div onmousedown="event.preventDefault();selectSaleLocation('${val.replace(/'/g,"\\'")}','${s.replace(/'/g,"\\'")}');" ontouchend="_ddSelect(event,()=>selectSaleLocation('${val.replace(/'/g,"\\'")}','${s.replace(/'/g,"\\'")}'));" style="padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);">${s}</div>`;
+  }).join('');
+}
+function selectSaleLocation(val, label) {
+  const sel = document.getElementById('sale-location');
+  const disp = document.getElementById('sale-location-display');
+  if(sel) sel.value = val;
+  if(disp) { disp.textContent = label; disp.style.color = val ? 'var(--text)' : 'var(--text2)'; }
+  closeSaleLocationDD();
+}
+function toggleSaleLocationDD() {
+  const dd = document.getElementById('sale-location-dd');
+  if(!dd) return;
+  if(dd.style.display==='none'||!dd.style.display) { buildSaleLocationDD(); dd.style.display='block'; }
+  else dd.style.display='none';
+}
+function closeSaleLocationDD() {
+  const dd = document.getElementById('sale-location-dd');
+  if(dd) dd.style.display = 'none';
+}
+
 function addSupplierFromInput() { /* disabled - manage in settings */ }
 function onSupplierInput(el) {}
 function renderSuppliersList() {
@@ -2943,6 +3049,7 @@ document.addEventListener('click', e=>{
     ['buy-type-dd','buy-type-display'],
     ['buy-name-dd','buy-name-display'],
     ['buy-supplier-dd','buy-supplier-display'],
+    ['sale-location-dd','sale-location-display'],
     ['buy-unit-dd','buy-unit-display-btn'],
     ['emp-wage-dd','emp-wage-display'],
     ['admin-pay-dd','admin-pay-display'],
@@ -3355,6 +3462,7 @@ function calcSaleGrandTotal() {
 function confirmSale() {
   const date = document.getElementById('sale-date')?.value;
   const note = document.getElementById('sale-note')?.value.trim()||'';
+  const location = (document.getElementById('sale-location')||{value:''}).value.trim();
   if(!date) { showToast('กรุณาเลือกวันที่'); return; }
   const validRows = _saleRows.filter(r=>r.meat && r.amount>0);
   if(!validRows.length) { showToast('กรุณากรอกสินค้าและยอดขายอย่างน้อย 1 รายการ'); return; }
@@ -3363,6 +3471,7 @@ function confirmSale() {
   const rows = [
     ['เลขออเดอร์', document.getElementById('sale-order-preview')?.textContent||'SL-...'],
     ['วันที่', fmtDate(date)],
+    ['สถานที่ขาย', location||'—'],
     ...validRows.map(r=>{
       const parts = [r.meat];
       if(r.qty) parts.push(`จำนวน ${r.qty} Qty`);
@@ -3388,7 +3497,7 @@ function confirmSale() {
       if(!skus.find(s=>s.name===r.meat)) {
         skus.push({id:'sku_'+uid(),name:r.meat,price:r.unitPrice||0,emoji:getMeatEmoji(r.meat,skus.length)});
       }
-      list.push({id:uid(),orderId,amount:r.amount,qty:r.qty,unitPrice:r.unitPrice,meat:r.meat,date,note,ts:Date.now()});
+      list.push({id:uid(),orderId,amount:r.amount,qty:r.qty,unitPrice:r.unitPrice,meat:r.meat,location,date,note,ts:Date.now()});
     });
     saveSaleSkus(skus);
     DB.set(KEY.sale,list);
@@ -3405,6 +3514,7 @@ function confirmSale() {
       // reset ฟอร์มไว้บันทึกบิลถัดไป
       initSaleRows();
       document.getElementById('sale-note').value='';
+      selectSaleLocation('', '-- เลือกสถานที่ --');
       buildSaleProductDatalist();
       renderSaleList_noop();
       previewSaleOrder(); // อัปเดตเลขออเดอร์ถัดไป
@@ -4088,6 +4198,7 @@ function renderSubSetting(id) {
   if(id==='set-salecats') { goSubSetting('set-itemnames'); return; } // redirect เก่า
   else if(id==='set-units') { renderUnitsList(); }
   else if(id==='set-suppliers') { renderSuppliersList(); buildSupplierDatalist(); }
+  else if(id==='set-locations') { renderLocationsList(); buildSaleLocationDD(); }
   else if(id==='set-buytypes') renderBuyTypesList();
   else if(id==='set-itemnames') { populateSetItemTypeSelect(); renderItemNamesList(); populateUnitSelects(); }
   else if(id==='set-profit') renderProfitCfgUI();
@@ -5723,16 +5834,16 @@ function exportExcel() {
   const typeLabel = id => { const t=buyTypes.find(t=>t.id===id); return t?t.label:id||''; };
 
   // ---- Sheet 1: รายรับ ----
-  const saleRows = [['#','วันที่','ประเภทสินค้า','จำนวน (Qty)','ราคา/หน่วย (฿)','ยอดรวม (฿)','หมายเหตุ']];
+  const saleRows = [['#','วันที่','ประเภทสินค้า','จำนวน (Qty)','ราคา/หน่วย (฿)','สถานที่ขาย','ยอดรวม (฿)','หมายเหตุ']];
   sales.forEach((s,i)=>{
-    saleRows.push([i+1, fmtDateFull(s.date), s.meat||s.name||'', s.qty||0, s.unitPrice||0, s.amount||0, s.note||'']);
+    saleRows.push([i+1, fmtDateFull(s.date), s.meat||s.name||'', s.qty||0, s.unitPrice||0, s.location||'', s.amount||0, s.note||'']);
   });
   const totalSale = sales.reduce((t,s)=>t+(s.amount||0),0);
-  saleRows.push(['','','','','รวมยอดขาย', totalSale,'']);
+  saleRows.push(['','','','','','รวมยอดขาย', totalSale,'']);
   const ws1 = XLSX.utils.aoa_to_sheet(saleRows);
-  ws1['!cols'] = [{wch:5},{wch:12},{wch:18},{wch:13},{wch:16},{wch:14},{wch:22}];
+  ws1['!cols'] = [{wch:5},{wch:12},{wch:18},{wch:13},{wch:16},{wch:16},{wch:14},{wch:22}];
   _xlsxStyleHeader(ws1, 0, saleRows[0].length, '166534');
-  _xlsxStyleTotal(ws1, saleRows.length-1, 5, saleRows.length-1, 4);
+  _xlsxStyleTotal(ws1, saleRows.length-1, 6, saleRows.length-1, 5);
   XLSX.utils.book_append_sheet(wb, ws1, 'รายรับ');
 
   // ---- Sheet 2: รายจ่าย (ซื้อของ) ----
@@ -5944,6 +6055,7 @@ function openEditModal(key,id,cb) {
     <div class="form-group"><label>จำนวน</label><input type="number" id="e-qty" value="${item.qty||''}" step="0.01" oninput="calcEditSale()"></div>
     <div class="form-group"><label>ราคา/หน่วย</label><input type="number" id="e-unit" value="${item.unitPrice||''}" step="0.01" oninput="calcEditSale()"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
+    <div class="form-group"><label>สถานที่ขาย</label><input type="text" id="e-location" value="${item.location||''}"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
     </div>`;
   else if(key===KEY.buy) {
@@ -6025,7 +6137,7 @@ function saveEdit() {
   const beforeAmt = item.amount||0;
   const beforeDate = item.date||'';
   const beforeName = item.name||item.empName||item.adminName||item.note||'';
-  if(_editKey===KEY.sale){item.qty=parseFloat(g('e-qty'))||0;item.unitPrice=parseFloat(g('e-unit'))||0;item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
+  if(_editKey===KEY.sale){item.qty=parseFloat(g('e-qty'))||0;item.unitPrice=parseFloat(g('e-unit'))||0;item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.location=g('e-location')||'';item.note=g('e-note');}
   else if(_editKey===KEY.buy){item.name=g('e-name');item.supplier=g('e-supplier')||'';item.type=g('e-type');item.qty=parseFloat(g('e-qty'))||1;item.unitPrice=parseFloat(g('e-unit'))||0;item.price=parseFloat(g('e-price'))||0;item.date=g('e-date');}
   else if(_editKey===KEY.capital){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
   else if(_editKey===KEY.loan){item.amount=parseFloat(g('e-amount'))||0;item.source=g('e-source');item.date=g('e-date');}
@@ -6061,7 +6173,8 @@ function renderRepIncome() {
   let items=[];
   if(chkRi('ri-c-sale')) DB.get(KEY.sale).filter(i=>i.date>=from&&i.date<=to)
     .filter(i=> !_riSelectedProduct || (i.meat||'ไม่ระบุ') === _riSelectedProduct)
-    .forEach(i=>{ const _u=getUnit(i.meat,SALE_TYPE_ID); items.push({date:i.date,ts:i.ts||0,orderId:i.orderId||i.id,cat:'ยอดขาย',label:`${i.meat||''}${_u?' ('+_u+')':''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id,_qty:i.qty||0}); });
+    .filter(i=> !_riLocation || (i.location||'') === _riLocation)
+    .forEach(i=>{ const _u=getUnit(i.meat,SALE_TYPE_ID); items.push({date:i.date,ts:i.ts||0,orderId:i.orderId||i.id,location:i.location||'',cat:'ยอดขาย',label:`${i.meat||''}${_u?' ('+_u+')':''}${i.note?' · '+i.note:''}`,detail:i.qty&&i.unitPrice?`${i.qty}×${Math.round(Number(i.unitPrice)).toLocaleString('th-TH')}`:'',amount:i.amount,color:'green',key:KEY.sale,id:i.id,_qty:i.qty||0}); });
   if(chkRi('ri-c-loan')) DB.get(KEY.loan).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'รับจากเงินกู้',label:i.source||'เงินกู้'+(i.interestRate>0?' ('+i.interestRate+'%/ปี)':''),detail:i.totalDue?`ยอดที่ต้องชำระรวม: ${fmt(i.totalDue)}`:'',amount:i.amount,color:'blue',key:KEY.loan,id:i.id}));
   if(chkRi('ri-c-capital')) DB.get(KEY.capital).filter(i=>i.date>=from&&i.date<=to).forEach(i=>items.push({date:i.date,ts:i.ts||0,cat:'รับจากทุน',label:i.note||'เงินทุน',detail:'',amount:i.amount,color:'blue',key:KEY.capital,id:i.id}));
 
@@ -6153,7 +6266,7 @@ function renderRepIncome() {
     const usedDates=new Set();
     // interleave sale groups and non-sale by date+ts
     const allItems=[
-      ...saleGroups.map(gi=>({type:'sale-group',date:gi[0].date,ts:gi[0].ts,items:gi})),
+      ...saleGroups.map(gi=>({type:'sale-group',date:gi[0].date,ts:gi[0].ts,location:gi[0].location||'',items:gi})),
       ...nonSaleRows.map(i=>({type:'single',date:i.date,ts:i.ts,item:i}))
     ].sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
     allItems.forEach(r=>finalRows.push(r));
@@ -6168,6 +6281,7 @@ function renderRepIncome() {
           html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepIncome" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" ontouchstart="startRowLongPress(this,event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()">
             <div style="flex:0 0 52px;"><div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div></div>
             <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}</div>
+            <div style="flex:0 0 60px;font-size:10.5px;color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.location?_escHtml(row.location):'—'}</div>
             <div style="font-size:11px;color:var(--yellow);font-weight:600;white-space:nowrap;min-width:42px;text-align:right;">${i.key===KEY.sale&&i._qty?i._qty:''}</div>
             <div style="font-size:13px;font-weight:700;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">+${fmt(i.amount)}</div>
           </div>`;
@@ -6180,17 +6294,19 @@ function renderRepIncome() {
               <div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${summary}</div>
               <div style="font-size:10px;color:var(--text2);margin-top:1px;">${gi.length} รายการ · แตะ 2 ครั้งดูรายละเอียด</div>
             </div>
+            <div style="flex:0 0 60px;font-size:10.5px;color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.location?_escHtml(row.location):'—'}</div>
             <div style="font-size:11px;color:var(--yellow);font-weight:600;white-space:nowrap;min-width:42px;text-align:right;">${gi.reduce((s,x)=>s+(x._qty||0),0)||''}</div>
             <div style="font-size:13px;font-weight:700;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">+${fmt(gt)}</div>
           </div>`;
           // เก็บ items ไว้ใน global map
-          _saleGroupMap[grpId] = {date:row.date, items:gi};
+          _saleGroupMap[grpId] = {date:row.date, location:row.location, items:gi};
         }
       } else {
         const i=row.item;
         html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepIncome" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" ontouchstart="startRowLongPress(this,event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()">
           <div style="flex:0 0 52px;"><div style="font-size:11px;font-weight:600;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:10px;color:var(--text2);margin-top:1px;">${i.cat}</div></div>
           <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>${i.detail?`<div style="font-size:11px;color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}</div>
+          <div style="flex:0 0 60px;font-size:10.5px;color:var(--text2);text-align:center;">—</div>
           <div style="min-width:42px;"></div>
           <div style="font-size:13px;font-weight:700;color:var(--${i.color});white-space:nowrap;min-width:52px;text-align:right;">+${fmt(i.amount)}</div>
         </div>`;
@@ -6395,12 +6511,13 @@ function openSaleGroupById(grpId) {
   const grp = _saleGroupMap[grpId];
   if(!grp) return;
   _saleGroupModalCurrentId = grpId;
-  showSaleGroupModal(grp.date, grp.items);
+  showSaleGroupModal(grp.date, grp.items, grp.location);
 }
 
-function showSaleGroupModal(date, items) {
+function showSaleGroupModal(date, items, location) {
   const orderId = items[0]?.orderId||'';
-  document.getElementById('sale-group-modal-title').textContent = (orderId?orderId+' · ':'')+'ยอดขาย '+fmtDate(date)+' ('+items.length+' รายการ)';
+  const locSfx = location ? ' · '+location : '';
+  document.getElementById('sale-group-modal-title').textContent = (orderId?orderId+' · ':'')+'ยอดขาย '+fmtDate(date)+locSfx+' ('+items.length+' รายการ)';
   const total = items.reduce((s,i)=>s+(i.amount||0),0);
   const totalEl = document.getElementById('sale-group-modal-total');
   if(totalEl) totalEl.textContent = fmt(total);
@@ -6462,6 +6579,9 @@ function editSaleBill(grpId) {
       // หมายเหตุเดิม
       const noteEl = document.getElementById('sale-note');
       if(noteEl) noteEl.value = rawItems[0].note||'';
+      // สถานที่ขายเดิม
+      const loc = rawItems[0].location||'';
+      selectSaleLocation(loc, loc||'-- เลือกสถานที่ --');
       // เลขออเดอร์เดิม ไม่สร้างใหม่
       const orderEl = document.getElementById('sale-order-preview');
       if(orderEl) orderEl.textContent = orderId;
@@ -6488,6 +6608,7 @@ function cancelEditSaleBill() {
   previewSaleOrder();
   const noteEl = document.getElementById('sale-note');
   if(noteEl) noteEl.value = '';
+  selectSaleLocation('', '-- เลือกสถานที่ --');
   // กลับไปหน้ารายงานรายรับหลัก แล้วเปิดป๊อปอัพบิลเดิมขึ้นมาอีกครั้ง (จุดที่มาก่อนกดแก้ไข)
   if(grpId) {
     goReportTab('rep-income', document.getElementById('nav-rep-income'));
@@ -8434,7 +8555,51 @@ function onRiSaleFilterChange() {
   const saleChecked = document.getElementById('ri-c-sale')?.checked;
   const wrap = document.getElementById('ri-product-filter-wrap');
   if(wrap) wrap.style.display = saleChecked ? '' : 'none';
-  if(!saleChecked) { _riSelectedProduct = null; _clearRiUI(); }
+  const locWrap = document.getElementById('ri-loc-filter-wrap');
+  if(locWrap) locWrap.style.display = saleChecked ? '' : 'none';
+  if(!saleChecked) { _riSelectedProduct = null; _clearRiUI(); _riLocation = null; const l=document.getElementById('ri-loc-label'); if(l) l.textContent='ทั้งหมด'; const t=document.getElementById('ri-loc-trigger'); if(t){t.style.borderColor='var(--border)';t.style.color='var(--text)';} }
+  renderRepIncome();
+}
+
+let _riLocation = null;
+
+function toggleRiLocDD(e) {
+  if(e) e.stopPropagation();
+  const dd = document.getElementById('ri-loc-dd');
+  const trigger = document.getElementById('ri-loc-trigger');
+  if(!dd || !trigger) return;
+  if(dd.style.display === 'block') { dd.style.display = 'none'; return; }
+  const rect = trigger.getBoundingClientRect();
+  dd.style.top = (rect.bottom + 4) + 'px';
+  dd.style.left = rect.left + 'px';
+  dd.style.width = rect.width + 'px';
+  buildRiLocList(dd);
+  dd.style.display = 'block';
+}
+
+function buildRiLocList(dd) {
+  const from = document.getElementById('ri-from')?.value;
+  const to = document.getElementById('ri-to')?.value;
+  const sales = DB.get(KEY.sale).filter(i => !from || !to || (i.date >= from && i.date <= to));
+  const locs = [...new Set(sales.map(i => i.location||'').filter(Boolean))].sort();
+  let html = `<div class="ri-prod-item${!_riLocation?' selected':''}" data-val="" onclick="selectRiLocation(this.dataset.val)">ทั้งหมด</div>`;
+  locs.forEach(s => {
+    const safe = s.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    html += `<div class="ri-prod-item${_riLocation===s?' selected':''}" data-val="${safe}" onclick="selectRiLocation(this.dataset.val)">${s}</div>`;
+  });
+  dd.innerHTML = html;
+}
+
+function selectRiLocation(val) {
+  _riLocation = val || null;
+  const label = document.getElementById('ri-loc-label');
+  const trigger = document.getElementById('ri-loc-trigger');
+  if(label) label.textContent = _riLocation || 'ทั้งหมด';
+  if(trigger) {
+    trigger.style.borderColor = _riLocation ? 'var(--accent)' : 'var(--border)';
+    trigger.style.color = _riLocation ? 'var(--accent)' : 'var(--text)';
+  }
+  document.getElementById('ri-loc-dd').style.display = 'none';
   renderRepIncome();
 }
 
@@ -8682,7 +8847,7 @@ function clearReNameFilter() {
 
 // ปิด dropdown เมื่อ click นอก
 document.addEventListener('click', e => {
-  ['re-sup-dd','re-type-dd'].forEach(id => {
+  ['re-sup-dd','re-type-dd','ri-loc-dd'].forEach(id => {
     const dd = document.getElementById(id);
     if(!dd || dd.style.display === 'none') return;
     if(!e.target.closest('#'+id) && !e.target.closest('#'+id.replace('-dd','-trigger'))) dd.style.display = 'none';
@@ -8813,6 +8978,7 @@ function _execClearForm() {
     initSaleRows();
     const n=document.getElementById('sale-note'); if(n) n.value='';
     const d=document.getElementById('sale-date'); if(d) d.value=today();
+    selectSaleLocation('', '-- เลือกสถานที่ --');
   } else if(t==='buy') {
     initBuyRows();
     selectBuySupplier('', '-- เลือกร้าน --');
