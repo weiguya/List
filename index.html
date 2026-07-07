@@ -4,28 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Onion Ver.184</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 #login-page input:-webkit-autofill,
 #login-page input:-webkit-autofill:hover,
 #login-page input:-webkit-autofill:focus,
 #login-page input:-webkit-autofill:active{
-  -webkit-text-fill-color:#171D1A !important;
-  caret-color:#171D1A !important;
+  -webkit-text-fill-color:#1B2430 !important;
+  caret-color:#1B2430 !important;
   transition:background-color 9999s ease-in-out 0s;
   box-shadow:0 0 0 1000px #FFFFFF inset !important;
 }
 #login-page input{ color-scheme: light; }
 :root {
-  --bg:#F6F4EE; --card:#fff; --card2:#F1EFE7;
-  --accent:#A9812E; --accent-deep:#8C6D25; --accent-text:#7A5E1F; --green:#0E5C4A; --green-soft:#DCEBE5;
-  --red:#8A3A3D; --red-soft:#F1DFDC; --yellow:#B8860B; --yellow-soft:#F3E7C8;
-  --purple:#5E4780; --blue-soft:#F3E7C8;
-  --text:#171D1A; --text2:#5B6560;
-  --border:#E1DED3;
+  --bg:#F7F9FC; --card:#fff; --card2:#EEF2F7;
+  --accent:#C9972E; --accent-deep:#A87C22; --accent-text:#8A6B1F; --green:#12805F; --green-soft:#DCF3EA;
+  --red:#C0393B; --red-soft:#FBE4E4; --yellow:#D9A62B; --yellow-soft:#FCEFCB;
+  --purple:#7C5CB5; --blue-soft:#FCEFCB;
+  --text:#1B2430; --text2:#667085;
+  --border:#E2E8F0;
   /* หมวดหมู่: รับ (เขียวสนอ่อน) / จ่าย (ดินเผาอ่อน) / อื่นๆ = --accent */
-  --income:#7A9A80; --income-soft:#E9F0E9;
-  --expense:#C08862; --expense-soft:#F3E8DE;
+  --income:#4FA876; --income-soft:#E5F5EC;
+  --expense:#D98F5F; --expense-soft:#FBEEE2;
   --shadow:0 2px 14px rgba(0,0,0,0.08);
   --shadow-card:0 10px 26px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.07);
   --radius:18px;
@@ -35,10 +35,10 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{overflow-x:hidden;}
 body{max-width:100%;}
-body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:24px;font-size:15px;touch-action:pan-y;}
+body{font-family:'Prompt',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:24px;font-size:15px;touch-action:pan-y;}
 #app-root{position:relative;z-index:1;}
 /* ตัวเลขหลัก dashboard ใช้ Inter เพื่อความคม */
-#d-cashbal,#d-sale,#d-buy,#d-profit,#d-capital,#d-loan,#d-avg-val{font-family:'IBM Plex Sans Thai',sans-serif;}
+#d-cashbal,#d-sale,#d-buy,#d-profit,#d-capital,#d-loan,#d-avg-val{font-family:'Prompt',sans-serif;}
 
 /* เส้นดินสอเล็กๆ ใต้หัวข้อ signature ของธีม */
 .section-title{position:relative;display:inline-flex !important;}
@@ -76,7 +76,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .sidebar-close{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
 .sidebar-menu{flex:1;overflow-y:auto;padding:12px 0;touch-action:pan-y;overscroll-behavior:contain;}
 .sidebar-section-label{font-size:10px;font-weight:600;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px 4px;}
-.sidebar-item{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;color:var(--text);font-weight:500;text-align:left;}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text);font-weight:500;text-align:left;}
 .sidebar-item:active{background:var(--blue-soft);}
 .sidebar-item.active{background:var(--blue-soft);color:var(--accent-text);font-weight:600;}
 .sidebar-item .s-ico{font-size:20px;width:28px;text-align:center;}
@@ -95,122 +95,122 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 /* STATS GRID */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 14px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
-.stat-card .label{font-size:11px;color:#5B6560;font-weight:500;margin-bottom:5px;}
-.stat-card .value{font-size:20px;font-weight:700;font-family:'IBM Plex Sans Thai',sans-serif;}
+.stat-card .label{font-size:11px;color:#667085;font-weight:500;margin-bottom:5px;}
+.stat-card .value{font-size:20px;font-weight:700;font-family:'Prompt',sans-serif;}
 .stat-card.full{grid-column:1/-1;}
 .green{color:var(--green);} .red{color:var(--red);} .yellow{color:var(--yellow);} .blue{color:var(--accent-text);} .purple{color:var(--purple);}
 
 /* CHART */
 .chart-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
-.chart-card h3{font-size:13px;font-weight:600;color:#5B6560;margin-bottom:12px;}
+.chart-card h3{font-size:13px;font-weight:600;color:#667085;margin-bottom:12px;}
 .bar-row{margin-bottom:10px;}
-.bar-row .bar-label{font-size:12px;color:#5B6560;margin-bottom:4px;display:flex;justify-content:space-between;}
-.bar-track{background:#F1EFE7;border:1px solid var(--border);border-radius:6px;height:10px;overflow:hidden;}
+.bar-row .bar-label{font-size:12px;color:#667085;margin-bottom:4px;display:flex;justify-content:space-between;}
+.bar-track{background:#EEF2F7;border:1px solid var(--border);border-radius:6px;height:10px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:6px;transition:width 1s ease;}
 
 /* NAV GRID */
 .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .nav-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-align:center;cursor:pointer;transition:background 0.2s,transform 0.1s;user-select:none;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
-.nav-card:active{transform:scale(0.97);background:#F1EFE7;}
+.nav-card:active{transform:scale(0.97);background:#EEF2F7;}
 .nav-card .nav-icon{font-size:26px;margin-bottom:6px;}
-.nav-card .nav-title{font-size:14px;font-weight:600;color:#171D1A;}
-.nav-card .nav-sub{font-size:11px;color:#5B6560;margin-top:2px;}
+.nav-card .nav-title{font-size:14px;font-weight:600;color:#1B2430;}
+.nav-card .nav-sub{font-size:11px;color:#667085;margin-top:2px;}
 
 /* SECTION TITLE */
-.section-title{font-size:16px;font-weight:700;color:#171D1A;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.back-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:var(--accent-text);font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:600;cursor:pointer;padding:4px 8px 4px 2px;border-radius:8px;transition:background 0.15s;user-select:none;-webkit-tap-highlight-color:transparent;}
-.back-btn:active{background:#F1EFE7;}
+.section-title{font-size:16px;font-weight:700;color:#1B2430;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.back-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:var(--accent-text);font-family:'Prompt',sans-serif;font-size:14px;font-weight:600;cursor:pointer;padding:4px 8px 4px 2px;border-radius:8px;transition:background 0.15s;user-select:none;-webkit-tap-highlight-color:transparent;}
+.back-btn:active{background:#EEF2F7;}
 .back-btn::before{content:'';display:inline-block;width:8px;height:8px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);margin-right:2px;flex-shrink:0;}
 
 /* FORM */
 .form-group{margin-bottom:12px;}
-.form-group label{font-size:12px;color:#5B6560;display:block;margin-bottom:6px;font-weight:600;}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:#fff;border:1px solid #E1DED3;border-radius:10px;padding:12px 14px;color:#171D1A;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.form-group label{font-size:12px;color:#667085;display:block;margin-bottom:6px;font-weight:600;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:12px 14px;color:#1B2430;font-family:'Prompt',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
 .form-group input:focus,.form-group select:focus{border-color:var(--accent-text);box-shadow:0 0 0 3px rgba(0,0,0,0.1);background:#fff;}
 .form-group input[type="date"]{padding:7px 10px;font-size:12px;border-radius:8px;}
 .form-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 14px 4px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
 .form-card .form-group{margin-bottom:10px;}
 
 /* BUTTONS */
-.btn{width:100%;padding:14px;border-radius:12px;border:none;font-family:'IBM Plex Sans Thai',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.1s;}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;font-family:'Prompt',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.1s;}
 .btn:active{transform:scale(0.98);opacity:0.85;}
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-green{background:var(--green);color:#fff;}
 .btn-red{background:var(--red);color:#fff;}
-.btn-outline{background:#fff;border:1.5px solid #E1DED3;color:#171D1A;}
+.btn-outline{background:#fff;border:1.5px solid #E2E8F0;color:#1B2430;}
 .btn-sm{width:auto;padding:7px 15px;font-size:13px;}
 .rep-back-to-top-btn{display:block;width:fit-content;margin:14px auto 4px;padding:9px 18px;border-radius:22px;
   background:var(--card2);border:1px solid var(--border);color:var(--accent-text);
-  font-family:'IBM Plex Sans Thai',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;
+  font-family:'Prompt',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;
   display:flex;align-items:center;gap:5px;justify-content:center;}
 .rep-back-to-top-btn:active{background:var(--blue-soft);}
 
 /* LIST ITEMS */
 .list-item{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
-.item-name{font-size:14px;font-weight:600;color:#171D1A;}
-.item-meta{font-size:11px;color:#5B6560;margin-top:2px;}
-.item-amount{font-size:15px;font-weight:700;font-family:'IBM Plex Sans Thai',sans-serif;}
+.item-name{font-size:14px;font-weight:600;color:#1B2430;}
+.item-meta{font-size:11px;color:#667085;margin-top:2px;}
+.item-amount{font-size:15px;font-weight:700;font-family:'Prompt',sans-serif;}
 .item-del{background:var(--red-soft);border:none;color:var(--red);font-size:13px;cursor:pointer;padding:4px 8px;margin-left:4px;border-radius:8px;}
 .item-edit{background:var(--yellow-soft);border:none;font-size:13px;cursor:pointer;padding:4px 8px;border-radius:8px;}
 
 /* TABS */
 .tab-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
-.tab-btn{padding:7px 15px;border-radius:20px;border:1.5px solid #E1DED3;background:#fff;color:#5B6560;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-weight:500;}
+.tab-btn{padding:7px 15px;border-radius:20px;border:1.5px solid #E2E8F0;background:#fff;color:#667085;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-weight:500;}
 .tab-btn.active{background:var(--accent);border-color:#fff;color:#fff;font-weight:600;}
 
 /* REPORT */
 .report-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
-.report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F1EFE7;font-size:14px;}
+.report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #EEF2F7;font-size:14px;}
 .report-row:last-child{border-bottom:none;}
-.report-row .r-label{color:#5B6560;font-weight:500;}
+.report-row .r-label{color:#667085;font-weight:500;}
 .report-total{display:flex;justify-content:space-between;padding:12px 0 0;font-size:16px;font-weight:700;}
 
 /* LOAN */
-.loan-box{background:#F1EFE7;border:1px solid #E1DED3;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.loan-box{background:#EEF2F7;border:1px solid #E2E8F0;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
 .loan-progress .bar-track{height:12px;}
 
 /* MISC */
 .divider{height:1px;background:var(--border);margin:14px 0;}
-.empty{text-align:center;padding:40px 16px;color:#5B6560;font-size:14px;}
+.empty{text-align:center;padding:40px 16px;color:#667085;font-size:14px;}
 .empty .empty-icon{font-size:40px;margin-bottom:8px;}
 .filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-.filter-row input,.filter-row select{flex:1;min-width:100px;background:#fff;border:1px solid #E1DED3;border-radius:10px;padding:10px 12px;color:#171D1A;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;}
+.filter-row input,.filter-row select{flex:1;min-width:100px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:10px 12px;color:#1B2430;font-family:'Prompt',sans-serif;font-size:13px;outline:none;}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,26,0.6);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-height:90vh;overflow-y:auto;border-top:3px solid var(--accent);}
-.modal-title{font-size:16px;font-weight:700;color:#171D1A;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-title{font-size:16px;font-weight:700;color:#1B2430;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 .modal-close{background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:15px;line-height:1;cursor:pointer;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;}
 .modal-close:active{background:var(--red-soft);color:var(--red);border-color:var(--red);}
 
 /* MEAT BTNS */
-.meat-btn{padding:12px 6px;border-radius:12px;border:2px solid #E1DED3;background:#fff;color:#171D1A;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s;}
+.meat-btn{padding:12px 6px;border-radius:12px;border:2px solid #E2E8F0;background:#fff;color:#1B2430;font-family:'Prompt',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s;}
 .meat-btn.active{border-color:var(--green);background:var(--green-soft);color:var(--green);}
 
 /* CONFIRM */
-.confirm-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F1EFE7;font-size:14px;}
+.confirm-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #EEF2F7;font-size:14px;}
 .confirm-row:last-child{border-bottom:none;}
-.confirm-row .c-label{color:#5B6560;font-weight:500;}
+.confirm-row .c-label{color:#667085;font-weight:500;}
 
 /* TIMELINE */
-.tl-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #F1EFE7;}
+.tl-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #EEF2F7;}
 .tl-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;}
-.tl-date-group{font-size:12px;font-weight:600;color:#5B6560;padding:8px 0 4px;border-bottom:2px solid var(--border);margin-bottom:2px;}
+.tl-date-group{font-size:12px;font-weight:600;color:#667085;padding:8px 0 4px;border-bottom:2px solid var(--border);margin-bottom:2px;}
 
 .inc-section{}
 .rep-section{}
-.chk-label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:4px 8px;background:#F1EFE7;border:1px solid var(--border);border-radius:8px;}
+.chk-label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:4px 8px;background:#EEF2F7;border:1px solid var(--border);border-radius:8px;}
 .chk-label input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;}
 /* SETTINGS */
 .set-section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
-.set-section h3{font-size:14px;font-weight:700;color:#171D1A;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.set-section h3{font-size:14px;font-weight:700;color:#1B2430;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
 .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-.tag-chip{display:flex;align-items:center;gap:6px;background:#F1EFE7;border:1px solid #E1DED3;border-radius:20px;padding:6px 12px;font-size:13px;font-weight:500;}
+.tag-chip{display:flex;align-items:center;gap:6px;background:#EEF2F7;border:1px solid #E2E8F0;border-radius:20px;padding:6px 12px;font-size:13px;font-weight:500;}
 .tag-chip .chip-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0;line-height:1;}
 .tag-add{display:flex;gap:8px;}
-.tag-add input{flex:1;background:#F1EFE7;border:1px solid #E1DED3;border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:#171D1A;}
-.tag-add button{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.tag-add input{flex:1;background:#EEF2F7;border:1px solid #E2E8F0;border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:#1B2430;}
+.tag-add button{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
 /* SETTINGS MENU LIST */
 .set-menu-item{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.06);transition:background 0.15s;}
 .set-menu-item:active{background:var(--blue-soft);}
@@ -245,8 +245,8 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .admin-card{background:var(--blue-soft);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-card);}
 .admin-card .admin-label{font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;}
 .admin-payout-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
-.payout-btn{background:var(--green);border:none;color:#fff;border-radius:8px;padding:6px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;font-weight:500;cursor:pointer;}
-.export-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1.5px solid var(--accent);color:var(--accent-text);border-radius:12px;padding:14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-bottom:10px;transition:background 0.15s;}
+.payout-btn{background:var(--green);border:none;color:#fff;border-radius:8px;padding:6px 14px;font-family:'Prompt',sans-serif;font-size:12px;font-weight:500;cursor:pointer;}
+.export-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1.5px solid var(--accent);color:var(--accent-text);border-radius:12px;padding:14px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-bottom:10px;transition:background 0.15s;}
 .export-btn:active{background:var(--blue-soft);}
 
 /* LOGIN PAGE */
@@ -259,7 +259,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .login-title{font-size:20px;font-weight:700;text-align:center;color:var(--accent-text);margin-bottom:4px;}
 .login-sub{font-size:12px;color:var(--text2);text-align:center;margin-bottom:22px;}
 .login-tab{display:flex;gap:0;margin-bottom:18px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
-.login-tab-btn{flex:1;padding:10px;border:none;background:var(--card2);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all 0.2s;}
+.login-tab-btn{flex:1;padding:10px;border:none;background:var(--card2);font-family:'Prompt',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all 0.2s;}
 .login-tab-btn.active{background:var(--accent);color:#fff;}
 .login-error{background:var(--red-soft);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:12px;display:none;}
 .login-error.show{display:block;}
@@ -285,7 +285,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .admin-panel-card .apc-name{font-size:14px;font-weight:600;}
 .admin-panel-card .apc-meta{font-size:11px;color:var(--text2);margin-top:2px;}
 .role-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;}
-.role-badge.superadmin{background:#F3E7C8;color:#92400e;}
+.role-badge.superadmin{background:#FCEFCB;color:#92400e;}
 .role-badge.master{background:var(--blue-soft);color:var(--accent-text);}
 .role-badge.staff{background:var(--green-soft);color:var(--green);}
 .role-badge.pending{background:var(--red-soft);color:var(--red);}
@@ -331,7 +331,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .br-col-price{width:70px;}
 .br-col-total{width:78px;}
 .br-col-del{width:38px;justify-content:center;align-items:center;}
-.br-field{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 5px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.br-field{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 5px;font-family:'Prompt',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .br-field.br-num-input{cursor:text;text-align:right;font-size:12px;}
 .br-field.br-locked{background:var(--blue-soft);border-color:var(--accent-text);color:var(--accent-text);font-weight:600;text-align:center;}
 /* ไฮไลท์แถวอ่อนๆ ค้างไว้ตราบใดที่แถวนั้นมีข้อมูลกรอกแล้วอย่างน้อย 1 ช่อง (บันทึกรับ/จ่าย) สีเข้ากับธีมหลัก */
@@ -341,9 +341,9 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .br-row.br-row-filled .br-field.br-locked{background:var(--blue-soft);}
 /* RECIPE TABLE (สูตรหมัก) */
 .rcp-toolbar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-.rcp-toolbar select{flex:1;min-width:110px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 10px;color:var(--text);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;}
+.rcp-toolbar select{flex:1;min-width:110px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 10px;color:var(--text);font-family:'Prompt',sans-serif;font-size:13px;outline:none;}
 .rcp-btnrow{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-.rcp-btn{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:9px 13px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.rcp-btn{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:9px 13px;font-family:'Prompt',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
 .rcp-btn.rcp-btn-soft{background:var(--blue-soft);color:var(--accent-text);}
 .rcp-btn.rcp-btn-soft.rcp-btn-active{background:var(--accent);color:#fff;}
 .rcp-btn.rcp-btn-green{background:var(--green);}
@@ -370,7 +370,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .rcp-base-ml{font-size:9px;color:var(--text2);margin-top:1px;}
 .rcp-col-spoon{width:58px;}
 .rcp-col-actual{width:70px;}
-.rcp-field{width:100%;background:transparent;border:none;border-radius:0;padding:4px 3px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;text-align:center;}
+.rcp-field{width:100%;background:transparent;border:none;border-radius:0;padding:4px 3px;font-family:'Prompt',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;text-align:center;}
 .rcp-field.rcp-name-field{text-align:left;font-weight:600;font-size:12px;}
 .rcp-field.rcp-readonly{background:transparent;color:var(--accent-text);font-weight:600;border:none;}
 .rcp-field.rcp-field-filled{background:var(--yellow-soft);color:var(--yellow);font-weight:700;border-radius:4px;}
@@ -431,13 +431,13 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 <script>
 // ══ ธีมสีของแอป: ใช้ตัวแปร CSS (--accent, --blue-soft) เป็นระบบสีหลัก ทำให้สลับได้ทันที ══
 const THEME_PRESETS = {
-  gold:      {name:'ทองบรอนซ์ (ค่าเริ่มต้น)', accent:'#A9812E', soft:'#F3E7C8', rgb:'169,129,46'},
+  gold:      {name:'ทองบรอนซ์ (ค่าเริ่มต้น)', accent:'#C9972E', soft:'#FCEFCB', rgb:'201,151,46'},
   moss:      {name:'เขียวมอส',       accent:'#8CA88F', soft:'#E6EEE7', rgb:'140,168,143'},
   dusty:     {name:'ฟ้าหม่น',        accent:'#8EA3B0', soft:'#E7EDF0', rgb:'142,163,176'},
   rose:      {name:'ชมพูอบเชย',      accent:'#C99A9A', soft:'#F5E8E8', rgb:'201,154,154'},
   lavender:  {name:'ลาเวนเดอร์อ่อน', accent:'#A594B0', soft:'#EFE9F2', rgb:'165,148,176'},
   charcoal:  {name:'เทาเข้ม',        accent:'#767676', soft:'#E9E7E2', rgb:'107,101,90'},
-  terracotta:{name:'ส้มดินเผา',      accent:'#C08862', soft:'#F3E5DA', rgb:'192,136,98'},
+  terracotta:{name:'ส้มดินเผา',      accent:'#D98F5F', soft:'#F3E5DA', rgb:'217,143,95'},
   mint:      {name:'ฟ้าเขียวมิ้นท์', accent:'#7FADA3', soft:'#E6F0EE', rgb:'127,173,163'},
   bright_red:    {name:'แดงสด',    accent:'#E5484D', soft:'#FDECEC', rgb:'229,72,77'},
   bright_orange: {name:'ส้มสด',    accent:'#F76B15', soft:'#FEF0E4', rgb:'247,107,21'},
@@ -531,7 +531,7 @@ applyTheme(getCurrentTheme(), false);
   </nav>
   <div class="sidebar-footer" style="padding:0;border-top:1px solid var(--border);flex-shrink:0;">
     <!-- Logout button -->
-    <button onclick="doLogout()" style="width:100%;display:flex;align-items:center;gap:8px;padding:8px 16px 12px;background:none;border:none;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;color:#8A3A3D;font-weight:600;text-align:left;-webkit-tap-highlight-color:transparent;" onmouseenter="this.style.background='#F1EFE7'" onmouseleave="this.style.background='none'">
+    <button onclick="doLogout()" style="width:100%;display:flex;align-items:center;gap:8px;padding:8px 16px 12px;background:none;border:none;cursor:pointer;font-family:'Prompt',sans-serif;font-size:13px;color:#C0393B;font-weight:600;text-align:left;-webkit-tap-highlight-color:transparent;" onmouseenter="this.style.background='#EEF2F7'" onmouseleave="this.style.background='none'">
       <span style="font-size:15px;">🚪</span> ออกจากระบบ
     </button>
     <div style="padding:0 16px 10px;font-size:10px;color:var(--text2);">Ver.184 · localStorage</div>
@@ -551,14 +551,14 @@ applyTheme(getCurrentTheme(), false);
     <div style="margin-bottom:16px;">
       <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;">รหัสร้านค้า (Shop ID)</label>
       <input type="text" id="login-shopid-input" placeholder="เช่น onion_bbq"
-        style="width:100%;padding:8px 2px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14.5px;outline:none;color:var(--text);background:transparent;border:none;border-bottom:1.5px solid var(--border);border-radius:0;box-sizing:border-box;transition:border-color 0.15s;"
+        style="width:100%;padding:8px 2px;font-family:'Prompt',sans-serif;font-size:14.5px;outline:none;color:var(--text);background:transparent;border:none;border-bottom:1.5px solid var(--border);border-radius:0;box-sizing:border-box;transition:border-color 0.15s;"
         onkeydown="if(event.key==='Enter')document.getElementById('login-username').focus()">
     </div>
 
     <div style="margin-bottom:16px;">
       <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;">อีเมล / Username</label>
       <input type="email" id="login-username" placeholder="weiguya@gmail.com" autocomplete="username"
-        style="width:100%;padding:8px 2px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14.5px;outline:none;color:var(--text);background:transparent;border:none;border-bottom:1.5px solid var(--border);border-radius:0;box-sizing:border-box;transition:border-color 0.15s;"
+        style="width:100%;padding:8px 2px;font-family:'Prompt',sans-serif;font-size:14.5px;outline:none;color:var(--text);background:transparent;border:none;border-bottom:1.5px solid var(--border);border-radius:0;box-sizing:border-box;transition:border-color 0.15s;"
         onkeydown="if(event.key==='Enter')document.getElementById('login-password').focus()">
     </div>
 
@@ -566,9 +566,9 @@ applyTheme(getCurrentTheme(), false);
       <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.8px;">รหัสผ่าน</label>
       <div style="position:relative;">
         <input type="password" id="login-password" placeholder="••••••••••" autocomplete="current-password"
-          style="width:100%;padding:8px 34px 8px 2px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14.5px;outline:none;color:var(--text);background:transparent;border:none;border-bottom:1.5px solid var(--border);border-radius:0;box-sizing:border-box;letter-spacing:2px;transition:border-color 0.15s;"
+          style="width:100%;padding:8px 34px 8px 2px;font-family:'Prompt',sans-serif;font-size:14.5px;outline:none;color:var(--text);background:transparent;border:none;border-bottom:1.5px solid var(--border);border-radius:0;box-sizing:border-box;letter-spacing:2px;transition:border-color 0.15s;"
           onkeydown="if(event.key==='Enter')doLogin()">
-        <button onclick="toggleLoginPw()" style="position:absolute;right:0;top:6px;background:none;border:none;cursor:pointer;color:var(--text2);font-size:12px;font-family:'IBM Plex Sans Thai',sans-serif;padding:2px 4px;z-index:2;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text2)'">ดู</button>
+        <button onclick="toggleLoginPw()" style="position:absolute;right:0;top:6px;background:none;border:none;cursor:pointer;color:var(--text2);font-size:12px;font-family:'Prompt',sans-serif;padding:2px 4px;z-index:2;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text2)'">ดู</button>
       </div>
     </div>
 
@@ -583,7 +583,7 @@ applyTheme(getCurrentTheme(), false);
 
     <div id="login-error" style="display:none;background:var(--red-soft);border:1px solid var(--red);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--red);margin-bottom:16px;text-align:center;"></div>
 
-    <button onclick="doLogin()" style="width:100%;background:var(--text2);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 8px rgba(0,0,0,0.08);letter-spacing:0.3px;"
+    <button onclick="doLogin()" style="width:100%;background:var(--text2);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 8px rgba(0,0,0,0.08);letter-spacing:0.3px;"
       onmousedown="this.style.transform='scale(0.98)'"
       onmouseup="this.style.transform=''"
       onmouseleave="this.style.transform=''">
@@ -618,31 +618,31 @@ applyTheme(getCurrentTheme(), false);
 
     <!-- period tabs -->
     <div style="display:flex;gap:6px;margin-bottom:14px;">
-      <button id="dash-tab-day" onclick="dashTab('day',this)" style="font-family:'IBM Plex Sans Thai',sans-serif;font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;border:1.5px solid #E1DED3;cursor:pointer;background:#fff;color:var(--accent-text);transition:all 0.18s;">วันนี้</button>
-      <button id="dash-tab-week" onclick="dashTab('week',this)" style="font-family:'IBM Plex Sans Thai',sans-serif;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;background:transparent;color:#5B6560;transition:all 0.18s;">สัปดาห์</button>
-      <button id="dash-tab-month" onclick="dashTab('month',this)" style="font-family:'IBM Plex Sans Thai',sans-serif;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;background:transparent;color:#5B6560;transition:all 0.18s;">เดือน</button>
-      <button id="dash-tab-all" onclick="dashTab('all',this)" style="font-family:'IBM Plex Sans Thai',sans-serif;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;background:transparent;color:#5B6560;transition:all 0.18s;">ทั้งหมด</button>
+      <button id="dash-tab-day" onclick="dashTab('day',this)" style="font-family:'Prompt',sans-serif;font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;border:1.5px solid #E2E8F0;cursor:pointer;background:#fff;color:var(--accent-text);transition:all 0.18s;">วันนี้</button>
+      <button id="dash-tab-week" onclick="dashTab('week',this)" style="font-family:'Prompt',sans-serif;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;background:transparent;color:#667085;transition:all 0.18s;">สัปดาห์</button>
+      <button id="dash-tab-month" onclick="dashTab('month',this)" style="font-family:'Prompt',sans-serif;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;background:transparent;color:#667085;transition:all 0.18s;">เดือน</button>
+      <button id="dash-tab-all" onclick="dashTab('all',this)" style="font-family:'Prompt',sans-serif;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;background:transparent;color:#667085;transition:all 0.18s;">ทั้งหมด</button>
     </div>
 
     <!-- เงินคงเหลือ -->
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
       <div>
-        <div style="font-size:11px;color:#5B6560;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;">เงินคงเหลือในบัญชีจริง</div>
-        <div id="d-cashbal" style="font-size:24px;font-weight:600;color:#171D1A;line-height:1;letter-spacing:-0.3px;">0</div>
-        <div style="font-size:10px;color:#5B6560;margin-top:4px;">ทุน+กู้+ขาย−ของ−แรง−เช่า−หนี้</div>
+        <div style="font-size:11px;color:#667085;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;">เงินคงเหลือในบัญชีจริง</div>
+        <div id="d-cashbal" style="font-size:24px;font-weight:600;color:#1B2430;line-height:1;letter-spacing:-0.3px;">0</div>
+        <div style="font-size:10px;color:#667085;margin-top:4px;">ทุน+กู้+ขาย−ของ−แรง−เช่า−หนี้</div>
       </div>
-      <button id="cashbal-show-btn" onclick="toggleSensitive('cashbal')" style="background:#fff;border:1px solid #E1DED3;color:#5B6560;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">ดู</button>
+      <button id="cashbal-show-btn" onclick="toggleSensitive('cashbal')" style="background:#fff;border:1px solid #E2E8F0;color:#667085;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">ดู</button>
     </div>
 
-    <div id="dash-period-label" style="font-size:10px;color:#5B6560;margin-top:6px;"></div>
+    <div id="dash-period-label" style="font-size:10px;color:#667085;margin-top:6px;"></div>
   </div>
 
   <!-- ══ ยอดขาย + ค่าเฉลี่ย (อิงช่วงที่เลือกด้านบน: วันนี้/สัปดาห์/เดือน/ทั้งหมด) ══ -->
   <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:13px 16px;margin:0 14px 10px;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
     <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
       <div style="display:flex;background:var(--card2);border-radius:7px;border:1px solid var(--border);overflow:hidden;">
-        <button id="dstat-tab-baht" onclick="_setDashStatUnit('baht')" style="padding:3px 10px;font-size:10.5px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">฿ บาท</button>
-        <button id="dstat-tab-qty" onclick="_setDashStatUnit('qty')" style="padding:3px 10px;font-size:10.5px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:var(--text2);">Qty</button>
+        <button id="dstat-tab-baht" onclick="_setDashStatUnit('baht')" style="padding:3px 10px;font-size:10.5px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">฿ บาท</button>
+        <button id="dstat-tab-qty" onclick="_setDashStatUnit('qty')" style="padding:3px 10px;font-size:10.5px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:var(--text2);">Qty</button>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -660,7 +660,7 @@ applyTheme(getCurrentTheme(), false);
   <!-- ══ สรุปยอด: การ์ดเดียว รวมทุกตัวเลขสำคัญ ขยายดูรายละเอียดได้ ══ -->
   <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:15px 16px;margin:-4px 14px 0;box-shadow:0 3px 16px rgba(0,0,0,0.1);position:relative;z-index:1;">
     <div style="display:flex;justify-content:flex-end;margin-bottom:6px;">
-      <button onclick="cycleDashStyle(event)" title="เปลี่ยนรูปแบบการ์ด" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:4px 9px 4px 8px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'IBM Plex Sans Thai',sans-serif;">⇄ รูปแบบ</button>
+      <button onclick="cycleDashStyle(event)" title="เปลี่ยนรูปแบบการ์ด" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:4px 9px 4px 8px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Prompt',sans-serif;">⇄ รูปแบบ</button>
     </div>
     <div id="dash-metrics"></div>
   </div>
@@ -672,64 +672,64 @@ applyTheme(getCurrentTheme(), false);
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;margin-bottom:8px;">
       <div onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);"
         style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;position:relative;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-        <button id="capital-show-btn" onclick="event.stopPropagation();toggleSensitive('capital')" style="position:absolute;top:8px;right:8px;background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;">ดู</button>
-        <div style="font-size:11px;color:#5B6560;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">เงินทุน</div>
+        <button id="capital-show-btn" onclick="event.stopPropagation();toggleSensitive('capital')" style="position:absolute;top:8px;right:8px;background:#EEF2F7;border:1px solid var(--border);color:#667085;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;">ดู</button>
+        <div style="font-size:11px;color:#667085;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">เงินทุน</div>
         <div id="d-capital" style="font-size:16px;font-weight:700;color:var(--accent-text);line-height:1;">0</div>
-        <div style="font-size:10px;color:#5B6560;margin-top:4px;">แตะดูรายละเอียด</div>
+        <div style="font-size:10px;color:#667085;margin-top:4px;">แตะดูรายละเอียด</div>
       </div>
       <div onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));"
         style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;position:relative;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-        <button id="loan-show-btn" onclick="event.stopPropagation();toggleSensitive('loan')" style="position:absolute;top:8px;right:8px;background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;">ดู</button>
-        <div style="font-size:11px;color:#5B6560;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">หนี้คงเหลือ</div>
-        <div id="d-loan" style="font-size:16px;font-weight:700;color:#8A3A3D;line-height:1;">0</div>
-        <div id="d-loan-row" style="font-size:9px;color:#5B6560;margin-top:4px;">จ่ายแล้ว <span id="d-loan-paid" style="color:#0E5C4A;">0</span> / <span id="d-loan-due" style="color:#8A3A3D;">0</span></div>
+        <button id="loan-show-btn" onclick="event.stopPropagation();toggleSensitive('loan')" style="position:absolute;top:8px;right:8px;background:#EEF2F7;border:1px solid var(--border);color:#667085;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;">ดู</button>
+        <div style="font-size:11px;color:#667085;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">หนี้คงเหลือ</div>
+        <div id="d-loan" style="font-size:16px;font-weight:700;color:#C0393B;line-height:1;">0</div>
+        <div id="d-loan-row" style="font-size:9px;color:#667085;margin-top:4px;">จ่ายแล้ว <span id="d-loan-paid" style="color:#12805F;">0</span> / <span id="d-loan-due" style="color:#C0393B;">0</span></div>
       </div>
     </div>
 
     <!-- formula hint -->
-    <div id="d-profit-formula" style="font-size:10.5px;color:#5B6560;background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 12px;margin-bottom:8px;text-align:center;">—</div>
+    <div id="d-profit-formula" style="font-size:10.5px;color:#667085;background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 12px;margin-bottom:8px;text-align:center;">—</div>
 
     <!-- กราฟยอดขาย -->
     <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
-        <div id="chart7day-title" style="font-size:12px;font-weight:700;color:#171D1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;">สัปดาห์นี้</div>
+        <div id="chart7day-title" style="font-size:12px;font-weight:700;color:#1B2430;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;">สัปดาห์นี้</div>
         <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
-          <span style="font-size:9px;color:#5B6560;white-space:nowrap;">แสดงกราฟเป็น</span>
-          <div style="display:flex;background:#F1EFE7;border-radius:5px;border:1px solid var(--border);overflow:hidden;">
-            <button id="avg-tab-baht" onclick="_setAvgMetric('baht')" style="padding:2px 6px;font-size:10px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">฿</button>
-            <button id="avg-tab-qty" onclick="_setAvgMetric('qty')" style="padding:2px 6px;font-size:10px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#5B6560;">Qty</button>
+          <span style="font-size:9px;color:#667085;white-space:nowrap;">แสดงกราฟเป็น</span>
+          <div style="display:flex;background:#EEF2F7;border-radius:5px;border:1px solid var(--border);overflow:hidden;">
+            <button id="avg-tab-baht" onclick="_setAvgMetric('baht')" style="padding:2px 6px;font-size:10px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">฿</button>
+            <button id="avg-tab-qty" onclick="_setAvgMetric('qty')" style="padding:2px 6px;font-size:10px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#667085;">Qty</button>
           </div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-bottom:8px;-webkit-overflow-scrolling:touch;">
-        <div style="display:flex;background:#F1EFE7;border-radius:6px;border:1px solid var(--border);overflow:hidden;flex-shrink:0;">
-          <button id="chart7-tab-7d" onclick="_setChart7Mode('7d')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">สัปดาห์</button>
-          <button id="chart7-tab-month" onclick="_setChart7Mode('month')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#5B6560;">เดือน</button>
+        <div style="display:flex;background:#EEF2F7;border-radius:6px;border:1px solid var(--border);overflow:hidden;flex-shrink:0;">
+          <button id="chart7-tab-7d" onclick="_setChart7Mode('7d')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">สัปดาห์</button>
+          <button id="chart7-tab-month" onclick="_setChart7Mode('month')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#667085;">เดือน</button>
         </div>
 
         <div id="chart7day-month-picker" style="display:none;align-items:center;gap:3px;flex-shrink:0;">
-          <button onclick="_chart7PrevMonth()" style="background:#F1EFE7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">‹</button>
-          <span id="chart7day-month-label" style="font-size:11px;font-weight:600;color:#171D1A;min-width:44px;text-align:center;"></span>
-          <button onclick="_chart7NextMonth()" style="background:#F1EFE7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">›</button>
+          <button onclick="_chart7PrevMonth()" style="background:#EEF2F7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">‹</button>
+          <span id="chart7day-month-label" style="font-size:11px;font-weight:600;color:#1B2430;min-width:44px;text-align:center;"></span>
+          <button onclick="_chart7NextMonth()" style="background:#EEF2F7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">›</button>
         </div>
         <div id="chart7day-week-picker" style="display:flex;align-items:center;gap:3px;flex-shrink:0;">
-          <button onclick="_chart7PrevWeek()" style="background:#F1EFE7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">‹</button>
-          <button id="chart7-week-next-btn" onclick="_chart7NextWeek()" style="background:#F1EFE7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">›</button>
+          <button onclick="_chart7PrevWeek()" style="background:#EEF2F7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">‹</button>
+          <button id="chart7-week-next-btn" onclick="_chart7NextWeek()" style="background:#EEF2F7;border:1px solid var(--border);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;">›</button>
         </div>
         <div style="position:relative;flex-shrink:0;">
           <div id="chart7-sku-chip" onclick="_openChart7SkuDD('A',event)"
-            style="display:flex;align-items:center;gap:3px;background:#F1EFE7;border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
+            style="display:flex;align-items:center;gap:3px;background:#EEF2F7;border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-size:11px;font-family:'Prompt',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
             <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;flex-shrink:0;"></span>
-            <span id="chart7-sku-label" style="color:#5B6560;">ทุกสินค้า</span>
-            <span style="font-size:8px;color:#5B6560;">▾</span>
+            <span id="chart7-sku-label" style="color:#667085;">ทุกสินค้า</span>
+            <span style="font-size:8px;color:#667085;">▾</span>
           </div>
         </div>
         <div style="position:relative;flex-shrink:0;">
           <div id="chart7-skuB-chip" onclick="_openChart7SkuDD('B',event)"
-            style="display:flex;align-items:center;gap:3px;background:#F1EFE7;border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C08862;display:inline-block;flex-shrink:0;"></span>
-            <span id="chart7-skuB-label" style="color:#5B6560;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เทียบ</span>
-            <span style="font-size:8px;color:#5B6560;">▾</span>
+            style="display:flex;align-items:center;gap:3px;background:#EEF2F7;border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-size:11px;font-family:'Prompt',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#D98F5F;display:inline-block;flex-shrink:0;"></span>
+            <span id="chart7-skuB-label" style="color:#667085;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เทียบ</span>
+            <span style="font-size:8px;color:#667085;">▾</span>
           </div>
         </div>
       </div>
@@ -741,22 +741,22 @@ applyTheme(getCurrentTheme(), false);
     <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);" id="linechart-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:6px;flex-wrap:wrap;">
         <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;flex:1;">
-          <div style="font-size:12px;font-weight:700;color:#171D1A;white-space:nowrap;">แนวโน้มรายรับ / รายจ่าย</div>
+          <div style="font-size:12px;font-weight:700;color:#1B2430;white-space:nowrap;">แนวโน้มรายรับ / รายจ่าย</div>
           <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-start;">
-            <div style="display:flex;background:#F1EFE7;border-radius:6px;border:1px solid var(--border);overflow:hidden;">
-              <button id="lc-view-both" onclick="setLCView('both')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">ทั้งคู่</button>
-              <button id="lc-view-income" onclick="setLCView('income')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#5B6560;">รายรับ</button>
-              <button id="lc-view-expense" onclick="setLCView('expense')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#5B6560;">รายจ่าย</button>
+            <div style="display:flex;background:#EEF2F7;border-radius:6px;border:1px solid var(--border);overflow:hidden;">
+              <button id="lc-view-both" onclick="setLCView('both')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">ทั้งคู่</button>
+              <button id="lc-view-income" onclick="setLCView('income')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#667085;">รายรับ</button>
+              <button id="lc-view-expense" onclick="setLCView('expense')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#667085;">รายจ่าย</button>
             </div>
-            <div style="display:flex;background:#F1EFE7;border-radius:6px;border:1px solid var(--border);overflow:hidden;">
-              <button id="lc-period-day" onclick="setLCPeriod('day')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">วัน</button>
-              <button id="lc-period-month" onclick="setLCPeriod('month')" style="padding:3px 8px;font-size:11px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#5B6560;">เดือน</button>
+            <div style="display:flex;background:#EEF2F7;border-radius:6px;border:1px solid var(--border);overflow:hidden;">
+              <button id="lc-period-day" onclick="setLCPeriod('day')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">วัน</button>
+              <button id="lc-period-month" onclick="setLCPeriod('month')" style="padding:3px 8px;font-size:11px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#667085;">เดือน</button>
             </div>
           </div>
         </div>
-        <div style="display:flex;background:#F1EFE7;border-radius:5px;border:1px solid var(--border);overflow:hidden;flex-shrink:0;">
-          <button id="lc-mode-amount" onclick="setLCMode('amount')" style="padding:2px 6px;font-size:10px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">฿</button>
-          <button id="lc-mode-qty" onclick="setLCMode('qty')" style="padding:2px 6px;font-size:10px;font-family:'IBM Plex Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#5B6560;">Qty</button>
+        <div style="display:flex;background:#EEF2F7;border-radius:5px;border:1px solid var(--border);overflow:hidden;flex-shrink:0;">
+          <button id="lc-mode-amount" onclick="setLCMode('amount')" style="padding:2px 6px;font-size:10px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;">฿</button>
+          <button id="lc-mode-qty" onclick="setLCMode('qty')" style="padding:2px 6px;font-size:10px;font-family:'Prompt',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:#667085;">Qty</button>
         </div>
       </div>
       <div id="lc-legend" style="display:flex;gap:12px;margin-bottom:6px;font-size:10px;"></div>
@@ -775,7 +775,7 @@ applyTheme(getCurrentTheme(), false);
   <div style="padding:8px 10px;border-bottom:1px solid var(--border);">
     <input id="chart7-sku-search" type="text" placeholder="ค้นหาสินค้า..."
       oninput="_filterChart7SkuDD()"
-      style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;outline:none;color:var(--text);box-sizing:border-box;">
+      style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Prompt',sans-serif;font-size:12px;outline:none;color:var(--text);box-sizing:border-box;">
   </div>
   <div id="chart7-sku-dd-list" style="overflow-y:auto;max-height:200px;-webkit-overflow-scrolling:touch;"></div>
 </div>
@@ -795,9 +795,9 @@ applyTheme(getCurrentTheme(), false);
 <!-- PAGE: ไทม์ไลน์ -->
 <div class="page" id="page-timeline">
   <div style="display:flex;gap:6px;background:var(--card2);border-radius:20px;padding:4px;margin-bottom:14px;">
-    <button id="tl-tab-day" onclick="setTimelinePeriod('day',this)" style="flex:1;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:600;padding:8px 4px;border-radius:16px;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all 0.18s;">รายวัน</button>
-    <button id="tl-tab-week" onclick="setTimelinePeriod('week',this)" style="flex:1;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:500;padding:8px 4px;border-radius:16px;border:none;cursor:pointer;background:transparent;color:#5B6560;transition:all 0.18s;">รายสัปดาห์</button>
-    <button id="tl-tab-month" onclick="setTimelinePeriod('month',this)" style="flex:1;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:500;padding:8px 4px;border-radius:16px;border:none;cursor:pointer;background:transparent;color:#5B6560;transition:all 0.18s;">รายเดือน</button>
+    <button id="tl-tab-day" onclick="setTimelinePeriod('day',this)" style="flex:1;font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;padding:8px 4px;border-radius:16px;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all 0.18s;">รายวัน</button>
+    <button id="tl-tab-week" onclick="setTimelinePeriod('week',this)" style="flex:1;font-family:'Prompt',sans-serif;font-size:13px;font-weight:500;padding:8px 4px;border-radius:16px;border:none;cursor:pointer;background:transparent;color:#667085;transition:all 0.18s;">รายสัปดาห์</button>
+    <button id="tl-tab-month" onclick="setTimelinePeriod('month',this)" style="flex:1;font-family:'Prompt',sans-serif;font-size:13px;font-weight:500;padding:8px 4px;border-radius:16px;border:none;cursor:pointer;background:transparent;color:#667085;transition:all 0.18s;">รายเดือน</button>
   </div>
   <div id="timeline-feed"></div>
   <button id="tl-load-more-btn" onclick="loadMoreTimeline()" class="btn btn-outline" style="display:none;margin-top:4px;">โหลดเพิ่มเติม</button>
@@ -811,7 +811,7 @@ applyTheme(getCurrentTheme(), false);
     <!-- แบนเนอร์โหมดแก้ไขบิลเดิม -->
     <div id="sale-edit-banner" style="display:none;align-items:center;justify-content:space-between;gap:10px;background:var(--yellow-soft);border:1.5px solid var(--yellow);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
       <div style="font-size:13px;font-weight:600;color:var(--text);"> กำลังแก้ไขบิล <span id="sale-edit-banner-id" style="color:var(--accent-text);"></span></div>
-      <button onclick="cancelEditSaleBill()" style="background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;white-space:nowrap;">ยกเลิก</button>
+      <button onclick="cancelEditSaleBill()" style="background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'Prompt',sans-serif;white-space:nowrap;">ยกเลิก</button>
     </div>
 
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card);">
@@ -832,7 +832,7 @@ applyTheme(getCurrentTheme(), false);
         <label>สถานที่ขาย</label>
         <div style="position:relative;">
           <div id="sale-location-display" onclick="toggleSaleLocationDD()"
-            style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+            style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
             -- เลือกสถานที่ --
           </div>
           <span onclick="toggleSaleLocationDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
@@ -1023,7 +1023,7 @@ applyTheme(getCurrentTheme(), false);
   <!-- แบนเนอร์โหมดแก้ไขบิลเดิม -->
   <div id="buy-edit-banner" style="display:none;align-items:center;justify-content:space-between;gap:10px;background:var(--yellow-soft);border:1.5px solid var(--yellow);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
     <div style="font-size:13px;font-weight:600;color:var(--text);"> กำลังแก้ไขบิล <span id="buy-edit-banner-id" style="color:var(--accent-text);"></span></div>
-    <button onclick="cancelEditBuyBill()" style="background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;white-space:nowrap;">ยกเลิก</button>
+    <button onclick="cancelEditBuyBill()" style="background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'Prompt',sans-serif;white-space:nowrap;">ยกเลิก</button>
   </div>
 
   <!-- Header: วันที่ + ซัพพลายเออร์ -->
@@ -1037,7 +1037,7 @@ applyTheme(getCurrentTheme(), false);
         <label>ร้าน/ซัพพลายเออร์</label>
         <div style="position:relative;">
           <div id="buy-supplier-display" onclick="toggleBuySupplierDD()"
-            style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+            style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
             -- เลือกร้าน --
           </div>
           <span onclick="toggleBuySupplierDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
@@ -1118,7 +1118,7 @@ applyTheme(getCurrentTheme(), false);
       <label>เลือกพนักงาน</label>
       <div style="position:relative;">
         <div id="emp-wage-display" onclick="toggleEmpWageDD()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
           -- เลือกพนักงาน --
         </div>
         <span onclick="toggleEmpWageDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
@@ -1167,7 +1167,7 @@ applyTheme(getCurrentTheme(), false);
       <label>เลือกผู้บริหาร</label>
       <div style="position:relative;">
         <div id="admin-pay-display" onclick="toggleAdminPayDD()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px 40px 12px 14px;font-family:'Prompt',sans-serif;font-size:14px;color:var(--text2);cursor:pointer;box-sizing:border-box;user-select:none;">
           -- เลือกผู้บริหาร --
         </div>
         <span onclick="toggleAdminPayDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;cursor:pointer;color:var(--text2);line-height:1;pointer-events:all;">▾</span>
@@ -1210,7 +1210,7 @@ applyTheme(getCurrentTheme(), false);
       <div style="position:relative;">
         <input type="hidden" id="recurring-type" value="">
         <div id="recurring-type-display" onclick="toggleRecurringTypeDD()"
-          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
           -- เลือกประเภท --
         </div>
         <span onclick="toggleRecurringTypeDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
@@ -1223,7 +1223,7 @@ applyTheme(getCurrentTheme(), false);
       <label>สถานที่ (ไม่บังคับ)</label>
       <div style="position:relative;">
         <div id="recurring-location-display" onclick="toggleRecurringLocationDD()"
-          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 26px 7px 10px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
           -- เลือกสถานที่ --
         </div>
         <span onclick="toggleRecurringLocationDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
@@ -1248,11 +1248,11 @@ applyTheme(getCurrentTheme(), false);
       <div style="flex:0 0 132px;">
         <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
           <label style="font-size:11px;color:var(--text2);font-weight:600;width:28px;flex-shrink:0;">From</label>
-          <input type="date" id="ri-from" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+          <input type="date" id="ri-from" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;">
         </div>
         <div style="display:flex;align-items:center;gap:5px;">
           <label style="font-size:11px;color:var(--text2);font-weight:600;width:28px;flex-shrink:0;">To</label>
-          <input type="date" id="ri-to" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+          <input type="date" id="ri-to" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;">
         </div>
       </div>
       <div style="flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-width:0;">
@@ -1278,7 +1278,7 @@ applyTheme(getCurrentTheme(), false);
       <input id="ri-product-search" type="text" placeholder="พิมพ์ชื่อสินค้าเพื่อกรอง..."
         oninput="filterRiProductList()" onkeyup="filterRiProductList()"
         autocomplete="off"
-        style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 36px 10px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);transition:border-color 0.2s;">
+        style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 36px 10px 14px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);transition:border-color 0.2s;">
       <span id="ri-search-clear" onclick="clearRiProductSearch()" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--text2);cursor:pointer;line-height:1;"></span>
     </div>
     <div id="ri-product-list" style="display:none;margin-top:4px;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);max-height:220px;overflow-y:auto;"></div>
@@ -1308,11 +1308,11 @@ applyTheme(getCurrentTheme(), false);
       <div style="flex:0 0 132px;">
         <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
           <label style="font-size:11px;color:var(--text2);font-weight:600;width:28px;flex-shrink:0;">From</label>
-          <input type="date" id="re-from" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+          <input type="date" id="re-from" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;">
         </div>
         <div style="display:flex;align-items:center;gap:5px;">
           <label style="font-size:11px;color:var(--text2);font-weight:600;width:28px;flex-shrink:0;">To</label>
-          <input type="date" id="re-to" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+          <input type="date" id="re-to" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;">
         </div>
       </div>
       <div style="flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-width:0;">
@@ -1348,7 +1348,7 @@ applyTheme(getCurrentTheme(), false);
       <div style="position:relative;">
         <input id="re-name-search" type="text" placeholder="พิมพ์เพื่อกรอง..."
           oninput="filterReNameList()" onkeyup="filterReNameList()" autocomplete="off"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:7px 30px 7px 8px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;outline:none;color:var(--text);">
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:7px 30px 7px 8px;font-family:'Prompt',sans-serif;font-size:12px;outline:none;color:var(--text);">
         <span id="re-name-clear" onclick="clearReNameFilter()" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text2);cursor:pointer;line-height:1;"></span>
       </div>
       <div id="re-name-list" style="display:none;margin-top:4px;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.14);max-height:180px;overflow-y:auto;"></div>
@@ -1392,11 +1392,11 @@ applyTheme(getCurrentTheme(), false);
       <div style="flex:0 0 132px;">
         <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
           <label style="font-size:11px;color:var(--text2);font-weight:600;width:28px;flex-shrink:0;">From</label>
-          <input type="date" id="tl-from" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+          <input type="date" id="tl-from" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;">
         </div>
         <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
           <label style="font-size:11px;color:var(--text2);font-weight:600;width:28px;flex-shrink:0;">To</label>
-          <input type="date" id="tl-to" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+          <input type="date" id="tl-to" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;">
         </div>
         <label class="chk-label" style="padding:7px 10px;font-size:12px;box-sizing:border-box;margin:0 auto;"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> จ่ายหนี้</label>
       </div>
@@ -1457,7 +1457,7 @@ applyTheme(getCurrentTheme(), false);
 <!-- PAGE: ประวัติการแก้ไข -->
 <div class="page" id="page-rep-log">
   <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-    <select id="log-filter-cat" onchange="renderAuditLog()" style="flex:1;min-width:120px;background:#fff;border:1px solid #E1DED3;border-radius:10px;padding:8px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:#171D1A;">
+    <select id="log-filter-cat" onchange="renderAuditLog()" style="flex:1;min-width:120px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:8px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:#1B2430;">
       <option value="">ทุกประเภท</option>
       <option value="ค่าแรง">ค่าแรง</option>
       <option value="ค่าคอม">ค่าคอม</option>
@@ -1467,7 +1467,7 @@ applyTheme(getCurrentTheme(), false);
       <option value="ผู้บริหาร">ผู้บริหาร</option>
       <option value="ค่าเช่า">ค่าเช่า</option>
     </select>
-    <select id="log-filter-action" onchange="renderAuditLog()" style="flex:1;min-width:100px;background:#fff;border:1px solid #E1DED3;border-radius:10px;padding:8px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:#171D1A;">
+    <select id="log-filter-action" onchange="renderAuditLog()" style="flex:1;min-width:100px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:8px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:#1B2430;">
       <option value="">ทุก action</option>
       <option value="เพิ่ม">เพิ่ม</option>
       <option value="แก้ไข">แก้ไข</option>
@@ -1513,10 +1513,10 @@ applyTheme(getCurrentTheme(), false);
       <input type="number" id="recipe-spoon-ml-input" placeholder="เช่น 1.25" step="0.001" min="0.001">
     </div>
     <div style="display:flex;gap:10px;margin-top:6px;">
-      <button onclick="saveRecipeSpoonModal()" style="flex:1;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">บันทึก</button>
-      <button onclick="closeRecipeSpoonModal()" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="saveRecipeSpoonModal()" style="flex:1;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">บันทึก</button>
+      <button onclick="closeRecipeSpoonModal()" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
     </div>
-    <button id="recipe-spoon-delete-btn" onclick="deleteRecipeSpoonFromModal()" style="display:none;width:100%;margin-top:10px;background:var(--red-soft);border:1.5px solid var(--red);color:var(--red);border-radius:10px;padding:10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">ลบขนาดช้อนนี้</button>
+    <button id="recipe-spoon-delete-btn" onclick="deleteRecipeSpoonFromModal()" style="display:none;width:100%;margin-top:10px;background:var(--red-soft);border:1.5px solid var(--red);color:var(--red);border-radius:10px;padding:10px;font-family:'Prompt',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">ลบขนาดช้อนนี้</button>
   </div>
 </div>
 
@@ -1525,8 +1525,8 @@ applyTheme(getCurrentTheme(), false);
     <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:6px;">ลบวัตถุดิบที่เลือก?</div>
     <div id="del-recipe-row-name" style="font-size:14px;font-weight:600;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:8px 12px;margin-bottom:18px;color:var(--red);"></div>
     <div style="display:flex;gap:10px;">
-      <button onclick="confirmDeleteSelectedRecipeRows()" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-recipe-row-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="confirmDeleteSelectedRecipeRows()" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-recipe-row-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1544,8 +1544,8 @@ applyTheme(getCurrentTheme(), false);
       <input type="text" id="save-adj-recipe-note" placeholder="เช่น เพิ่มความหวาน 20%">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-      <button onclick="confirmSaveAdjRecipe()" style="background:var(--green);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
-      <button onclick="document.getElementById('save-adj-recipe-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="confirmSaveAdjRecipe()" style="background:var(--green);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
+      <button onclick="document.getElementById('save-adj-recipe-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1562,19 +1562,19 @@ applyTheme(getCurrentTheme(), false);
         <input type="color" id="edit-emp-color" value="#C98A9E" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
         <div style="display:flex;gap:5px;">
           <span onclick="document.getElementById('edit-emp-color').value='var(--accent)'" style="width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#0E5C4A'" style="width:20px;height:20px;border-radius:50%;background:#0E5C4A;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#C08862'" style="width:20px;height:20px;border-radius:50%;background:#C08862;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#8A3A3D'" style="width:20px;height:20px;border-radius:50%;background:#8A3A3D;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#5E4780'" style="width:20px;height:20px;border-radius:50%;background:#5E4780;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#12805F'" style="width:20px;height:20px;border-radius:50%;background:#12805F;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#D98F5F'" style="width:20px;height:20px;border-radius:50%;background:#D98F5F;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#C0393B'" style="width:20px;height:20px;border-radius:50%;background:#C0393B;cursor:pointer;display:inline-block;"></span>
+          <span onclick="document.getElementById('edit-emp-color').value='#7C5CB5'" style="width:20px;height:20px;border-radius:50%;background:#7C5CB5;cursor:pointer;display:inline-block;"></span>
           <span onclick="document.getElementById('edit-emp-color').value='#4C8C8B'" style="width:20px;height:20px;border-radius:50%;background:#4C8C8B;cursor:pointer;display:inline-block;"></span>
         </div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-      <button onclick="saveEditEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
-      <button onclick="document.getElementById('edit-emp-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="saveEditEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
+      <button onclick="document.getElementById('edit-emp-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
-    <button onclick="confirmDelEmployee()" style="background:none;border:none;color:var(--red);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;"> ลบพนักงานนี้</button>
+    <button onclick="confirmDelEmployee()" style="background:none;border:none;color:var(--red);font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;"> ลบพนักงานนี้</button>
   </div>
 </div>
 
@@ -1585,8 +1585,8 @@ applyTheme(getCurrentTheme(), false);
     <div id="del-emp-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติการจ่ายค่าแรงที่ผ่านมาจะยังคงอยู่ แต่ชื่อในรายการเก่าจะยังเป็นชื่อที่บันทึกไว้ก่อนลบ</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="execDelEmployee()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-emp-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="execDelEmployee()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-emp-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1599,10 +1599,10 @@ applyTheme(getCurrentTheme(), false);
     <div class="form-group"><label>ชื่อประเภท</label><input type="text" id="edit-recurring-type-name" placeholder="เช่น ค่าน้ำแข็ง"></div>
     <div class="form-group"><label>ราคาเริ่มต้น (บาท)</label><input type="number" id="edit-recurring-type-price" placeholder="0.00" min="0" step="0.01"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-      <button onclick="saveEditRecurringType()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
-      <button onclick="document.getElementById('edit-recurring-type-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="saveEditRecurringType()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
+      <button onclick="document.getElementById('edit-recurring-type-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
-    <button onclick="confirmDelRecurringType()" style="background:none;border:none;color:var(--red);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;"> ลบประเภทนี้</button>
+    <button onclick="confirmDelRecurringType()" style="background:none;border:none;color:var(--red);font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;"> ลบประเภทนี้</button>
   </div>
 </div>
 
@@ -1613,8 +1613,8 @@ applyTheme(getCurrentTheme(), false);
     <div id="del-recurring-type-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติที่บันทึกไว้แล้วจะยังคงอยู่ แค่ลบตัวเลือกนี้ออกจากลิสต์เท่านั้น</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="execDelRecurringType()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-recurring-type-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="execDelRecurringType()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-recurring-type-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1633,10 +1633,10 @@ applyTheme(getCurrentTheme(), false);
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-      <button onclick="saveEditAdmin()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
-      <button onclick="document.getElementById('edit-admin-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="saveEditAdmin()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> บันทึก</button>
+      <button onclick="document.getElementById('edit-admin-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
-    <button onclick="confirmDelAdmin()" style="background:none;border:none;color:var(--red);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;"> ลบผู้บริหารนี้</button>
+    <button onclick="confirmDelAdmin()" style="background:none;border:none;color:var(--red);font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;"> ลบผู้บริหารนี้</button>
   </div>
 </div>
 
@@ -1647,8 +1647,8 @@ applyTheme(getCurrentTheme(), false);
     <div id="del-admin-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติการจ่ายค่าคอมที่ผ่านมาจะยังคงอยู่ในระบบ</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="execDelAdmin()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-admin-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="execDelAdmin()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-admin-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1752,12 +1752,12 @@ applyTheme(getCurrentTheme(), false);
   <div class="section-title"><button class="back-btn" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">ธีมสีของแอป</button></div>
   <div class="smi-sub" style="margin-bottom:14px;">แตะเพื่อเปลี่ยนสีหลักของแอปทั้งหมด บันทึกไว้ในเครื่องนี้</div>
   <div id="theme-swatch-row" style="display:flex;flex-wrap:wrap;gap:12px 8px;padding:2px 2px 18px;">
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="gold" style="background:#A9812E;" onclick="applyTheme('gold',true)"></div><div class="theme-swatch-label">ทองบรอนซ์</div></div>
+    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="gold" style="background:#C9972E;" onclick="applyTheme('gold',true)"></div><div class="theme-swatch-label">ทองบรอนซ์</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="moss" style="background:#8CA88F;" onclick="applyTheme('moss',true)"></div><div class="theme-swatch-label">เขียวมอส</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="dusty" style="background:#8EA3B0;" onclick="applyTheme('dusty',true)"></div><div class="theme-swatch-label">ฟ้าหม่น</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="rose" style="background:#C99A9A;" onclick="applyTheme('rose',true)"></div><div class="theme-swatch-label">ชมพูอบเชย</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="lavender" style="background:#A594B0;" onclick="applyTheme('lavender',true)"></div><div class="theme-swatch-label">ลาเวนเดอร์</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="terracotta" style="background:#C08862;" onclick="applyTheme('terracotta',true)"></div><div class="theme-swatch-label">ส้มดินเผา</div></div>
+    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="terracotta" style="background:#D98F5F;" onclick="applyTheme('terracotta',true)"></div><div class="theme-swatch-label">ส้มดินเผา</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="mint" style="background:#7FADA3;" onclick="applyTheme('mint',true)"></div><div class="theme-swatch-label">มินท์</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_red" style="background:#E5484D;" onclick="applyTheme('bright_red',true)"></div><div class="theme-swatch-label">แดงสด</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_orange" style="background:#F76B15;" onclick="applyTheme('bright_orange',true)"></div><div class="theme-swatch-label">ส้มสด</div></div>
@@ -1765,7 +1765,7 @@ applyTheme(getCurrentTheme(), false);
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_green" style="background:#30A46C;" onclick="applyTheme('bright_green',true)"></div><div class="theme-swatch-label">เขียวสด</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_purple" style="background:#8E4EC6;" onclick="applyTheme('bright_purple',true)"></div><div class="theme-swatch-label">ม่วงสด</div></div>
     <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_pink" style="background:#E93D82;" onclick="applyTheme('bright_pink',true)"></div><div class="theme-swatch-label">ชมพูสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="charcoal" style="background:#5B6560;" onclick="applyTheme('charcoal',true)"></div><div class="theme-swatch-label">เทาเข้ม</div></div>
+    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="charcoal" style="background:#667085;" onclick="applyTheme('charcoal',true)"></div><div class="theme-swatch-label">เทาเข้ม</div></div>
   </div>
 </div>
 
@@ -1824,8 +1824,8 @@ applyTheme(getCurrentTheme(), false);
     <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มหน่วยนับใหม่</div>
     <div style="display:flex;gap:8px;">
       <input type="text" id="new-unit-input" placeholder="เช่น กก., ขีด, ชิ้น, กล่อง"
-        style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);">
-      <button onclick="addUnit()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่ม</button>
+        style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <button onclick="addUnit()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่ม</button>
     </div>
   </div>
 </div>
@@ -1835,8 +1835,8 @@ applyTheme(getCurrentTheme(), false);
     <div id="del-unit-name" style="font-size:14px;font-weight:600;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:8px 12px;margin-bottom:10px;color:var(--red);"></div>
     <div style="font-size:12px;color:var(--text2);margin-bottom:18px;">หน่วยนับที่ผูกกับสินค้าจะหายไปด้วย</div>
     <div style="display:flex;gap:10px;">
-      <button onclick="confirmDeleteUnit()" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-unit-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="confirmDeleteUnit()" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-unit-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1859,17 +1859,17 @@ applyTheme(getCurrentTheme(), false);
     <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มสถานที่ใหม่</div>
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
       <input type="text" id="new-location" placeholder="ชื่อสถานที่ เช่น ตลาดนัดคลองถม"
-        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
       <div style="display:grid;grid-template-columns:1fr 80px 44px;gap:7px;">
         <input type="number" id="new-location-price" placeholder="ราคาเริ่มต้น" min="0" step="0.01"
-          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
         <input type="text" id="new-location-abbr" placeholder="ตัวย่อ" maxlength="4"
-          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 8px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;text-align:center;">
-        <input type="color" id="new-location-color" value="#A9812E"
+          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 8px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;text-align:center;">
+        <input type="color" id="new-location-color" value="#C9972E"
           style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:2px;width:100%;height:38px;box-sizing:border-box;cursor:pointer;">
       </div>
       <button onclick="addLocationFromSettings()"
-        style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสถานที่</button>
+        style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสถานที่</button>
     </div>
     <div class="divider"></div>
     <div id="locations-list"></div>
@@ -1888,10 +1888,10 @@ applyTheme(getCurrentTheme(), false);
       <div class="form-group" style="margin-bottom:0;"><label>สี</label><input type="color" id="edit-location-color" style="padding:2px;height:38px;cursor:pointer;"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-      <button onclick="saveEditLocation()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">บันทึก</button>
-      <button onclick="document.getElementById('edit-location-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="saveEditLocation()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">บันทึก</button>
+      <button onclick="document.getElementById('edit-location-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
-    <button onclick="confirmDelLocation()" style="background:none;border:none;color:var(--red);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;">ลบสถานที่นี้</button>
+    <button onclick="confirmDelLocation()" style="background:none;border:none;color:var(--red);font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;">ลบสถานที่นี้</button>
   </div>
 </div>
 
@@ -1902,8 +1902,8 @@ applyTheme(getCurrentTheme(), false);
     <div id="del-location-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติที่บันทึกไว้แล้วจะยังคงอยู่ แค่ลบตัวเลือกนี้ออกจากลิสต์เท่านั้น</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="execDelLocation()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-location-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="execDelLocation()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-location-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -1946,12 +1946,12 @@ applyTheme(getCurrentTheme(), false);
       <!-- แถว 1: ชื่อสินค้า | หน่วยนับ -->
       <div style="display:grid;grid-template-columns:1fr 110px;gap:7px;">
         <input type="text" id="new-item-name" placeholder="ชื่อสินค้า"
-          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
         <!-- หน่วยนับ custom dropdown -->
         <div style="position:relative;">
           <input type="hidden" id="new-item-unit" value="">
           <div id="new-item-unit-display" onclick="toggleSetUnitDD()"
-            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- หน่วย --</div>
+            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'Prompt',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- หน่วย --</div>
           <span onclick="toggleSetUnitDD()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;user-select:none;">▾</span>
           <div id="set-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:200px;overflow-y:auto;"></div>
         </div>
@@ -1962,17 +1962,17 @@ applyTheme(getCurrentTheme(), false);
         <div style="position:relative;">
           <input type="hidden" id="set-item-type" value="">
           <div id="set-item-type-display" onclick="toggleSetItemTypeDD()"
-            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- ประเภท --</div>
+            style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'Prompt',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- ประเภท --</div>
           <span onclick="toggleSetItemTypeDD()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;user-select:none;">▾</span>
           <div id="set-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:200px;overflow-y:auto;"></div>
         </div>
         <!-- ราคา/หน่วย -->
         <input type="number" id="new-item-price" placeholder="ราคา/หน่วย" step="0.01" min="0"
-          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+          style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
         <div id="new-item-price-row" style="display:none;"></div>
       </div>
       <button onclick="addItemName()"
-        style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสินค้า</button>
+        style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">+ เพิ่มสินค้า</button>
     </div>
     <div class="divider"></div>
     <!-- ค้นหา + กรองประเภท -->
@@ -1981,12 +1981,12 @@ applyTheme(getCurrentTheme(), false);
         <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text2);pointer-events:none;"></span>
         <input type="text" id="itemnames-search" placeholder="ค้นหาชื่อสินค้า..."
           oninput="_itemNamesPage=1;renderItemNamesList()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px 9px 34px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);box-sizing:border-box;">
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px 9px 34px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);box-sizing:border-box;">
       </div>
       <div style="position:relative;">
         <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text2);pointer-events:none;"></span>
         <select id="itemnames-filter-type" onchange="_itemNamesPage=1;renderItemNamesList()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px 9px 32px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;color:var(--text);outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;box-sizing:border-box;">
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px 9px 32px;font-family:'Prompt',sans-serif;font-size:13px;color:var(--text);outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;box-sizing:border-box;">
           <option value="">ทุกประเภท</option>
         </select>
         <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;pointer-events:none;">▾</span>
@@ -2003,8 +2003,8 @@ applyTheme(getCurrentTheme(), false);
     <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px;text-align:center;">ยืนยันเพิ่มสินค้า</div>
     <div id="confirm-add-item-body" style="background:var(--card2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px;"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="execAddItemName()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> ยืนยัน</button>
-      <button onclick="document.getElementById('confirm-add-item-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="execAddItemName()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;"> ยืนยัน</button>
+      <button onclick="document.getElementById('confirm-add-item-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -2021,10 +2021,10 @@ applyTheme(getCurrentTheme(), false);
       พิมพ์ <strong>รีเซ็ต</strong> เพื่อยืนยัน
     </div>
     <input id="factory-reset-confirm-input" type="text" placeholder="พิมพ์ รีเซ็ต"
-      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;outline:none;color:var(--text);box-sizing:border-box;margin-bottom:14px;text-align:center;">
+      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'Prompt',sans-serif;font-size:14px;outline:none;color:var(--text);box-sizing:border-box;margin-bottom:14px;text-align:center;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="execFactoryReset()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">รีเซ็ตเลย</button>
-      <button onclick="document.getElementById('factory-reset-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="execFactoryReset()" style="background:var(--red);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">รีเซ็ตเลย</button>
+      <button onclick="document.getElementById('factory-reset-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -2110,8 +2110,8 @@ applyTheme(getCurrentTheme(), false);
     <div style="font-size:15px;font-weight:700;margin-bottom:6px;">ยืนยันการดูยอดเงิน</div>
     <div style="font-size:13px;color:var(--text2);margin-bottom:20px;">ต้องการดูยอดคงเหลือในบัญชีจริงหรือไม่?</div>
     <div style="display:flex;gap:10px;">
-      <button onclick="confirmShowCashBalance()" style="flex:1;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">ยืนยัน</button>
-      <button onclick="document.getElementById('cashbal-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="confirmShowCashBalance()" style="flex:1;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">ยืนยัน</button>
+      <button onclick="document.getElementById('cashbal-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -2120,7 +2120,7 @@ applyTheme(getCurrentTheme(), false);
 <div id="buyrow-select-dd">
   <div id="buyrow-select-search-wrap" style="display:none;padding:8px;position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--border);">
     <input id="buyrow-select-search" type="text" placeholder=" ค้นหา..." oninput="filterBuyRowSelectModal(this.value)"
-      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;box-sizing:border-box;">
+      style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'Prompt',sans-serif;font-size:12px;color:var(--text);outline:none;box-sizing:border-box;">
   </div>
   <div id="buyrow-select-list"></div>
 </div>
@@ -2134,26 +2134,26 @@ applyTheme(getCurrentTheme(), false);
     <div class="form-card">
     <div class="form-group"><label>ชื่อสินค้า</label>
       <input type="text" id="edit-item-name"
-        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
     </div>
     <div class="form-group"><label>ประเภท</label>
       <div style="position:relative;">
         <input type="hidden" id="edit-item-type" value="">
         <div id="edit-item-type-display" onclick="toggleEditItemTypeDD()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- เลือกประเภท --</div>
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'Prompt',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- เลือกประเภท --</div>
         <span onclick="toggleEditItemTypeDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px;cursor:pointer;user-select:none;">▾</span>
         <div id="edit-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:190px;overflow-y:auto;"></div>
       </div>
     </div>
     <div class="form-group" id="edit-item-price-row"><label>ราคา/หน่วย (บาท) — เฉพาะสินค้าขาย</label>
       <input type="number" id="edit-item-price" placeholder="0.00" step="0.01" min="0"
-        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
+        style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);width:100%;box-sizing:border-box;">
     </div>
     <div class="form-group"><label>หน่วยนับ</label>
       <div style="position:relative;">
         <input type="hidden" id="edit-item-unit" value="">
         <div id="edit-item-unit-display" onclick="toggleEditUnitDD()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- ไม่มีหน่วยนับ --</div>
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'Prompt',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- ไม่มีหน่วยนับ --</div>
         <span onclick="toggleEditUnitDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px;cursor:pointer;user-select:none;">▾</span>
         <div id="edit-item-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:190px;overflow-y:auto;"></div>
       </div>
@@ -2161,11 +2161,11 @@ applyTheme(getCurrentTheme(), false);
     </div><!-- end form-card -->
     <div style="display:flex;gap:10px;margin-top:4px;">
       <button onclick="saveEditItem()"
-        style="flex:2;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;font-weight:600;"> บันทึก</button>
+        style="flex:2;background:var(--accent);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;"> บันทึก</button>
       <button onclick="deleteEditItem()"
-        style="flex:1;background:var(--red-soft);border:1.5px solid var(--red);color:var(--red);border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">ลบ</button>
+        style="flex:1;background:var(--red-soft);border:1.5px solid var(--red);color:var(--red);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;font-weight:600;">ลบ</button>
       <button onclick="closeEditItemModal()"
-        style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
+        style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -2213,8 +2213,8 @@ applyTheme(getCurrentTheme(), false);
     <div class="divider"></div>
     <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มพนักงานใหม่</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-      <input type="text" id="new-emp-name" placeholder="ชื่อพนักงาน" style="flex:1;min-width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);">
-      <input type="number" id="new-emp-rate" placeholder="บาท/วัน" step="0.01" min="0" style="width:110px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <input type="text" id="new-emp-name" placeholder="ชื่อพนักงาน" style="flex:1;min-width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <input type="number" id="new-emp-rate" placeholder="บาท/วัน" step="0.01" min="0" style="width:110px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
       <label style="font-size:12px;color:var(--text2);font-weight:600;">สีปฏิทิน</label>
@@ -2223,7 +2223,7 @@ applyTheme(getCurrentTheme(), false);
         <span onclick="document.getElementById('new-emp-color').value='#C98A9E'" style="width:18px;height:18px;border-radius:50%;background:#C98A9E;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#B5605A'" style="width:18px;height:18px;border-radius:50%;background:#B5605A;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#C08348'" style="width:18px;height:18px;border-radius:50%;background:#C08348;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#C9A227'" style="width:18px;height:18px;border-radius:50%;background:#C9A227;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#6E9B7C'" style="width:18px;height:18px;border-radius:50%;background:#6E9B7C;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#3E7D5C'" style="width:18px;height:18px;border-radius:50%;background:#3E7D5C;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#4C8C8B'" style="width:18px;height:18px;border-radius:50%;background:#4C8C8B;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#5B7FA6'" style="width:18px;height:18px;border-radius:50%;background:#5B7FA6;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#7E6BA6'" style="width:18px;height:18px;border-radius:50%;background:#7E6BA6;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#9C6B96'" style="width:18px;height:18px;border-radius:50%;background:#9C6B96;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#7C8C4A'" style="width:18px;height:18px;border-radius:50%;background:#7C8C4A;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#B8952E'" style="width:18px;height:18px;border-radius:50%;background:#B8952E;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#6E8AA6'" style="width:18px;height:18px;border-radius:50%;background:#6E8AA6;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#A65B72'" style="width:18px;height:18px;border-radius:50%;background:#A65B72;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#8B7AA0'" style="width:18px;height:18px;border-radius:50%;background:#8B7AA0;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#4E8064'" style="width:18px;height:18px;border-radius:50%;background:#4E8064;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#A9682F'" style="width:18px;height:18px;border-radius:50%;background:#A9682F;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#35695A'" style="width:18px;height:18px;border-radius:50%;background:#35695A;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span>
       </div>
     </div>
-    <button onclick="addEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มพนักงาน</button>
+    <button onclick="addEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มพนักงาน</button>
   </div>
 </div>
 
@@ -2238,10 +2238,10 @@ applyTheme(getCurrentTheme(), false);
     <div class="divider"></div>
     <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">+ เพิ่มประเภทใหม่</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-      <input type="text" id="new-recurring-type-name" placeholder="เช่น ค่าน้ำแข็ง" style="flex:1;min-width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);">
-      <input type="number" id="new-recurring-type-price" placeholder="ราคาเริ่มต้น" step="0.01" min="0" style="width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <input type="text" id="new-recurring-type-name" placeholder="เช่น ค่าน้ำแข็ง" style="flex:1;min-width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
+      <input type="number" id="new-recurring-type-price" placeholder="ราคาเริ่มต้น" step="0.01" min="0" style="width:120px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Prompt',sans-serif;font-size:13px;outline:none;color:var(--text);">
     </div>
-    <button onclick="addRecurringType()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มประเภท</button>
+    <button onclick="addRecurringType()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มประเภท</button>
   </div>
 </div>
 
@@ -2281,8 +2281,8 @@ applyTheme(getCurrentTheme(), false);
       <label>น้ำหนักฐาน (กก.)</label>
       <input type="number" id="recipe-formula-basekg-input" placeholder="เช่น 3" step="0.5" min="0.5">
     </div>
-    <button onclick="submitRecipeFormulaModal()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px 16px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:14px;cursor:pointer;font-weight:700;width:100%;margin-top:6px;">บันทึก</button>
-    <button id="recipe-formula-delete-btn" onclick="deleteRecipeFormulaFromModal()" style="display:none;background:none;border:none;color:var(--red);font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;">ลบสูตรนี้</button>
+    <button onclick="submitRecipeFormulaModal()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px 16px;font-family:'Prompt',sans-serif;font-size:14px;cursor:pointer;font-weight:700;width:100%;margin-top:6px;">บันทึก</button>
+    <button id="recipe-formula-delete-btn" onclick="deleteRecipeFormulaFromModal()" style="display:none;background:none;border:none;color:var(--red);font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;width:100%;padding:14px 0 2px;">ลบสูตรนี้</button>
   </div>
 </div>
 <div id="del-recipe-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
@@ -2291,8 +2291,8 @@ applyTheme(getCurrentTheme(), false);
     <div id="del-recipe-name" style="font-size:14px;font-weight:600;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:8px 12px;margin-bottom:10px;color:var(--red);"></div>
     <div style="font-size:12px;color:var(--text2);margin-bottom:18px;">วัตถุดิบและตัวเลขในสูตรนี้จะหายไปทั้งหมด</div>
     <div style="display:flex;gap:10px;">
-      <button onclick="confirmDeleteRecipeFormula()" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ลบเลย</button>
-      <button onclick="document.getElementById('del-recipe-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
+      <button onclick="confirmDeleteRecipeFormula()" style="flex:1;background:var(--red);border:none;color:#fff;border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">ลบเลย</button>
+      <button onclick="document.getElementById('del-recipe-modal').style.display='none'" style="flex:1;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-family:'Prompt',sans-serif;font-size:13px;cursor:pointer;">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -2469,7 +2469,7 @@ function renderBuyPinnedChips() {
       const tEsc = p.type.replace(/'/g,"\\'"), nEsc = p.name.replace(/'/g,"\\'");
       return `<span style="display:inline-flex;align-items:center;background:var(--yellow-soft);border:1.5px solid var(--yellow);border-radius:20px;padding:2px 2px 2px 12px;gap:4px;">
         <button onclick="quickAddPinnedBuyItem('${tEsc}','${nEsc}')"
-          style="background:none;border:none;color:var(--text);font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;padding:4px 2px;">
+          style="background:none;border:none;color:var(--text);font-family:'Prompt',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;padding:4px 2px;">
           📌 ${_escHtml(p.name)} <span style="font-size:10px;color:var(--text2);font-weight:400;">(${_escHtml(typeLabel)})</span>
         </button>
         <button onclick="event.stopPropagation();togglePinBuyItem('${tEsc}','${nEsc}');" title="ถอดหมุด"
@@ -2997,8 +2997,8 @@ function getLocations() {
   let list = s ? JSON.parse(s) : [];
   let migrated = false;
   list = list.map(x=>{
-    if(typeof x === 'string') { migrated = true; return { name:x, defaultPrice:0, abbr:'', color:'#A9812E' }; }
-    return { name:x.name||'', defaultPrice:x.defaultPrice||0, abbr:x.abbr||'', color:x.color||'#A9812E' };
+    if(typeof x === 'string') { migrated = true; return { name:x, defaultPrice:0, abbr:'', color:'#C9972E' }; }
+    return { name:x.name||'', defaultPrice:x.defaultPrice||0, abbr:x.abbr||'', color:x.color||'#C9972E' };
   });
   if(migrated) saveLocations(list);
   return list;
@@ -3020,7 +3020,7 @@ function renderLocationsList() {
         </div>
         <div class="item-meta">ราคาเริ่มต้น ${fmt(loc.defaultPrice||0)} บาท</div>
       </div>
-      <button class="item-edit" onclick="openEditLocationModal(${i})" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;">แก้ไข</button>
+      <button class="item-edit" onclick="openEditLocationModal(${i})" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;">แก้ไข</button>
     </div>`).join('')
     : '<div style="font-size:12px;color:var(--text2);">ยังไม่มีสถานที่ กรอกเพิ่มด้านบน</div>';
 }
@@ -3029,7 +3029,7 @@ function addLocationFromSettings() {
   if(!val) return;
   const price = parseFloat(document.getElementById('new-location-price').value) || 0;
   const abbr = document.getElementById('new-location-abbr').value.trim();
-  const color = document.getElementById('new-location-color').value || '#A9812E';
+  const color = document.getElementById('new-location-color').value || '#C9972E';
   const list = getLocations();
   if(list.find(l=>l.name===val)) { showToast('มีสถานที่นี้อยู่แล้ว'); return; }
   list.push({ name:val, defaultPrice:price, abbr, color });
@@ -3037,7 +3037,7 @@ function addLocationFromSettings() {
   document.getElementById('new-location').value='';
   document.getElementById('new-location-price').value='';
   document.getElementById('new-location-abbr').value='';
-  document.getElementById('new-location-color').value='#A9812E';
+  document.getElementById('new-location-color').value='#C9972E';
   renderLocationsList();
   buildSaleLocationDD();
   buildRecurringLocationDD();
@@ -3049,7 +3049,7 @@ function openEditLocationModal(idx) {
   document.getElementById('edit-location-name').value = loc.name;
   document.getElementById('edit-location-price').value = loc.defaultPrice||0;
   document.getElementById('edit-location-abbr').value = loc.abbr||'';
-  document.getElementById('edit-location-color').value = loc.color||'#A9812E';
+  document.getElementById('edit-location-color').value = loc.color||'#C9972E';
   document.getElementById('edit-location-modal').style.display = 'flex';
 }
 function saveEditLocation() {
@@ -3063,7 +3063,7 @@ function saveEditLocation() {
   loc.name = newName;
   loc.defaultPrice = parseFloat(document.getElementById('edit-location-price').value) || 0;
   loc.abbr = document.getElementById('edit-location-abbr').value.trim();
-  loc.color = document.getElementById('edit-location-color').value || '#A9812E';
+  loc.color = document.getElementById('edit-location-color').value || '#C9972E';
   saveLocations(list);
   // ชื่อใหม่ ไม่ไปแก้ไขข้อมูลย้อนหลังที่บันทึกไปแล้ว (location เดิมยังอ้างอิงชื่อเก่าอยู่ตามประวัติจริง)
   document.getElementById('edit-location-modal').style.display = 'none';
@@ -4188,8 +4188,8 @@ function renderWageList() {
     <div><div class="item-name">${i.name}</div><div class="item-meta">${i.date}</div></div>
     <div style="display:flex;align-items:center;gap:4px">
       <span class="item-amount yellow">${fmt(i.amount)}</span>
-      <button class="item-edit" onclick="openEditModalWithPin('${KEY.wage}','${i.id}',renderWageList)" style="font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;">แก้ไข</button>
-      <button class="item-del" onclick="delItemWithPin('${KEY.wage}','${i.id}',renderWageList)" style="font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;">ลบ</button>
+      <button class="item-edit" onclick="openEditModalWithPin('${KEY.wage}','${i.id}',renderWageList)" style="font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;">แก้ไข</button>
+      <button class="item-del" onclick="delItemWithPin('${KEY.wage}','${i.id}',renderWageList)" style="font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;">ลบ</button>
     </div></div>`).join('');
 }
 
@@ -4270,7 +4270,7 @@ function renderRecurringList() {
         <div class="item-meta">${fmtDate(i.date)}</div>
       </div>
       <div style="font-size:14px;font-weight:700;color:var(--red);white-space:nowrap;">−${fmt(i.amount)}</div>
-      <button class="item-edit" onclick="event.stopPropagation();delItemWithPin('${KEY.recurring}','${i.id}',renderRecurringList)" style="margin-left:8px;font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;background:var(--red-soft);color:var(--red);">ลบ</button>
+      <button class="item-edit" onclick="event.stopPropagation();delItemWithPin('${KEY.recurring}','${i.id}',renderRecurringList)" style="margin-left:8px;font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;background:var(--red-soft);color:var(--red);">ลบ</button>
     </div>`).join('');
 }
 
@@ -4401,7 +4401,7 @@ function renderItemNamesList(page) {
   if(pgEl){
     if(totalPages<=1){ pgEl.innerHTML=''; return; }
     const cur=_itemNamesPage;
-    const btnStyle=(active,disabled)=>`style="min-width:32px;height:32px;padding:0 8px;border-radius:8px;border:1.5px solid ${active?'var(--accent)':'var(--border)'};background:${active?'var(--accent)':'var(--card2)'};color:${active?'#fff':'var(--text)'};font-family:'IBM Plex Sans Thai',sans-serif;font-size:12px;font-weight:${active?700:400};cursor:${disabled?'default':'pointer'};opacity:${disabled?0.4:1};"`;
+    const btnStyle=(active,disabled)=>`style="min-width:32px;height:32px;padding:0 8px;border-radius:8px;border:1.5px solid ${active?'var(--accent)':'var(--border)'};background:${active?'var(--accent)':'var(--card2)'};color:${active?'#fff':'var(--text)'};font-family:'Prompt',sans-serif;font-size:12px;font-weight:${active?700:400};cursor:${disabled?'default':'pointer'};opacity:${disabled?0.4:1};"`;
     let pg='';
     // หน้าแรก / ก่อนหน้า
     pg+=`<button ${btnStyle(false,cur===1)} onclick="renderItemNamesList(1)" ${cur===1?'disabled':''}>«</button>`;
@@ -4673,7 +4673,7 @@ function renderUnitsList() {
   el.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;">'
     +units.map((u,i)=>`<div style="display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1.5px solid var(--border);border-radius:20px;padding:6px 10px 6px 14px;">
       <span style="font-size:13px;font-weight:500;">${u}</span>
-      <button onmousedown="event.preventDefault();askDeleteUnit(${i},'${u.replace(/'/g,"\'")}')" ontouchend="_ddSelect(event,()=>askDeleteUnit(${i},'${u.replace(/'/g,"\'")}'))" style="background:none;border:none;color:var(--red);font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;cursor:pointer;padding:0 4px;">ลบ</button>
+      <button onmousedown="event.preventDefault();askDeleteUnit(${i},'${u.replace(/'/g,"\'")}')" ontouchend="_ddSelect(event,()=>askDeleteUnit(${i},'${u.replace(/'/g,"\'")}'))" style="background:none;border:none;color:var(--red);font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;cursor:pointer;padding:0 4px;">ลบ</button>
     </div>`).join('')
     +'</div>';
 }
@@ -4961,7 +4961,7 @@ function renderRecipeTable(recipeId, kg) {
         const adjBg = adjPct>0?'var(--green-soft)':adjPct<0?'var(--red-soft)':'transparent';
         html += `<div class="rcp-cell rcp-col-adj${rowHiCls}">
           <input type="number" value="${adjPct||''}" placeholder="0"
-            style="width:100%;background:${adjBg};color:${adjColor};border:1px solid ${adjPct!==0?(adjPct>0?'var(--green)':'var(--red)'):'var(--border)'};border-radius:6px;padding:4px 2px;font-family:'IBM Plex Sans Thai',sans-serif;font-size:10px;font-weight:700;text-align:center;outline:none;box-sizing:border-box;"
+            style="width:100%;background:${adjBg};color:${adjColor};border:1px solid ${adjPct!==0?(adjPct>0?'var(--green)':'var(--red)'):'var(--border)'};border-radius:6px;padding:4px 2px;font-family:'Prompt',sans-serif;font-size:10px;font-weight:700;text-align:center;outline:none;box-sizing:border-box;"
             onchange="setRecipeRowAdj('${row.id}',this.value)"
             onkeydown="if(event.key==='Enter'){setRecipeRowAdj('${row.id}',this.value);this.blur();}">
         </div>`;
@@ -5488,7 +5488,7 @@ function deleteRecipeSpoonFromModal() {
 const RECIPE_CARD_PALETTES = [
   {bg:'var(--blue-soft)', fg:'var(--accent)'},
   {bg:'var(--green-soft)', fg:'var(--green)'},
-  {bg:'#F3E7C8', fg:'var(--yellow)'},
+  {bg:'#FCEFCB', fg:'var(--yellow)'},
   {bg:'#ece5f9', fg:'var(--purple)'},
   {bg:'var(--red-soft)', fg:'var(--red)'}
 ];
@@ -5835,7 +5835,7 @@ function renderEmployeeList() {
         <div class="item-name">${e.name}</div>
         <div class="item-meta">ค่าแรง ${fmt(e.rate)} / วัน</div>
       </div>
-      <button class="item-edit" onclick="openEditEmpModal('${e.id}')" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;">แก้ไข</button>
+      <button class="item-edit" onclick="openEditEmpModal('${e.id}')" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;">แก้ไข</button>
     </div>`).join('');
 }
 
@@ -5931,7 +5931,7 @@ function renderRecurringTypeList() {
         <div class="item-name">${t.name}</div>
         <div class="item-meta">ราคาเริ่มต้น ${fmt(t.defaultPrice||0)} บาท</div>
       </div>
-      <button class="item-edit" onclick="openEditRecurringTypeModal('${t.id}')" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif;">แก้ไข</button>
+      <button class="item-edit" onclick="openEditRecurringTypeModal('${t.id}')" style="margin-right:4px;font-size:11px;font-weight:600;font-family:'Prompt',sans-serif;">แก้ไข</button>
     </div>`).join('');
 }
 function openEditRecurringTypeModal(id) {
@@ -6052,14 +6052,14 @@ function drawEmpCal() {
   const paidColorMap={};
   DB.get(KEY.empwagepay).forEach(p=>{
     const emp=allEmps.find(e=>e.id===p.empId);
-    const c=emp?.color||'#0E5C4A';
+    const c=emp?.color||'#12805F';
     (p.days||[]).forEach(d=>{
       if(!paidColorMap[d]) paidColorMap[d]=[];
       if(!paidColorMap[d].includes(c)) paidColorMap[d].push(c);
     });
   });
   const selEmp=allEmps.find(e=>e.id===empId);
-  const selColor=selEmp?.color||'#0E5C4A';
+  const selColor=selEmp?.color||'#12805F';
   let html='';
   ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d=>{
     html+=`<div style="text-align:center;font-size:10px;font-weight:600;color:var(--text2);padding:3px 0;">${d}</div>`;
@@ -6403,9 +6403,9 @@ function dashTab(period, btn) {
     if(!b) return;
     const active=p===period;
     b.style.background=active?'#fff':'transparent';
-    b.style.color=active?'var(--accent-text)':'#5B6560';
+    b.style.color=active?'var(--accent-text)':'#667085';
     b.style.fontWeight=active?600:500;
-    b.style.border=active?'1.5px solid #E1DED3':'1.5px solid transparent';
+    b.style.border=active?'1.5px solid #E2E8F0':'1.5px solid transparent';
   });
   updateDashboard();
 }
@@ -6567,28 +6567,28 @@ function renderAuditLog() {
   if(catF) logs = logs.filter(l=>l.cat===catF);
   if(actF) logs = logs.filter(l=>l.action===actF);
   if(!logs.length) {
-    el.innerHTML='<div class="empty" style="padding:40px;text-align:center;color:#5B6560;">ยังไม่มีประวัติการแก้ไข</div>';
+    el.innerHTML='<div class="empty" style="padding:40px;text-align:center;color:#667085;">ยังไม่มีประวัติการแก้ไข</div>';
     return;
   }
-  const actionColor = {'เพิ่ม':'#0E5C4A','แก้ไข':'#B8860B','ลบ':'#8A3A3D'};
+  const actionColor = {'เพิ่ม':'#12805F','แก้ไข':'#D9A62B','ลบ':'#C0393B'};
   el.innerHTML = logs.map(l=>{
     const dt = new Date(l.ts).toLocaleString('th-TH',{day:'numeric',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});
     const ac = actionColor[l.action]||'var(--accent)';
     const beforeAfter = (l.before||l.after) ?
-      `<div style="font-size:10px;color:#5B6560;margin-top:5px;background:#F1EFE7;border-radius:6px;padding:4px 8px;word-break:break-all;">
-        ${l.before?'<span style="color:#8A3A3D;">ก่อน: '+l.before+'</span>':''}
-        ${l.before&&l.after?' <span style="color:#5B6560;">→</span> ':''}
-        ${l.after?'<span style="color:#0E5C4A;">หลัง: '+l.after+'</span>':''}
+      `<div style="font-size:10px;color:#667085;margin-top:5px;background:#EEF2F7;border-radius:6px;padding:4px 8px;word-break:break-all;">
+        ${l.before?'<span style="color:#C0393B;">ก่อน: '+l.before+'</span>':''}
+        ${l.before&&l.after?' <span style="color:#667085;">→</span> ':''}
+        ${l.after?'<span style="color:#12805F;">หลัง: '+l.after+'</span>':''}
       </div>` : '';
-    const byHtml = l.by ? `<span style="font-size:9px;color:#5B6560;margin-left:4px;">โดย: ${l.by}</span>` : '';
+    const byHtml = l.by ? `<span style="font-size:9px;color:#667085;margin-left:4px;">โดย: ${l.by}</span>` : '';
     return `<div style="background:#fff;border:1px solid var(--border);border-left:3px solid ${ac};border-radius:12px;padding:10px 12px;margin-bottom:8px;">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">
         <span style="font-size:10px;font-weight:700;color:${ac};background:${ac}18;padding:2px 8px;border-radius:10px;">${l.action}</span>
-        <span style="font-size:11px;font-weight:600;color:#171D1A;">${l.cat}</span>
+        <span style="font-size:11px;font-weight:600;color:#1B2430;">${l.cat}</span>
         ${byHtml}
-        <span style="font-size:10px;color:#5B6560;margin-left:auto;">${dt}</span>
+        <span style="font-size:10px;color:#667085;margin-left:auto;">${dt}</span>
       </div>
-      <div style="font-size:12px;color:#5B6560;word-break:break-word;">${l.detail}</div>
+      <div style="font-size:12px;color:#667085;word-break:break-word;">${l.detail}</div>
       ${beforeAfter}
     </div>`;
   }).join('');
@@ -7904,7 +7904,7 @@ function setTimelinePeriod(mode, btn) {
     if(!b) return;
     const active = p===mode;
     b.style.background = active ? 'var(--accent)' : 'transparent';
-    b.style.color = active ? '#fff' : '#5B6560';
+    b.style.color = active ? '#fff' : '#667085';
     b.style.fontWeight = active ? 600 : 500;
   });
   _tlVisibleCount = _tlPageSize();
@@ -7917,7 +7917,7 @@ function loadMoreTimeline() {
 }
 
 // สีสำหรับหลอดกราฟรายจ่ายประจำ แต่ละประเภทได้สีของตัวเอง (วนซ้ำถ้ามีมากกว่าจำนวนสี)
-const _TL_RECUR_PALETTE = ['#B8860B','#5E4780','#5B8DBE','#D98C4A','#4F9DA6','#A65B8B','#7C9C4A','#B25D5D'];
+const _TL_RECUR_PALETTE = ['#D9A62B','#7C5CB5','#5B8DBE','#D98C4A','#4F9DA6','#A65B8B','#7C9C4A','#B25D5D'];
 function _tlRecurColor(typeId, typeName) {
   const types = getRecurringTypes();
   let idx = types.findIndex(t=>t.id===typeId);
@@ -8434,7 +8434,7 @@ const DASH_METRIC_DEFS = [
   {key:'sale', label:'ยอดขาย', color:'var(--green)'},
   {key:'buy', label:'ซื้อของ', color:'var(--red)'},
   {key:'wage', label:'ค่าแรง', color:'var(--accent)'},
-  {key:'admincom', label:'ค่าคอม', color:'#C08862'},
+  {key:'admincom', label:'ค่าคอม', color:'#D98F5F'},
   {key:'recurring', label:'รายจ่ายประจำ', color:'var(--purple)'}
 ];
 const DASH_STYLE_LABELS = { grid:'Stat Grid', donut:'Donut สัดส่วน', compare:'Comparison Bar', receipt:'ใบเสร็จ (Receipt)' };
@@ -8555,7 +8555,7 @@ function _dashNetFooterHtml(){
     </span>
     <span style="display:flex;align-items:center;gap:6px;">
       <span id="d-profit" style="font-size:18px;font-weight:800;line-height:1;">0</span>
-      <button id="profit-show-btn" onclick="event.stopPropagation();toggleSensitive('profit')" style="background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;">ดู</button>
+      <button id="profit-show-btn" onclick="event.stopPropagation();toggleSensitive('profit')" style="background:#EEF2F7;border:1px solid var(--border);color:#667085;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:600;cursor:pointer;">ดู</button>
     </span>
   </div>`;
 }
@@ -8584,7 +8584,7 @@ function _dashRenderDonut(d, metrics, visible, bd, maxVal){
   const expenseKeys = ['buy','wage','admincom','recurring'].filter(k=>visible[k]!==false);
   const total = expenseKeys.reduce((s,k)=>s+Math.max(0,d[k]||0),0);
   const R = 42, C = 2*Math.PI*R;
-  const colorMap = {buy:'var(--red)', wage:'var(--accent)', admincom:'#C08862', recurring:'var(--purple)'};
+  const colorMap = {buy:'var(--red)', wage:'var(--accent)', admincom:'#D98F5F', recurring:'var(--purple)'};
   const labelMap = {buy:'ซื้อของ', wage:'ค่าแรง', admincom:'ค่าคอม', recurring:'รายจ่ายประจำ'};
   let segsHtml = '', offset = 0;
   if(total>0){
@@ -8637,7 +8637,7 @@ function _dashRenderDonut(d, metrics, visible, bd, maxVal){
 function _dashRenderCompare(d, metrics, visible, bd, maxVal){
   const expenseKeys = ['buy','wage','admincom','recurring'].filter(k=>visible[k]!==false);
   const totalExpense = expenseKeys.reduce((s,k)=>s+Math.max(0,d[k]||0),0);
-  const colorMap = {buy:'var(--red)', wage:'var(--accent)', admincom:'#C08862', recurring:'var(--purple)'};
+  const colorMap = {buy:'var(--red)', wage:'var(--accent)', admincom:'#D98F5F', recurring:'var(--purple)'};
   const labelMap = {buy:'ซื้อของ', wage:'ค่าแรง', admincom:'ค่าคอม', recurring:'รายจ่ายประจำ'};
   let html = '';
   if(visible.sale!==false || expenseKeys.length){
@@ -8979,7 +8979,7 @@ function _buildChart7SkuDD(q) {
   const allSkus = getSaleSkus().map(s=>s.name).filter(n=>n!==otherFilter);
   const baseSkus = isB ? ['__none__', ...allSkus] : ['', ...allSkus];
   const skus = q ? baseSkus.filter(n=>n==='__none__'||n===''||n.toLowerCase().includes(q.toLowerCase())) : baseSkus;
-  const color = isB?'#C08862':'var(--accent)';
+  const color = isB?'#D98F5F':'var(--accent)';
   list.innerHTML = skus.map(n=>{
     const label = n==='__none__'?'— ไม่เปรียบเทียบ':n||'ทุกสินค้า';
     const isActive = n===currentFilter||(n==='__none__'&&currentFilter==='');
@@ -9000,8 +9000,8 @@ function _selectChart7Sku(name) {
     const lbl = document.getElementById('chart7-skuB-label');
     const chip = document.getElementById('chart7-skuB-chip');
     const active = _chart7SkuFilterB !== '';
-    if(lbl) { lbl.textContent = active ? _chart7SkuFilterB : 'เทียบ'; lbl.style.color = active?'#C08862':'var(--text2)'; }
-    if(chip) chip.style.borderColor = active?'#C08862':'var(--border)';
+    if(lbl) { lbl.textContent = active ? _chart7SkuFilterB : 'เทียบ'; lbl.style.color = active?'#D98F5F':'var(--text2)'; }
+    if(chip) chip.style.borderColor = active?'#D98F5F':'var(--border)';
   } else {
     _chart7SkuFilter = name;
     const lbl = document.getElementById('chart7-sku-label');
@@ -9111,7 +9111,7 @@ function _renderChart7() {
 
   const maxV = Math.max(...bars.map(d=>d.v), ...(hasB?barsB.map(d=>d.v):[]), 1);
   const colA = 'var(--accent)';
-  const colB = '#C08862';
+  const colB = '#D98F5F';
 
   if(hasB) {
     // กราฟ 2 แท่งคู่
@@ -10220,9 +10220,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
     if(!b) return;
     const active=p==='all';
     b.style.background=active?'#fff':'transparent';
-    b.style.color=active?'var(--accent-text)':'#5B6560';
+    b.style.color=active?'var(--accent-text)':'#667085';
     b.style.fontWeight=active?600:500;
-    b.style.border=active?'1.5px solid #E1DED3':'1.5px solid transparent';
+    b.style.border=active?'1.5px solid #E2E8F0':'1.5px solid transparent';
   });
   updateDashboard();
   // init sidebar role/perms
@@ -10272,7 +10272,7 @@ window._showBarTooltip = function(i, slot) {
   const skuLabel = slot==='B'
     ? (_chart7SkuFilterB||'ทุกสินค้า')
     : (_chart7SkuFilter||'ทุกสินค้า');
-  const dotColor = slot==='B' ? '#C08862' : 'var(--accent)';
+  const dotColor = slot==='B' ? '#D98F5F' : 'var(--accent)';
   const thDays = ['อา','จ','อ','พ','พฤ','ศ','ส'];
   const dt = new Date(d.ds);
   const dayName = thDays[dt.getDay()];
