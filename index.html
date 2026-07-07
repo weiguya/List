@@ -5740,12 +5740,8 @@ function saveEditRecurringType() {
   t.name = newName;
   t.defaultPrice = newPrice;
   saveRecurringTypes(types);
-  // propagate ชื่อใหม่ไปในรายการที่บันทึกไว้แล้ว
-  if(oldName !== newName) {
-    const list = DB.get(KEY.recurring);
-    list.forEach(r=>{ if(r.typeId===id) r.typeName=newName; });
-    DB.set(KEY.recurring, list);
-  }
+  // หมายเหตุ: ไม่ไปแก้ไขข้อมูลย้อนหลังที่บันทึกไปแล้ว (รายการเก่ายังคงใช้ชื่อ ณ วันที่บันทึกจริง)
+  // ถ้าต้องการแก้ชื่อของรายการเก่ารายตัว ให้เข้าไปแก้ไขที่รายการนั้นโดยตรงในหน้ารายงาน
   document.getElementById('edit-recurring-type-modal').style.display = 'none';
   renderRecurringTypeList();
   buildRecurringTypeDD();
@@ -6504,14 +6500,23 @@ function openEditModal(key,id,cb) {
     <div class="form-group"><label>สถานที่</label><input type="text" id="e-location" value="${item.location||''}"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
     </div>`;
-  else if(key===KEY.recurring) body=`
+  else if(key===KEY.recurring) {
+    const types = getRecurringTypes();
+    const hasCurrentType = types.some(t=>t.id===item.typeId);
+    body=`
     <div class="form-card">
-    <div class="form-group"><label>ประเภท</label><input type="text" disabled value="${item.typeName||''}"></div>
+    <div class="form-group"><label>ประเภท</label>
+      <select id="e-type">
+        ${types.map(t=>`<option value="${t.id}" data-name="${t.name}" ${t.id===item.typeId?'selected':''}>${t.name}</option>`).join('')}
+        ${!hasCurrentType?`<option value="${item.typeId||''}" data-name="${item.typeName||''}" selected>${item.typeName||'(ไม่พบในตั้งค่าปัจจุบัน)'}</option>`:''}
+      </select>
+    </div>
     <div class="form-group"><label>ราคา (บาท)</label><input type="number" id="e-amount" value="${item.amount}" step="0.01"></div>
     <div class="form-group"><label>วันที่</label><input type="date" id="e-date" value="${item.date}"></div>
     <div class="form-group"><label>สถานที่</label><input type="text" id="e-location" value="${item.location||''}"></div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="e-note" value="${item.note||''}"></div>
     </div>`;
+  }
   else if(key===KEY.empwagepay) body=`
     <div class="form-card">
     <div class="form-group"><label>พนักงาน</label><input type="text" disabled value="${item.empName||''}"></div>
@@ -6545,7 +6550,11 @@ function saveEdit() {
   else if(_editKey===KEY.loanpay){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.note=g('e-note');}
   else if(_editKey===KEY.wage){item.name=g('e-name');item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');}
   else if(_editKey===KEY.rent){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.location=g('e-location')||'';item.note=g('e-note');}
-  else if(_editKey===KEY.recurring){item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.location=g('e-location')||'';item.note=g('e-note');}
+  else if(_editKey===KEY.recurring){
+    const typeSel = document.getElementById('e-type');
+    if(typeSel && typeSel.value){ item.typeId = typeSel.value; item.typeName = typeSel.options[typeSel.selectedIndex]?.dataset.name || typeSel.options[typeSel.selectedIndex]?.textContent || item.typeName; }
+    item.amount=parseFloat(g('e-amount'))||0;item.date=g('e-date');item.location=g('e-location')||'';item.note=g('e-note');
+  }
   else if(_editKey===KEY.empwagepay){item.total=parseFloat(g('e-amount'))||0;item.amount=item.total;item.paidDate=g('e-date');}
   else if(_editKey===KEY.adminpay){item.amount=parseFloat(g('e-amount'))||0;item.paidDate=g('e-date');}
   list[idx]=item; DB.set(_editKey,list);
