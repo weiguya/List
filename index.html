@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onion Ver.196</title>
+<title>Onion Ver.198</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINESeedSansTH/LINESeedSansTH.css" rel="stylesheet">
 <style>
@@ -388,17 +388,17 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .br-row:last-child{border-bottom:none;}
 .br-row.br-row-filled{background:var(--blue-soft);box-shadow:inset 3px 0 0 var(--accent-text);}
 .dr-top{display:flex;align-items:center;gap:8px;}
-.dr-badge{flex-shrink:0;font-size:10px;font-weight:600;color:var(--accent-text);background:var(--blue-soft);border-radius:6px;padding:3px 7px;cursor:pointer;white-space:nowrap;max-width:78px;overflow:hidden;text-overflow:ellipsis;}
-.dr-name{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dr-badge{flex-shrink:0;font-size:11px;font-weight:700;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent);border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;max-width:88px;overflow:hidden;text-overflow:ellipsis;}
+.dr-name{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;}
 .dr-total-input{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent-text);border-radius:7px;padding:5px 7px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;}
 .dr-total-static{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);}
 .dr-bottom{display:flex;align-items:center;gap:6px;}
-.dr-unit{flex-shrink:0;font-size:10.5px;color:var(--text2);background:var(--card2);border-radius:6px;padding:4px 8px;cursor:pointer;white-space:nowrap;}
+.dr-unit{flex-shrink:0;font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;}
 .dr-unit.dr-dash{color:var(--border);cursor:default;}
 .dr-num{width:56px;flex-shrink:0;text-align:center;font-size:12.5px;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:5px 4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;color:var(--text);}
 .dr-x{flex-shrink:0;font-size:11px;color:var(--text2);}
 .dr-spacer{flex:1;}
-.dr-del{flex-shrink:0;background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;padding:2px 4px;opacity:0.75;}
+.dr-del{flex-shrink:0;background:var(--red-soft);border:1px solid var(--red);color:var(--red);cursor:pointer;font-size:15px;font-weight:700;line-height:1;padding:6px 9px;border-radius:8px;opacity:1;}
 .br-field{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 5px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 .br-row.br-row-filled .br-field.br-locked{background:var(--blue-soft);}
@@ -417,7 +417,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .rcp-row.rcp-head{background:var(--blue-soft);}
 .rcp-cell{padding:4px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-sizing:border-box;flex-shrink:0;border-right:1px solid var(--border);}
 .rcp-cell:last-child{border-right:none;}
-.rcp-head-cell{font-size:9.5px;font-weight:500;color:var(--accent-text);text-align:center;line-height:1.25;}
+.rcp-head-cell{font-size:9.5px;font-weight:700;color:var(--accent-text);text-align:center;line-height:1.25;}
 .rcp-col-name{width:122px;position:sticky;left:0;z-index:2;background:#fff;border-right:1px solid var(--border);align-items:flex-start;}
 .rcp-row.rcp-head .rcp-col-name{background:var(--blue-soft);}
 .rcp-row-selected .rcp-col-name{background:var(--blue-soft);}
@@ -707,12 +707,12 @@ applyTheme(getCurrentTheme(), false);
 <div class="fab-overlay" id="fab-overlay" onclick="closeFabSheet()"></div>
 
 <div class="report-tabs-bar" id="report-tabs-bar">
-  <button class="rtab" id="rtab-rep-income" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'))"><span>▦</span>รายรับ</button>
-  <button class="rtab" id="rtab-rep-expense" onclick="goReportTab('rep-expense',document.getElementById('nav-rep-expense'))"><span>🛒</span>รายจ่าย</button>
-  <button class="rtab" id="rtab-rep-movement" onclick="goReportTab('rep-movement',document.getElementById('nav-rep-movement'))"><span>⇄</span>เคลื่อนไหว</button>
-  <button class="rtab" id="rtab-rep-wages" onclick="goReportTab('rep-wages',document.getElementById('nav-rep-wages'))"><span>₿</span>ค่าแรง/คอม/ประจำ</button>
-  <button class="rtab" id="rtab-rep-loan" onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'))"><span>%</span>เงินกู้</button>
-  <button class="rtab" id="rtab-rep-log" onclick="goReportTab('rep-log',document.getElementById('nav-rep-log'))"><span>🕓</span>ประวัติการแก้ไข</button>
+  <button class="rtab" id="rtab-rep-income" onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'))">รายรับ</button>
+  <button class="rtab" id="rtab-rep-expense" onclick="goReportTab('rep-expense',document.getElementById('nav-rep-expense'))">รายจ่าย</button>
+  <button class="rtab" id="rtab-rep-movement" onclick="goReportTab('rep-movement',document.getElementById('nav-rep-movement'))">เคลื่อนไหว</button>
+  <button class="rtab" id="rtab-rep-wages" onclick="goReportTab('rep-wages',document.getElementById('nav-rep-wages'))">ค่าแรง/คอม/ประจำ</button>
+  <button class="rtab" id="rtab-rep-loan" onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'))">เงินกู้</button>
+  <button class="rtab" id="rtab-rep-log" onclick="goReportTab('rep-log',document.getElementById('nav-rep-log'))">ประวัติการแก้ไข</button>
 </div>
 
 <!-- PAGE: DASHBOARD -->
@@ -813,28 +813,27 @@ applyTheme(getCurrentTheme(), false);
       <button onclick="cycleDashStyle(event)" title="เปลี่ยนรูปแบบการ์ด" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:4px 9px 4px 8px;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;">⇄ รูปแบบ</button>
     </div>
     <div id="dash-metrics"></div>
-  </div>
-
-  <!-- ══ CONTENT ══ -->
-  <div style="padding:10px 14px 0;">
-
-    <!-- ทุน + หนี้ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;margin-bottom:8px;">
+    <!-- ทุน + หนี้ (ย้ายมาอยู่บนการ์ดกราฟโดนัทเดียวกัน) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
       <div onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);"
-        style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;position:relative;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        style="background:var(--card2);border-radius:14px;padding:12px;position:relative;cursor:pointer;">
         <button id="capital-show-btn" onclick="event.stopPropagation();toggleSensitive('capital')" style="position:absolute;top:8px;right:8px;background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:500;cursor:pointer;">ดู</button>
-        <div style="font-size:11px;color:#5B6560;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">เงินทุน</div>
+        <div style="font-size:11px;color:#5B6560;font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">เงินทุน</div>
         <div id="d-capital" style="font-size:16px;font-weight:500;color:var(--accent-text);line-height:1;">0</div>
         <div style="font-size:10px;color:#5B6560;margin-top:4px;">แตะดูรายละเอียด</div>
       </div>
       <div onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));"
-        style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;position:relative;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+        style="background:var(--card2);border-radius:14px;padding:12px;position:relative;cursor:pointer;">
         <button id="loan-show-btn" onclick="event.stopPropagation();toggleSensitive('loan')" style="position:absolute;top:8px;right:8px;background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:500;cursor:pointer;">ดู</button>
-        <div style="font-size:11px;color:#5B6560;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">หนี้คงเหลือ</div>
+        <div style="font-size:11px;color:#5B6560;font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">หนี้คงเหลือ</div>
         <div id="d-loan" style="font-size:16px;font-weight:500;color:#8A3A3D;line-height:1;">0</div>
         <div id="d-loan-row" style="font-size:9px;color:#5B6560;margin-top:4px;">จ่ายแล้ว <span id="d-loan-paid" style="color:#0E5C4A;">0</span> / <span id="d-loan-due" style="color:#8A3A3D;">0</span></div>
       </div>
     </div>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <div style="padding:10px 14px 0;">
 
     <!-- กราฟยอดขาย -->
     <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
@@ -1412,11 +1411,11 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="ri-col-header" style="display:none;border:1px solid var(--border);border-radius:8px 8px 0 0;overflow:hidden;">
     <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--blue-soft);border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 52px;font-size:10px;font-weight:500;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:10px;font-weight:500;color:var(--text2);">รายการ</div>
-      <div style="flex:0 0 60px;font-size:10px;font-weight:500;color:var(--text2);text-align:center;">สถานที่</div>
-      <div style="font-size:10px;font-weight:500;color:var(--yellow);white-space:nowrap;min-width:42px;text-align:right;">Qty</div>
-      <div style="font-size:10px;font-weight:500;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">ยอด</div>
+      <div style="flex:0 0 52px;font-size:10px;font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="flex:0 0 60px;font-size:10px;font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
+      <div style="font-size:10px;font-weight:700;color:var(--yellow);white-space:nowrap;min-width:42px;text-align:right;">Qty</div>
+      <div style="font-size:10px;font-weight:700;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">ยอด</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -1492,10 +1491,10 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="re-col-header" style="display:none;border:1px solid var(--border);border-radius:8px 8px 0 0;overflow:hidden;">
     <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--blue-soft);border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 52px;font-size:10px;font-weight:500;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:10px;font-weight:500;color:var(--text2);">รายการ</div>
-      <div style="flex:0 0 60px;font-size:10px;font-weight:500;color:var(--text2);text-align:center;">สถานที่</div>
-      <div style="font-size:10px;font-weight:500;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">ยอด</div>
+      <div style="flex:0 0 52px;font-size:10px;font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="flex:0 0 60px;font-size:10px;font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
+      <div style="font-size:10px;font-weight:700;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">ยอด</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -1540,11 +1539,11 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="tl-col-header" style="display:none;border:1px solid var(--border);border-radius:0;overflow:hidden;">
     <div style="background:var(--card2);padding:6px 10px;display:flex;align-items:center;gap:6px;border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 52px;font-size:10px;font-weight:500;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:10px;font-weight:500;color:var(--text2);">รายการ</div>
-      <div style="font-size:10px;font-weight:500;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">รับ</div>
-      <div style="font-size:10px;font-weight:500;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">จ่าย</div>
-      <div style="font-size:10px;font-weight:500;color:var(--text2);white-space:nowrap;flex:0 0 52px;text-align:right;">คงเหลือ</div>
+      <div style="flex:0 0 52px;font-size:10px;font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="font-size:10px;font-weight:700;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">รับ</div>
+      <div style="font-size:10px;font-weight:700;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">จ่าย</div>
+      <div style="font-size:10px;font-weight:700;color:var(--text2);white-space:nowrap;flex:0 0 52px;text-align:right;">คงเหลือ</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -1554,18 +1553,32 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- PAGE: รายงาน ค่าแรง/คอม/รายจ่ายประจำ -->
 <div class="page" id="page-rep-wages">
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow-card);">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div class="form-group rep-date-group" style="margin:0"><label>ตั้งแต่วันที่</label><input type="date" id="rw-from" onchange="renderRepWages()"></div>
-      <div class="form-group rep-date-group" style="margin:0"><label>ถึงวันที่</label><input type="date" id="rw-to" onchange="renderRepWages()"></div>
+  <div class="rep-filter-sticky">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:var(--shadow-card);">
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:28px;flex-shrink:0;">From</label>
+        <input type="date" id="rw-from" onchange="renderRepWages()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+      </div>
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:20px;flex-shrink:0;">To</label>
+        <input type="date" id="rw-to" onchange="renderRepWages()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
+      </div>
     </div>
-    <div style="font-size:11px;font-weight:500;color:var(--text2);margin-bottom:8px;">แสดงประเภท</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       <label class="chk-label"><input type="checkbox" id="rw-c-wage" checked onchange="renderRepWages()"> ค่าแรงพนักงาน</label>
       <label class="chk-label"><input type="checkbox" id="rw-c-adminpay" checked onchange="renderRepWages()"> ค่าคอมผู้บริหาร</label>
       <label class="chk-label"><input type="checkbox" id="rw-c-recurring" checked onchange="renderRepWages()"> รายจ่ายประจำ</label>
     </div>
   </div>
+  <div id="rw-col-header" style="display:none;border:1px solid var(--border);border-radius:8px 8px 0 0;overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--blue-soft);border-bottom:2px solid var(--border);">
+      <div style="flex:0 0 66px;font-size:10px;font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="font-size:10px;font-weight:700;color:var(--red);white-space:nowrap;text-align:right;">จ่าย</div>
+    </div>
+  </div>
+  </div><!-- end rep-filter-sticky -->
   <div id="rep-wages-output"></div>
   <button class="rep-back-to-top-btn" onclick="scrollToTopFast()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span>กลับขึ้นข้างบน</span></button>
 </div>
@@ -3965,7 +3978,12 @@ function addSaleRow() {
 }
 
 function removeSaleRow(id) {
-  if(_saleRows.length <= 1) return;
+  if(_saleRows.length <= 1) {
+    // แถวเดียว ลบไม่ได้ -> ล้างข้อมูลในแถวแทน ให้กดปุ่ม × แล้วรู้สึกว่า "ล้างแล้ว" เสมอ
+    const r = _saleRows.find(r=>r.id===id);
+    if(r) { r.meat=''; r.unit=''; r.qty=''; r.unitPrice=''; r.amount=''; renderSaleRows(); calcSaleGrandTotal(); }
+    return;
+  }
   _saleRows = _saleRows.filter(r=>r.id!==id);
   renderSaleRows();
   calcSaleGrandTotal();
@@ -3995,7 +4013,7 @@ function buildSaleRowHtml(r, idx) {
       <input type="number" class="dr-num" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
         oninput="onSaleRowCalc('${r.id}','unitPrice',this.value)">
       <span class="dr-spacer"></span>
-      ${_saleRows.length>1?`<button class="dr-del" onclick="removeSaleRow('${r.id}')">✕</button>`:''}
+      ${'<button class="dr-del" onclick="removeSaleRow(\''+r.id+'\')">✕</button>'}
     </div>
   </div>`;
 }
@@ -4022,13 +4040,7 @@ function openSaleRowSelect(ev, rowId, field) {
   if(dd) dd.style.display = 'block';
   positionBuyRowDD(anchor);
   _buyRowDDOpenedAt = Date.now();
-  if(si) {
-    setTimeout(()=>{
-      si.focus({preventScroll:true});
-      positionBuyRowDD(anchor);
-      _buyRowDDOpenedAt = Date.now();
-    }, 200);
-  }
+  // หมายเหตุ (Ver.191): ตัดการ auto-focus ช่องค้นหาออก ไม่ให้คีย์บอร์ดเด้งขึ้นมาเองตอนเปิด dropdown
 }
 
 // เลือกประเภทรายรับ (ยอดขาย/รับจากเงินกู้/รับจากทุน) — ดรอปดาวน์ตัวเดียวกับชื่อสินค้า แทนปุ่มแท็บเดิม ประหยัดพื้นที่
@@ -7205,10 +7217,10 @@ function openBuyGroupModal(grpId) {
   // หัวตาราง
   let html = '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">';
   html += '<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;background:var(--blue-soft);border-bottom:2px solid var(--border);padding:7px 12px;">';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--text2);">รายการ</div>';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--text2);text-align:center;min-width:48px;">จำนวน</div>';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--text2);text-align:center;min-width:72px;">ราคา/หน่วย</div>';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--red);text-align:right;min-width:64px;">รวม</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text2);text-align:center;min-width:48px;">จำนวน</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text2);text-align:center;min-width:72px;">ราคา/หน่วย</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--red);text-align:right;min-width:64px;">รวม</div>';
   html += '</div>';
   html += grp.items.map((i,idx)=>{
     const bg = idx%2===0?'var(--card)':'var(--card2)';
@@ -7365,10 +7377,10 @@ function showSaleGroupModal(date, items, location) {
   let html = '<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">';
   // หัวคอลัมน์
   html += '<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;background:var(--blue-soft);border-bottom:2px solid var(--border);padding:7px 12px;">';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--text2);">รายการ</div>';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--text2);text-align:center;min-width:48px;">Qty</div>';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--text2);text-align:center;min-width:72px;">ราคา/Qty</div>';
-  html += '<div style="font-size:10px;font-weight:500;color:var(--green);text-align:right;min-width:60px;">ยอด</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text2);">รายการ</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text2);text-align:center;min-width:48px;">Qty</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--text2);text-align:center;min-width:72px;">ราคา/Qty</div>';
+  html += '<div style="font-size:10px;font-weight:700;color:var(--green);text-align:right;min-width:60px;">ยอด</div>';
   html += '</div>';
   html += items.map((i,idx)=>{
     const bg = idx%2===0?'var(--card)':'var(--card2)';
@@ -7500,7 +7512,11 @@ function addBuyRow() {
 }
 
 function removeBuyRow(id) {
-  if(_buyRows.length <= 1) return;
+  if(_buyRows.length <= 1) {
+    const r = _buyRows.find(r=>r.id===id);
+    if(r) { r.type=''; r.name=''; r.unit=''; r.qty=0; r.unitPrice=0; renderBuyRows(); updateBuyBillTotal(); }
+    return;
+  }
   _buyRows = _buyRows.filter(r=>r.id!==id);
   renderBuyRows();
   updateBuyBillTotal();
@@ -7538,7 +7554,7 @@ function buildBuyRowHtml(r, idx, types) {
       <input type="number" class="dr-num" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
         oninput="onBuyRowCalc('${r.id}','unitPrice',this.value)">
       <span class="dr-spacer"></span>
-      ${_buyRows.length>1?`<button class="dr-del" onclick="removeBuyRow('${r.id}')">✕</button>`:''}
+      ${'<button class="dr-del" onclick="removeBuyRow(\''+r.id+'\')">✕</button>'}
     </div>
   </div>`;
 }
@@ -7588,14 +7604,8 @@ function openBuyRowSelect(ev, rowId, field) {
   if(dd) dd.style.display = 'block';
   positionBuyRowDD(anchor);
   _buyRowDDOpenedAt = Date.now();
-  if(field!=='type' && si) {
-    setTimeout(()=>{
-      // preventScroll กันเบราว์เซอร์มือถือเลื่อนจอเองตอนคีย์บอร์ดเด้งขึ้นมา (สาเหตุหลักที่ทำให้ดรอปดาวน์ปิดเร็ว)
-      si.focus({preventScroll:true});
-      positionBuyRowDD(anchor); // จัดตำแหน่งใหม่เผื่อ layout ขยับเล็กน้อยตอนคีย์บอร์ดขึ้น
-      _buyRowDDOpenedAt = Date.now(); // รีเซ็ตช่วงเวลากันปิด ให้ครอบคลุมตอนคีย์บอร์ดเด้งด้วย
-    }, 200);
-  }
+  // หมายเหตุ (Ver.191): ตัดการ auto-focus ช่องค้นหาออก ไม่ให้คีย์บอร์ดเด้งขึ้นมาเองตอนเปิด dropdown
+  // ผู้ใช้แตะช่องค้นหาเองถ้าต้องการพิมพ์ค้นหา
 }
 
 function closeBuyRowSelectModal() {
@@ -7996,7 +8006,7 @@ function renderRepWages() {
   const to=document.getElementById('rw-to')?.value;
   const el=document.getElementById('rep-wages-output');
   if(!el) return;
-  if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';return;}
+  if(!from||!to){el.innerHTML='<div class="empty">เลือกช่วงวันที่</div>';_setRepSticky('rw',false);return;}
 
   let items=[];
 
@@ -8039,7 +8049,8 @@ function renderRepWages() {
     });
   }
 
-  if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon"></div>ไม่มีรายการในช่วงนี้</div>';return;}
+  if(!items.length){el.innerHTML='<div class="empty"><div class="empty-icon"></div>ไม่มีรายการในช่วงนี้</div>';_setRepSticky('rw',false);return;}
+  _setRepSticky('rw', true);
 
   items.sort((a,b)=>a.date.localeCompare(b.date)||a.ts-b.ts);
   const total=items.reduce((s,i)=>s+i.amount,0);
@@ -9198,36 +9209,68 @@ function renderHomeExtras() {
   const byOrder = {};
   sales.forEach(i=>{
     const k = 'S-'+(i.orderId||i.id);
-    if(!byOrder[k]) byOrder[k] = {type:'sale', label:i.location||i.meat||'ขาย', ts:i.ts||0, amount:0};
-    byOrder[k].amount += (i.amount||0);
+    if(!byOrder[k]) byOrder[k] = {type:'sale', label:i.location||i.meat||'ขาย', ts:i.ts||0, date:i.date||'', items:[]};
+    byOrder[k].amount = (byOrder[k].amount||0) + (i.amount||0);
     byOrder[k].ts = Math.max(byOrder[k].ts, i.ts||0);
+    byOrder[k].items.push(i);
   });
   buys.forEach(i=>{
     const k = 'B-'+(i.orderId||i.id);
-    if(!byOrder[k]) byOrder[k] = {type:'buy', label:i.supplier||i.name||'ซื้อของ', ts:i.ts||0, amount:0};
-    byOrder[k].amount += (i.price||0);
+    if(!byOrder[k]) byOrder[k] = {type:'buy', label:i.supplier||i.name||'ซื้อของ', ts:i.ts||0, date:i.date||'', items:[]};
+    byOrder[k].amount = (byOrder[k].amount||0) + (i.price||0);
     byOrder[k].ts = Math.max(byOrder[k].ts, i.ts||0);
+    byOrder[k].items.push(i);
   });
-  const feed = Object.values(byOrder).sort((a,b)=>b.ts-a.ts).slice(0,4);
+  const feed = Object.entries(byOrder).sort((a,b)=>b[1].ts-a[1].ts).slice(0,4);
   const feedEl = document.getElementById('home-recent-feed');
   if(feedEl) {
     if(!feed.length) {
       feedEl.innerHTML = '<div style="text-align:center;padding:24px 12px;color:var(--text2);font-size:12px;">ยังไม่มีรายการ<br><span style="font-size:10px;">เริ่มบันทึกยอดขายรายการแรกกันเลย</span></div>';
     } else {
-      feedEl.innerHTML = feed.map(f=>{
+      feedEl.innerHTML = feed.map(([k,f])=>{
         const isSale = f.type==='sale';
         const t = f.ts ? new Date(f.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '';
-        return `<div class="nb-row">
+        const d = f.date ? fmtDate(f.date) : '';
+        return `<div class="nb-row" style="cursor:pointer;" ondblclick="homeFeedOpenBill('${k}')" ontouchstart="startHomeFeedDoubleTap('${k}',event)">
           <div style="display:flex;align-items:center;gap:9px;min-width:0;">
-            <div style="width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;background:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};color:#fff;">${isSale?'▦':'🛒'}</div>
+            <div style="width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;background:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};color:#fff;">${isSale?'▦':'▾'}</div>
             <div style="min-width:0;">
               <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">${isSale?'ขาย':'ซื้อของ'} — ${f.label}</div>
-              <div style="font-size:9px;font-weight:400;color:var(--text2);">${t}</div>
+              <div style="font-size:9px;font-weight:400;color:var(--text2);">${d}${d&&t?' · ':''}${t}</div>
             </div>
           </div>
           <div class="amt" style="color:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};flex-shrink:0;">${isSale?'+':'−'}${fmt(f.amount)}</div>
         </div>`;
       }).join('');
+    }
+  }
+  _homeFeedMap = Object.fromEntries(feed);
+}
+
+// เก็บข้อมูลบิลของฟีดรายการล่าสุดหน้าหลักไว้ใช้ตอนดับเบิลคลิก/แตะ 2 ครั้ง เพื่อเปิดบิลนั้น
+let _homeFeedMap = {};
+let _homeFeedLastTap = {};
+function startHomeFeedDoubleTap(k, ev) {
+  const now = Date.now();
+  if(now - (_homeFeedLastTap[k]||0) < 350) { homeFeedOpenBill(k); }
+  _homeFeedLastTap[k] = now;
+}
+function homeFeedOpenBill(k) {
+  const f = _homeFeedMap[k];
+  if(!f || !f.items || !f.items.length) return;
+  if(f.type==='sale') {
+    if(f.items.length===1) {
+      openEditModalWithPin(KEY.sale, f.items[0].id, renderHomeExtras);
+    } else {
+      showSaleGroupModal(f.date, f.items.map(i=>({id:i.id,orderId:i.orderId,date:i.date,ts:i.ts,amount:i.amount,label:(i.meat||'')+(i.note?' · '+i.note:''),_qty:i.qty,unitPrice:i.unitPrice})), f.items[0].location||'');
+    }
+  } else {
+    if(f.items.length===1) {
+      openEditModalWithPin(KEY.buy, f.items[0].id, renderHomeExtras);
+    } else {
+      const grpId = 'home_'+k;
+      _buyGroupMap[grpId] = {date:f.date, supplier:f.items[0].supplier||'', items:f.items.map(i=>({id:i.id,orderId:i.orderId,date:i.date,ts:i.ts,amount:i.price,label:i.name||'',qty:i.qty,unitPrice:i.unitPrice}))};
+      openBuyGroupModal(grpId);
     }
   }
 }
