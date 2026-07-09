@@ -192,6 +192,13 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 .form-card .form-group{margin-bottom:10px;}
 
 /* BUTTONS */
+/* ══ เอฟเฟคตอนกด (Combo: หด+มืดลง) — ใช้ทั่วทั้งแอป ══ */
+button,.btn,.dr-name,.dr-del,.dr-badge,.dr-unit,.rtab,.nb-tile,.nb-row,.rep-sheet-item,.tab-btn,.income-cat-display,.br-field{
+  transition:transform 0.1s,filter 0.1s;-webkit-tap-highlight-color:transparent;
+}
+button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-unit:not(.dr-dash):active,.rtab:active,.nb-tile:active,.nb-row:active,.rep-sheet-item:active,.tab-btn:active,.income-cat-display:active,.br-field:active{
+  transform:scale(0.96);filter:brightness(0.92);
+}
 .btn{width:100%;padding:14px;border-radius:12px;border:none;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity 0.2s,transform 0.1s;}
 .btn:active{transform:scale(0.98);opacity:0.85;}
 .btn-primary{background:var(--accent);color:#fff;}
@@ -374,30 +381,26 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
   letter-spacing: 2px;
 }
 .stat-card.full .sens-masked::before { color: rgba(255,255,255,0.05); }
-/* Compact buy-row spreadsheet table */
-.br-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px;background:#fff;box-shadow:var(--shadow-card);margin-bottom:10px;}
-.br-table{display:flex;flex-direction:column;width:max-content;min-width:100%;}
-.br-row{display:flex;align-items:stretch;border-bottom:1px solid var(--border);}
+/* Dense card row (แทนตาราง scroll แนวนอนเดิม) — ใช้ร่วมกันทั้งบิลขายและบิลซื้อของ */
+.br-table-wrap{border:1px solid var(--border);border-radius:12px;background:#fff;box-shadow:var(--shadow-card);margin-bottom:10px;overflow:hidden;}
+.br-table{display:flex;flex-direction:column;}
+.br-row{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-bottom:1px solid var(--border);}
 .br-row:last-child{border-bottom:none;}
-.br-row.br-head{background:var(--blue-soft);}
-.br-cell{padding:6px 4px;display:flex;align-items:center;box-sizing:border-box;flex-shrink:0;}
-.br-head-cell{font-size:11px;font-weight:500;color:var(--accent-text);justify-content:center;text-align:center;line-height:1.2;}
-.br-col-num{width:30px;position:sticky;left:0;z-index:2;background:#fff;border-right:1px solid var(--border);flex-direction:column;justify-content:center;align-items:center;gap:2px;}
-.br-row.br-head .br-col-num{background:var(--blue-soft);}
-.br-col-type{width:84px;}
-.br-col-name{width:128px;}
-.br-col-unit{width:58px;}
-.br-col-qty{width:58px;}
-.br-col-price{width:70px;}
-.br-col-total{width:78px;}
-.br-col-del{width:38px;justify-content:center;align-items:center;}
-.br-field{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 5px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.br-field.br-num-input{cursor:text;text-align:right;font-size:12px;}
-.br-field.br-locked{background:var(--blue-soft);border-color:var(--accent-text);color:var(--accent-text);font-weight:500;text-align:center;}
-/* ไฮไลท์แถวอ่อนๆ ค้างไว้ตราบใดที่แถวนั้นมีข้อมูลกรอกแล้วอย่างน้อย 1 ช่อง (บันทึกรับ/จ่าย) สีเข้ากับธีมหลัก */
 .br-row.br-row-filled{background:var(--blue-soft);box-shadow:inset 3px 0 0 var(--accent-text);}
-.br-row.br-row-filled .br-col-num{background:var(--blue-soft);}
-.br-row.br-row-filled .br-field{background:rgba(255,255,255,0.65);}
+.dr-top{display:flex;align-items:center;gap:8px;}
+.dr-badge{flex-shrink:0;font-size:10px;font-weight:600;color:var(--accent-text);background:var(--blue-soft);border-radius:6px;padding:3px 7px;cursor:pointer;white-space:nowrap;max-width:78px;overflow:hidden;text-overflow:ellipsis;}
+.dr-name{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dr-total-input{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent-text);border-radius:7px;padding:5px 7px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;}
+.dr-total-static{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);}
+.dr-bottom{display:flex;align-items:center;gap:6px;}
+.dr-unit{flex-shrink:0;font-size:10.5px;color:var(--text2);background:var(--card2);border-radius:6px;padding:4px 8px;cursor:pointer;white-space:nowrap;}
+.dr-unit.dr-dash{color:var(--border);cursor:default;}
+.dr-num{width:56px;flex-shrink:0;text-align:center;font-size:12.5px;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:5px 4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;color:var(--text);}
+.dr-x{flex-shrink:0;font-size:11px;color:var(--text2);}
+.dr-spacer{flex:1;}
+.dr-del{flex-shrink:0;background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;padding:2px 4px;opacity:0.75;}
+.br-field{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 5px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
 .br-row.br-row-filled .br-field.br-locked{background:var(--blue-soft);}
 /* RECIPE TABLE (สูตรหมัก) */
 .rcp-toolbar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
@@ -993,22 +996,12 @@ applyTheme(getCurrentTheme(), false);
       </div>
     </div>
 
-    <!-- รายการในบิล: ตารางบรรทัดเดียวต่อแถว เลื่อนซ้าย-ขวาได้ -->
+    <!-- รายการในบิล: การ์ดแนวตั้งต่อรายการ ไม่ต้องเลื่อนซ้าย-ขวา -->
     <div class="br-table-wrap">
       <div class="br-table">
-        <div class="br-row br-head">
-          <div class="br-cell br-head-cell br-col-num">#</div>
-          <div class="br-cell br-head-cell br-col-name">ชื่อสินค้า</div>
-          <div class="br-cell br-head-cell br-col-unit">หน่วย</div>
-          <div class="br-cell br-head-cell br-col-qty">จำนวน</div>
-          <div class="br-cell br-head-cell br-col-price">ราคา/หน่วย</div>
-          <div class="br-cell br-head-cell br-col-total">ยอด</div>
-          <div class="br-cell br-head-cell br-col-del"></div>
-        </div>
         <div id="sale-rows-wrap"></div>
       </div>
     </div>
-    <div style="font-size:10px;color:var(--text2);margin:-4px 0 10px;text-align:center;">เลื่อนซ้าย-ขวาเพื่อดูทุกช่อง</div>
     <button class="btn btn-outline" onclick="addSaleRow()" type="button" style="margin-bottom:12px;">+ เพิ่มแถว</button>
 
     <div class="form-card"><div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div></div>
@@ -1203,23 +1196,12 @@ applyTheme(getCurrentTheme(), false);
   <!-- ชิปเตือนความจำ สินค้าที่มักลืมลง -->
   <div id="buy-pinned-chips" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
 
-  <!-- รายการในบิล: ตารางบรรทัดเดียวต่อแถว เลื่อนซ้าย-ขวาได้ -->
+  <!-- รายการในบิล: การ์ดแนวตั้งต่อรายการ ไม่ต้องเลื่อนซ้าย-ขวา -->
   <div class="br-table-wrap">
     <div class="br-table">
-      <div class="br-row br-head">
-        <div class="br-cell br-head-cell br-col-num">#</div>
-        <div class="br-cell br-head-cell br-col-type">ประเภท</div>
-        <div class="br-cell br-head-cell br-col-name">ชื่อสินค้า</div>
-        <div class="br-cell br-head-cell br-col-unit">หน่วย</div>
-        <div class="br-cell br-head-cell br-col-qty">จำนวน</div>
-        <div class="br-cell br-head-cell br-col-price">ราคา/หน่วย</div>
-        <div class="br-cell br-head-cell br-col-total">รวม</div>
-        <div class="br-cell br-head-cell br-col-del"></div>
-      </div>
       <div id="buy-rows-wrap"></div>
     </div>
   </div>
-  <div style="font-size:10px;color:var(--text2);margin:-4px 0 10px;text-align:center;">เลื่อนซ้าย-ขวาเพื่อดูทุกช่อง</div>
   <button class="btn btn-outline" onclick="addBuyRow()" style="margin-bottom:12px;">+ เพิ่มแถว</button>
 
   <!-- ปุ่มบันทึก -->
@@ -1532,27 +1514,24 @@ applyTheme(getCurrentTheme(), false);
 <div class="page" id="page-rep-movement">
   <div class="rep-filter-sticky">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:var(--shadow-card);">
-    <div style="display:flex;gap:10px;">
-      <div style="flex:0 0 132px;">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
-          <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">From</label>
-          <input type="date" id="tl-from" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
-          <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">To</label>
-          <input type="date" id="tl-to" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
-        </div>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;box-sizing:border-box;margin:0 auto;"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> จ่ายหนี้</label>
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">From</label>
+        <input type="date" id="tl-from" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
-      <!-- หมายเหตุ (Ver.163): เอา width:100%+justify-content:center ออก เพราะทำให้กล่องยืดยาวเกินสัดส่วน เทียบกับ checkbox อื่นๆ ที่ auto-size ตามเนื้อหา -->
-      <div style="flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-width:0;">
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> ยอดขาย</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-loan" checked onchange="renderTimeline()"> รับกู้</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> รับทุน</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-buy" checked onchange="renderTimeline()"> ซื้อของ</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-wage" checked onchange="renderTimeline()"> ค่าแรง</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-recurring" checked onchange="renderTimeline()"> รายจ่ายประจำ</label>
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:500;width:20px;flex-shrink:0;">To</label>
+        <input type="date" id="tl-to" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> ยอดขาย</label>
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-buy" checked onchange="renderTimeline()"> ซื้อของ</label>
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-loan" checked onchange="renderTimeline()"> รับกู้</label>
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> จ่ายหนี้</label>
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> รับทุน</label>
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-wage" checked onchange="renderTimeline()"> ค่าแรง</label>
+      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;grid-column:1 / -1;"><input type="checkbox" id="tl-c-recurring" checked onchange="renderTimeline()"> รายจ่ายประจำ</label>
     </div>
   </div>
   <div id="tl-carry-banner" style="display:none;background:var(--card2);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;padding:7px 10px;display:flex;align-items:center;justify-content:flex-end;gap:6px;">
@@ -3999,34 +3978,24 @@ function _saleRowHasData(r) {
 function buildSaleRowHtml(r, idx) {
   const defaultUnit = r.meat ? getUnit(r.meat, SALE_TYPE_ID) : '';
   const displayUnit = r.unit || defaultUnit;
-  let unitCellHtml;
-  if(r.meat) {
-    unitCellHtml = `<div class="br-field" style="text-align:center;" onclick="openSaleRowSelect(event,'${r.id}','unit')">${displayUnit?_escHtml(displayUnit):'เลือก'}</div>`;
-  } else {
-    unitCellHtml = `<div class="br-field br-dash">—</div>`;
-  }
+  const unitHtml = r.meat
+    ? `<span class="dr-unit" onclick="openSaleRowSelect(event,'${r.id}','unit')">${displayUnit?_escHtml(displayUnit):'หน่วย'}</span>`
+    : `<span class="dr-unit dr-dash">—</span>`;
   return `<div class="br-row${_saleRowHasData(r)?' br-row-filled':''}" data-row-id="${r.id}">
-    <div class="br-cell br-col-num">
-      <span style="font-size:11px;font-weight:500;color:var(--text2);">${idx+1}</span>
-    </div>
-    <div class="br-cell br-col-name">
-      <div class="br-field" onclick="openSaleRowSelect(event,'${r.id}')" style="color:${r.meat?'var(--text)':'var(--text2)'};">${r.meat?_escHtml(r.meat):'-- เลือก --'}</div>
-    </div>
-    <div class="br-cell br-col-unit">${unitCellHtml}</div>
-    <div class="br-cell br-col-qty">
-      <input type="number" class="br-field br-num-input" value="${r.qty||''}" placeholder="0" step="0.01" min="0"
-        oninput="onSaleRowCalc('${r.id}','qty',this.value)">
-    </div>
-    <div class="br-cell br-col-price">
-      <input type="number" class="br-field br-num-input" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
-        oninput="onSaleRowCalc('${r.id}','unitPrice',this.value)">
-    </div>
-    <div class="br-cell br-col-total">
-      <input type="number" id="sra-${r.id}" class="br-field br-num-input br-total" value="${r.amount||''}" placeholder="0" step="0.01"
+    <div class="dr-top">
+      <div class="dr-name" onclick="openSaleRowSelect(event,'${r.id}')" style="color:${r.meat?'var(--text)':'var(--text2)'};">${r.meat?_escHtml(r.meat):'-- เลือกสินค้า --'}</div>
+      <input type="number" id="sra-${r.id}" class="dr-total-input" value="${r.amount||''}" placeholder="0" step="0.01"
         oninput="onSaleRowAmtDirect('${r.id}',this.value)">
     </div>
-    <div class="br-cell br-col-del">
-      ${_saleRows.length>1?`<button class="br-del-btn" onclick="removeSaleRow('${r.id}')">✕</button>`:''}
+    <div class="dr-bottom">
+      ${unitHtml}
+      <input type="number" class="dr-num" value="${r.qty||''}" placeholder="0" step="0.01" min="0"
+        oninput="onSaleRowCalc('${r.id}','qty',this.value)">
+      <span class="dr-x">×</span>
+      <input type="number" class="dr-num" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
+        oninput="onSaleRowCalc('${r.id}','unitPrice',this.value)">
+      <span class="dr-spacer"></span>
+      ${_saleRows.length>1?`<button class="dr-del" onclick="removeSaleRow('${r.id}')">✕</button>`:''}
     </div>
   </div>`;
 }
@@ -7549,40 +7518,27 @@ function buildBuyRowHtml(r, idx, types) {
   const autoUnit = r.name && r.type ? getUnit(r.name, r.type) : '';
   const isTransport = r.type === 'transport';
   const total = (parseFloat(r.qty)||0) * (parseFloat(r.unitPrice)||0);
-  const typeLabel = r.type ? (types.find(t=>t.id===r.type)?.label||r.type) : '-- เลือก --';
+  const typeLabel = r.type ? (types.find(t=>t.id===r.type)?.label||r.type) : 'ประเภท';
 
-  let unitCellHtml;
-  if(isTransport) {
-    unitCellHtml = `<div class="br-field br-dash">—</div>`;
-  } else {
-    const displayUnit = r.unit || autoUnit;
-    unitCellHtml = `<div class="br-field" style="text-align:center;" onclick="openBuyRowSelect(event,'${r.id}','unit')">${displayUnit?_escHtml(displayUnit):'เลือก'}</div>`;
-  }
+  const unitHtml = isTransport
+    ? `<span class="dr-unit dr-dash">—</span>`
+    : `<span class="dr-unit" onclick="openBuyRowSelect(event,'${r.id}','unit')">${(r.unit||autoUnit)?_escHtml(r.unit||autoUnit):'หน่วย'}</span>`;
 
   return `<div class="br-row${_buyRowHasData(r)?' br-row-filled':''}" data-row-id="${r.id}">
-    <div class="br-cell br-col-num">
-      <span style="font-size:11px;font-weight:500;color:var(--text2);">${idx+1}</span>
+    <div class="dr-top">
+      <span class="dr-badge" onclick="openBuyRowSelect(event,'${r.id}','type')">${_escHtml(typeLabel)}</span>
+      <div class="dr-name" onclick="openBuyRowSelect(event,'${r.id}','name')" style="color:${r.name?'var(--text)':'var(--text2)'};">${r.name?_escHtml(r.name):'-- เลือกสินค้า --'}</div>
+      <div id="brt-${r.id}" class="dr-total-static">${total>0?fmt(total):'0'}</div>
     </div>
-    <div class="br-cell br-col-type">
-      <div class="br-field" onclick="openBuyRowSelect(event,'${r.id}','type')" style="color:${r.type?'var(--text)':'var(--text2)'};">${_escHtml(typeLabel)}</div>
-    </div>
-    <div class="br-cell br-col-name">
-      <div class="br-field" onclick="openBuyRowSelect(event,'${r.id}','name')" style="color:${r.name?'var(--text)':'var(--text2)'};">${r.name?_escHtml(r.name):'-- เลือก --'}</div>
-    </div>
-    <div class="br-cell br-col-unit">${unitCellHtml}</div>
-    <div class="br-cell br-col-qty">
-      <input type="number" class="br-field br-num-input" value="${r.qty||''}" placeholder="0" step="0.01" min="0"
+    <div class="dr-bottom">
+      ${unitHtml}
+      <input type="number" class="dr-num" value="${r.qty||''}" placeholder="0" step="0.01" min="0"
         oninput="onBuyRowCalc('${r.id}','qty',this.value)">
-    </div>
-    <div class="br-cell br-col-price">
-      <input type="number" class="br-field br-num-input" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
+      <span class="dr-x">×</span>
+      <input type="number" class="dr-num" value="${r.unitPrice||''}" placeholder="0.00" step="0.01" min="0"
         oninput="onBuyRowCalc('${r.id}','unitPrice',this.value)">
-    </div>
-    <div class="br-cell br-col-total">
-      <div id="brt-${r.id}" class="br-field br-total">${total>0?fmt(total):'0'}</div>
-    </div>
-    <div class="br-cell br-col-del">
-      ${_buyRows.length>1?`<button class="br-del-btn" onclick="removeBuyRow('${r.id}')">✕</button>`:''}
+      <span class="dr-spacer"></span>
+      ${_buyRows.length>1?`<button class="dr-del" onclick="removeBuyRow('${r.id}')">✕</button>`:''}
     </div>
   </div>`;
 }
@@ -7768,7 +7724,7 @@ document.addEventListener('click', e=>{
   const dd = document.getElementById('buyrow-select-dd');
   if(!dd || dd.style.display!=='block') return;
   if(dd.contains(e.target)) return;
-  if(e.target.closest('.br-field')) return; // ปล่อยให้ onclick ของ field จัดการเปิดเอง
+  if(e.target.closest('.br-field,.dr-name,.dr-unit,.dr-badge')) return; // ปล่อยให้ onclick ของ field จัดการเปิดเอง
   if(Date.now() - _buyRowDDOpenedAt < 150) return; // กัน ghost-click ตอนเพิ่งเปิดบนมือถือ
   closeBuyRowSelectModal();
 });
