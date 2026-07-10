@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onion Ver.198</title>
+<title>Onion Ver.202</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINESeedSansTH/LINESeedSansTH.css" rel="stylesheet">
 <style>
@@ -79,8 +79,23 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 .rtab.active{background:var(--blue-soft);color:var(--accent-text);font-weight:700;}
 
 /* ══ MARKET POP (Home page big buttons — flat, softer color, gentle shadow, no heavy border) ══ */
-.nb-chip{flex:1;background:#fff;border:1px solid var(--border);border-radius:12px;padding:8px 10px;font-size:10.5px;font-weight:600;color:var(--text2);box-shadow:0 2px 8px rgba(0,0,0,0.06);}
-.nb-chip b{display:block;font-size:15px;font-weight:500;margin-top:2px;}
+.nb-chip{flex:1;background:var(--card2);border:none;border-radius:12px;padding:10px 12px;font-size:10.5px;font-weight:600;color:var(--text2);}
+.nb-chip b{display:block;font-size:16px;font-weight:500;margin-top:2px;}
+.home-bal-card{border-radius:16px;padding:14px 16px;background:var(--card2);}
+.home-bal-btn{background:#fff;border:none;color:var(--accent-text);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.08);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;}
+.home-period-sw{display:flex;background:var(--card2);border-radius:20px;padding:3px;gap:2px;}
+.home-period-sw button{flex:1;border:none;background:none;padding:7px 0;font-size:11.5px;font-weight:700;color:var(--text2);border-radius:18px;cursor:pointer;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;}
+.home-period-sw button.active{background:#fff;color:var(--accent-text);box-shadow:0 1px 4px rgba(0,0,0,0.12);}
+.home-menu-row{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;border:none;border-top:1px solid var(--border);background:none;width:100%;text-align:left;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;}
+.home-menu-row:last-child{border-bottom:1px solid var(--border);}
+.home-menu-row:active{background:var(--card2);}
+.home-menu-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.home-menu-row .t{font-size:15px;font-weight:700;color:var(--text);}
+.home-menu-row .s{font-size:10.5px;color:var(--text2);margin-top:2px;}
+.home-menu-chev{margin-left:auto;color:var(--text2);font-size:17px;flex-shrink:0;}
+.home-recent-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:11px;font-weight:500;cursor:pointer;}
+.home-recent-row+.home-recent-row{margin-top:2px;}
+.home-recent-row:active{background:var(--card2);}
 .nb-tile{border:none;border-radius:18px;padding:16px 17px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 14px rgba(0,0,0,0.13);color:#fff;width:100%;text-align:left;cursor:pointer;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;transition:transform 0.1s,box-shadow 0.1s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;}
 .nb-tile:active{transform:scale(0.98);box-shadow:0 2px 8px rgba(0,0,0,0.13);}
 .nb-tile::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 22px 22px 0;border-color:transparent rgba(255,255,255,0.16) transparent transparent;}
@@ -91,7 +106,7 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 .nb-txt .t{font-size:18px;font-weight:700;}
 .nb-txt .s{font-size:10.5px;font-weight:500;margin-top:2px;opacity:0.92;}
 .nb-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;margin-bottom:7px;background:#fff;border:1px solid var(--border);border-radius:11px;font-size:11px;font-weight:500;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.05);}
-.nb-row .amt{font-weight:500;}
+.nb-row .amt,.home-recent-row .amt{font-weight:500;}
 #app-root{position:relative;z-index:1;}
 /* ตัวเลขหลัก dashboard ใช้ Inter เพื่อความคม */
 #d-cashbal,#d-sale,#d-buy,#d-profit,#d-capital,#d-loan,#d-avg-val{font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;}
@@ -387,18 +402,18 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .br-row{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-bottom:1px solid var(--border);}
 .br-row:last-child{border-bottom:none;}
 .br-row.br-row-filled{background:var(--blue-soft);box-shadow:inset 3px 0 0 var(--accent-text);}
-.dr-top{display:flex;align-items:center;gap:8px;}
-.dr-badge{flex-shrink:0;font-size:11px;font-weight:700;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent);border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;max-width:88px;overflow:hidden;text-overflow:ellipsis;}
-.dr-name{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;}
+.dr-top{display:flex;align-items:center;gap:7px;}
+.dr-badge{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent-text);background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:9px;padding:7px 11px;cursor:pointer;white-space:nowrap;max-width:88px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+.dr-name{flex:0 1 auto;display:inline-flex;align-items:center;min-width:0;max-width:150px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 11px;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
 .dr-total-input{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent-text);border-radius:7px;padding:5px 7px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;}
-.dr-total-static{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);}
+.dr-total-static{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);margin-left:auto;}
 .dr-bottom{display:flex;align-items:center;gap:6px;}
-.dr-unit{flex-shrink:0;font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;}
-.dr-unit.dr-dash{color:var(--border);cursor:default;}
+.dr-unit{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text2);background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:7px 11px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+.dr-unit.dr-dash{color:var(--border);cursor:default;box-shadow:none;background:var(--card2);}
 .dr-num{width:56px;flex-shrink:0;text-align:center;font-size:12.5px;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:5px 4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;color:var(--text);}
 .dr-x{flex-shrink:0;font-size:11px;color:var(--text2);}
 .dr-spacer{flex:1;}
-.dr-del{flex-shrink:0;background:var(--red-soft);border:1px solid var(--red);color:var(--red);cursor:pointer;font-size:15px;font-weight:700;line-height:1;padding:6px 9px;border-radius:8px;opacity:1;}
+.dr-del{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:var(--red-soft);border:1.5px solid var(--red);color:var(--red);cursor:pointer;font-size:14px;font-weight:700;line-height:1;padding:7px 10px;border-radius:9px;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
 .br-field{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 5px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11px;outline:none;color:var(--text);box-sizing:border-box;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 .br-row.br-row-filled .br-field.br-locked{background:var(--blue-soft);}
@@ -509,6 +524,38 @@ const THEME_PRESETS = {
   bright_purple: {name:'ม่วงสด',   accent:'#8E4EC6', soft:'#F3EAFB', rgb:'142,78,198'},
   bright_pink:   {name:'ชมพูสด',   accent:'#E93D82', soft:'#FCE6F0', rgb:'233,61,130'}
 };
+// ══ เติมธีมสีเพิ่มอีกจำนวนมาก คำนวณ soft-tint/rgb อัตโนมัติจากสีหลัก ไม่ต้องพิมพ์ทีละค่า ══
+function _hexMixWhite(hex, amt) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  const mr=Math.round(r+(255-r)*amt), mg=Math.round(g+(255-g)*amt), mb=Math.round(b+(255-b)*amt);
+  return '#'+[mr,mg,mb].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function _hexToRgbStr(hex) {
+  return [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)].join(',');
+}
+function _addTheme(key, name, accent) {
+  THEME_PRESETS[key] = { name, accent, soft:_hexMixWhite(accent,0.87), rgb:_hexToRgbStr(accent) };
+}
+_addTheme('camel',        'แคเมล',          '#B08968');
+_addTheme('sage',         'เขียวเซจ',        '#5C7A6E');
+_addTheme('deep_lavender','ม่วงลาเวนเดอร์เข้ม','#6B5B95');
+_addTheme('sky',          'ฟ้าท้องฟ้า',       '#6D9DC5');
+_addTheme('cocoa',        'โกโก้',           '#8C6A5D');
+_addTheme('steel_teal',   'ฟ้าเขียวเหล็ก',     '#4F6D7A');
+_addTheme('sand',         'ทรายทอง',         '#C2A878');
+_addTheme('mauve',        'ม่วงเทามอฟ',       '#85586F');
+_addTheme('coral',        'ปะการัง',         '#FF6B6B');
+_addTheme('sun_orange',   'ส้มทานตะวัน',      '#FF9F43');
+_addTheme('lemon',        'เหลืองมะนาว',      '#FFD93D');
+_addTheme('fresh_green',  'เขียวสดใหม่',      '#6BCB77');
+_addTheme('sky_blue',     'ฟ้าใส',           '#4D96FF');
+_addTheme('grape',        'ม่วงองุ่น',        '#C56CF0');
+_addTheme('bubblegum',    'ชมพูหมากฝรั่ง',     '#FF6FB5');
+_addTheme('teal_bright',  'เขียวเทอร์คอยส์',   '#00C2A8');
+_addTheme('watermelon',   'แดงแตงโม',        '#FC5C65');
+_addTheme('azure',        'ฟ้าอาซัวร์',       '#45AAF2');
+_addTheme('indigo',       'น้ำเงินอินดิโก้',   '#4B7BEC');
+_addTheme('lilac',        'ม่วงไลแลค',        '#A29BFE');
 function applyTheme(key, save) {
   const t = THEME_PRESETS[key] || THEME_PRESETS.gold;
   document.documentElement.style.setProperty('--accent', t.accent);
@@ -524,6 +571,13 @@ function applyTheme(key, save) {
   if (label) label.textContent = t.name;
 }
 function getCurrentTheme(){ return localStorage.getItem('app_theme') || 'gold'; }
+function renderThemeSwatchRow() {
+  const el = document.getElementById('theme-swatch-row');
+  if(!el) return;
+  el.innerHTML = Object.entries(THEME_PRESETS).map(([key,t])=>
+    `<div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="${key}" style="background:${t.accent};" onclick="applyTheme('${key}',true)"></div><div class="theme-swatch-label">${t.name.replace(' (ค่าเริ่มต้น)','')}</div></div>`
+  ).join('');
+}
 // ใช้ธีมที่บันทึกไว้ทันที ก่อนหน้าจอ render เพื่อไม่ให้เห็นสีกระพริบ
 applyTheme(getCurrentTheme(), false);
 </script>
@@ -720,42 +774,54 @@ applyTheme(getCurrentTheme(), false);
 <div class="page active" id="page-home" style="padding:0;background:var(--bg);">
 
   <div style="padding:16px 16px 4px;">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
-      <div>
-        <div style="font-size:11px;color:#5B6560;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;">เงินคงเหลือในบัญชีจริง</div>
-        <div id="d-cashbal-home" style="font-size:24px;font-weight:500;color:#171D1A;line-height:1;letter-spacing:-0.3px;">0</div>
+    <div class="home-bal-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+        <div>
+          <div style="font-size:11px;color:#5B6560;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;">เงินคงเหลือในบัญชีจริง</div>
+          <div id="d-cashbal-home" style="font-size:24px;font-weight:500;color:#171D1A;line-height:1;letter-spacing:-0.3px;">0</div>
+        </div>
+        <button id="cashbal-show-btn-home" onclick="toggleSensitive('cashbal')" class="home-bal-btn">ดู</button>
       </div>
-      <button id="cashbal-show-btn-home" onclick="toggleSensitive('cashbal')" style="background:#fff;border:1px solid var(--border);color:var(--text2);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.08);">ดู</button>
     </div>
   </div>
 
-  <!-- ยอดวันนี้ — chip เล็ก ขอบหนา+เงา offset ให้เข้าโทนเดียวกับปุ่มใหญ่ -->
+  <!-- สวิตช์ วันนี้/เดือนนี้/ทั้งหมด -->
+  <div class="home-period-sw" id="home-period-sw" style="margin:14px 16px 0;">
+    <button class="active" data-p="day" onclick="homeChipPeriod('day')">วันนี้</button>
+    <button data-p="month" onclick="homeChipPeriod('month')">เดือนนี้</button>
+    <button data-p="all" onclick="homeChipPeriod('all')">ทั้งหมด</button>
+  </div>
+
+  <!-- ยอดขาย/ซื้อของ ตามช่วงที่เลือกด้านบน -->
   <div style="display:flex;gap:8px;margin:10px 16px 16px;">
-    <div class="nb-chip">ยอดขายวันนี้<b style="color:var(--vivid-sale);">฿<span id="d-home-sale-today">0</span></b></div>
-    <div class="nb-chip">ซื้อของวันนี้<b style="color:var(--vivid-buy);">฿<span id="d-home-buy-today">0</span></b></div>
+    <div class="nb-chip"><span id="d-home-sale-label">ยอดขาย</span><b style="color:var(--vivid-sale);">฿<span id="d-home-sale-today">0</span></b></div>
+    <div class="nb-chip"><span id="d-home-buy-label">ซื้อของ</span><b style="color:var(--vivid-buy);">฿<span id="d-home-buy-today">0</span></b></div>
   </div>
 
-  <!-- ปุ่มหลัก 3 อัน — Neo-Market: สีทึบสดจัด + ขอบหนา + เงา offset -->
-  <div style="display:flex;flex-direction:column;gap:12px;margin:0 16px 16px;">
-    <button class="nb-tile sale" onclick="goPage('page-income',document.getElementById('nav-page-income'))">
-      <span class="nb-ico">▦</span>
-      <span class="nb-txt"><span class="t" style="display:block;">ขาย</span><span class="s" style="display:block;">บันทึกยอดขายวันนี้ ลูกค้า/สินค้า/ราคา</span></span>
+  <!-- ปุ่มหลัก 3 อัน — เต็มจอ คั่นด้วยเส้นบน-ล่าง ไม่มีกรอบ/กล่อง -->
+  <div>
+    <button class="home-menu-row" onclick="goPage('page-income',document.getElementById('nav-page-income'))">
+      <div class="home-menu-dot" style="background:var(--vivid-sale);"></div>
+      <div><div class="t">ขาย</div><div class="s">บันทึกยอดขายวันนี้ ลูกค้า/สินค้า/ราคา</div></div>
+      <div class="home-menu-chev">›</div>
     </button>
-    <button class="nb-tile buy" onclick="goPage('page-buy',document.getElementById('nav-page-buy'))">
-      <span class="nb-ico">🛒︎</span>
-      <span class="nb-txt"><span class="t" style="display:block;">ซื้อของ</span><span class="s" style="display:block;">บันทึกรายการซื้อของ/วัตถุดิบวันนี้</span></span>
+    <button class="home-menu-row" onclick="goPage('page-buy',document.getElementById('nav-page-buy'))">
+      <div class="home-menu-dot" style="background:var(--vivid-buy);"></div>
+      <div><div class="t">ซื้อของ</div><div class="s">บันทึกรายการซื้อของ/วัตถุดิบวันนี้</div></div>
+      <div class="home-menu-chev">›</div>
     </button>
-    <button class="nb-tile fin" onclick="goPage('page-finance',document.getElementById('nav-page-finance'))">
-      <span class="nb-ico">₿</span>
-      <span class="nb-txt"><span class="t" style="display:block;">การเงิน</span><span class="s" style="display:block;">ค่าแรง ค่าคอม เงินทุน เงินกู้ รายจ่ายประจำ</span></span>
+    <button class="home-menu-row" onclick="goPage('page-finance',document.getElementById('nav-page-finance'))">
+      <div class="home-menu-dot" style="background:var(--vivid-fin);"></div>
+      <div><div class="t">การเงิน</div><div class="s">ค่าแรง ค่าคอม เงินทุน เงินกู้ รายจ่ายประจำ</div></div>
+      <div class="home-menu-chev">›</div>
     </button>
   </div>
 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin:16px 16px 8px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin:16px 16px 0;padding-top:16px;">
     <div style="font-size:13px;font-weight:700;color:var(--text);">รายการล่าสุด</div>
     <div onclick="goPage('page-dashboard',document.getElementById('nav-page-dashboard'))" style="font-size:10.5px;color:var(--text);font-weight:700;cursor:pointer;text-decoration:underline;">ดูแดชบอร์ด ›</div>
   </div>
-  <div id="home-recent-feed" style="margin:0 16px 16px;"></div>
+  <div id="home-recent-feed" style="padding-bottom:8px;"></div>
 
 </div>
 
@@ -813,23 +879,6 @@ applyTheme(getCurrentTheme(), false);
       <button onclick="cycleDashStyle(event)" title="เปลี่ยนรูปแบบการ์ด" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:4px 9px 4px 8px;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;">⇄ รูปแบบ</button>
     </div>
     <div id="dash-metrics"></div>
-    <!-- ทุน + หนี้ (ย้ายมาอยู่บนการ์ดกราฟโดนัทเดียวกัน) -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
-      <div onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);"
-        style="background:var(--card2);border-radius:14px;padding:12px;position:relative;cursor:pointer;">
-        <button id="capital-show-btn" onclick="event.stopPropagation();toggleSensitive('capital')" style="position:absolute;top:8px;right:8px;background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:500;cursor:pointer;">ดู</button>
-        <div style="font-size:11px;color:#5B6560;font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">เงินทุน</div>
-        <div id="d-capital" style="font-size:16px;font-weight:500;color:var(--accent-text);line-height:1;">0</div>
-        <div style="font-size:10px;color:#5B6560;margin-top:4px;">แตะดูรายละเอียด</div>
-      </div>
-      <div onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));"
-        style="background:var(--card2);border-radius:14px;padding:12px;position:relative;cursor:pointer;">
-        <button id="loan-show-btn" onclick="event.stopPropagation();toggleSensitive('loan')" style="position:absolute;top:8px;right:8px;background:#F1EFE7;border:1px solid var(--border);color:#5B6560;border-radius:5px;padding:3px 7px;font-size:10px;font-weight:500;cursor:pointer;">ดู</button>
-        <div style="font-size:11px;color:#5B6560;font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em;">หนี้คงเหลือ</div>
-        <div id="d-loan" style="font-size:16px;font-weight:500;color:#8A3A3D;line-height:1;">0</div>
-        <div id="d-loan-row" style="font-size:9px;color:#5B6560;margin-top:4px;">จ่ายแล้ว <span id="d-loan-paid" style="color:#0E5C4A;">0</span> / <span id="d-loan-due" style="color:#8A3A3D;">0</span></div>
-      </div>
-    </div>
   </div>
 
   <!-- ══ CONTENT ══ -->
@@ -881,6 +930,7 @@ applyTheme(getCurrentTheme(), false);
       </div>
       <div id="chart7day" style="display:flex;align-items:flex-end;gap:1px;height:90px;padding-top:8px;"></div>
       <div id="chart7day-labels" style="display:flex;gap:1px;margin-top:4px;"></div>
+      <div id="chart7day-bestday" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text2);display:none;"></div>
     </div>
 
     <!-- แนวโน้ม -->
@@ -1369,22 +1419,20 @@ applyTheme(getCurrentTheme(), false);
 <div class="page" id="page-rep-income">
   <div class="rep-filter-sticky">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:var(--shadow-card);">
-    <div style="display:flex;gap:10px;">
-      <div style="flex:0 0 132px;">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
-          <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">From</label>
-          <input type="date" id="ri-from" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">To</label>
-          <input type="date" id="ri-to" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
-        </div>
+    <div style="display:flex;gap:10px;margin-bottom:10px;">
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:28px;flex-shrink:0;">From</label>
+        <input type="date" id="ri-from" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
-      <div style="flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-width:0;">
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="ri-c-sale" checked onchange="onRiSaleFilterChange()"> ยอดขาย</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="ri-c-loan" checked onchange="renderRepIncome()"> รับกู้</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="ri-c-capital" checked onchange="renderRepIncome()"> รับทุน</label>
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:20px;flex-shrink:0;">To</label>
+        <input type="date" id="ri-to" onchange="renderRepIncome()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <label class="chk-label"><input type="checkbox" id="ri-c-sale" checked onchange="onRiSaleFilterChange()"> ยอดขาย</label>
+      <label class="chk-label"><input type="checkbox" id="ri-c-loan" checked onchange="renderRepIncome()"> รับกู้</label>
+      <label class="chk-label"><input type="checkbox" id="ri-c-capital" checked onchange="renderRepIncome()"> รับทุน</label>
     </div>
   </div>
   <!-- LOCATION FILTER: แสดงเฉพาะเมื่อติ๊ก ยอดขาย -->
@@ -1430,23 +1478,21 @@ applyTheme(getCurrentTheme(), false);
   <!-- วันที่ -->
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:var(--shadow-card);">
     <div style="display:flex;gap:10px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
-      <div style="flex:0 0 132px;">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
-          <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">From</label>
-          <input type="date" id="re-from" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">To</label>
-          <input type="date" id="re-to" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
-        </div>
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:28px;flex-shrink:0;">From</label>
+        <input type="date" id="re-from" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
-      <div style="flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-width:0;">
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="re-c-buy" checked onchange="renderRepExpense()"> ซื้อของ</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="re-c-wage" checked onchange="renderRepExpense()"> ค่าแรง</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="re-c-admincom" checked onchange="renderRepExpense()"> ค่าคอม</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="re-c-loanpay" checked onchange="renderRepExpense()"> จ่ายหนี้</label>
-        <label class="chk-label" style="padding:7px 10px;font-size:12px;flex:0 0 auto;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="re-c-recurring" checked onchange="renderRepExpense()"> รายจ่ายประจำ</label>
+      <div style="flex:1;display:flex;align-items:center;gap:5px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:20px;flex-shrink:0;">To</label>
+        <input type="date" id="re-to" onchange="renderRepExpense()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+      <label class="chk-label"><input type="checkbox" id="re-c-buy" checked onchange="renderRepExpense()"> ซื้อของ</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-wage" checked onchange="renderRepExpense()"> ค่าแรง</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-admincom" checked onchange="renderRepExpense()"> ค่าคอม</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-loanpay" checked onchange="renderRepExpense()"> จ่ายหนี้</label>
+      <label class="chk-label"><input type="checkbox" id="re-c-recurring" checked onchange="renderRepExpense()"> รายจ่ายประจำ</label>
     </div>
     <!-- แถว 2: ซัพพลายเออร์ + ประเภท -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
@@ -1515,22 +1561,22 @@ applyTheme(getCurrentTheme(), false);
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:var(--shadow-card);">
     <div style="display:flex;gap:10px;margin-bottom:10px;">
       <div style="flex:1;display:flex;align-items:center;gap:5px;">
-        <label style="font-size:11px;color:var(--text2);font-weight:500;width:28px;flex-shrink:0;">From</label>
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:28px;flex-shrink:0;">From</label>
         <input type="date" id="tl-from" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
       <div style="flex:1;display:flex;align-items:center;gap:5px;">
-        <label style="font-size:11px;color:var(--text2);font-weight:500;width:20px;flex-shrink:0;">To</label>
+        <label style="font-size:11px;color:var(--text2);font-weight:700;width:20px;flex-shrink:0;">To</label>
         <input type="date" id="tl-to" onchange="renderTimeline()" style="flex:1;min-width:0;min-height:34px;box-sizing:border-box;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:7px 6px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12px;color:var(--text);outline:none;">
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> ยอดขาย</label>
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-buy" checked onchange="renderTimeline()"> ซื้อของ</label>
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-loan" checked onchange="renderTimeline()"> รับกู้</label>
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> จ่ายหนี้</label>
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> รับทุน</label>
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;"><input type="checkbox" id="tl-c-wage" checked onchange="renderTimeline()"> ค่าแรง</label>
-      <label class="chk-label" style="padding:7px 10px;font-size:12px;min-height:34px;box-sizing:border-box;grid-column:1 / -1;"><input type="checkbox" id="tl-c-recurring" checked onchange="renderTimeline()"> รายจ่ายประจำ</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <label class="chk-label"><input type="checkbox" id="tl-c-sale" checked onchange="renderTimeline()"> ยอดขาย</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-buy" checked onchange="renderTimeline()"> ซื้อของ</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-loan" checked onchange="renderTimeline()"> รับกู้</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-loanpay" checked onchange="renderTimeline()"> จ่ายหนี้</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-capital" checked onchange="renderTimeline()"> รับทุน</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-wage" checked onchange="renderTimeline()"> ค่าแรง</label>
+      <label class="chk-label"><input type="checkbox" id="tl-c-recurring" checked onchange="renderTimeline()"> รายจ่ายประจำ</label>
     </div>
   </div>
   <div id="tl-carry-banner" style="display:none;background:var(--card2);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;padding:7px 10px;display:flex;align-items:center;justify-content:flex-end;gap:6px;">
@@ -1694,17 +1740,10 @@ applyTheme(getCurrentTheme(), false);
     <div class="form-group"><label>ชื่อพนักงาน</label><input type="text" id="edit-emp-name" placeholder="ชื่อพนักงาน"></div>
     <div class="form-group"><label>ค่าแรง (บาท/วัน)</label><input type="number" id="edit-emp-rate" placeholder="บาท/วัน" min="0" step="0.01"></div>
     <div class="form-group"><label>สีปฏิทิน</label>
-      <div style="display:flex;align-items:center;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
         <input type="color" id="edit-emp-color" value="#C98A9E" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
-        <div style="display:flex;gap:5px;">
-          <span onclick="document.getElementById('edit-emp-color').value='var(--accent)'" style="width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#0E5C4A'" style="width:20px;height:20px;border-radius:50%;background:#0E5C4A;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#C08862'" style="width:20px;height:20px;border-radius:50%;background:#C08862;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#8A3A3D'" style="width:20px;height:20px;border-radius:50%;background:#8A3A3D;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#5E4780'" style="width:20px;height:20px;border-radius:50%;background:#5E4780;cursor:pointer;display:inline-block;"></span>
-          <span onclick="document.getElementById('edit-emp-color').value='#4C8C8B'" style="width:20px;height:20px;border-radius:50%;background:#4C8C8B;cursor:pointer;display:inline-block;"></span>
-        </div>
       </div>
+      <div id="edit-emp-color-swatches" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-width:260px;"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <button onclick="saveEditEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14px;font-weight:500;cursor:pointer;"> บันทึก</button>
@@ -1887,22 +1926,7 @@ applyTheme(getCurrentTheme(), false);
 <div class="page" id="set-theme">
   <div class="section-title"><button class="back-btn" onclick="goPage('page-settings',document.getElementById('nav-page-settings'))">ธีมสีของแอป</button></div>
   <div class="smi-sub" style="margin-bottom:14px;">แตะเพื่อเปลี่ยนสีหลักของแอปทั้งหมด บันทึกไว้ในเครื่องนี้</div>
-  <div id="theme-swatch-row" style="display:flex;flex-wrap:wrap;gap:12px 8px;padding:2px 2px 18px;">
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="gold" style="background:#A9812E;" onclick="applyTheme('gold',true)"></div><div class="theme-swatch-label">ทองบรอนซ์</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="moss" style="background:#8CA88F;" onclick="applyTheme('moss',true)"></div><div class="theme-swatch-label">เขียวมอส</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="dusty" style="background:#8EA3B0;" onclick="applyTheme('dusty',true)"></div><div class="theme-swatch-label">ฟ้าหม่น</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="rose" style="background:#C99A9A;" onclick="applyTheme('rose',true)"></div><div class="theme-swatch-label">ชมพูอบเชย</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="lavender" style="background:#A594B0;" onclick="applyTheme('lavender',true)"></div><div class="theme-swatch-label">ลาเวนเดอร์</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="terracotta" style="background:#C08862;" onclick="applyTheme('terracotta',true)"></div><div class="theme-swatch-label">ส้มดินเผา</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="mint" style="background:#7FADA3;" onclick="applyTheme('mint',true)"></div><div class="theme-swatch-label">มินท์</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_red" style="background:#E5484D;" onclick="applyTheme('bright_red',true)"></div><div class="theme-swatch-label">แดงสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_orange" style="background:#F76B15;" onclick="applyTheme('bright_orange',true)"></div><div class="theme-swatch-label">ส้มสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_blue" style="background:#0090FF;" onclick="applyTheme('bright_blue',true)"></div><div class="theme-swatch-label">ฟ้าสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_green" style="background:#30A46C;" onclick="applyTheme('bright_green',true)"></div><div class="theme-swatch-label">เขียวสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_purple" style="background:#8E4EC6;" onclick="applyTheme('bright_purple',true)"></div><div class="theme-swatch-label">ม่วงสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="bright_pink" style="background:#E93D82;" onclick="applyTheme('bright_pink',true)"></div><div class="theme-swatch-label">ชมพูสด</div></div>
-    <div class="theme-swatch-wrap"><div class="theme-swatch" data-theme-key="charcoal" style="background:#5B6560;" onclick="applyTheme('charcoal',true)"></div><div class="theme-swatch-label">เทาเข้ม</div></div>
-  </div>
+  <div id="theme-swatch-row" style="display:flex;flex-wrap:wrap;gap:12px 8px;padding:2px 2px 18px;"></div>
 </div>
 
 <!-- SUB: รูปแบบสรุปยอด Dashboard -->
@@ -2004,6 +2028,7 @@ applyTheme(getCurrentTheme(), false);
         <input type="color" id="new-location-color" value="#A9812E"
           style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:2px;width:100%;height:38px;box-sizing:border-box;cursor:pointer;">
       </div>
+      <div id="new-location-color-swatches" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-width:260px;"></div>
       <button onclick="addLocationFromSettings()"
         style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;cursor:pointer;font-weight:500;">+ เพิ่มสถานที่</button>
     </div>
@@ -2023,6 +2048,7 @@ applyTheme(getCurrentTheme(), false);
       <div class="form-group" style="margin-bottom:0;"><label>ตัวย่อ</label><input type="text" id="edit-location-abbr" maxlength="4" style="text-align:center;"></div>
       <div class="form-group" style="margin-bottom:0;"><label>สี</label><input type="color" id="edit-location-color" style="padding:2px;height:38px;cursor:pointer;"></div>
     </div>
+    <div id="edit-location-color-swatches" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-width:260px;"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
       <button onclick="saveEditLocation()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14px;font-weight:500;cursor:pointer;">บันทึก</button>
       <button onclick="document.getElementById('edit-location-modal').style.display='none'" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14px;cursor:pointer;">ยกเลิก</button>
@@ -2355,9 +2381,7 @@ applyTheme(getCurrentTheme(), false);
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
       <label style="font-size:12px;color:var(--text2);font-weight:500;">สีปฏิทิน</label>
       <input type="color" id="new-emp-color" value="#C98A9E" style="width:36px;height:30px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--card2);">
-      <div style="display:flex;gap:4px;flex-wrap:wrap;max-width:220px;">
-        <span onclick="document.getElementById('new-emp-color').value='#C98A9E'" style="width:18px;height:18px;border-radius:50%;background:#C98A9E;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#B5605A'" style="width:18px;height:18px;border-radius:50%;background:#B5605A;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#C08348'" style="width:18px;height:18px;border-radius:50%;background:#C08348;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#C9A227'" style="width:18px;height:18px;border-radius:50%;background:#C9A227;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#6E9B7C'" style="width:18px;height:18px;border-radius:50%;background:#6E9B7C;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#3E7D5C'" style="width:18px;height:18px;border-radius:50%;background:#3E7D5C;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#4C8C8B'" style="width:18px;height:18px;border-radius:50%;background:#4C8C8B;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#5B7FA6'" style="width:18px;height:18px;border-radius:50%;background:#5B7FA6;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#7E6BA6'" style="width:18px;height:18px;border-radius:50%;background:#7E6BA6;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#9C6B96'" style="width:18px;height:18px;border-radius:50%;background:#9C6B96;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#7C8C4A'" style="width:18px;height:18px;border-radius:50%;background:#7C8C4A;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#B8952E'" style="width:18px;height:18px;border-radius:50%;background:#B8952E;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#6E8AA6'" style="width:18px;height:18px;border-radius:50%;background:#6E8AA6;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#A65B72'" style="width:18px;height:18px;border-radius:50%;background:#A65B72;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#8B7AA0'" style="width:18px;height:18px;border-radius:50%;background:#8B7AA0;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#4E8064'" style="width:18px;height:18px;border-radius:50%;background:#4E8064;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#A9682F'" style="width:18px;height:18px;border-radius:50%;background:#A9682F;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span><span onclick="document.getElementById('new-emp-color').value='#35695A'" style="width:18px;height:18px;border-radius:50%;background:#35695A;cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span>
-      </div>
+      <div id="new-emp-color-swatches" style="display:flex;gap:4px;flex-wrap:wrap;max-width:220px;"></div>
     </div>
     <button onclick="addEmployee()" style="background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;cursor:pointer;">+ เพิ่มพนักงาน</button>
   </div>
@@ -2821,6 +2845,24 @@ function localDateStr(d){ d=d||new Date(); return d.getFullYear()+'-'+_pad2(d.ge
 function localMonthStr(d){ d=d||new Date(); return d.getFullYear()+'-'+_pad2(d.getMonth()+1); }
 const today = () => localDateStr(new Date());
 const thisMonth = () => localMonthStr(new Date());
+
+// ══ ชุดสีขนาดใหญ่ ใช้ร่วมกันทุกจุดที่มี color picker (สถานที่, พนักงาน ฯลฯ) ══
+const COLOR_SWATCHES = [
+  // โทนหม่นนวล (ของเดิม)
+  '#C98A9E','#B5605A','#C08348','#C9A227','#6E9B7C','#3E7D5C','#4C8C8B','#5B7FA6','#7E6BA6','#9C6B96',
+  '#7C8C4A','#B8952E','#6E8AA6','#A65B72','#8B7AA0','#4E8064','#A9682F','#35695A',
+  // โทนสดของเดิม
+  '#E5484D','#F76B15','#0090FF','#30A46C','#8E4EC6','#E93D82',
+  // โทนหม่นนวล เพิ่มใหม่
+  '#A8763E','#7A6C5D','#5C7A6E','#6B5B95','#C97064','#8FA3A3','#B08968','#6F8F92','#9B8281','#85586F',
+  '#517664','#A47148','#6A7B8C','#B5838D','#6D9DC5','#C2A878','#8C6A5D','#4F6D7A','#9A8C98','#7D8570',
+  // โทนสดใหม่
+  '#FF6B6B','#FF9F43','#FFD93D','#6BCB77','#4D96FF','#C56CF0','#FF6FB5','#00C2A8','#FF4757','#2ED573',
+  '#1E90FF','#A55EEA','#FD79A8','#FDA085','#26DE81','#FC5C65','#45AAF2','#4B7BEC','#FED330','#A29BFE'
+];
+function buildColorSwatchRow(inputId) {
+  return COLOR_SWATCHES.map(c=>`<span onclick="document.getElementById('${inputId}').value='${c}'" style="width:18px;height:18px;border-radius:50%;background:${c};cursor:pointer;display:inline-block;border:1.5px solid rgba(0,0,0,0.08);flex-shrink:0;"></span>`).join('');
+}
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
 // Toast notification แทน alert — Ver.194: เลื่อนขึ้นจากล่าง + ไอคอนวงกลม (✓/✕/i) แทนข้อความล้วน
@@ -8848,6 +8890,19 @@ function _animateDonutDraw(container){
   });
 }
 
+function _dashCapitalDebtStripHtml(){
+  return `<div style="display:flex;gap:8px;padding-top:10px;margin-top:9px;border-top:1px dashed var(--border);">
+    <div onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);" style="flex:1;cursor:pointer;background:var(--card2);border-radius:10px;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;gap:6px;">
+      <span style="font-size:10.5px;color:var(--text2);">ทุน</span>
+      <span id="d-capital" style="font-size:13px;font-weight:700;color:var(--accent-text);white-space:nowrap;">0</span>
+    </div>
+    <div onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));" style="flex:1;cursor:pointer;background:var(--card2);border-radius:10px;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;gap:6px;">
+      <span style="font-size:10.5px;color:var(--text2);">หนี้คงเหลือ</span>
+      <span id="d-loan" style="font-size:13px;font-weight:700;color:#8A3A3D;white-space:nowrap;">0</span>
+    </div>
+  </div>`;
+}
+
 function _dashNetFooterHtml(){
   return `<div style="padding-top:11px;margin-top:8px;border-top:1px dashed var(--border);">
     <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -8900,14 +8955,27 @@ function _dashRenderDonut(d, metrics, visible, bd, maxVal){
     });
   }
   let html = `<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-    <div style="position:relative;flex-shrink:0;">
-      <svg width="104" height="104" viewBox="0 0 110 110">
-        <circle cx="55" cy="55" r="${R}" fill="none" stroke="#EEEEEE" stroke-width="14"/>
-        ${segsHtml}
-      </svg>
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:70px;">
-        <div style="font-size:9px;color:var(--text2);font-weight:500;">รวมจ่าย</div>
-        <div style="font-size:13px;font-weight:500;color:var(--red);">${fmt(total)}</div>
+    <div style="flex-shrink:0;width:104px;">
+      <div style="position:relative;">
+        <svg width="104" height="104" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="${R}" fill="none" stroke="#EEEEEE" stroke-width="14"/>
+          ${segsHtml}
+        </svg>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:70px;">
+          <div style="font-size:9px;color:var(--text2);font-weight:500;">รวมจ่าย</div>
+          <div style="font-size:13px;font-weight:500;color:var(--red);">${fmt(total)}</div>
+        </div>
+      </div>
+      <!-- เงินทุน + หนี้คงเหลือ: ฝังไว้บนกราฟโดนัทโดยตรง -->
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:9px;background:var(--card2);border-radius:9px;padding:6px 8px;">
+        <div onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:4px;">
+          <span style="font-size:9px;color:var(--text2);white-space:nowrap;">ทุน</span>
+          <span id="d-capital" style="font-size:11px;font-weight:700;color:var(--accent-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">0</span>
+        </div>
+        <div onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:4px;">
+          <span style="font-size:9px;color:var(--text2);white-space:nowrap;">หนี้</span>
+          <span id="d-loan" style="font-size:11px;font-weight:700;color:#8A3A3D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">0</span>
+        </div>
       </div>
     </div>
     <div style="flex:1;min-width:120px;display:flex;flex-direction:column;gap:9px;">`;
@@ -9052,7 +9120,7 @@ function renderDashMetrics(d){
   else if(style==='receipt') body = _dashRenderReceipt(d, metrics, visible, bd, maxVal);
   else body = _dashRenderGrid(d, metrics, visible, bd, maxVal);
 
-  el.innerHTML = body + _dashNetFooterHtml();
+  el.innerHTML = body + _dashNetFooterHtml() + (style==='donut' ? '' : _dashCapitalDebtStripHtml());
   ac('d-profit', d.profit, d.profit>=0?'green':'red');
   _applySensAll();
   _animateDonutDraw(el);
@@ -9173,7 +9241,8 @@ function updateDashboard() {
 
   const dashSummaryData = {
     sale: periodSale, saleQty: periodSaleQty, buy: periodBuy, wage: monthWage, admincom: adminCom, recurring: monthRecurring,
-    profit: monthProfit, periodFrom, periodTo, from: profitFrom, to: profitTo, period
+    profit: monthProfit, periodFrom, periodTo, from: profitFrom, to: profitTo, period,
+    capitalTotal, loanRemain
   };
   renderDashMetrics(dashSummaryData);
   renderDashSummaryStats(dashSummaryData);
@@ -9192,18 +9261,38 @@ function updateDashboard() {
   renderLineChart();
 }
 
-// ============ HOME PAGE EXTRAS (ยอดวันนี้ + รายการล่าสุด) ============
+// ============ HOME PAGE EXTRAS (ยอดขาย/ซื้อของ ตาม period + รายการล่าสุด) ============
+let _homeChipPeriod = 'day';
+function homeChipPeriod(p) {
+  _homeChipPeriod = p;
+  const sw = document.getElementById('home-period-sw');
+  if(sw) sw.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b.dataset.p===p));
+  renderHomeExtras();
+}
+
 function renderHomeExtras() {
   const td = today();
+  const tm = thisMonth();
   const sales = DB.get(KEY.sale);
   const buys = DB.get(KEY.buy);
 
-  const saleToday = sales.filter(i=>i.date===td).reduce((s,i)=>s+(i.amount||0),0);
-  const buyToday = buys.filter(i=>i.date===td).reduce((s,i)=>s+(i.price||0),0);
+  const p = _homeChipPeriod || 'day';
+  const inPeriod = (dateStr) => {
+    if(p==='day') return dateStr===td;
+    if(p==='month') return (dateStr||'').slice(0,7)===tm;
+    return true; // 'all'
+  };
+  const periodLabel = p==='day' ? 'วันนี้' : (p==='month' ? 'เดือนนี้' : 'ทั้งหมด');
+  const saleAmt = sales.filter(i=>inPeriod(i.date)).reduce((s,i)=>s+(i.amount||0),0);
+  const buyAmt = buys.filter(i=>inPeriod(i.date)).reduce((s,i)=>s+(i.price||0),0);
+  const saleLblEl = document.getElementById('d-home-sale-label');
+  if(saleLblEl) saleLblEl.textContent = 'ยอดขาย'+periodLabel;
+  const buyLblEl = document.getElementById('d-home-buy-label');
+  if(buyLblEl) buyLblEl.textContent = 'ซื้อของ'+periodLabel;
   const saleEl = document.getElementById('d-home-sale-today');
-  if(saleEl) saleEl.textContent = fmt(saleToday);
+  if(saleEl) saleEl.textContent = fmt(saleAmt);
   const buyEl = document.getElementById('d-home-buy-today');
-  if(buyEl) buyEl.textContent = fmt(buyToday);
+  if(buyEl) buyEl.textContent = fmt(buyAmt);
 
   // รวมบิลขาย+ซื้อ ตาม orderId แล้วเรียงตามเวลาล่าสุด เอา 4 อันดับแรก
   const byOrder = {};
@@ -9231,11 +9320,11 @@ function renderHomeExtras() {
         const isSale = f.type==='sale';
         const t = f.ts ? new Date(f.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '';
         const d = f.date ? fmtDate(f.date) : '';
-        return `<div class="nb-row" style="cursor:pointer;" ondblclick="homeFeedOpenBill('${k}')" ontouchstart="startHomeFeedDoubleTap('${k}',event)">
-          <div style="display:flex;align-items:center;gap:9px;min-width:0;">
-            <div style="width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;background:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};color:#fff;">${isSale?'▦':'▾'}</div>
+        return `<div class="home-recent-row" ondblclick="homeFeedOpenBill('${k}')" ontouchstart="startHomeFeedDoubleTap('${k}',event)">
+          <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+            <div class="home-menu-dot" style="background:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};"></div>
             <div style="min-width:0;">
-              <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">${isSale?'ขาย':'ซื้อของ'} — ${f.label}</div>
+              <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;">${isSale?'ขาย':'ซื้อของ'} — ${f.label}</div>
               <div style="font-size:9px;font-weight:400;color:var(--text2);">${d}${d&&t?' · ':''}${t}</div>
             </div>
           </div>
@@ -9532,24 +9621,43 @@ function _renderChart7() {
     chartEl.innerHTML = bars.map((d,i)=>{
       const barH = Math.max(d.v/maxV*80, d.v>0?4:2);
       const fillColor = d.v>0 ? (d.locColor||colA) : 'var(--border)';
-      const showAbbrInBar = !isMonth && d.v>0 && d.locAbbr && barH>=18;
+      const showAbbrInBar = !isMonth && d.v>0 && d.locAbbr && barH>=32;
+      // ตัวย่อวันในสัปดาห์ (จ./อ./พ./ฯลฯ) — วางกลางแท่งแนวตั้งเสมอ ไม่ต้องรอลงป้ายด้านล่าง (โหมด 7 วันเท่านั้น)
+      const dayTagHtml = !isMonth ? `<div style="position:absolute;top:0;left:0;right:0;height:90px;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+          <span style="font-size:9px;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;line-height:1;color:${d.v>0?'#fff':'var(--text2)'};text-shadow:${d.v>0?'0 0 3px rgba(0,0,0,0.35)':'none'};">${d.lbl}</span>
+        </div>` : '';
       return `
-      <div onclick="_showBarTooltip(${i})" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;cursor:${d.v>0?'pointer':'default'};position:relative;">
-        ${d.v>0?`<div style="font-size:${isMonth?'6.5':'9'}px;color:var(--text2);white-space:nowrap;${isMonth?'transform:rotate(-45deg) translateX(-2px);transform-origin:bottom center;margin-bottom:3px;display:block;':'text-align:center;'}line-height:1;">${fmt(d.v)}</div>`:''}
-        <div style="width:85%;background:${fillColor};border-radius:3px 3px 0 0;opacity:${d.isToday?1:d.v>0?0.82:0.22};height:${barH}px;transition:height 0.4s ease;${d.isToday?'box-shadow:0 0 0 2px var(--green) inset;':''}display:flex;align-items:flex-start;justify-content:center;">
+      <div onclick="_showBarTooltip(${i})" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;cursor:${d.v>0?'pointer':'default'};position:relative;height:${isMonth?'auto':'90px'};">
+        ${d.v>0?`<div style="font-size:${isMonth?'6.5':'9'}px;color:var(--text2);white-space:nowrap;${isMonth?'transform:rotate(-45deg) translateX(-2px);transform-origin:bottom center;margin-bottom:3px;display:block;':'text-align:center;'}line-height:1;position:relative;z-index:2;">${fmt(d.v)}</div>`:''}
+        <div style="width:85%;background:${fillColor};border-radius:3px 3px 0 0;opacity:${d.isToday?1:d.v>0?0.82:0.22};height:${barH}px;transition:height 0.4s ease;${d.isToday?'box-shadow:0 0 0 2px var(--green) inset;':''}display:flex;align-items:flex-start;justify-content:center;position:relative;z-index:1;">
           ${showAbbrInBar?`<span style="font-size:7.5px;font-weight:500;color:#fff;margin-top:3px;line-height:1;writing-mode:vertical-rl;text-orientation:mixed;">${d.locAbbr}${d.locMulti?'+':''}</span>`:''}
         </div>
+        ${dayTagHtml}
       </div>`;
     }).join('');
   }
 
-  labelsEl.innerHTML = bars.map((d,i)=>{
-    const show = isMonth ? landmarks.has(i+1)||i===bars.length-1 : (i%step===0||i===bars.length-1);
-    return `<div style="flex:1;min-width:0;text-align:center;font-size:${isMonth?'8':'10'}px;color:${d.isToday?'var(--accent-text)':d.v>0?'var(--text)':'var(--text2)'};font-weight:${d.isToday||d.v>0?500:400};overflow:hidden;white-space:nowrap;">${show?d.lbl:''}</div>`;
-  }).join('');
+  labelsEl.innerHTML = isMonth ? bars.map((d,i)=>{
+    const show = landmarks.has(i+1)||i===bars.length-1;
+    return `<div style="flex:1;min-width:0;text-align:center;font-size:8px;color:${d.isToday?'var(--accent-text)':d.v>0?'var(--text)':'var(--text2)'};font-weight:${d.isToday||d.v>0?500:400};overflow:hidden;white-space:nowrap;">${show?d.lbl:''}</div>`;
+  }).join('') : '';
 
   window._chart7Bars = bars;
   window._chart7BarsB = barsB;
+
+  // วันที่ขายดีสุด — หาแท่งที่ยอดสูงสุด (ต้องมียอด > 0) แสดง Qty และยอดบาทคู่กัน
+  const bestEl = document.getElementById('chart7day-bestday');
+  if(bestEl) {
+    const withSales = bars.filter(d=>d.amt>0);
+    if(!withSales.length) {
+      bestEl.style.display='none';
+    } else {
+      const best = withSales.reduce((a,b)=> b.amt>a.amt?b:a);
+      const dateTxt = isMonth ? `วันที่ ${best.lbl}` : `${best.lbl} ${fmtDate(best.ds)}`;
+      bestEl.innerHTML = `🏆 ขายดีสุด <b style="color:var(--text);font-weight:700;">${dateTxt}</b> · Qty <b style="color:var(--accent-text);font-weight:700;">${fmt(best.q)}</b> / <b style="color:var(--vivid-sale,var(--green));font-weight:700;">฿${fmt(best.amt)}</b>`;
+      bestEl.style.display='block';
+    }
+  }
 }
 
 
@@ -10613,6 +10721,13 @@ function buildEditUnitDD(){const dd=document.getElementById('edit-item-unit-dd')
 function selectEditUnit(val,label){const hid=document.getElementById('edit-item-unit');const disp=document.getElementById('edit-item-unit-display');const dd=document.getElementById('edit-item-unit-dd');if(hid)hid.value=val;if(disp){disp.textContent=label;disp.style.color=val?'var(--text)':'var(--text2)';}if(dd)dd.style.display='none';}
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  // สร้างแถวธีมสีทั้งหมดจาก THEME_PRESETS (รวมธีมที่เพิ่มใหม่)
+  renderThemeSwatchRow();
+  // เติมตัวเลือกสีชุดใหญ่ให้ทุกจุดที่มี color picker (สถานที่, พนักงาน)
+  ['new-location-color-swatches','edit-location-color-swatches','new-emp-color-swatches','edit-emp-color-swatches'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = buildColorSwatchRow(id.replace('-swatches',''));
+  });
   // เครื่องหมายถูกบนสีธีมที่เลือกไว้ (ตอนโหลดครั้งแรก swatch ยังไม่มีใน DOM เลยต้องมาร์คซ้ำตรงนี้)
   applyTheme(getCurrentTheme(), false);
   // set active dash tab (default: ทั้งหมด)
