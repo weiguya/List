@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onion Ver.204</title>
+<title>Onion Ver.206</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINESeedSansTH/LINESeedSansTH.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Mali:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINESeedSansTH/LINESeedSansTH.css" rel="stylesheet">
@@ -73,11 +73,11 @@ body.has-bottom-nav{padding-bottom:78px;}
 #dialPill1.show{bottom:78px;}
 #dialPill2.show{bottom:132px;}
 #dialPill3.show{bottom:186px;}
-.dial-ico{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;color:#fff;flex-shrink:0;box-shadow:0 6px 16px rgba(0,0,0,0.24);}
+.dial-ico{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;color:#fff;flex-shrink:0;box-shadow:0 6px 16px rgba(51,48,43,0.18);}
 .dial-lbl{background:#fff;color:var(--text);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;font-weight:700;padding:7px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.16);}
 
 /* ══ REPORT TABS BAR — แท็บในหน้าเดียว ไม่มี sheet ครอบ (ตัวเลือก C) ══ */
-.report-tabs-bar{display:none;position:sticky;top:0;z-index:80;background:#fff;border-bottom:1px solid var(--border);gap:6px;padding:9px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.report-tabs-bar{display:none;position:sticky;top:0;z-index:80;background:var(--bg);border-bottom:1px solid var(--border);gap:6px;padding:9px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 body.show-report-tabs .report-tabs-bar{display:flex;}
 .rtab{flex:0 0 auto;display:flex;align-items:center;gap:5px;background:var(--card2);color:var(--text2);border:none;border-radius:20px;padding:7px 13px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11.5px;font-weight:600;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color 0.15s,color 0.15s;}
 .rtab.active{background:var(--accent-soft);color:var(--accent-text);font-weight:700;}
@@ -134,7 +134,7 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 .section-title{position:relative;display:inline-flex !important;}
 .section-title::after{
   content:'';position:absolute;left:1px;bottom:-5px;width:46px;height:6px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 6'%3E%3Cpath d='M1 3.5c4-2.5 7-2.5 10 0s7 2.5 11 0 7-2.5 11 0 7 2.5 11 0' fill='none' stroke='%23C08862' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 6'%3E%3Cpath d='M1 3.5c4-2.5 7-2.5 10 0s7 2.5 11 0 7-2.5 11 0 7 2.5 11 0' fill='none' stroke='%23FF7BAC' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;opacity:0.75;
 }
 
@@ -186,14 +186,14 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 
 /* STATS GRID */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 14px;box-shadow:0 2px 10px rgba(0,0,0,0.10);}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 14px;box-shadow:var(--shadow);}
 .stat-card .label{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:5px;}
 .stat-card .value{font-size:20px;font-weight:500;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;}
 .stat-card.full{grid-column:1/-1;}
 .green{color:var(--green);} .red{color:var(--red);} .yellow{color:var(--yellow);} .blue{color:var(--accent-text);} .purple{color:var(--purple);}
 
 /* CHART */
-.chart-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.10);}
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);}
 .chart-card h3{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:12px;}
 .bar-row{margin-bottom:10px;}
 .bar-row .bar-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between;}
@@ -202,7 +202,7 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 
 /* NAV GRID */
 .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.nav-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-align:center;cursor:pointer;transition:background 0.2s,transform 0.1s;user-select:none;box-shadow:0 2px 10px rgba(0,0,0,0.10);}
+.nav-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-align:center;cursor:pointer;transition:background 0.2s,transform 0.1s;user-select:none;box-shadow:var(--shadow);}
 .nav-card:active{transform:scale(0.97);background:var(--card2);}
 
 /* Ver.194: เอฟเฟคกดทั่วแอป — จับทุก element ที่ระบุ cursor:pointer (การ์ด/แถว/ปุ่มทั้งหมด) ยุบตัวเบาๆ ตอนกด */
@@ -213,18 +213,18 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 .nav-card .nav-sub{font-size:11px;color:var(--text2);margin-top:2px;}
 
 /* SECTION TITLE */
-.section-title{font-size:16px;font-weight:500;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-title{font-family:var(--hand);font-size:17px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .back-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:var(--accent-text);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14px;font-weight:500;cursor:pointer;padding:4px 8px 4px 2px;border-radius:8px;transition:background 0.15s;user-select:none;-webkit-tap-highlight-color:transparent;}
 .back-btn:active{background:var(--card2);}
 .back-btn::before{content:'';display:inline-block;width:8px;height:8px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);margin-right:2px;flex-shrink:0;}
 
 /* FORM */
 .form-group{margin-bottom:12px;}
-.form-group label{font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
-.form-group input:focus,.form-group select:focus{border-color:var(--accent-text);box-shadow:0 0 0 3px rgba(0,0,0,0.1);background:#fff;}
-.form-group input[type="date"]{padding:7px 10px;font-size:12px;border-radius:8px;}
-.form-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 14px 4px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.10);}
+.form-group label{font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:700;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.16);background:#fff;}
+.form-group input[type="date"]{padding:7px 10px;font-size:12.5px;border-radius:10px;}
+.form-card{background:#fff;border:none;border-radius:16px;padding:14px 14px 4px;margin-bottom:12px;box-shadow:var(--shadow);}
 .form-card .form-group{margin-bottom:10px;}
 
 /* BUTTONS */
@@ -235,12 +235,12 @@ button,.btn,.dr-name,.dr-del,.dr-badge,.dr-unit,.rtab,.nb-tile,.nb-row,.rep-shee
 button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-unit:not(.dr-dash):active,.rtab:active,.nb-tile:active,.nb-row:active,.rep-sheet-item:active,.tab-btn:active,.income-cat-display:active,.br-field:active{
   transform:scale(0.96);filter:brightness(0.92);
 }
-.btn{width:100%;padding:14px;border-radius:12px;border:none;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity 0.2s,transform 0.1s;}
+.btn{width:100%;padding:14px;border-radius:14px;border:none;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:14.5px;font-weight:800;cursor:pointer;transition:opacity 0.2s,transform 0.1s;}
 .btn:active{transform:scale(0.98);opacity:0.85;}
-.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(var(--accent-rgb),0.35);}
 .btn-green{background:var(--green);color:#fff;}
 .btn-red{background:var(--red);color:#fff;}
-.btn-outline{background:#fff;border:1.5px solid var(--border);color:var(--text);}
+.btn-outline{background:#fff;border:2px solid var(--border);color:var(--text);font-weight:700;}
 .btn-sm{width:auto;padding:7px 15px;font-size:13px;}
 .rep-back-to-top-btn{display:block;width:fit-content;margin:14px auto 4px;padding:9px 18px;border-radius:22px;
   background:var(--card2);border:1px solid var(--border);color:var(--accent-text);
@@ -258,32 +258,33 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 
 /* TABS */
 .tab-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
-.tab-btn{padding:7px 15px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-weight:500;}
-.tab-btn.active{background:var(--accent);border-color:#fff;color:#fff;font-weight:500;}
+.tab-btn{padding:8px 16px;border-radius:999px;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-weight:600;}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;box-shadow:0 3px 8px rgba(var(--accent-rgb),0.3);}
 
 /* REPORT */
-.report-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.10);}
+.report-box{background:#fff;border:none;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);}
 .report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--card2);font-size:14px;}
 .report-row:last-child{border-bottom:none;}
 .report-row .r-label{color:var(--text2);font-weight:500;}
 .report-total{display:flex;justify-content:space-between;padding:12px 0 0;font-size:16px;font-weight:500;}
 
 /* LOAN */
-.loan-box{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.loan-box{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);}
 .loan-progress .bar-track{height:12px;}
 
 /* MISC */
 .divider{height:1px;background:var(--border);margin:14px 0;}
-.empty{text-align:center;padding:40px 16px;color:var(--text2);font-size:14px;}
-.empty .empty-icon{font-size:40px;margin-bottom:8px;}
+.empty{text-align:center;padding:32px 16px;color:var(--text2);font-family:var(--hand);font-size:14.5px;font-weight:600;}
+.empty .empty-icon{width:58px;height:58px;margin:0 auto 8px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Cpath d='M30 16c-2-4-1-8 2-11M34 16c1.5-4 .5-7-2-10' stroke='%232FB673' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M32 15C21 21 13 32 13 42.5 13 54 21.5 60.5 32 60.5S51 54 51 42.5C51 32 43 21 32 15Z' fill='%23F3B7DE' stroke='%2333302B' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M24 40q2-2 4 0M36 40q2-2 4 0' stroke='%2333302B' stroke-width='2' stroke-linecap='round'/%3E%3Cellipse cx='32' cy='47.5' rx='2.6' ry='3.2' fill='%2333302B'/%3E%3Ccircle cx='20.5' cy='45.5' r='2.8' fill='%23FF9DBB' opacity='0.75'/%3E%3Ccircle cx='43.5' cy='45.5' r='2.8' fill='%23FF9DBB' opacity='0.75'/%3E%3C/svg%3E");background-size:contain;background-repeat:no-repeat;background-position:center;}
 .filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-.filter-row input,.filter-row select{flex:1;min-width:100px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;outline:none;}
+.filter-row input,.filter-row select{flex:1;min-width:100px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;color:var(--text);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;outline:none;}
 
 /* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,26,0.6);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(38,32,26,0.45);z-index:200;align-items:flex-end;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-height:90vh;overflow-y:auto;border-top:3px solid var(--accent);}
-.modal-title{font-size:16px;font-weight:500;color:var(--text);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal{background:#fff;border-radius:24px 24px 0 0;padding:12px 16px 32px;width:100%;max-height:90vh;overflow-y:auto;border-top:none;}
+.modal::before{content:'';display:block;width:44px;height:5px;border-radius:99px;background:var(--border);margin:0 auto 14px;}
+.modal-title{font-family:var(--hand);font-size:17px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
 .modal-close{background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:15px;line-height:1;cursor:pointer;border-radius:50%;width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;}
 .modal-close:active{background:var(--red-soft);color:var(--red);border-color:var(--red);}
 
@@ -306,7 +307,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .chk-label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:4px 8px;background:var(--card2);border:1px solid var(--border);border-radius:8px;}
 .chk-label input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;}
 /* SETTINGS */
-.set-section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.10);}
+.set-section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);}
 .set-section h3{font-size:14px;font-weight:500;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
 .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
 .tag-chip{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:500;}
@@ -315,13 +316,13 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .tag-add input{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);}
 .tag-add button{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:8px 14px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;}
 /* SETTINGS MENU LIST */
-.set-menu-item{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.06);transition:background 0.15s;}
+.set-menu-item{display:flex;align-items:center;gap:14px;background:#fff;border:none;border-radius:16px;padding:15px 16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:background 0.15s;}
 .set-menu-item:active{background:var(--blue-soft);}
 .set-menu-item .smi-ico{font-size:22px;width:32px;text-align:center;}
 .set-menu-item .smi-body{flex:1;}
-.set-menu-item .smi-title{font-size:14px;font-weight:500;color:var(--text);}
+.set-menu-item .smi-title{font-size:14.5px;font-weight:700;color:var(--text);}
 .set-menu-item .smi-sub{font-size:11px;color:var(--text2);margin-top:2px;}
-.set-menu-item .smi-arrow{color:var(--text2);font-size:16px;}
+.set-menu-item .smi-arrow{color:#D8CFBE;font-size:17px;}
 .recipe-card-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
 .recipe-card{position:relative;display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow-card);cursor:pointer;transition:transform 0.12s,background 0.12s;}
 .recipe-card:active{transform:scale(0.98);background:var(--blue-soft);}
@@ -388,7 +389,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .admin-panel-card .apc-name{font-size:14px;font-weight:500;}
 .admin-panel-card .apc-meta{font-size:11px;color:var(--text2);margin-top:2px;}
 .role-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;display:inline-block;}
-.role-badge.superadmin{background:#F3E7C8;color:#92400e;}
+.role-badge.superadmin{background:var(--yellow-soft);color:var(--yellow);}
 .role-badge.master{background:var(--blue-soft);color:var(--accent-text);}
 .role-badge.staff{background:var(--green-soft);color:var(--green);}
 .role-badge.pending{background:var(--red-soft);color:var(--red);}
@@ -514,14 +515,14 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .br-field.br-dash{background:transparent;border-color:transparent;color:var(--text2);text-align:center;cursor:default;}
 .br-del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:4px;line-height:1;opacity:0.8;}
 /* Dropdown แบบจิ้มแล้วเลือก (ไม่ใช่ popup เต็มจอ) สำหรับตารางบันทึกรายจ่าย */
-#buyrow-select-dd{display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.18);width:210px;max-width:calc(100vw - 16px);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#buyrow-select-dd{display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:9999;box-shadow:0 8px 24px rgba(51,48,43,0.14);width:210px;max-width:calc(100vw - 16px);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 
 /* ธีมสีของแอป: swatch วงกลมพาสเทลให้เลือกในหน้าตั้งค่า */
 .theme-swatch-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;width:64px;}
 .theme-swatch{width:44px;height:44px;border-radius:50%;border:3px solid transparent;cursor:pointer;position:relative;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;box-shadow:0 2px 6px rgba(0,0,0,0.08);}
 .theme-swatch:active{transform:scale(0.9);}
 .theme-swatch.active{border-color:var(--text);}
-.theme-swatch.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,0.35);}
+.theme-swatch.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:500;text-shadow:0 1px 3px rgba(51,48,43,0.25);}
 .theme-swatch-label{font-size:10px;color:var(--text2);text-align:center;line-height:1.3;}
 
 /* ══ ล็อกอิน: กรอบ input ปกติ พร้อม focus state ══ */
@@ -920,7 +921,7 @@ applyTheme(getCurrentTheme(), false);
   </div>
 
   <!-- ══ สรุปยอด: การ์ดเดียว รวมทุกตัวเลขสำคัญ ขยายดูรายละเอียดได้ ══ -->
-  <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:15px 16px;margin:-4px 14px 0;box-shadow:0 3px 16px rgba(0,0,0,0.1);position:relative;z-index:1;">
+  <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:15px 16px;margin:-4px 14px 0;box-shadow:var(--shadow);position:relative;z-index:1;">
     <div style="display:flex;justify-content:flex-end;margin-bottom:6px;">
       <button onclick="cycleDashStyle(event)" title="เปลี่ยนรูปแบบการ์ด" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:4px 9px 4px 8px;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;">⇄ รูปแบบ</button>
     </div>
@@ -931,7 +932,7 @@ applyTheme(getCurrentTheme(), false);
   <div style="padding:10px 14px 0;">
 
     <!-- กราฟยอดขาย -->
-    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:var(--shadow);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
         <div id="chart7day-title" style="font-family:var(--hand);font-size:14.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;">สัปดาห์นี้</div>
         <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
@@ -968,7 +969,7 @@ applyTheme(getCurrentTheme(), false);
         <div style="position:relative;flex-shrink:0;">
           <div id="chart7-skuB-chip" onclick="_openChart7SkuDD('B',event)"
             style="display:flex;align-items:center;gap:3px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-size:11px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C08862;display:inline-block;flex-shrink:0;"></span>
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--cat-admincom);display:inline-block;flex-shrink:0;"></span>
             <span id="chart7-skuB-label" style="color:var(--text2);max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เทียบ</span>
             <span style="font-size:8px;color:var(--text2);">▾</span>
           </div>
@@ -980,7 +981,7 @@ applyTheme(getCurrentTheme(), false);
     </div>
 
     <!-- แนวโน้ม -->
-    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);" id="linechart-card">
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:var(--shadow);" id="linechart-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:6px;flex-wrap:wrap;">
         <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;flex:1;">
           <div style="font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;">แนวโน้มรายรับ / รายจ่าย</div>
@@ -1013,7 +1014,7 @@ applyTheme(getCurrentTheme(), false);
 </div>
 
 <!-- Floating DD สินค้า chart7 -->
-<div id="chart7-sku-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 4px 24px rgba(0,0,0,0.18);width:200px;max-height:280px;overflow:hidden;flex-direction:column;">
+<div id="chart7-sku-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 4px 24px rgba(51,48,43,0.14);width:200px;max-height:280px;overflow:hidden;flex-direction:column;">
   <div style="padding:8px 10px;border-bottom:1px solid var(--border);">
     <input id="chart7-sku-search" type="text" placeholder="ค้นหาสินค้า..."
       oninput="_filterChart7SkuDD()"
@@ -1079,7 +1080,7 @@ applyTheme(getCurrentTheme(), false);
           </div>
           <span onclick="toggleSaleLocationDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
           <select id="sale-location" style="display:none;"></select>
-          <div id="sale-location-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:160px;overflow-y:auto;"></div>
+          <div id="sale-location-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:160px;overflow-y:auto;"></div>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:10px 14px;">
@@ -1087,7 +1088,7 @@ applyTheme(getCurrentTheme(), false);
           <div style="font-size:13px;font-weight:500;color:var(--accent-text);">ยอดรวมทั้งหมด</div>
           <div style="font-size:10px;color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="sale-order-preview" style="font-weight:500;color:var(--accent-text);">SL-...</span></div>
         </div>
-        <span id="sale-grand-total" style="font-size:18px;font-weight:500;color:var(--accent-text);">฿0</span>
+        <span id="sale-grand-total" style="font-size:19px;font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">฿0</span>
       </div>
     </div>
 
@@ -1274,7 +1275,7 @@ applyTheme(getCurrentTheme(), false);
           </div>
           <span onclick="toggleBuySupplierDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
           <select id="buy-supplier" style="display:none;"></select>
-          <div id="buy-supplier-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:160px;overflow-y:auto;"></div>
+          <div id="buy-supplier-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:160px;overflow-y:auto;"></div>
         </div>
       </div>
     </div>
@@ -1346,7 +1347,7 @@ applyTheme(getCurrentTheme(), false);
         <select id="emp-wage-select" style="display:none;" onchange="renderEmpWageCal()">
           <option value="">-- เลือกพนักงาน --</option>
         </select>
-        <div id="emp-wage-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:200px;overflow-y:auto;"></div>
+        <div id="emp-wage-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:200px;overflow-y:auto;"></div>
       </div>
     </div>
     </div><!-- end form-card -->
@@ -1395,7 +1396,7 @@ applyTheme(getCurrentTheme(), false);
         <select id="admin-pay-select" style="display:none;" onchange="renderAdminCal()">
           <option value="">-- เลือกผู้บริหาร --</option>
         </select>
-        <div id="admin-pay-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:200px;overflow-y:auto;"></div>
+        <div id="admin-pay-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:200px;overflow-y:auto;"></div>
       </div>
     </div>
     </div><!-- end form-card -->
@@ -1435,7 +1436,7 @@ applyTheme(getCurrentTheme(), false);
           -- เลือกประเภท --
         </div>
         <span onclick="toggleRecurringTypeDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
-        <div id="recurring-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:160px;overflow-y:auto;"></div>
+        <div id="recurring-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:160px;overflow-y:auto;"></div>
       </div>
     </div>
     <div class="form-group"><label>ราคา (บาท)</label><input type="number" id="recurring-amount" placeholder="0.00" step="0.01"></div>
@@ -1449,7 +1450,7 @@ applyTheme(getCurrentTheme(), false);
         </div>
         <span onclick="toggleRecurringLocationDD()" style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:15px;cursor:pointer;color:var(--text2);line-height:1;">▾</span>
         <select id="recurring-location" style="display:none;"></select>
-        <div id="recurring-location-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:160px;overflow-y:auto;"></div>
+        <div id="recurring-location-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:160px;overflow-y:auto;"></div>
       </div>
     </div>
     <div class="form-group"><label>หมายเหตุ</label><input type="text" id="recurring-note" placeholder="ไม่บังคับ"></div>
@@ -1500,7 +1501,7 @@ applyTheme(getCurrentTheme(), false);
         style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:10px 36px 10px 14px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;outline:none;color:var(--text);transition:border-color 0.2s;">
       <span id="ri-search-clear" onclick="clearRiProductSearch()" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--text2);cursor:pointer;line-height:1;"></span>
     </div>
-    <div id="ri-product-list" style="display:none;margin-top:4px;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);max-height:220px;overflow-y:auto;"></div>
+    <div id="ri-product-list" style="display:none;margin-top:4px;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(51,48,43,0.12);max-height:220px;overflow-y:auto;"></div>
     <div id="ri-selected-chip" style="display:none;margin-top:8px;"></div>
   </div>
   <div id="ri-col-header" style="display:none;border:1px solid var(--border);border-radius:8px 8px 0 0;overflow:hidden;">
@@ -1513,7 +1514,7 @@ applyTheme(getCurrentTheme(), false);
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
-  <div id="ri-loc-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.22);overflow-y:auto;max-height:220px;"></div>
+  <div id="ri-loc-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(51,48,43,0.16);overflow-y:auto;max-height:220px;"></div>
   <div id="rep-income-output"></div>
   <button class="rep-back-to-top-btn" onclick="scrollToTopFast()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span>กลับขึ้นข้างบน</span></button>
 </div>
@@ -1591,9 +1592,9 @@ applyTheme(getCurrentTheme(), false);
   </div>
   </div><!-- end rep-filter-sticky -->
   <!-- Dropdown panels -->
-  <div id="re-sup-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.22);overflow-y:auto;max-height:220px;"></div>
-  <div id="re-type-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.22);overflow-y:auto;max-height:220px;"></div>
-  <div id="re-loc-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.22);overflow-y:auto;max-height:220px;"></div>
+  <div id="re-sup-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(51,48,43,0.16);overflow-y:auto;max-height:220px;"></div>
+  <div id="re-type-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(51,48,43,0.16);overflow-y:auto;max-height:220px;"></div>
+  <div id="re-loc-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;z-index:9999;box-shadow:0 8px 32px rgba(51,48,43,0.16);overflow-y:auto;max-height:220px;"></div>
   <!-- รายการ -->
   <div id="rep-expense-output"></div>
   <button class="rep-back-to-top-btn" onclick="scrollToTopFast()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span>กลับขึ้นข้างบน</span></button>
@@ -1730,7 +1731,7 @@ applyTheme(getCurrentTheme(), false);
 </div>
 
 <div id="recipe-spoon-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div id="recipe-spoon-modal-title" style="font-size:15px;font-weight:500;margin-bottom:14px;">เพิ่มขนาดช้อน</div>
     <div class="form-group">
       <label>ชื่อช้อน (เช่น 1/4 tsp, 1 tbsp)</label>
@@ -1749,7 +1750,7 @@ applyTheme(getCurrentTheme(), false);
 </div>
 
 <div id="del-recipe-row-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(51,48,43,0.22);text-align:center;">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:6px;">ลบวัตถุดิบที่เลือก?</div>
     <div id="del-recipe-row-name" style="font-size:14px;font-weight:500;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:8px 12px;margin-bottom:18px;color:var(--red);"></div>
     <div style="display:flex;gap:10px;">
@@ -1761,7 +1762,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal บันทึกสูตรใหม่จากการปรับ % -->
 <div id="save-adj-recipe-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;"> บันทึกเป็นสูตรใหม่</div>
     <div class="form-group">
       <label>ชื่อสูตร</label>
@@ -1780,7 +1781,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal แก้ไขพนักงาน -->
 <div id="edit-emp-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;"> แก้ไขพนักงาน</div>
     <input type="hidden" id="edit-emp-id">
     <div class="form-group"><label>ชื่อพนักงาน</label><input type="text" id="edit-emp-name" placeholder="ชื่อพนักงาน"></div>
@@ -1801,7 +1802,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal ยืนยันลบพนักงาน -->
 <div id="del-emp-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10000;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:8px;"> ยืนยันการลบ</div>
     <div id="del-emp-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติการจ่ายค่าแรงที่ผ่านมาจะยังคงอยู่ แต่ชื่อในรายการเก่าจะยังเป็นชื่อที่บันทึกไว้ก่อนลบ</div>
@@ -1814,7 +1815,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal แก้ไขประเภทรายจ่ายประจำ -->
 <div id="edit-recurring-type-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;"> แก้ไขประเภทรายจ่ายประจำ</div>
     <input type="hidden" id="edit-recurring-type-id">
     <div class="form-group"><label>ชื่อประเภท</label><input type="text" id="edit-recurring-type-name" placeholder="เช่น ค่าน้ำแข็ง"></div>
@@ -1829,7 +1830,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal ยืนยันลบประเภทรายจ่ายประจำ -->
 <div id="del-recurring-type-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10000;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:8px;"> ยืนยันการลบ</div>
     <div id="del-recurring-type-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติที่บันทึกไว้แล้วจะยังคงอยู่ แค่ลบตัวเลือกนี้ออกจากลิสต์เท่านั้น</div>
@@ -1842,7 +1843,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal แก้ไขผู้บริหาร -->
 <div id="edit-admin-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;"> แก้ไขผู้บริหาร</div>
     <input type="hidden" id="edit-admin-idx">
     <div class="form-group"><label>ชื่อผู้บริหาร</label><input type="text" id="edit-admin-name" placeholder="ชื่อ"></div>
@@ -1863,7 +1864,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal ยืนยันลบผู้บริหาร -->
 <div id="del-admin-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10000;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:8px;"> ยืนยันการลบ</div>
     <div id="del-admin-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติการจ่ายค่าคอมที่ผ่านมาจะยังคงอยู่ในระบบ</div>
@@ -1873,7 +1874,7 @@ applyTheme(getCurrentTheme(), false);
     </div>
   </div>
 </div>
-<div id="rcp-adj-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.18);width:130px;max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+<div id="rcp-adj-dd" style="display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:9999;box-shadow:0 8px 24px rgba(51,48,43,0.14);width:130px;max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;">
   <div id="rcp-adj-dd-list"></div>
 </div>
 
@@ -1883,7 +1884,7 @@ applyTheme(getCurrentTheme(), false);
   <div onclick="goSubSetting('set-theme')" class="set-menu-item">
     <div class="smi-body">
       <div class="smi-title">ธีมสีของแอป</div>
-      <div class="smi-sub" id="set-theme-current-label">ทองบรอนซ์</div>
+      <div class="smi-sub" id="set-theme-current-label">ชมพูน้องหอม</div>
     </div>
     <span class="theme-swatch" data-theme-key="__preview" id="set-theme-preview-dot" style="width:20px;height:20px;margin-right:6px;pointer-events:none;flex-shrink:0;"></span>
     <span class="smi-arrow">›</span>
@@ -2036,7 +2037,7 @@ applyTheme(getCurrentTheme(), false);
   </div>
 </div>
 <div id="del-unit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(51,48,43,0.22);text-align:center;">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:6px;">ลบหน่วยนับ?</div>
     <div id="del-unit-name" style="font-size:14px;font-weight:500;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:8px 12px;margin-bottom:10px;color:var(--red);"></div>
     <div style="font-size:12px;color:var(--text2);margin-bottom:18px;">หน่วยนับที่ผูกกับสินค้าจะหายไปด้วย</div>
@@ -2085,7 +2086,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal แก้ไขสถานที่ -->
 <div id="edit-location-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;">แก้ไขสถานที่</div>
     <input type="hidden" id="edit-location-idx">
     <div class="form-group"><label>ชื่อสถานที่</label><input type="text" id="edit-location-name" placeholder="เช่น ตลาดนัดคลองถม"></div>
@@ -2105,7 +2106,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal ยืนยันลบสถานที่ -->
 <div id="del-location-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10000;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:8px;">ยืนยันการลบ</div>
     <div id="del-location-msg" style="font-size:13px;color:var(--text2);margin-bottom:6px;"></div>
     <div style="background:var(--red-soft);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--red);margin-bottom:14px;">ประวัติที่บันทึกไว้แล้วจะยังคงอยู่ แค่ลบตัวเลือกนี้ออกจากลิสต์เท่านั้น</div>
@@ -2161,7 +2162,7 @@ applyTheme(getCurrentTheme(), false);
           <div id="new-item-unit-display" onclick="toggleSetUnitDD()"
             style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- หน่วย --</div>
           <span onclick="toggleSetUnitDD()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;user-select:none;">▾</span>
-          <div id="set-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:200px;overflow-y:auto;"></div>
+          <div id="set-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:200px;overflow-y:auto;"></div>
         </div>
       </div>
       <!-- แถว 2: ประเภทสินค้า | ราคา/หน่วย -->
@@ -2172,7 +2173,7 @@ applyTheme(getCurrentTheme(), false);
           <div id="set-item-type-display" onclick="toggleSetItemTypeDD()"
             style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- ประเภท --</div>
           <span onclick="toggleSetItemTypeDD()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;user-select:none;">▾</span>
-          <div id="set-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:200px;overflow-y:auto;"></div>
+          <div id="set-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:200px;overflow-y:auto;"></div>
         </div>
         <!-- ราคา/หน่วย -->
         <input type="number" id="new-item-price" placeholder="ราคา/หน่วย" step="0.01" min="0"
@@ -2207,7 +2208,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal ยืนยันเพิ่มสินค้า -->
 <div id="confirm-add-item-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;text-align:center;">ยืนยันเพิ่มสินค้า</div>
     <div id="confirm-add-item-body" style="background:var(--card2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px;"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -2219,7 +2220,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal รีเซ็ตข้อมูลทั้งหมด -->
 <div id="factory-reset-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:24px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.35);">
+  <div style="background:var(--card);border-radius:16px;padding:24px 20px;width:88%;max-width:340px;box-shadow:0 8px 32px rgba(51,48,43,0.25);">
     <div style="text-align:center;margin-bottom:16px;">
       <div style="margin-bottom:4px;"></div>
       <div style="font-size:16px;font-weight:500;color:var(--red);margin-top:6px;">รีเซ็ตข้อมูลทั้งหมด</div>
@@ -2313,7 +2314,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal ยืนยันดูยอดคงเหลือ -->
 <div id="cashbal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:24px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+  <div style="background:var(--card);border-radius:16px;padding:24px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(51,48,43,0.22);text-align:center;">
     <div style="margin-bottom:8px;"></div>
     <div style="font-size:15px;font-weight:500;margin-bottom:6px;">ยืนยันการดูยอดเงิน</div>
     <div style="font-size:13px;color:var(--text2);margin-bottom:20px;">ต้องการดูยอดคงเหลือในบัญชีจริงหรือไม่?</div>
@@ -2335,7 +2336,7 @@ applyTheme(getCurrentTheme(), false);
 
 <!-- Modal แก้ไขสินค้า -->
 <div id="edit-item-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:20px;width:88%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+  <div style="background:var(--card);border-radius:16px;padding:20px;width:88%;max-width:360px;box-shadow:0 8px 32px rgba(51,48,43,0.22);">
     <div style="font-size:15px;font-weight:500;margin-bottom:16px;">แก้ไขสินค้า</div>
     <input type="hidden" id="edit-item-old-type">
     <input type="hidden" id="edit-item-old-name">
@@ -2350,7 +2351,7 @@ applyTheme(getCurrentTheme(), false);
         <div id="edit-item-type-display" onclick="toggleEditItemTypeDD()"
           style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- เลือกประเภท --</div>
         <span onclick="toggleEditItemTypeDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px;cursor:pointer;user-select:none;">▾</span>
-        <div id="edit-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:190px;overflow-y:auto;"></div>
+        <div id="edit-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:190px;overflow-y:auto;"></div>
       </div>
     </div>
     <div class="form-group" id="edit-item-price-row"><label>ราคา/หน่วย (บาท) — เฉพาะสินค้าขาย</label>
@@ -2363,7 +2364,7 @@ applyTheme(getCurrentTheme(), false);
         <div id="edit-item-unit-display" onclick="toggleEditUnitDD()"
           style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- ไม่มีหน่วยนับ --</div>
         <span onclick="toggleEditUnitDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px;cursor:pointer;user-select:none;">▾</span>
-        <div id="edit-item-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 4px 20px rgba(0,0,0,0.18);max-height:190px;overflow-y:auto;"></div>
+        <div id="edit-item-unit-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:190px;overflow-y:auto;"></div>
       </div>
     </div>
     </div><!-- end form-card -->
@@ -2492,7 +2493,7 @@ applyTheme(getCurrentTheme(), false);
   </div>
 </div>
 <div id="del-recipe-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;">
+  <div style="background:var(--card);border-radius:16px;padding:22px 20px;width:84%;max-width:320px;box-shadow:0 8px 32px rgba(51,48,43,0.22);text-align:center;">
     <div style="font-size:15px;font-weight:500;color:var(--red);margin-bottom:6px;">ลบสูตรนี้?</div>
     <div id="del-recipe-name" style="font-size:14px;font-weight:500;background:var(--red-soft);border:1.5px solid var(--red);border-radius:10px;padding:8px 12px;margin-bottom:10px;color:var(--red);"></div>
     <div style="font-size:12px;color:var(--text2);margin-bottom:18px;">วัตถุดิบและตัวเลขในสูตรนี้จะหายไปทั้งหมด</div>
@@ -4279,7 +4280,7 @@ function renderSaleList() {
         <span style="font-size:13px;font-weight:500;color:var(--green);white-space:nowrap;margin-left:8px;">+${fmt(i.amount)}</span>
       </div>`).join('');
 
-    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.09);">
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);">
       <div style="background:var(--card2);padding:6px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
         <span style="font-size:11px;font-weight:500;color:var(--text2);">${fmtDateFull(date)}</span>
         <span style="font-size:12px;font-weight:500;color:var(--green);">฿${Math.round(dayTotal).toLocaleString('th-TH')}</span>
@@ -8813,7 +8814,7 @@ const DASH_METRIC_DEFS = [
   {key:'sale', label:'ยอดขาย', color:'var(--green)'},
   {key:'buy', label:'ซื้อของ', color:'var(--red)'},
   {key:'wage', label:'ค่าแรง', color:'var(--accent)'},
-  {key:'admincom', label:'ค่าคอม', color:'#C08862'},
+  {key:'admincom', label:'ค่าคอม', color:'var(--cat-admincom)'},
   {key:'recurring', label:'รายจ่ายประจำ', color:'var(--purple)'}
 ];
 const DASH_STYLE_LABELS = { grid:'Stat Grid', donut:'Donut สัดส่วน', compare:'Comparison Bar', receipt:'ใบเสร็จ (Receipt)' };
@@ -9508,7 +9509,7 @@ function _buildChart7SkuDD(q) {
   const allSkus = getSaleSkus().map(s=>s.name).filter(n=>n!==otherFilter);
   const baseSkus = isB ? ['__none__', ...allSkus] : ['', ...allSkus];
   const skus = q ? baseSkus.filter(n=>n==='__none__'||n===''||n.toLowerCase().includes(q.toLowerCase())) : baseSkus;
-  const color = isB?'#C08862':'var(--accent)';
+  const color = isB?'var(--cat-admincom)':'var(--accent)';
   list.innerHTML = skus.map(n=>{
     const label = n==='__none__'?'— ไม่เปรียบเทียบ':n||'ทุกสินค้า';
     const isActive = n===currentFilter||(n==='__none__'&&currentFilter==='');
@@ -9529,8 +9530,8 @@ function _selectChart7Sku(name) {
     const lbl = document.getElementById('chart7-skuB-label');
     const chip = document.getElementById('chart7-skuB-chip');
     const active = _chart7SkuFilterB !== '';
-    if(lbl) { lbl.textContent = active ? _chart7SkuFilterB : 'เทียบ'; lbl.style.color = active?'#C08862':'var(--text2)'; }
-    if(chip) chip.style.borderColor = active?'#C08862':'var(--border)';
+    if(lbl) { lbl.textContent = active ? _chart7SkuFilterB : 'เทียบ'; lbl.style.color = active?'var(--cat-admincom)':'var(--text2)'; }
+    if(chip) chip.style.borderColor = active?'var(--cat-admincom)':'var(--border)';
   } else {
     _chart7SkuFilter = name;
     const lbl = document.getElementById('chart7-sku-label');
@@ -9653,7 +9654,7 @@ function _renderChart7() {
 
   const maxV = Math.max(...bars.map(d=>d.v), ...(hasB?barsB.map(d=>d.v):[]), 1);
   const colA = 'var(--accent)';
-  const colB = '#C08862';
+  const colB = 'var(--cat-admincom)';
 
   if(hasB) {
     // กราฟ 2 แท่งคู่
@@ -9682,7 +9683,7 @@ function _renderChart7() {
       const showAbbrInBar = !isMonth && d.v>0 && d.locAbbr && barH>=32;
       // ตัวย่อวันในสัปดาห์ (จ./อ./พ./ฯลฯ) — วางกลางแท่งแนวตั้งเสมอ ไม่ต้องรอลงป้ายด้านล่าง (โหมด 7 วันเท่านั้น)
       const dayTagHtml = !isMonth ? `<div style="position:absolute;top:0;left:0;right:0;height:90px;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-          <span style="font-size:9px;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;line-height:1;color:${d.v>0?'#fff':'var(--text2)'};text-shadow:${d.v>0?'0 0 3px rgba(0,0,0,0.35)':'none'};">${d.lbl}</span>
+          <span style="font-size:9px;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;line-height:1;color:${d.v>0?'#fff':'var(--text2)'};text-shadow:${d.v>0?'0 0 3px rgba(51,48,43,0.25)':'none'};">${d.lbl}</span>
         </div>` : '';
       return `
       <div onclick="_showBarTooltip(${i})" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;cursor:${d.v>0?'pointer':'default'};position:relative;height:${isMonth?'auto':'90px'};">
@@ -10827,7 +10828,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 (function(){
   const tip = document.createElement('div');
   tip.id = 'lc-tooltip';
-  tip.style.cssText = 'display:none;position:fixed;background:#fff;border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px;font-size:11px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.25);pointer-events:auto;min-width:150px;max-width:200px;';
+  tip.style.cssText = 'display:none;position:fixed;background:#fff;border:1.5px solid var(--accent);border-radius:10px;padding:8px 12px;font-size:11px;z-index:9999;box-shadow:0 4px 16px rgba(51,48,43,0.18);pointer-events:auto;min-width:150px;max-width:200px;';
   document.body.appendChild(tip);
 })();
 
@@ -10835,7 +10836,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 (function(){
   const tip = document.createElement('div');
   tip.id = 'bar-tip';
-  tip.style.cssText = 'display:none;position:fixed;background:rgba(20,30,60,0.93);color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;font-family:\'LINE Seed Sans TH\',\'Noto Sans Thai\',sans-serif;z-index:9000;min-width:130px;box-shadow:0 4px 18px rgba(0,0,0,0.3);pointer-events:none;line-height:1.7;';
+  tip.style.cssText = 'display:none;position:fixed;background:rgba(20,30,60,0.93);color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;font-family:\'LINE Seed Sans TH\',\'Noto Sans Thai\',sans-serif;z-index:9000;min-width:130px;box-shadow:0 4px 18px rgba(51,48,43,0.22);pointer-events:none;line-height:1.7;';
   document.body.appendChild(tip);
   document.addEventListener('click', e=>{
     if(!e.target.closest('#chart7day')) tip.style.display='none';
@@ -10851,7 +10852,7 @@ window._showBarTooltip = function(i, slot) {
   const skuLabel = slot==='B'
     ? (_chart7SkuFilterB||'ทุกสินค้า')
     : (_chart7SkuFilter||'ทุกสินค้า');
-  const dotColor = slot==='B' ? '#C08862' : 'var(--accent)';
+  const dotColor = slot==='B' ? 'var(--cat-admincom)' : 'var(--accent)';
   const thDays = ['อา','จ','อ','พ','พฤ','ศ','ส'];
   const dt = new Date(d.ds);
   const dayName = thDays[dt.getDay()];
