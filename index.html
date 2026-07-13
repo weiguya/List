@@ -310,26 +310,27 @@ body.show-report-tabs .report-tabs-bar{display:flex;}
 @keyframes fldPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,123,172,0);}50%{box-shadow:0 0 0 5px rgba(255,123,172,0.30);border-color:var(--accent)!important;}}
 .fld-pulse{animation:fldPulse 1.6s ease-in-out 4;}
 /* การ์ดปักหมุด: ของที่ซื้อประจำ */
-.pin-card{background:linear-gradient(160deg,#FFFDF6,#FCF6E8);border:1.5px solid #F3DFAE;border-radius:14px;padding:11px 12px 9px;margin-bottom:12px;}
-.pin-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.pin-title{font-family:var(--hand);font-size:13.5px;font-weight:700;color:var(--yellow);}
-.pin-manage{background:none;border:1px solid #E8D9B0;border-radius:8px;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11px;padding:4px 10px;cursor:pointer;}
+.pin-card{background:linear-gradient(160deg,#FFFDF6,#FCF6E8);border:1.5px solid #F3DFAE;border-radius:13px;padding:8px 10px 9px;margin-bottom:10px;}
+.pin-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.pin-title{font-family:var(--hand);font-size:12.5px;font-weight:700;color:var(--yellow);}
+.pin-manage{background:none;border:1px solid #E8D9B0;border-radius:7px;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:10.5px;padding:2.5px 8px;cursor:pointer;}
 .pin-manage.on{background:var(--yellow-soft);color:var(--yellow);border-color:var(--yellow);font-weight:700;}
-.pin-chips-v2{display:flex;flex-wrap:wrap;gap:7px;}
-.pin-chip{position:relative;display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--yellow);border-radius:20px;padding:7px 13px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:12.5px;font-weight:600;color:var(--text);cursor:pointer;box-shadow:0 1px 3px rgba(51,48,43,0.08);transition:transform .1s;}
+.pin-chips-v2{display:flex;flex-wrap:wrap;gap:6px;}
+.pin-chip{position:relative;display:inline-flex;align-items:center;gap:4px;background:#fff;border:1.5px solid var(--yellow);border-radius:20px;padding:5px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11.5px;font-weight:600;color:var(--text);cursor:pointer;box-shadow:0 1px 3px rgba(51,48,43,0.08);transition:transform .1s;}
 .pin-chip:active{transform:scale(0.94);}
-.pin-chip .sub{font-size:10px;color:var(--text2);font-weight:400;}
+.pin-chip .sub{font-size:9px;color:var(--text2);font-weight:400;}
 .pin-chip .x{display:none;position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;border:2px solid #fff;font-size:11px;line-height:16px;text-align:center;cursor:pointer;}
 .pin-chips-v2.managing .pin-chip{animation:pinWiggle .35s ease-in-out infinite;}
 .pin-chips-v2.managing .pin-chip .x{display:block;}
 @keyframes pinWiggle{0%,100%{transform:rotate(-1.3deg);}50%{transform:rotate(1.3deg);}}
 .pin-hint{font-size:10px;color:var(--text2);margin-top:7px;}
 /* หัวคอลัมน์ + เลขลำดับ + เส้นคั่นแถวบิล */
-.br-head{padding:7px 10px 6px 8px;border-bottom:2px solid #E9DEC9;background:var(--card2);}
-.br-head .l1{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:700;color:var(--text2);}
+/* Ver.209b: หัวคอลัมน์ต้องอ่านง่าย — ใหญ่ขึ้นให้ไล่ๆ กับเนื้อหา (ต่างกันระดับเดียว) แยกชั้นด้วยสี/น้ำหนักแทน */
+.br-head{padding:8px 10px 7px 8px;border-bottom:2px solid #E9DEC9;background:var(--card2);}
+.br-head .l1{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;color:var(--text2);}
 .br-head .l1 .hn{width:20px;text-align:center;flex-shrink:0;}
 .br-head .l1 .ht{margin-left:auto;}
-.br-head .l2{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text2);margin-top:3px;padding-left:27px;}
+.br-head .l2{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:var(--text2);opacity:0.85;margin-top:3px;padding-left:27px;}
 .br-ghost{padding:8px 10px;font-size:10.5px;color:var(--text2);opacity:0.65;border-bottom:1px dashed var(--border);font-style:italic;}
 .br-num{flex-shrink:0;width:20px;height:20px;border-radius:7px;background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:6px;}
 .br-row-filled .br-num{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -552,8 +553,8 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .br-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
 .dr-top{display:flex;align-items:center;gap:7px;}
 /* Ver.208: ดรอปดาวในแถวบิล — ว่าง=เทาทึบ / เลือกแล้ว=ขาวสว่าง หน้าตาปุ่มชุดเดียวกันทั้ง 3 ช่อง มีลูกศร ▾ กำกับทุกตัว */
-.dr-badge{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 7px 6px 9px;cursor:pointer;white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
-.dr-name{flex:0 1 auto;display:inline-flex;align-items:center;min-width:0;max-width:140px;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 7px 6px 9px;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+.dr-badge{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 7px 6px 9px;cursor:pointer;white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+.dr-name{flex:0 1 auto;display:inline-flex;align-items:center;min-width:0;max-width:140px;font-size:11.5px;font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 7px 6px 9px;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
 .dr-badge::after,.dr-name::after,.dr-unit:not(.dr-dash)::after{content:'▾';font-size:9px;margin-left:5px;opacity:0.55;flex-shrink:0;}
 .dr-badge.dr-filled{background:#fff;color:var(--accent-text);border-color:var(--accent);}
 .dr-name.dr-filled,.dr-unit.dr-filled{background:#fff;color:var(--text);border-color:#CFC5AF;}
@@ -561,7 +562,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .dr-total-input{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent-text);border-radius:7px;padding:5px 7px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;}
 .dr-total-static{width:82px;flex-shrink:0;text-align:right;font-size:14px;font-weight:600;color:var(--accent-text);margin-left:auto;}
 .dr-bottom{display:flex;align-items:center;gap:6px;}
-.dr-unit{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 7px 6px 9px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+.dr-unit{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 7px 6px 9px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
 .dr-unit.dr-dash{color:var(--border);cursor:default;box-shadow:none;background:var(--card2);}
 .dr-num{width:56px;flex-shrink:0;text-align:center;font-size:12.5px;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:5px 4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;color:var(--text);}
 .dr-x{flex-shrink:0;font-size:11px;color:var(--text2);}
@@ -1485,11 +1486,10 @@ applyTheme(getCurrentTheme(), false);
        ถอดหมุดต้องกด "จัดการ" แล้วยืนยันเสมอ / ปักเพิ่มได้จากปุ่ม 📌 ท้ายแถว หรือในตั้งค่า -->
   <div class="pin-card" id="buy-pin-card" style="display:none;">
     <div class="pin-head">
-      <span class="pin-title">📌 ของที่ซื้อประจำ</span>
+      <span class="pin-title">📌 ซื้อประจำ · แตะ = ลงแถว</span>
       <button class="pin-manage" id="pin-manage-btn" onclick="togglePinManage()">จัดการ</button>
     </div>
     <div class="pin-chips-v2" id="buy-pinned-chips"></div>
-    <div class="pin-hint" id="pin-hint">แตะชิป = ลงแถวให้ทันที · ปักเพิ่มจากปุ่ม 📌 ท้ายแถว หรือในตั้งค่า</div>
   </div>
 
   <!-- รายการในบิล: การ์ดแนวตั้งต่อรายการ ไม่ต้องเลื่อนซ้าย-ขวา -->
@@ -2926,12 +2926,10 @@ function renderBuyPinnedChips() {
   if(card) card.style.display='block';
   const types = getBuyTypes();
   el.className = 'pin-chips-v2' + (_pinManaging ? ' managing' : '');
-  const hint = document.getElementById('pin-hint');
-  if(hint) hint.style.display = _pinManaging ? 'none' : 'block';
   el.innerHTML = pinned.map(p=>{
     const typeLabel = types.find(t=>t.id===p.type)?.label || p.type || '';
     const tEsc = p.type.replace(/'/g,"\\'"), nEsc = p.name.replace(/'/g,"\\'");
-    return `<span class="pin-chip" onclick="${_pinManaging?'':`quickAddPinnedBuyItem('${tEsc}','${nEsc}')`}">📌 ${_escHtml(p.name)}${typeLabel?` <span class="sub">(${_escHtml(typeLabel)})</span>`:''}<span class="x" onclick="event.stopPropagation();askUnpinBuyItem('${tEsc}','${nEsc}')">✕</span></span>`;
+    return `<span class="pin-chip" onclick="${_pinManaging?'':`quickAddPinnedBuyItem('${tEsc}','${nEsc}')`}">${_escHtml(p.name)}${typeLabel?` <span class="sub">(${_escHtml(typeLabel)})</span>`:''}<span class="x" onclick="event.stopPropagation();askUnpinBuyItem('${tEsc}','${nEsc}')">✕</span></span>`;
   }).join('');
 }
 function quickAddPinnedBuyItem(type, name) {
