@@ -1289,10 +1289,8 @@ applyTheme(getCurrentTheme(), false);
     </button>
   </div>
   <!-- Ver.211: แถบเลื่อนวัน — โชว์เฉพาะมุมมอง 1 วันเต็มจอ -->
-  <div id="tl-1day-nav" class="tl-1day-nav" style="display:none;">
-    <button id="tl-1day-prev" onclick="_tl1dayNav(1)">‹</button>
-    <span class="tl-1day-label">เลื่อนดูวันอื่น</span>
-    <button id="tl-1day-next" onclick="_tl1dayNav(-1)">›</button>
+  <div id="tl-1day-nav" class="tl-1day-nav" style="display:none;justify-content:center;">
+    <span class="tl-1day-label">▲ ปัดขึ้นเพื่อดูวันอื่น</span>
   </div>
   <!-- Ver.209: 2 กล่องต่อแถว ไล่ตามวันซ้าย→ขวา บน→ล่าง เห็นได้ทีละหลายวัน -->
   <div id="timeline-feed" class="tl-feed-wide"></div>
@@ -9476,17 +9474,14 @@ function _tlCardHtml(period, c) {
   <div class="${scaleClass}" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 10px;box-shadow:0 1px 8px rgba(0,0,0,0.05);min-width:0;">
     <div onclick="_tlToggleCard('${cardKey}')" style="cursor:pointer;user-select:none;">
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:4px;row-gap:4px;">
-        <div style="display:flex;align-items:center;gap:4px;min-width:0;flex:1 1 auto;">
-          <span class="tl-date2" style="font-size:11.5px;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}</span>
-          ${badge?`<span class="tl-badge2" style="font-size:8.5px;font-weight:500;background:var(--blue-soft);color:var(--accent-text);border-radius:20px;padding:1px 6px;white-space:nowrap;flex-shrink:0;">${badge}</span>`:''}
-        </div>
+        <span class="tl-date2" style="font-size:11.5px;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto;">${main}</span>
         <div class="tl-loc2" style="font-size:9px;font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;padding:2px 7px;white-space:nowrap;flex-shrink:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;">${c.locLabel}</div>
       </div>
       <div class="tl-bal-row2" style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:6px;font-size:9.5px;color:var(--text2);flex-wrap:wrap;">
-        <span style="display:flex;align-items:center;gap:7px;min-width:0;">
-          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เหลือ <span style="font-weight:600;color:${cashColor};">${fmt(c.cashBalance)}</span></span>
+        <span style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+          <span style="white-space:nowrap;">เหลือ <span style="font-weight:600;color:${cashColor};">${fmt(c.cashBalance)}</span></span>
           <span style="width:1px;height:10px;background:var(--border);flex-shrink:0;"></span>
-          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">จริง <span style="font-weight:600;color:${realColor};">${fmt(realBalance)}</span></span>
+          <span style="white-space:nowrap;">จริง <span style="font-weight:600;color:${realColor};">${fmt(realBalance)}</span></span>
         </span>
         ${_tlCompareChipHtml(period, c.bucketSale, c.prevBucketSale)}
       </div>
@@ -9572,12 +9567,34 @@ function _tl1dayNav(dir) {
   renderTimelineFeed();
 }
 
+// Ver.223: ปัดขึ้น/ลงเพื่อดูวันอื่น ในมุมมอง "1 วันเต็มจอ" — ผูก listener ครั้งเดียว (idempotent) แล้วเช็ค _tlZoom ตอน touchend
+let _tlSwipeSetup = false;
+let _tlSwipeStartY = 0;
+function _tlSetupSwipe() {
+  if(_tlSwipeSetup) return;
+  _tlSwipeSetup = true;
+  const el = document.getElementById('timeline-feed');
+  if(!el) return;
+  el.addEventListener('touchstart', e=>{
+    if(_tlZoom!=='1day') return;
+    _tlSwipeStartY = e.touches[0].clientY;
+  }, {passive:true});
+  el.addEventListener('touchend', e=>{
+    if(_tlZoom!=='1day') return;
+    const dy = _tlSwipeStartY - e.changedTouches[0].clientY;
+    if(Math.abs(dy) < 40) return; // ปัดน้อยไป ไม่นับ
+    if(dy > 0) _tl1dayNav(1);  // ปัดขึ้น → วันถัดไป (เก่ากว่า)
+    else _tl1dayNav(-1);       // ปัดลง → วันก่อนหน้า (ใหม่กว่า)
+  }, {passive:true});
+}
+
 function renderTimelineFeed() {
   const el = document.getElementById('timeline-feed');
   const loadMoreBtn = document.getElementById('tl-load-more-btn');
   const nav = document.getElementById('tl-1day-nav');
   const dots = document.getElementById('tl-1day-dots');
   if(!el) return;
+  _tlSetupSwipe();
   try { _tlObligTotal = _calcAccruedObligations().total; } catch(e) { _tlObligTotal = 0; }
   // จัดกลุ่มการ์ดตาม bucketKey เพื่อทำ pagination ระดับ bucket (ไม่ตัดกลางกลุ่มสถานที่ของ bucket เดียวกัน)
   const cards = _aggregateTimelineCards(_tlPeriod);
@@ -9591,16 +9608,12 @@ function renderTimelineFeed() {
   cards.forEach(c=>{ if(!bucketOrder.includes(c.bucketKey)) bucketOrder.push(c.bucketKey); });
 
   if(_tlZoom==='1day') {
-    // มุมมอง 1 วัน/จอ: โชว์ทีละ bucket (ถ้า bucket นั้นมีหลายสถานที่ ขึ้นเป็นการ์ดเรียงต่อกันทั้งหมด) พร้อมเลื่อนดูวันอื่น
-    _tl1dayIdx = Math.min(_tl1dayIdx, bucketOrder.length-1);
+    // มุมมอง 1 วัน/จอ: โชว์ทีละ bucket (ถ้า bucket นั้นมีหลายสถานที่ ขึ้นเป็นการ์ดเรียงต่อกันทั้งหมด) ปัดขึ้น/ลงเพื่อดูวันอื่น
+    _tl1dayIdx = Math.max(0, Math.min(_tl1dayIdx, bucketOrder.length-1));
     const curKey = bucketOrder[_tl1dayIdx];
     const curCards = cards.filter(c=>c.bucketKey===curKey);
     el.innerHTML = curCards.map(c=>_tlCardHtml(_tlPeriod, c)).join('<div style="height:10px;"></div>');
     if(loadMoreBtn) loadMoreBtn.style.display = 'none';
-    const prevBtn = document.getElementById('tl-1day-prev');
-    const nextBtn = document.getElementById('tl-1day-next');
-    if(prevBtn) prevBtn.disabled = _tl1dayIdx >= bucketOrder.length-1;
-    if(nextBtn) nextBtn.disabled = _tl1dayIdx <= 0;
     if(dots) dots.innerHTML = bucketOrder.map((_,i)=>`<span class="${i===_tl1dayIdx?'active':''}"></span>`).join('');
     return;
   }
