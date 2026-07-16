@@ -323,8 +323,12 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 #timeline-feed.tl-feed-4day{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;}
 #timeline-feed.tl-feed-1day{display:block;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;max-height:72vh;}
 .tl-1day-item{scroll-snap-align:start;scroll-snap-stop:always;padding:2px 0 16px;}
+/* ═══ Ver.227: ขนาดพื้นฐาน (มุมมองกว้างสุด) ของวันที่/ป้ายสถานที่ในหัวการ์ด ═══ */
+.tl-date2{font-size:11.5px;}
+.tl-loc2{font-size:8px;padding:2px 6px;}
 .tl-card-sc-4day{padding:16px 16px !important;border-radius:16px !important;}
 .tl-card-sc-4day .tl-date2{font-size:16px !important;}
+.tl-card-sc-4day .tl-loc2{font-size:10px !important;padding:3px 9px !important;}
 .tl-card-sc-4day .tl-bal-row2{font-size:14px !important;}
 .tl-card-sc-4day .tl-bal-row2b{font-size:14px !important;margin-bottom:12px !important;}
 .tl-card-sc-4day .tl-bar-top2{font-size:14px !important;margin-bottom:5px !important;}
@@ -9469,13 +9473,22 @@ function _tlCardHtml(period, c) {
   // Ver.208: การ์ดกะทัดรัด — จอมือถือหนึ่งหน้าเห็นได้ 4-5 วัน (เดิมเห็นแค่ 2)
   // ตัดบรรทัด "เงินคงเหลือ" แยก / ตัดบรรทัดคำใบ้กดดูรายละเอียด — ยุบเป็นบรรทัดเดียวเล็กๆ และลูกศรมุมขวา
   // Ver.211: เพิ่ม "ยอดเหลือจริง" ต่อจาก "เหลือ" + เพิ่ม class ...2 ให้ CSS ปรับขนาดตามระดับซูมที่เลือก
+  // Ver.227: หัวการ์ดแยก 2 รูปแบบตามพื้นที่จริงที่มี — กันปัญหาชนกัน/ตัดคำแบบไม่ต้องเดา padding เอง
+  // - wide/4day: การ์ดแคบ (2 คอลัมน์) → วันที่กับป้ายสถานที่วางคนละบรรทัด รับประกันไม่ชนกันไม่ว่าข้อความยาวแค่ไหน
+  // - 1day: การ์ดเต็มจอกว้างมาก → ป้ายลอยมุมขวาบนได้สบาย ขยายขนาดให้เหมาะกับการ์ดใหญ่
+  const headerHtml = (_tlZoom==='1day')
+    ? `<div style="position:relative;margin-bottom:4px;">
+        <div class="tl-loc2" style="position:absolute;top:0;right:0;font-size:13px;font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;padding:5px 13px;white-space:nowrap;max-width:44%;overflow:hidden;text-overflow:ellipsis;">${c.locLabel}</div>
+        <span class="tl-date2" style="font-size:24px;font-weight:700;color:var(--text);display:block;padding-right:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}</span>
+      </div>`
+    : `<div style="margin-bottom:5px;">
+        <span class="tl-date2" style="font-weight:700;color:var(--text);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}</span>
+        <div class="tl-loc2" style="font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;margin-top:3px;">${c.locLabel}</div>
+      </div>`;
   return `
   <div class="${scaleClass}" style="position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 10px;box-shadow:0 1px 8px rgba(0,0,0,0.05);min-width:0;">
-    <div class="tl-loc2" style="position:absolute;top:8px;right:8px;font-size:8px;font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;padding:2px 6px;white-space:nowrap;max-width:38%;overflow:hidden;text-overflow:ellipsis;">${c.locLabel}</div>
     <div onclick="_tlToggleCard('${cardKey}')" style="cursor:pointer;user-select:none;">
-      <div style="margin-bottom:4px;padding-right:58px;">
-        <span class="tl-date2" style="font-size:11.5px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">${main}</span>
-      </div>
+      ${headerHtml}
       <div class="tl-bal-row2" style="display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:9.5px;color:var(--text2);">
         <span style="white-space:nowrap;">เหลือ <span style="font-weight:600;color:${cashColor};">${fmt(c.cashBalance)}</span></span>
         ${_tlCompareChipHtml(period, c.bucketSale, c.prevBucketSale)}
