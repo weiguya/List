@@ -314,6 +314,45 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .sale-sum-clear{background:none;border:none;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:11px;cursor:pointer;text-decoration:underline;padding:4px;}
 /* ═══ Ver.209: ภาษาขั้นตอน ①②③ ใช้ร่วมหน้าซื้อ/ขาย ═══ */
 #timeline-feed .empty{grid-column:1 / -1;}
+/* ═══ Ver.211: ปุ่มไอคอนซูม 3 ระดับ (หน้าไทม์ไลน์) ═══ */
+.tl-zoom-row{display:flex;justify-content:flex-end;gap:6px;margin-bottom:10px;}
+.tl-zoom-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:#fff;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0;}
+.tl-zoom-btn.active{border-color:var(--accent);background:var(--accent);color:#fff;}
+/* ═══ Ver.211: การ์ดไทม์ไลน์ 3 ระดับซูม — โครงเดียวกัน แค่สเกลต่างกัน ═══ */
+#timeline-feed.tl-feed-wide{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;}
+#timeline-feed.tl-feed-4day{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;}
+#timeline-feed.tl-feed-1day{display:flex;flex-direction:column;}
+.tl-card-sc-4day{padding:16px 16px !important;border-radius:16px !important;}
+.tl-card-sc-4day .tl-date2{font-size:16px !important;}
+.tl-card-sc-4day .tl-badge2{font-size:11px !important;padding:4px 11px !important;}
+.tl-card-sc-4day .tl-loc2{font-size:12px !important;padding:5px 13px !important;}
+.tl-card-sc-4day .tl-bal-row2{font-size:14px !important;margin-bottom:12px !important;}
+.tl-card-sc-4day .tl-bar-top2{font-size:14px !important;margin-bottom:5px !important;}
+.tl-card-sc-4day .tl-dot2{width:9px !important;height:9px !important;margin-right:8px !important;}
+.tl-card-sc-4day .tl-bar-track2{height:7px !important;}
+.tl-card-sc-4day .tl-bar2{margin-bottom:14px !important;}
+.tl-card-sc-4day .tl-net-row2{padding-top:10px !important;}
+.tl-card-sc-4day .tl-net-label2{font-size:14px !important;}
+.tl-card-sc-4day .tl-net-val2{font-size:19px !important;}
+.tl-card-sc-1day{padding:26px 22px !important;border-radius:20px !important;box-shadow:var(--shadow-card) !important;}
+.tl-card-sc-1day .tl-date2{font-size:24px !important;}
+.tl-card-sc-1day .tl-badge2{font-size:13px !important;padding:5px 13px !important;}
+.tl-card-sc-1day .tl-loc2{font-size:14px !important;padding:6px 15px !important;}
+.tl-card-sc-1day .tl-bal-row2{font-size:17px !important;margin-bottom:22px !important;}
+.tl-card-sc-1day .tl-bar-top2{font-size:16px !important;margin-bottom:6px !important;}
+.tl-card-sc-1day .tl-dot2{width:11px !important;height:11px !important;margin-right:9px !important;}
+.tl-card-sc-1day .tl-bar-track2{height:9px !important;}
+.tl-card-sc-1day .tl-bar2{margin-bottom:20px !important;}
+.tl-card-sc-1day .tl-net-row2{padding-top:12px !important;}
+.tl-card-sc-1day .tl-net-label2{font-size:16px !important;}
+.tl-card-sc-1day .tl-net-val2{font-size:26px !important;}
+.tl-1day-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px;}
+.tl-1day-nav button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:#fff;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.tl-1day-nav button:disabled{opacity:.35;cursor:default;}
+.tl-1day-nav .tl-1day-label{font-size:13px;color:var(--text2);font-weight:600;}
+.tl-1day-dots{display:flex;justify-content:center;gap:5px;margin-top:12px;}
+.tl-1day-dots span{width:6px;height:6px;border-radius:50%;background:var(--border);display:inline-block;}
+.tl-1day-dots span.active{background:var(--accent);width:16px;border-radius:4px;}
 .da-row{border-bottom:1px dashed var(--border);}
 .da-row:last-child{border-bottom:none;}
 .step-lbl{display:flex;align-items:center;gap:7px;margin:0 0 9px;}
@@ -1237,8 +1276,27 @@ applyTheme(getCurrentTheme(), false);
     <button id="tl-tab-week" onclick="setTimelinePeriod('week',this)" style="flex:1;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;font-weight:600;padding:9px 4px;border-radius:999px;border:none;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.18s;">รายสัปดาห์</button>
     <button id="tl-tab-month" onclick="setTimelinePeriod('month',this)" style="flex:1;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;font-weight:600;padding:9px 4px;border-radius:999px;border:none;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.18s;">รายเดือน</button>
   </div>
+  <!-- Ver.211: ปุ่มไอคอนซูม 3 ระดับ — กว้างสุด / 4 วันเต็มจอ / 1 วันเต็มจอ -->
+  <div class="tl-zoom-row">
+    <button id="tl-zoom-wide" class="tl-zoom-btn active" title="กว้างสุด" onclick="setTimelineZoom('wide')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    </button>
+    <button id="tl-zoom-4day" class="tl-zoom-btn" title="4 วันเต็มจอ" onclick="setTimelineZoom('4day')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg>
+    </button>
+    <button id="tl-zoom-1day" class="tl-zoom-btn" title="1 วันเต็มจอ" onclick="setTimelineZoom('1day')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
+    </button>
+  </div>
+  <!-- Ver.211: แถบเลื่อนวัน — โชว์เฉพาะมุมมอง 1 วันเต็มจอ -->
+  <div id="tl-1day-nav" class="tl-1day-nav" style="display:none;">
+    <button id="tl-1day-prev" onclick="_tl1dayNav(1)">‹</button>
+    <span class="tl-1day-label">เลื่อนดูวันอื่น</span>
+    <button id="tl-1day-next" onclick="_tl1dayNav(-1)">›</button>
+  </div>
   <!-- Ver.209: 2 กล่องต่อแถว ไล่ตามวันซ้าย→ขวา บน→ล่าง เห็นได้ทีละหลายวัน -->
-  <div id="timeline-feed" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;"></div>
+  <div id="timeline-feed" class="tl-feed-wide"></div>
+  <div id="tl-1day-dots" class="tl-1day-dots" style="display:none;"></div>
   <button id="tl-load-more-btn" onclick="loadMoreTimeline()" class="btn btn-outline" style="display:none;margin-top:4px;">โหลดเพิ่มเติม</button>
 </div>
 
@@ -9363,14 +9421,15 @@ function _metricBarHtml(label, amount, maxVal, color, opts={}) {
 }
 function _tlBarRow(label, amount, maxVal, color) {
   // Ver.208: แถบแบบกะทัดรัด — บรรทัดเดียว จุดสี+ชื่อ+ยอด แล้วแถบบางๆ ใต้ (ประหยัดความสูง ~40%)
+  // Ver.211: เพิ่ม class ...2 ไว้ให้ CSS ปรับขนาดตามระดับซูม (tl-card-sc-wide/4day/1day)
   const pct = maxVal>0 ? Math.min(100, Math.max(amount>0?4:0, Math.abs(amount)/maxVal*100)) : 0;
   return `
-    <div style="margin-bottom:6px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--text2);margin-bottom:2px;">
-        <span style="display:flex;align-items:center;min-width:0;"><span style="width:6px;height:6px;border-radius:50%;background:${color};display:inline-block;margin-right:5px;flex-shrink:0;"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${label}</span></span>
+    <div class="tl-bar2" style="margin-bottom:6px;">
+      <div class="tl-bar-top2" style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--text2);margin-bottom:2px;">
+        <span style="display:flex;align-items:center;min-width:0;"><span class="tl-dot2" style="width:6px;height:6px;border-radius:50%;background:${color};display:inline-block;margin-right:5px;flex-shrink:0;"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${label}</span></span>
         <span style="font-weight:600;color:var(--text);white-space:nowrap;margin-left:8px;">${fmt(amount)}</span>
       </div>
-      <div style="height:3.5px;border-radius:20px;background:#EEEEEE;overflow:hidden;">
+      <div class="tl-bar-track2" style="height:3.5px;border-radius:20px;background:#EEEEEE;overflow:hidden;">
         <div style="height:100%;width:${pct}%;min-width:${amount>0?'5px':'0'};border-radius:20px;background:${color};"></div>
       </div>
     </div>`;
@@ -9406,24 +9465,33 @@ function _tlCardHtml(period, c) {
   c.recurRows.forEach(r=>{ bars += _tlBarRow(r.name+recurSuffix, r.amount, maxVal, r.color); });
   const detailHtml = _tlDetailHtml(c);
   const cashColor = c.cashBalance>=0 ? 'var(--text)' : 'var(--red)';
+  // Ver.211: ยอดเหลือจริง = เหลือ − ภาระค้างจ่าย (สูตรเดียวกับการ์ดหน้าแรก) คำนวณครั้งเดียวต่อการ render แล้ว cache ไว้ที่ _tlObligTotal
+  const realBalance = c.cashBalance - (_tlObligTotal||0);
+  const realColor = realBalance>=0 ? 'var(--green)' : 'var(--red)';
+  const scaleClass = 'tl-card-sc-'+_tlZoom;
   // Ver.208: การ์ดกะทัดรัด — จอมือถือหนึ่งหน้าเห็นได้ 4-5 วัน (เดิมเห็นแค่ 2)
   // ตัดบรรทัด "เงินคงเหลือ" แยก / ตัดบรรทัดคำใบ้กดดูรายละเอียด — ยุบเป็นบรรทัดเดียวเล็กๆ และลูกศรมุมขวา
+  // Ver.211: เพิ่ม "ยอดเหลือจริง" ต่อจาก "เหลือ" + เพิ่ม class ...2 ให้ CSS ปรับขนาดตามระดับซูมที่เลือก
   return `
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 10px;box-shadow:0 1px 8px rgba(0,0,0,0.05);min-width:0;">
+  <div class="${scaleClass}" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 10px;box-shadow:0 1px 8px rgba(0,0,0,0.05);min-width:0;">
     <div onclick="_tlToggleCard('${cardKey}')" style="cursor:pointer;user-select:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:4px;">
-        <div style="font-size:11.5px;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}${badge?` <span style="font-size:8.5px;font-weight:500;background:var(--blue-soft);color:var(--accent-text);border-radius:20px;padding:1px 6px;margin-left:2px;">${badge}</span>`:''}</div>
-        <div style="font-size:9px;font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;padding:2px 7px;white-space:nowrap;flex-shrink:0;max-width:45%;overflow:hidden;text-overflow:ellipsis;">${c.locLabel}</div>
+        <div class="tl-date2" style="font-size:11.5px;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}${badge?` <span class="tl-badge2" style="font-size:8.5px;font-weight:500;background:var(--blue-soft);color:var(--accent-text);border-radius:20px;padding:1px 6px;margin-left:2px;">${badge}</span>`:''}</div>
+        <div class="tl-loc2" style="font-size:9px;font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;padding:2px 7px;white-space:nowrap;flex-shrink:0;max-width:45%;overflow:hidden;text-overflow:ellipsis;">${c.locLabel}</div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:6px;font-size:9.5px;color:var(--text2);">
-        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เหลือ <span style="font-weight:600;color:${cashColor};">${fmt(c.cashBalance)}</span></span>
+      <div class="tl-bal-row2" style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:6px;font-size:9.5px;color:var(--text2);flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:7px;min-width:0;">
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เหลือ <span style="font-weight:600;color:${cashColor};">${fmt(c.cashBalance)}</span></span>
+          <span style="width:1px;height:10px;background:var(--border);flex-shrink:0;"></span>
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">จริง <span style="font-weight:600;color:${realColor};">${fmt(realBalance)}</span></span>
+        </span>
         ${_tlCompareChipHtml(period, c.bucketSale, c.prevBucketSale)}
       </div>
       ${bars}
-      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed var(--border);">
-        <span style="font-size:11px;font-weight:500;color:var(--text2);">สุทธิ</span>
+      <div class="tl-net-row2" style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed var(--border);">
+        <span class="tl-net-label2" style="font-size:11px;font-weight:500;color:var(--text2);">สุทธิ</span>
         <span style="display:flex;align-items:center;gap:7px;">
-          <span style="font-size:14px;font-weight:700;color:${profitColor};">${emoji} ${fmt(c.net)}</span>
+          <span class="tl-net-val2" style="font-size:14px;font-weight:700;color:${profitColor};">${emoji} ${fmt(c.net)}</span>
           <span style="font-size:9px;color:var(--text2);">${expanded?'▲':'▼'}</span>
         </span>
       </div>
@@ -9475,19 +9543,66 @@ function _tlToggleCard(cardKey) {
   renderTimelineFeed();
 }
 
+// Ver.211: ระดับซูม 3 แบบ — 'wide' (เดิม, 2 คอลัมน์เล็กสุด) | '4day' (2 คอลัมน์ใหญ่ พอดี 4 การ์ด/จอ) | '1day' (การ์ดเดียวเต็มจอ + เลื่อนดูวันอื่น)
+let _tlZoom = 'wide';
+let _tl1dayIdx = 0;
+let _tlObligTotal = 0; // cache ภาระค้างจ่าย ต่อการ render 1 ครั้ง ใช้คำนวณ "ยอดเหลือจริง" ในทุกการ์ด
+
+function setTimelineZoom(mode) {
+  _tlZoom = mode;
+  _tl1dayIdx = 0;
+  ['wide','4day','1day'].forEach(z=>{
+    const b = document.getElementById('tl-zoom-'+z);
+    if(b) b.classList.toggle('active', z===mode);
+  });
+  const el = document.getElementById('timeline-feed');
+  if(el) el.className = 'tl-feed-'+mode;
+  const nav = document.getElementById('tl-1day-nav');
+  const dots = document.getElementById('tl-1day-dots');
+  if(nav) nav.style.display = mode==='1day' ? 'flex' : 'none';
+  if(dots) dots.style.display = mode==='1day' ? 'flex' : 'none';
+  renderTimelineFeed();
+}
+
+function _tl1dayNav(dir) {
+  _tl1dayIdx = Math.max(0, _tl1dayIdx + dir);
+  renderTimelineFeed();
+}
+
 function renderTimelineFeed() {
   const el = document.getElementById('timeline-feed');
   const loadMoreBtn = document.getElementById('tl-load-more-btn');
+  const nav = document.getElementById('tl-1day-nav');
+  const dots = document.getElementById('tl-1day-dots');
   if(!el) return;
+  try { _tlObligTotal = _calcAccruedObligations().total; } catch(e) { _tlObligTotal = 0; }
   // จัดกลุ่มการ์ดตาม bucketKey เพื่อทำ pagination ระดับ bucket (ไม่ตัดกลางกลุ่มสถานที่ของ bucket เดียวกัน)
   const cards = _aggregateTimelineCards(_tlPeriod);
   if(!cards.length) {
     el.innerHTML = '<div class="empty"><div class="empty-icon"></div>ยังไม่มีข้อมูล</div>';
     if(loadMoreBtn) loadMoreBtn.style.display = 'none';
+    if(dots) dots.innerHTML = '';
     return;
   }
   const bucketOrder = [];
   cards.forEach(c=>{ if(!bucketOrder.includes(c.bucketKey)) bucketOrder.push(c.bucketKey); });
+
+  if(_tlZoom==='1day') {
+    // มุมมอง 1 วัน/จอ: โชว์ทีละ bucket (ถ้า bucket นั้นมีหลายสถานที่ ขึ้นเป็นการ์ดเรียงต่อกันทั้งหมด) พร้อมเลื่อนดูวันอื่น
+    _tl1dayIdx = Math.min(_tl1dayIdx, bucketOrder.length-1);
+    const curKey = bucketOrder[_tl1dayIdx];
+    const curCards = cards.filter(c=>c.bucketKey===curKey);
+    el.innerHTML = curCards.map(c=>_tlCardHtml(_tlPeriod, c)).join('<div style="height:10px;"></div>');
+    if(loadMoreBtn) loadMoreBtn.style.display = 'none';
+    const prevBtn = document.getElementById('tl-1day-prev');
+    const nextBtn = document.getElementById('tl-1day-next');
+    if(prevBtn) prevBtn.disabled = _tl1dayIdx >= bucketOrder.length-1;
+    if(nextBtn) nextBtn.disabled = _tl1dayIdx <= 0;
+    if(dots) dots.innerHTML = bucketOrder.map((_,i)=>`<span class="${i===_tl1dayIdx?'active':''}"></span>`).join('');
+    return;
+  }
+
+  if(dots) dots.innerHTML = '';
   const visibleBuckets = new Set(bucketOrder.slice(0, _tlVisibleCount));
   const visible = cards.filter(c=>visibleBuckets.has(c.bucketKey));
   // Ver.210: ตัดธงคั่นระหว่างวันออก — ในตาราง 2 คอลัมน์ ธงจะกินช่องแล้วดันทุกวันขึ้นแถวใหม่
