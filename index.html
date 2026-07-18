@@ -335,10 +335,11 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .tl-1day-hint.show{opacity:1;transform:translateX(-50%) translateY(0);}
 /* ═══ Ver.227: ขนาดพื้นฐาน (มุมมองกว้างสุด) ของวันที่/ป้ายสถานที่ในหัวการ์ด ═══ */
 .tl-date2{font-size:11.5px;}
-.tl-loc2{font-size:8px;padding:2px 6px;}
+.tl-loc2{font-size:10.5px;padding:4px 10px;}
 .tl-card-sc-4day{padding:16px 16px !important;border-radius:16px !important;}
 .tl-card-sc-4day .tl-date2{font-size:16px !important;}
-.tl-card-sc-4day .tl-loc2{font-size:10px !important;padding:3px 9px !important;}
+.tl-card-sc-4day .tl-loc2{font-size:12.5px !important;padding:5px 12px !important;}
+.tl-card-sc-1day .tl-loc2{font-size:15px !important;padding:6px 14px !important;}
 .tl-card-sc-4day .tl-bal-row2{font-size:14px !important;}
 .tl-card-sc-4day .tl-bal-row2b{font-size:14px !important;margin-bottom:12px !important;}
 .tl-card-sc-4day .tl-bar-top2{font-size:14px !important;margin-bottom:5px !important;}
@@ -9481,17 +9482,12 @@ function _tlCardHtml(period, c) {
   // Ver.208: การ์ดกะทัดรัด — จอมือถือหนึ่งหน้าเห็นได้ 4-5 วัน (เดิมเห็นแค่ 2)
   // ตัดบรรทัด "เงินคงเหลือ" แยก / ตัดบรรทัดคำใบ้กดดูรายละเอียด — ยุบเป็นบรรทัดเดียวเล็กๆ และลูกศรมุมขวา
   // Ver.211: เพิ่ม "ยอดเหลือจริง" ต่อจาก "เหลือ" + เพิ่ม class ...2 ให้ CSS ปรับขนาดตามระดับซูมที่เลือก
-  // Ver.227: หัวการ์ดแยก 2 รูปแบบตามพื้นที่จริงที่มี — กันปัญหาชนกัน/ตัดคำแบบไม่ต้องเดา padding เอง
-  // - wide/4day: การ์ดแคบ (2 คอลัมน์) → วันที่กับป้ายสถานที่วางคนละบรรทัด รับประกันไม่ชนกันไม่ว่าข้อความยาวแค่ไหน
-  // - 1day: การ์ดเต็มจอกว้างมาก → ป้ายลอยมุมขวาบนได้สบาย ขยายขนาดให้เหมาะกับการ์ดใหญ่
-  const headerHtml = (_tlZoom==='1day')
-    ? `<div style="position:relative;margin-bottom:4px;">
-        <div class="tl-loc2" style="position:absolute;top:0;right:0;font-size:13px;font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;padding:5px 13px;white-space:nowrap;max-width:44%;overflow:hidden;text-overflow:ellipsis;">${c.locLabel}</div>
-        <span class="tl-date2" style="font-size:24px;font-weight:700;color:var(--text);display:block;padding-right:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}</span>
-      </div>`
-    : `<div style="margin-bottom:5px;">
-        <span class="tl-date2" style="font-weight:700;color:var(--text);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${main}</span>
-        <div class="tl-loc2" style="font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;display:inline-block;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;margin-top:3px;">${c.locLabel}</div>
+  // Ver.228: หัวการ์ดรวมเป็นแบบเดียว — วันที่กับป้ายสถานที่อยู่แถวเดียวกันด้วย Flexbox เสมอ
+  // (วันที่ชิดซ้ายความกว้างคงที่ ป้ายสถานที่ flex:1 ชิดขวา) ลดความสูงการ์ด และป้ายสถานที่ไม่มีวันตัดขึ้นบรรทัดใหม่
+  // ไม่ว่าชื่อตลาดจะยาวแค่ไหน — ใช้ ellipsis (...) แทนการตัดบรรทัดเสมอ ใช้ได้ทุกระดับซูม (wide/4day/1day)
+  const headerHtml = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;min-width:0;">
+        <span class="tl-date2" style="font-weight:700;color:var(--text);flex:0 0 auto;white-space:nowrap;">${main}</span>
+        <div class="tl-loc2" style="font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0;text-align:right;">${c.locLabel}</div>
       </div>`;
   return `
   <div class="${scaleClass}" style="position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 10px;box-shadow:0 1px 8px rgba(0,0,0,0.05);min-width:0;">
