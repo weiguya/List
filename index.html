@@ -723,7 +723,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .br-field.br-dash{background:transparent;border-color:transparent;color:var(--text2);text-align:center;cursor:default;}
 .br-del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:4px;line-height:1;opacity:0.8;}
 /* Dropdown แบบจิ้มแล้วเลือก (ไม่ใช่ popup เต็มจอ) สำหรับตารางบันทึกรายจ่าย */
-#buyrow-select-dd{display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:9999;box-shadow:0 8px 24px rgba(51,48,43,0.14);width:210px;max-width:calc(100vw - 16px);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#buyrow-select-dd{display:none;position:fixed;background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:10000;box-shadow:0 8px 24px rgba(51,48,43,0.14);width:210px;max-width:calc(100vw - 16px);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 
 /* ธีมสีของแอป: swatch วงกลมพาสเทลให้เลือกในหน้าตั้งค่า */
 .theme-swatch-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;width:64px;}
@@ -1357,13 +1357,6 @@ applyTheme(getCurrentTheme(), false);
           <div id="sale-location-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:999;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:160px;overflow-y:auto;"></div>
         </div>
       </div>
-      <div id="sale-top-total-box" style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:10px 14px;">
-        <div>
-          <div style="font-size:13px;font-weight:500;color:var(--accent-text);">ยอดรวมทั้งหมด</div>
-          <div style="font-size:10px;color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="sale-order-preview" style="font-weight:500;color:var(--accent-text);">SL-...</span></div>
-        </div>
-        <span id="sale-grand-total" style="font-size:19px;font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">฿0</span>
-      </div>
     </div>
 
     <!-- Ver.209: ขายด่วน — เอาหลักการ ไม่เอารูป: ③ แตะสินค้า ④ ปรับจำนวน (ใช้ท่อข้อมูล _saleRows เดิมทั้งหมด) -->
@@ -1395,6 +1388,15 @@ applyTheme(getCurrentTheme(), false);
     </div>
 
     <div class="form-card"><div class="form-group"><label>หมายเหตุ (ถ้ามี)</label><input type="text" id="sale-note" placeholder="เช่น ขายดีพิเศษ"></div></div>
+
+    <!-- Ver.229: ย้ายกล่องยอดรวม/เลขออเดอร์มาไว้ก่อนปุ่มบันทึก ให้ตรงกับหน้ารายจ่าย (ตรวจยอดก่อนกดบันทึก) -->
+    <div id="sale-top-total-box" style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:10px;">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--accent-text);">ยอดรวมทั้งหมด</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="sale-order-preview" style="font-weight:500;color:var(--accent-text);">SL-...</span></div>
+      </div>
+      <span id="sale-grand-total" style="font-size:19px;font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">฿0</span>
+    </div>
     <div id="sale-bottom-btns" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <button class="btn btn-outline" onclick="confirmClearForm('sale')">ล้างฟอร์ม</button>
       <button class="btn btn-green" onclick="confirmSale()">บันทึกยอดขาย</button>
@@ -2508,10 +2510,9 @@ applyTheme(getCurrentTheme(), false);
         <!-- ประเภท custom dropdown -->
         <div style="position:relative;">
           <input type="hidden" id="set-item-type" value="">
-          <div id="set-item-type-display" onclick="toggleSetItemTypeDD()"
+          <div id="set-item-type-display" onclick="openSetItemTypeSelect(event)"
             style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 12px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-- ประเภท --</div>
-          <span onclick="toggleSetItemTypeDD()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;user-select:none;">▾</span>
-          <div id="set-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:500;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:200px;overflow-y:auto;"></div>
+          <span onclick="openSetItemTypeSelect(event)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;user-select:none;">▾</span>
         </div>
         <!-- ราคา/หน่วย -->
         <input type="number" id="new-item-price" placeholder="ราคา/หน่วย" step="0.01" min="0"
@@ -2532,11 +2533,10 @@ applyTheme(getCurrentTheme(), false);
       </div>
       <div style="position:relative;">
         <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text2);pointer-events:none;"></span>
-        <select id="itemnames-filter-type" onchange="_itemNamesPage=1;renderItemNamesList()"
-          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px 9px 32px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text);outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;box-sizing:border-box;">
-          <option value="">ทุกประเภท</option>
-        </select>
-        <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;pointer-events:none;">▾</span>
+        <input type="hidden" id="itemnames-filter-type" value="">
+        <div id="itemnames-filter-type-display" onclick="openItemTypeFilterSelect(event)"
+          style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:9px 32px 9px 32px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text);cursor:pointer;user-select:none;box-sizing:border-box;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">ทุกประเภท</div>
+        <span onclick="openItemTypeFilterSelect(event)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:15px;cursor:pointer;pointer-events:auto;">▾</span>
       </div>
     </div>
     <div id="item-names-list"></div>
@@ -2686,10 +2686,9 @@ applyTheme(getCurrentTheme(), false);
     <div class="form-group"><label>ประเภท</label>
       <div style="position:relative;">
         <input type="hidden" id="edit-item-type" value="">
-        <div id="edit-item-type-display" onclick="toggleEditItemTypeDD()"
+        <div id="edit-item-type-display" onclick="openEditItemTypeSelect(event)"
           style="width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 38px 10px 14px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;user-select:none;box-sizing:border-box;">-- เลือกประเภท --</div>
-        <span onclick="toggleEditItemTypeDD()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px;cursor:pointer;user-select:none;">▾</span>
-        <div id="edit-item-type-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:var(--card);border:1.5px solid var(--accent);border-radius:10px;z-index:600;box-shadow:0 8px 24px rgba(51,48,43,0.14);max-height:190px;overflow-y:auto;"></div>
+        <span onclick="openEditItemTypeSelect(event)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px;cursor:pointer;user-select:none;">▾</span>
       </div>
     </div>
     <div class="form-group" id="edit-item-price-row"><label>ราคา/หน่วย (บาท) — เฉพาะสินค้าขาย</label>
@@ -4907,6 +4906,57 @@ function openIncomeCatSelect(ev) {
   _buyRowDDOpenedAt = Date.now();
 }
 
+// Ver.229: ประเภทสินค้า (ตั้งค่า > ชื่อสินค้า — ทั้งฟอร์มเพิ่มและแก้ไข) เปลี่ยนมาใช้ดรอปดาวน์ลอยตัวเดียวกับหน้ารายจ่าย
+// (แทนป็อปอัปแบบเดิมที่แยกกันคนละชุดต่อหน้า) ให้หน้าตา/การใช้งานเหมือนกันทั้งแอป
+function openSetItemTypeSelect(ev) {
+  const anchor = ev.currentTarget;
+  const ddEl = document.getElementById('buyrow-select-dd');
+  if(ddEl && ddEl.style.display==='block' && _buyRowSelectCtx && _buyRowSelectCtx.kind==='itemtype'){
+    closeBuyRowSelectModal();
+    return;
+  }
+  _buyRowSelectCtx = { kind:'itemtype' };
+  const searchWrap = document.getElementById('buyrow-select-search-wrap');
+  if(searchWrap) searchWrap.style.display = 'none'; // ตัวเลือกไม่เยอะ ไม่ต้องค้นหา (เหมือนหน้ารายจ่าย)
+  renderBuyRowSelectList('');
+  const dd = document.getElementById('buyrow-select-dd');
+  if(dd) dd.style.display = 'block';
+  positionBuyRowDD(anchor);
+  _buyRowDDOpenedAt = Date.now();
+}
+function openEditItemTypeSelect(ev) {
+  const anchor = ev.currentTarget;
+  const ddEl = document.getElementById('buyrow-select-dd');
+  if(ddEl && ddEl.style.display==='block' && _buyRowSelectCtx && _buyRowSelectCtx.kind==='itemtype-edit'){
+    closeBuyRowSelectModal();
+    return;
+  }
+  _buyRowSelectCtx = { kind:'itemtype-edit' };
+  const searchWrap = document.getElementById('buyrow-select-search-wrap');
+  if(searchWrap) searchWrap.style.display = 'none';
+  renderBuyRowSelectList('');
+  const dd = document.getElementById('buyrow-select-dd');
+  if(dd) dd.style.display = 'block';
+  positionBuyRowDD(anchor);
+  _buyRowDDOpenedAt = Date.now();
+}
+function openItemTypeFilterSelect(ev) {
+  const anchor = ev.currentTarget;
+  const ddEl = document.getElementById('buyrow-select-dd');
+  if(ddEl && ddEl.style.display==='block' && _buyRowSelectCtx && _buyRowSelectCtx.kind==='itemtype-filter'){
+    closeBuyRowSelectModal();
+    return;
+  }
+  _buyRowSelectCtx = { kind:'itemtype-filter' };
+  const searchWrap = document.getElementById('buyrow-select-search-wrap');
+  if(searchWrap) searchWrap.style.display = 'none';
+  renderBuyRowSelectList('');
+  const dd = document.getElementById('buyrow-select-dd');
+  if(dd) dd.style.display = 'block';
+  positionBuyRowDD(anchor);
+  _buyRowDDOpenedAt = Date.now();
+}
+
 function selectSaleRowCustomName(name) {
   if(!_buyRowSelectCtx) return;
   const { rowId } = _buyRowSelectCtx;
@@ -5381,17 +5431,12 @@ function populateSetItemTypeSelect() {
   const hidEl = document.getElementById('set-item-type');
   if(hidEl && !hidEl.value && types.length) hidEl.value = types[0].id;
   onNewItemTypeChange();
-  // populate filter dropdown
-  const fEl = document.getElementById('itemnames-filter-type');
-  if(fEl){
-    const cur = fEl.value;
-    fEl.innerHTML = '<option value="">ทุกประเภท</option>';
-    types.forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t.id; opt.textContent = t.label;
-      fEl.appendChild(opt);
-    });
-    if(cur) fEl.value = cur;
+  // Ver.230: filter dropdown เปลี่ยนมาใช้ดรอปดาวน์ลอยตัวร่วมกันแทน <select> เดิม — sync แค่ข้อความที่แสดง
+  const fHid = document.getElementById('itemnames-filter-type');
+  const fDisp = document.getElementById('itemnames-filter-type-display');
+  if(fHid && fDisp) {
+    const cur = types.find(t=>t.id===fHid.value);
+    fDisp.textContent = cur ? cur.label : 'ทุกประเภท';
   }
 }
 
@@ -8656,6 +8701,12 @@ function getBuyRowSelectOptions() {
   if(kind==='inccat') {
     return Object.entries(INCOME_CAT_LABELS).map(([value,label])=>({ value, label }));
   }
+  if(kind==='itemtype' || kind==='itemtype-edit') {
+    return getAllItemTypes().map(t=>({ value:t.id, label:t.label }));
+  }
+  if(kind==='itemtype-filter') {
+    return [{value:'',label:'ทุกประเภท'}, ...getAllItemTypes().map(t=>({ value:t.id, label:t.label }))];
+  }
   if(kind==='sale') {
     const r = _saleRows.find(r=>r.id===rowId);
     if(!r) return [];
@@ -8723,6 +8774,26 @@ function selectBuyRowSelectOption(idx) {
   if(kind==='inccat') {
     closeBuyRowSelectModal();
     selectIncomeCategory(o.value);
+    return;
+  }
+  if(kind==='itemtype') {
+    closeBuyRowSelectModal();
+    selectSetItemType(o.value, o.label);
+    return;
+  }
+  if(kind==='itemtype-edit') {
+    closeBuyRowSelectModal();
+    selectEditItemType(o.value, o.label);
+    return;
+  }
+  if(kind==='itemtype-filter') {
+    closeBuyRowSelectModal();
+    const fHid = document.getElementById('itemnames-filter-type');
+    const fDisp = document.getElementById('itemnames-filter-type-display');
+    if(fHid) fHid.value = o.value;
+    if(fDisp) fDisp.textContent = o.label;
+    _itemNamesPage = 1;
+    renderItemNamesList();
     return;
   }
   if(kind==='sale') {
@@ -9288,7 +9359,20 @@ function _tlCashBalanceAsOf(dateStr) {
 }
 
 // รวม dayMap เป็น "การ์ด" ต่อ (ช่วงเวลา + สถานที่) — ซื้อของใช้ยอดรวมทั้งช่วงเวลา (ไม่แยกที่)
+// Ver.229: ป้ายหัวการ์ดไทม์ไลน์ใช้ "ชื่อย่อสถานที่" (abbr) จากตั้งค่า › สถานที่ขาย/ตลาด แทนชื่อเต็ม
+// เพื่อให้ชื่อสถานที่อยู่แถวเดียวกับวันที่ได้แน่นอนโดยไม่ต้องตัดคำ/ขึ้นบรรทัดใหม่ — ถ้ายังไม่ได้ตั้งชื่อย่อ จะใช้ชื่อเต็มแทน
+let _tlLocAbbrMap = null;
+function _tlLocAbbr(name) {
+  if(!name) return name;
+  if(!_tlLocAbbrMap) {
+    _tlLocAbbrMap = {};
+    getLocations().forEach(l=>{ _tlLocAbbrMap[l.name] = (l.abbr||'').trim() || l.name; });
+  }
+  return _tlLocAbbrMap[name] || name;
+}
+
 function _aggregateTimelineCards(period) {
+  _tlLocAbbrMap = null; // เคลียร์แคชทุกครั้งที่ render ใหม่ กันชื่อย่อที่เพิ่งแก้ในตั้งค่าไม่อัปเดต
   const dayMap = _buildTimelineDayMap();
   const dates = Object.keys(dayMap).sort();
   if(!dates.length) return [];
@@ -9352,7 +9436,7 @@ function _aggregateTimelineCards(period) {
       const realNames = locKeys.filter(lk=>lk!=='');
       locAgg['__merged__'] = merged;
       locKeys = ['__merged__'];
-      var mergedLocLabel = realNames.length ? realNames.join(', ') : 'ไม่ระบุที่';
+      var mergedLocLabel = realNames.length ? realNames.map(_tlLocAbbr).join(', ') : 'ไม่ระบุที่';
     }
     locKeys.sort((a,b)=> a===''?1:b===''?-1:a.localeCompare(b));
     const multiLoc = locKeys.length>1;
@@ -9371,7 +9455,7 @@ function _aggregateTimelineCards(period) {
     locKeys.forEach(locKey=>{
       const a = locAgg[locKey] || { sale:0, saleCount:0, saleProducts:{} };
       const net = a.sale - buy - pinnedTotal - recurTotal;
-      const locLabel = locKey==='__merged__' ? mergedLocLabel : (locKey||'ไม่ระบุที่');
+      const locLabel = locKey==='__merged__' ? mergedLocLabel : (locKey ? _tlLocAbbr(locKey) : 'ไม่ระบุที่');
       cards.push({
         bucketKey:bKey, locKey, locLabel, multiLoc,
         sale:a.sale, saleCount:a.saleCount, saleProducts:a.saleProducts,
@@ -9482,12 +9566,14 @@ function _tlCardHtml(period, c) {
   // Ver.208: การ์ดกะทัดรัด — จอมือถือหนึ่งหน้าเห็นได้ 4-5 วัน (เดิมเห็นแค่ 2)
   // ตัดบรรทัด "เงินคงเหลือ" แยก / ตัดบรรทัดคำใบ้กดดูรายละเอียด — ยุบเป็นบรรทัดเดียวเล็กๆ และลูกศรมุมขวา
   // Ver.211: เพิ่ม "ยอดเหลือจริง" ต่อจาก "เหลือ" + เพิ่ม class ...2 ให้ CSS ปรับขนาดตามระดับซูมที่เลือก
-  // Ver.228: หัวการ์ดรวมเป็นแบบเดียว — วันที่กับป้ายสถานที่อยู่แถวเดียวกันด้วย Flexbox เสมอ
-  // (วันที่ชิดซ้ายความกว้างคงที่ ป้ายสถานที่ flex:1 ชิดขวา) ลดความสูงการ์ด และป้ายสถานที่ไม่มีวันตัดขึ้นบรรทัดใหม่
-  // ไม่ว่าชื่อตลาดจะยาวแค่ไหน — ใช้ ellipsis (...) แทนการตัดบรรทัดเสมอ ใช้ได้ทุกระดับซูม (wide/4day/1day)
-  const headerHtml = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;min-width:0;">
+  // Ver.229: หัวการ์ดรวมเป็นแบบเดียว — วันที่กับ "ชื่อย่อสถานที่" (จากตั้งค่า) อยู่แถวเดียวกันด้วย Flexbox เสมอ
+  // ทั้งวันที่และป้ายชื่อย่อกว้างเท่าเนื้อหาจริง (flex:0 0 auto) แล้วดันชิดสองข้างด้วย justify-content:space-between
+  // เพราะเป็น "ชื่อย่อ" ที่ตั้งไว้สั้นอยู่แล้ว จึงไม่ตัดคำด้วย ... และไม่ขึ้นบรรทัดใหม่ — อยู่มุมขวาบนตำแหน่งเดียวกันทุกแท็บ/ทุกระดับซูม
+  // Ver.230: เพิ่ม padding-right เล็กน้อยที่แถวหัวการ์ด กันป้ายชื่อย่อสถานที่ชิดโค้งมุมขวาบนของการ์ดจนดูเหมือนตกขอบ
+  // (โดยเฉพาะมุมมอง 2 คอลัมน์/wide ที่การ์ดแคบสุด) — ไม่กระทบ padding โดยรวมของการ์ด แก้เฉพาะแถวหัวเท่านั้น
+  const headerHtml = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;padding-right:3px;min-width:0;">
         <span class="tl-date2" style="font-weight:700;color:var(--text);flex:0 0 auto;white-space:nowrap;">${main}</span>
-        <div class="tl-loc2" style="font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0;text-align:right;">${c.locLabel}</div>
+        <div class="tl-loc2" style="font-weight:500;color:var(--accent-text);background:var(--blue-soft);border-radius:20px;white-space:nowrap;flex:0 0 auto;text-align:right;">${c.locLabel}</div>
       </div>`;
   return `
   <div class="${scaleClass}" style="position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:9px 10px;box-shadow:0 1px 8px rgba(0,0,0,0.05);min-width:0;">
@@ -10529,19 +10615,32 @@ function renderHomeExtras() {
         <button onclick="openFabSheet()" style="margin-top:12px;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:10px 22px;font-size:13px;font-weight:800;cursor:pointer;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;box-shadow:0 3px 8px rgba(255,123,172,0.4);">+ บันทึกรายการ</button>
       </div>`;
     } else {
+      // Ver.230: ป้าย "วันนี้ / เมื่อวาน" สีเด่นกำกับแต่ละรายการ ให้แยกวันได้ไวขึ้นโดยไม่ต้องอ่านวันที่ละเอียด
+      const todayStr = today();
+      const ystD = new Date(); ystD.setDate(ystD.getDate()-1);
+      const ystStr = localDateStr(ystD);
       const rows = feed.map(([k,f])=>{
         const isSale = f.type==='sale';
         const t = f.ts ? new Date(f.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '';
         const d = f.date ? fmtDate(f.date) : '';
+        const dayBadge = f.date===todayStr
+          ? '<span style="font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:8px;background:var(--green-soft);color:var(--green);white-space:nowrap;">🟢 วันนี้</span>'
+          : f.date===ystStr
+            ? '<span style="font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:8px;background:var(--yellow-soft);color:var(--yellow);white-space:nowrap;">🕒 เมื่อวาน</span>'
+            : '';
         const arrow = isSale
           ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--vivid-sale)" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'
           : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--vivid-buy)" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>';
-        return `<div class="home-recent-row" onclick="homeFeedOpenBill('${k}')">
+        // Ver.230: เพิ่ม ontouchend คู่กับ onclick (แพทเทิร์นเดียวกับดรอปดาวน์ในแอป) กันปัญหาบางเครื่องต้องแตะ 2 ครั้งกว่าจะเปิดบิล
+        return `<div class="home-recent-row" onclick="homeFeedOpenBill('${k}')" ontouchend="_ddSelect(event,()=>homeFeedOpenBill('${k}'))">
           <div style="display:flex;align-items:center;gap:11px;min-width:0;">
             <div class="fic" style="background:${isSale?'var(--income-soft)':'var(--expense-soft)'};">${arrow}</div>
             <div style="min-width:0;">
               <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;font-weight:700;">${isSale?'ขาย':'ซื้อของ'} — ${f.label}</div>
-              <div style="font-size:11px;font-weight:400;color:var(--text2);margin-top:1px;">${d}${d&&t?' · ':''}${t}</div>
+              <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
+                ${dayBadge}
+                <span style="font-size:11px;font-weight:400;color:var(--text2);">${d}${d&&t?' · ':''}${t}</span>
+              </div>
             </div>
           </div>
           <div class="amt" style="color:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};flex-shrink:0;font-weight:800;">${isSale?'+':'−'}${fmt(f.amount)}</div>
@@ -11926,23 +12025,21 @@ document.addEventListener('click', e => {
     if(!dd || dd.style.display === 'none') return;
     if(!e.target.closest('#'+id) && !e.target.closest('#'+id.replace('-dd','-trigger'))) dd.style.display = 'none';
   });
-  [{dd:'set-item-type-dd',wrap:'set-item-type-display'},{dd:'set-unit-dd',wrap:'new-item-unit-display'},
-   {dd:'edit-item-type-dd',wrap:'edit-item-type-display'},{dd:'edit-item-unit-dd',wrap:'edit-item-unit-display'}
+  [{dd:'set-unit-dd',wrap:'new-item-unit-display'},
+   {dd:'edit-item-unit-dd',wrap:'edit-item-unit-display'}
   ].forEach(({dd,wrap})=>{const ddEl=document.getElementById(dd);if(!ddEl||ddEl.style.display==='none')return;if(!e.target.closest('#'+dd)&&!e.target.closest('#'+wrap))ddEl.style.display='none';});
 });
 
 // ============ SET-ITEMNAMES CUSTOM DROPDOWNS ============
-function toggleSetItemTypeDD(){const dd=document.getElementById('set-item-type-dd');if(!dd)return;if(dd.style.display==='none'||!dd.style.display){buildSetItemTypeDD();dd.style.display='block';}else dd.style.display='none';}
-function buildSetItemTypeDD(){const dd=document.getElementById('set-item-type-dd');if(!dd)return;const types=getAllItemTypes();const cur=document.getElementById('set-item-type')?.value;dd.innerHTML=types.map(t=>{const sel=t.id===cur;return`<div onmousedown="event.preventDefault();selectSetItemType('${t.id}','${t.label.replace(/'/g,"\'")}');" ontouchend="_ddSelect(event,()=>selectSetItemType('${t.id}','${t.label.replace(/'/g,"\'")}'));" style="padding:11px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);${sel?'background:var(--blue-soft);color:var(--accent-text);font-weight:500;':''}">${t.label}</div>`;}).join('');}
-function selectSetItemType(id,label){const hid=document.getElementById('set-item-type');const disp=document.getElementById('set-item-type-display');const dd=document.getElementById('set-item-type-dd');if(hid)hid.value=id;if(disp){disp.textContent=label;disp.style.color='var(--text)';}if(dd)dd.style.display='none';onNewItemTypeChange();}
+// Ver.229: ตัด toggleSetItemTypeDD/buildSetItemTypeDD (ป็อปอัปเดิม) ออก — ใช้ openSetItemTypeSelect ผ่านดรอปดาวน์ลอยตัวร่วมกันแทน
+function selectSetItemType(id,label){const hid=document.getElementById('set-item-type');const disp=document.getElementById('set-item-type-display');if(hid)hid.value=id;if(disp){disp.textContent=label;disp.style.color='var(--text)';}onNewItemTypeChange();}
 
 function toggleSetUnitDD(){const dd=document.getElementById('set-unit-dd');if(!dd)return;if(dd.style.display==='none'||!dd.style.display){buildSetUnitDD();dd.style.display='block';}else dd.style.display='none';}
 function buildSetUnitDD(){const dd=document.getElementById('set-unit-dd');if(!dd)return;const units=getStoredUnits();const cur=document.getElementById('new-item-unit')?.value;const items=['',...units];dd.innerHTML=items.map(u=>{const label=u||'-- ไม่มีหน่วยนับ --';const sel=u===cur;return`<div onmousedown="event.preventDefault();selectSetUnit('${u}','${label.replace(/'/g,"\'")}');" ontouchend="_ddSelect(event,()=>selectSetUnit('${u}','${label.replace(/'/g,"\'")}'));" style="padding:11px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);${sel?'background:var(--blue-soft);color:var(--accent-text);font-weight:500;':''}">${label}</div>`;}).join('');}
 function selectSetUnit(val,label){const hid=document.getElementById('new-item-unit');const disp=document.getElementById('new-item-unit-display');const dd=document.getElementById('set-unit-dd');if(hid)hid.value=val;if(disp){disp.textContent=label;disp.style.color=val?'var(--text)':'var(--text2)';}if(dd)dd.style.display='none';}
 
-function toggleEditItemTypeDD(){const dd=document.getElementById('edit-item-type-dd');if(!dd)return;if(dd.style.display==='none'||!dd.style.display){buildEditItemTypeDD();dd.style.display='block';}else dd.style.display='none';}
-function buildEditItemTypeDD(){const dd=document.getElementById('edit-item-type-dd');if(!dd)return;const types=getAllItemTypes();const cur=document.getElementById('edit-item-type')?.value;dd.innerHTML=types.map(t=>{const sel=t.id===cur;return`<div onmousedown="event.preventDefault();selectEditItemType('${t.id}','${t.label.replace(/'/g,"\'")}');" ontouchend="_ddSelect(event,()=>selectEditItemType('${t.id}','${t.label.replace(/'/g,"\'")}'));" style="padding:11px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);${sel?'background:var(--blue-soft);color:var(--accent-text);font-weight:500;':''}">${t.label}</div>`;}).join('');}
-function selectEditItemType(id,label){const hid=document.getElementById('edit-item-type');const disp=document.getElementById('edit-item-type-display');const dd=document.getElementById('edit-item-type-dd');const priceRow=document.getElementById('edit-item-price-row');if(hid)hid.value=id;if(disp){disp.textContent=label;disp.style.color='var(--text)';}if(dd)dd.style.display='none';if(priceRow)priceRow.style.display=id===SALE_TYPE_ID?'block':'none';}
+// Ver.229: ตัด toggleEditItemTypeDD/buildEditItemTypeDD (ป็อปอัปเดิม) ออก — ใช้ openEditItemTypeSelect ผ่านดรอปดาวน์ลอยตัวร่วมกันแทน
+function selectEditItemType(id,label){const hid=document.getElementById('edit-item-type');const disp=document.getElementById('edit-item-type-display');const priceRow=document.getElementById('edit-item-price-row');if(hid)hid.value=id;if(disp){disp.textContent=label;disp.style.color='var(--text)';}if(priceRow)priceRow.style.display=id===SALE_TYPE_ID?'block':'none';}
 
 function toggleEditUnitDD(){const dd=document.getElementById('edit-item-unit-dd');if(!dd)return;if(dd.style.display==='none'||!dd.style.display){buildEditUnitDD();dd.style.display='block';}else dd.style.display='none';}
 function buildEditUnitDD(){const dd=document.getElementById('edit-item-unit-dd');if(!dd)return;const units=getStoredUnits();const cur=document.getElementById('edit-item-unit')?.value;const items=['',...units];dd.innerHTML=items.map(u=>{const label=u||'-- ไม่มีหน่วยนับ --';const sel=u===cur;return`<div onmousedown="event.preventDefault();selectEditUnit('${u}','${label.replace(/'/g,"\'")}');" ontouchend="_ddSelect(event,()=>selectEditUnit('${u}','${label.replace(/'/g,"\'")}'));" style="padding:11px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);${sel?'background:var(--blue-soft);color:var(--accent-text);font-weight:500;':''}">${label}</div>`;}).join('');}
