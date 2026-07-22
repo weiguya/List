@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onion Ver.235</title>
+<title>Onion Ver.237</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINESeedSansTH/LINESeedSansTH.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Mali:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/LINESeedSansTH/LINESeedSansTH.css" rel="stylesheet">
@@ -39,8 +39,9 @@
      กติกาใหม่: ต่อจากนี้ "ห้ามใส่ค่าดิบ" ให้ใช้ token ด้านล่างเท่านั้น
      ถ้าค่าที่ต้องการไม่มีใน token = ออกแบบผิด ให้กลับมาคิดใหม่ว่าจะใช้ระดับไหน */
 
-  /* ตัวอักษร 6 ระดับ */
-  --fs-xs:12px;    /* ป้ายกำกับ ข้อความรอง หน่วย */
+  /* ตัวอักษร 7 ระดับ */
+  --fs-2xs:10px;   /* ป้ายเล็กสุด: ป้ายบาร์ล่าง ชิป หน่วย ตัวห้อย */
+  --fs-xs:12px;    /* ป้ายกำกับ ข้อความรอง */
   --fs-sm:14px;    /* เนื้อหาทั่วไป รายการในลิสต์ */
   --fs-md:16px;    /* ชื่อรายการเด่น หัวข้อย่อย */
   --fs-lg:20px;    /* หัวข้อหน้า */
@@ -78,7 +79,7 @@ body.has-bottom-nav{padding-bottom:78px;}
 
 /* ══ BOTTOM NAV ══ */
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:150;background:#fff;border-top:1px solid var(--border);display:flex;align-items:flex-end;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:var(--sh-1);}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);font-weight:500;padding:6px 2px;margin:0 2px;border-radius:var(--r-md);cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;transition:background-color 0.18s,color 0.18s,transform 0.1s;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-2xs);font-weight:500;padding:6px 2px;margin:0 2px;border-radius:var(--r-md);cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;transition:background-color 0.18s,color 0.18s,transform 0.1s;}
 .bn-item:active{transform:scale(0.92);}
 .bn-item .bn-ico{width:42px;height:25px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;transition:background-color 0.18s;}
 .bn-item .bn-ico svg{stroke:#B4AC9E;transition:stroke 0.18s;}
@@ -115,7 +116,7 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .rcpt-foot{position:relative;background:#fff;border:1px solid var(--border);border-top:2px dashed var(--border);padding:12px 84px 20px 14px;--rz:10px;clip-path:polygon(0 0,100% 0,100% calc(100% - var(--rz)),95% 100%,90% calc(100% - var(--rz)),85% 100%,80% calc(100% - var(--rz)),75% 100%,70% calc(100% - var(--rz)),65% 100%,60% calc(100% - var(--rz)),55% 100%,50% calc(100% - var(--rz)),45% 100%,40% calc(100% - var(--rz)),35% 100%,30% calc(100% - var(--rz)),25% 100%,20% calc(100% - var(--rz)),15% 100%,10% calc(100% - var(--rz)),5% 100%,0 calc(100% - var(--rz)));}
 .rcpt-stamp{position:absolute;right:12px;top:50%;transform:translateY(-56%) rotate(-11deg);width:60px;height:60px;border:2px solid var(--green);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green);opacity:.55;pointer-events:none;}
 .rcpt-stamp svg{width:24px;height:24px;}
-.rcpt-stamp span{font-family:var(--hand);font-size:var(--fs-xs);font-weight:700;letter-spacing:.3px;white-space:nowrap;}
+.rcpt-stamp span{font-family:var(--hand);font-size:var(--fs-2xs);font-weight:700;letter-spacing:.3px;white-space:nowrap;}
 .ff-empty{background:var(--card2) !important;border:1.5px dashed #D9CDB6 !important;}
 .ff-done{background:#fff !important;border:1.5px solid #BFDCC9 !important;}
 .ff-next{background:#fff !important;border:1.5px solid var(--accent) !important;box-shadow:0 0 0 3px var(--accent-soft) !important;}
@@ -128,8 +129,8 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .sc-card.sel{border-color:var(--accent);background:linear-gradient(180deg,#fff,var(--accent-soft));}
 .sc-em{font-size:var(--fs-lg);line-height:1;}
 .sc-name{font-size:var(--fs-xs);font-weight:700;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.sc-price{font-size:var(--fs-xs);color:var(--text2);margin-top:1px;}
-.sc-price input{width:52px;border:none;border-bottom:1px dashed var(--border);background:transparent;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);color:var(--accent-text);text-align:center;outline:none;padding:0;}
+.sc-price{font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;}
+.sc-price input{width:52px;border:none;border-bottom:1px dashed var(--border);background:transparent;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-2xs);color:var(--accent-text);text-align:center;outline:none;padding:0;}
 .sc-qty{position:absolute;top:-7px;right:-5px;min-width:22px;height:22px;border-radius:var(--r-full);background:var(--accent);color:#fff;font-size:var(--fs-xs);font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 6px;box-shadow:0 2px 6px rgba(232,94,147,.4);animation:scpop .22s cubic-bezier(.34,1.8,.64,1);}
 @keyframes scpop{0%{transform:scale(.4)}100%{transform:scale(1)}}
 .sc-step{display:flex;justify-content:center;gap:5px;margin-top:6px;}
@@ -139,7 +140,7 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .vs-col+.vs-col{border-left:1px solid var(--border);}
 .vs-h{font-size:var(--fs-xs);font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
 .vs-row{margin-bottom:7px;}
-.vs-rt{display:flex;justify-content:space-between;font-size:var(--fs-xs);margin-bottom:2px;}
+.vs-rt{display:flex;justify-content:space-between;font-size:var(--fs-2xs);margin-bottom:2px;}
 .vs-rt .n{color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .vs-rt .v{font-weight:700;font-variant-numeric:tabular-nums;flex-shrink:0;margin-left:6px;}
 .vs-bar{height:7px;background:var(--card2);border-radius:var(--r-full);overflow:hidden;}
@@ -147,14 +148,14 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .vs-total{border-top:1px solid var(--border);margin-top:auto;padding-top:7px;display:flex;justify-content:space-between;font-size:var(--fs-xs);font-weight:800;}
 .wcmp{margin-top:10px;border-top:1px solid var(--border);padding-top:9px;}
 .wcmp .r{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.wcmp .k{font-size:var(--fs-xs);color:var(--text2);width:56px;flex-shrink:0;}
+.wcmp .k{font-size:var(--fs-2xs);color:var(--text2);width:56px;flex-shrink:0;}
 .wcmp .tk{flex:1;height:12px;background:var(--card2);border-radius:var(--r-full);overflow:hidden;}
 .wcmp .tk i{display:block;height:100%;border-radius:var(--r-full);transition:width .3s;}
 .wcmp .v{font-size:var(--fs-xs);font-weight:800;min-width:64px;text-align:right;font-variant-numeric:tabular-nums;}
-.wcmp-minus{text-align:center;font-size:var(--fs-xs);color:var(--red);font-weight:700;margin:1px 0 5px;}
+.wcmp-minus{text-align:center;font-size:var(--fs-2xs);color:var(--red);font-weight:700;margin:1px 0 5px;}
 .wcmp .neg{background:var(--red-soft);border:1px solid var(--red);border-radius:var(--r-sm);padding:7px 10px;font-size:var(--fs-xs);color:var(--red);margin-top:6px;line-height:1.5;}
 .c7-legend{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px;padding-top:7px;border-top:1px solid var(--border);}
-.c7-legend span{font-size:var(--fs-xs);color:var(--text2);display:flex;align-items:center;gap:4px;}
+.c7-legend span{font-size:var(--fs-2xs);color:var(--text2);display:flex;align-items:center;gap:4px;}
 .c7-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
 .fin-balchip{background:#fff;border:1.5px solid var(--border);border-radius:var(--r-md);padding:9px 13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;box-shadow:var(--sh-1);font-size:var(--fs-xs);color:var(--text2);}
 .fin-balchip b{font-size:var(--fs-sm);color:var(--text);font-variant-numeric:tabular-nums;}
@@ -206,7 +207,7 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .nb-tile.fin{background:var(--vivid-fin);}
 .nb-ico{width:44px;height:44px;border-radius:var(--r-md);background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-size:var(--fs-lg);flex-shrink:0;color:#fff;}
 .nb-txt .t{font-size:var(--fs-md);font-weight:700;}
-.nb-txt .s{font-size:var(--fs-xs);font-weight:500;margin-top:2px;opacity:0.92;}
+.nb-txt .s{font-size:var(--fs-2xs);font-weight:500;margin-top:2px;opacity:0.92;}
 .nb-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;margin-bottom:7px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:500;color:var(--text);box-shadow:var(--sh-1);}
 .nb-row .amt,.home-recent-row .amt{font-weight:500;}
 #app-root{position:relative;z-index:1;}
@@ -243,7 +244,7 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .sidebar-header .s-date{color:rgba(255,255,255,0.8);opacity:1;font-size:var(--fs-xs);margin-top:2px;}
 .sidebar-close{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:var(--fs-md);cursor:pointer;width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;}
 .sidebar-menu{flex:1;overflow-y:auto;padding:12px 0;touch-action:pan-y;overscroll-behavior:contain;}
-.sidebar-section-label{font-size:var(--fs-xs);font-weight:500;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px 4px;}
+.sidebar-section-label{font-size:var(--fs-2xs);font-weight:500;color:var(--text2);letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px 4px;}
 .sidebar-item{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-sm);color:var(--text);font-weight:500;text-align:left;}
 .sidebar-item:active{background:var(--blue-soft);}
 .sidebar-item.active{background:var(--blue-soft);color:var(--accent-text);font-weight:500;}
@@ -252,7 +253,7 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .sidebar-item.active .s-ico svg{stroke:var(--accent);}
 .sidebar-item .s-mono{font-size:var(--fs-md);color:var(--text2);filter:grayscale(1);opacity:0.85;}
 .sidebar-item.active .s-mono{color:var(--accent-text);opacity:1;}
-.sidebar-item .s-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:var(--fs-xs);padding:2px 7px;border-radius:var(--r-sm);}
+.sidebar-item .s-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:var(--fs-2xs);padding:2px 7px;border-radius:var(--r-sm);}
 .sidebar-divider{height:6px;background:transparent;margin:0;}
 .sidebar-footer{padding:16px;border-top:1px solid var(--border);}
 .sidebar-footer .version{font-size:var(--fs-xs);color:var(--text2);text-align:center;}
@@ -317,15 +318,15 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 #sale-loc-chips .loc-chip i{width:7px;height:7px;}
 .sku-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .sku-btn2{position:relative;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-md);padding:11px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-sm);font-weight:600;color:var(--text);cursor:pointer;text-align:left;transition:all .12s;}
-.sku-btn2 .p{display:block;font-size:var(--fs-xs);color:var(--text2);font-weight:400;margin-top:2px;}
+.sku-btn2 .p{display:block;font-size:var(--fs-2xs);color:var(--text2);font-weight:400;margin-top:2px;}
 .sku-btn2.on{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,123,172,0.16);}
 .sku-btn2 .qb{display:none;position:absolute;top:-8px;right:-6px;min-width:22px;height:22px;padding:0 6px;border-radius:var(--r-sm);background:var(--accent-deep);color:#fff;border:2px solid #fff;font-size:var(--fs-xs);font-weight:800;line-height:18px;text-align:center;}
 .sku-btn2.on .qb{display:block;}
 .sel-item{display:flex;align-items:center;gap:8px;padding:9px 0;}
 .sel-item + .sel-item{border-top:1px solid var(--border);}
 .sel-name{flex:1;min-width:0;font-size:var(--fs-sm);font-weight:700;overflow:hidden;text-overflow:ellipsis;}
-.sel-name .u{font-size:var(--fs-xs);color:var(--text2);font-weight:400;}
-.sel-price-in{width:56px;padding:3px;font-size:var(--fs-xs);text-align:center;background:#fff;border:1px solid #CFC5AF;border-radius:var(--r-sm);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;}
+.sel-name .u{font-size:var(--fs-2xs);color:var(--text2);font-weight:400;}
+.sel-price-in{width:56px;padding:3px;font-size:var(--fs-2xs);text-align:center;background:#fff;border:1px solid #CFC5AF;border-radius:var(--r-sm);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;}
 .stepper2{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--r-sm);overflow:hidden;background:#fff;flex-shrink:0;}
 .stepper2 button{width:34px;height:34px;border:none;background:var(--card2);font-size:var(--fs-md);font-weight:700;color:var(--accent-text);cursor:pointer;line-height:1;font-family:inherit;}
 .stepper2 .q{width:38px;text-align:center;font-size:var(--fs-sm);font-weight:800;font-variant-numeric:tabular-nums;}
@@ -333,7 +334,7 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .sel-amt{width:60px;text-align:right;font-size:var(--fs-xs);font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;flex-shrink:0;}
 .sel-del{width:26px;height:26px;flex-shrink:0;border:none;background:var(--red-soft);color:var(--red);border-radius:var(--r-sm);font-size:var(--fs-xs);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0;}
 .sale-sum-bar{position:sticky;bottom:74px;z-index:50;background:#fff;border:1.5px solid var(--border);border-radius:var(--r-md);box-shadow:var(--sh-2);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.sale-sum-bar .t{font-size:var(--fs-xs);color:var(--text2);}
+.sale-sum-bar .t{font-size:var(--fs-2xs);color:var(--text2);}
 .sale-sum-bar .v{font-size:var(--fs-lg);font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;line-height:1.1;}
 .sale-sum-save{margin-left:auto;background:var(--accent);border:none;color:#fff;border-radius:var(--r-md);padding:12px 20px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-sm);font-weight:800;cursor:pointer;box-shadow:0 3px 8px rgba(232,94,147,0.35);white-space:nowrap;}
 .sale-sum-clear{background:none;border:none;color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);cursor:pointer;text-decoration:underline;padding:4px;}
@@ -408,26 +409,26 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .pin-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px 11px;margin-bottom:10px;box-shadow:var(--sh-1);}
 .pin-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .pin-title{font-family:var(--hand);font-size:var(--fs-xs);font-weight:700;color:var(--yellow);}
-.pin-manage{background:none;border:1px solid #E8D9B0;border-radius:var(--r-sm);color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);padding:2.5px 8px;cursor:pointer;}
+.pin-manage{background:none;border:1px solid #E8D9B0;border-radius:var(--r-sm);color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-2xs);padding:2.5px 8px;cursor:pointer;}
 .pin-manage.on{background:var(--yellow-soft);color:var(--yellow);border-color:var(--yellow);font-weight:700;}
 .pin-chips-v2{display:flex;flex-wrap:wrap;gap:6px;}
 .pin-chip{position:relative;display:inline-flex;align-items:center;gap:4px;background:#fff;border:1.5px solid var(--yellow);border-radius:var(--r-lg);padding:5px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);font-weight:600;color:var(--text);cursor:pointer;box-shadow:var(--sh-1);transition:transform .1s;}
 .pin-chip:active{transform:scale(0.94);}
-.pin-chip .sub{font-size:var(--fs-xs);color:var(--text2);font-weight:400;}
+.pin-chip .sub{font-size:var(--fs-2xs);color:var(--text2);font-weight:400;}
 .pin-chip .x{display:none;position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;border:2px solid #fff;font-size:var(--fs-xs);line-height:16px;text-align:center;cursor:pointer;}
 .pin-chips-v2.managing .pin-chip{animation:pinWiggle .35s ease-in-out infinite;}
 .pin-chips-v2.managing .pin-chip .x{display:block;}
 @keyframes pinWiggle{0%,100%{transform:rotate(-1.3deg);}50%{transform:rotate(1.3deg);}}
-.pin-hint{font-size:var(--fs-xs);color:var(--text2);margin-top:7px;}
+.pin-hint{font-size:var(--fs-2xs);color:var(--text2);margin-top:7px;}
 /* หัวคอลัมน์ + เลขลำดับ + เส้นคั่นแถวบิล */
 /* Ver.209b: หัวคอลัมน์ต้องอ่านง่าย — ใหญ่ขึ้นให้ไล่ๆ กับเนื้อหา (ต่างกันระดับเดียว) แยกชั้นด้วยสี/น้ำหนักแทน */
 .br-head{padding:8px 10px 7px 8px;border-bottom:2px solid var(--border);background:var(--accent-soft);}
 .br-head .l1{display:flex;align-items:center;gap:7px;font-size:var(--fs-xs);font-weight:800;color:var(--text);}
 .br-head .l1 .hn{width:20px;text-align:center;flex-shrink:0;}
 .br-head .l1 .ht{margin-left:auto;}
-.br-head .l2{display:flex;align-items:center;gap:6px;font-size:var(--fs-xs);font-weight:600;color:var(--text);opacity:0.85;margin-top:6px;padding:6px 0 0 27px;border-top:2px solid #E9DEC9;}
-.br-ghost{padding:8px 10px;font-size:var(--fs-xs);color:var(--text2);opacity:0.65;border-bottom:1px solid var(--border);font-style:italic;}
-.br-num{flex-shrink:0;width:20px;height:20px;border-radius:var(--r-sm);background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:var(--fs-xs);font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:6px;}
+.br-head .l2{display:flex;align-items:center;gap:6px;font-size:var(--fs-2xs);font-weight:600;color:var(--text);opacity:0.85;margin-top:6px;padding:6px 0 0 27px;border-top:2px solid #E9DEC9;}
+.br-ghost{padding:8px 10px;font-size:var(--fs-2xs);color:var(--text2);opacity:0.65;border-bottom:1px solid var(--border);font-style:italic;}
+.br-num{flex-shrink:0;width:20px;height:20px;border-radius:var(--r-sm);background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:var(--fs-2xs);font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:6px;}
 .br-row-filled .br-num{background:var(--accent);border-color:var(--accent);color:#fff;}
 .rpin-btn{flex-shrink:0;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);width:28px;height:27px;cursor:pointer;font-size:var(--fs-xs);line-height:1;padding:0;}
 .rpin-btn.pinned{background:var(--yellow-soft);border-color:var(--yellow);}
@@ -565,7 +566,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .recipe-card-body{flex:1;min-width:0;}
 .recipe-card-name{font-size:var(--fs-sm);font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .recipe-card-meta{font-size:var(--fs-xs);color:var(--text2);margin-top:4px;display:flex;align-items:center;gap:6px;}
-.recipe-card-kgpill{background:var(--blue-soft);color:var(--accent-text);font-weight:500;border-radius:var(--r-lg);padding:2px 8px;font-size:var(--fs-xs);white-space:nowrap;}
+.recipe-card-kgpill{background:var(--blue-soft);color:var(--accent-text);font-weight:500;border-radius:var(--r-lg);padding:2px 8px;font-size:var(--fs-2xs);white-space:nowrap;}
 .recipe-card-arrow{flex-shrink:0;color:var(--text2);font-size:var(--fs-md);}
 .recipe-card-editbtn{flex-shrink:0;background:var(--card2);border:none;border-radius:var(--r-sm);width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);color:var(--text2);cursor:pointer;}
 .recipe-card-editbtn:active{background:var(--blue-soft);color:var(--accent-text);}
@@ -614,7 +615,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .shop-card.suspended{opacity:0.5;cursor:not-allowed;}
 .shop-card .sc-name{font-size:var(--fs-md);font-weight:500;color:var(--text);}
 .shop-card .sc-role{font-size:var(--fs-xs);color:var(--text2);margin-top:3px;}
-.shop-card .sc-status{font-size:var(--fs-xs);font-weight:500;padding:2px 8px;border-radius:var(--r-sm);margin-top:6px;display:inline-block;}
+.shop-card .sc-status{font-size:var(--fs-2xs);font-weight:500;padding:2px 8px;border-radius:var(--r-sm);margin-top:6px;display:inline-block;}
 .sc-status.active{background:var(--green-soft);color:var(--green);}
 .sc-status.suspended{background:var(--red-soft);color:var(--red);}
 .sc-status.pending{background:var(--yellow-soft);color:var(--yellow);}
@@ -623,7 +624,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .admin-panel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;margin-bottom:10px;box-shadow:var(--sh-1);}
 .admin-panel-card .apc-name{font-size:var(--fs-sm);font-weight:500;}
 .admin-panel-card .apc-meta{font-size:var(--fs-xs);color:var(--text2);margin-top:2px;}
-.role-badge{font-size:var(--fs-xs);font-weight:500;padding:2px 8px;border-radius:var(--r-sm);display:inline-block;}
+.role-badge{font-size:var(--fs-2xs);font-weight:500;padding:2px 8px;border-radius:var(--r-sm);display:inline-block;}
 .role-badge.superadmin{background:var(--yellow-soft);color:var(--yellow);}
 .role-badge.master{background:var(--blue-soft);color:var(--accent-text);}
 .role-badge.staff{background:var(--green-soft);color:var(--green);}
@@ -667,16 +668,16 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .buy-top .dr-total-static{position:absolute;top:0;right:0;margin-left:0;}
 .buy-top .dr-name{max-width:118px;}
 /* Ver.208: ดรอปดาวในแถวบิล — ว่าง=เทาทึบ / เลือกแล้ว=ขาวสว่าง หน้าตาปุ่มชุดเดียวกันทั้ง 3 ช่อง มีลูกศร ▾ กำกับทุกตัว */
-.dr-badge{flex-shrink:0;display:inline-block;font-size:var(--fs-xs);font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 18px 6px 9px;cursor:pointer;white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;box-shadow:var(--sh-1);position:relative;}
+.dr-badge{flex-shrink:0;display:inline-block;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 18px 6px 9px;cursor:pointer;white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;box-shadow:var(--sh-1);position:relative;}
 .dr-name{flex:0 1 auto;display:inline-block;min-width:0;max-width:165px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 18px 6px 9px;box-shadow:var(--sh-1);position:relative;}
-.dr-badge::after,.dr-name::after,.dr-unit:not(.dr-dash)::after{content:'▾';position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:var(--fs-xs);opacity:0.55;}
+.dr-badge::after,.dr-name::after,.dr-unit:not(.dr-dash)::after{content:'▾';position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:var(--fs-2xs);opacity:0.55;}
 .dr-badge.dr-filled{background:#fff;color:var(--accent-text);border-color:var(--accent);}
 .dr-name.dr-filled,.dr-unit.dr-filled{background:#fff;color:var(--accent-text);border-color:var(--accent);}
 .dr-num.dr-filled{background:#fff;border-color:#CFC5AF;}
 .dr-total-input{width:82px;flex-shrink:0;text-align:right;font-size:var(--fs-sm);font-weight:600;color:var(--accent-text);background:var(--blue-soft);border:1px solid var(--accent-text);border-radius:var(--r-sm);padding:5px 7px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;margin-left:auto;}
 .dr-total-static{width:82px;flex-shrink:0;text-align:right;font-size:var(--fs-sm);font-weight:600;color:var(--accent-text);margin-left:auto;}
 .dr-bottom{display:flex;align-items:center;gap:6px;}
-.dr-unit{flex-shrink:0;display:inline-block;font-size:var(--fs-xs);font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 18px 6px 9px;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-1);position:relative;max-width:80px;overflow:hidden;text-overflow:ellipsis;}
+.dr-unit{flex-shrink:0;display:inline-block;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 18px 6px 9px;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-1);position:relative;max-width:80px;overflow:hidden;text-overflow:ellipsis;}
 .dr-unit.dr-dash{color:var(--border);cursor:default;box-shadow:none;background:var(--card2);}
 .dr-num{width:56px;flex-shrink:0;text-align:center;font-size:var(--fs-xs);background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 4px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;outline:none;color:var(--text);}
 .sale-bottom .dr-num{width:78px;font-size:var(--fs-sm);padding:7px 4px;}
@@ -702,7 +703,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .rcp-row.rcp-head{background:var(--blue-soft);}
 .rcp-cell{padding:4px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-sizing:border-box;flex-shrink:0;border-right:1px solid var(--border);}
 .rcp-cell:last-child{border-right:none;}
-.rcp-head-cell{font-size:var(--fs-xs);font-weight:700;color:var(--accent-text);text-align:center;line-height:1.25;}
+.rcp-head-cell{font-size:var(--fs-2xs);font-weight:700;color:var(--accent-text);text-align:center;line-height:1.25;}
 .rcp-col-name{width:122px;position:sticky;left:0;z-index:2;background:#fff;border-right:1px solid var(--border);align-items:flex-start;}
 .rcp-row.rcp-head .rcp-col-name{background:var(--blue-soft);}
 .rcp-row-selected .rcp-col-name{background:var(--blue-soft);}
@@ -711,11 +712,11 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .rcp-checkbox{width:19px;height:19px;cursor:pointer;accent-color:var(--accent);}
 .rcp-col-target{width:70px;}
 .rcp-col-adj{width:58px;}
-.rcp-adj-badge{display:inline-block;font-size:var(--fs-xs);font-weight:500;border-radius:var(--r-sm);padding:1px 5px;margin-top:2px;line-height:1.4;}
+.rcp-adj-badge{display:inline-block;font-size:var(--fs-2xs);font-weight:500;border-radius:var(--r-sm);padding:1px 5px;margin-top:2px;line-height:1.4;}
 .rcp-adj-badge.pos{background:var(--green-soft);color:var(--green);}
 .rcp-adj-badge.neg{background:var(--red-soft);color:var(--red);}
 .rcp-adj-badge.zero{background:var(--blue-soft);color:var(--accent-text);}
-.rcp-base-ml{font-size:var(--fs-xs);color:var(--text2);margin-top:1px;}
+.rcp-base-ml{font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;}
 .rcp-col-spoon{width:58px;}
 .rcp-col-actual{width:70px;}
 .rcp-field{width:100%;background:transparent;border:none;border-radius:0;padding:4px 3px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);outline:none;color:var(--text);box-sizing:border-box;text-align:center;}
@@ -735,7 +736,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .rcp-actual-val{font-size:var(--fs-xs);font-weight:500;color:var(--text);padding:2px 5px;border-radius:var(--r-sm);display:inline-block;}
 .rcp-actual-val.rcp-mismatch{color:var(--red);background:var(--red-soft);}
 .rcp-actual-val.rcp-match{color:var(--green);background:var(--green-soft);}
-.rcp-actual-sub{font-size:var(--fs-xs);color:var(--text2);}
+.rcp-actual-sub{font-size:var(--fs-2xs);color:var(--text2);}
 .rcp-mini-btn{background:none;border:none;cursor:pointer;font-size:var(--fs-sm);padding:3px;line-height:1;}
 .rcp-add-col-cell{width:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .rcp-add-col-btn{background:none;border:1.5px dashed var(--accent);color:var(--accent-text);border-radius:var(--r-sm);width:32px;height:32px;font-size:var(--fs-md);cursor:pointer;font-weight:500;line-height:1;}
@@ -748,16 +749,16 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .rcp-table.rcp-compact .rcp-add-col-cell{width:34px;}
 .rcp-table.rcp-compact .rcp-add-col-btn{width:24px;height:24px;font-size:var(--fs-sm);}
 .rcp-table.rcp-compact .rcp-cell{padding:3px 2px;}
-.rcp-table.rcp-compact .rcp-head-cell{font-size:var(--fs-xs);}
-.rcp-table.rcp-compact .rcp-spoon-label{font-size:var(--fs-xs);}
-.rcp-table.rcp-compact .rcp-spoon-ml{font-size:var(--fs-xs);}
-.rcp-table.rcp-compact .rcp-field{font-size:var(--fs-xs);padding:5px 2px;}
-.rcp-table.rcp-compact .rcp-field.rcp-name-field{font-size:var(--fs-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.rcp-table.rcp-compact .rcp-actual-val{font-size:var(--fs-xs);}
+.rcp-table.rcp-compact .rcp-head-cell{font-size:var(--fs-2xs);}
+.rcp-table.rcp-compact .rcp-spoon-label{font-size:var(--fs-2xs);}
+.rcp-table.rcp-compact .rcp-spoon-ml{font-size:var(--fs-2xs);}
+.rcp-table.rcp-compact .rcp-field{font-size:var(--fs-2xs);padding:5px 2px;}
+.rcp-table.rcp-compact .rcp-field.rcp-name-field{font-size:var(--fs-2xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rcp-table.rcp-compact .rcp-actual-val{font-size:var(--fs-2xs);}
 .rcp-table.rcp-compact .rcp-actual-sub{display:none;}
 .rcp-spoon-head-btn{background:none;border:none;color:var(--accent-text);cursor:pointer;text-align:center;line-height:1.3;padding:0;}
 .rcp-spoon-label{font-size:var(--fs-sm);font-weight:500;color:var(--accent-text);display:block;}
-.rcp-spoon-ml{font-size:var(--fs-xs);font-weight:500;color:var(--text2);display:block;}
+.rcp-spoon-ml{font-size:var(--fs-2xs);font-weight:500;color:var(--text2);display:block;}
 .rcp-empty-state{padding:24px 16px;text-align:center;color:var(--text2);font-size:var(--fs-sm);}
 .br-field.br-total{background:var(--blue-soft);border-color:var(--accent-text);color:var(--accent-text);font-weight:500;text-align:right;font-size:var(--fs-xs);}
 .br-field.br-dash{background:transparent;border-color:transparent;color:var(--text2);text-align:center;cursor:default;}
@@ -771,7 +772,7 @@ button:active,.btn:active,.dr-name:active,.dr-del:active,.dr-badge:active,.dr-un
 .theme-swatch:active{transform:scale(0.9);}
 .theme-swatch.active{border-color:var(--text);}
 .theme-swatch.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:var(--fs-md);font-weight:500;text-shadow:0 1px 3px rgba(51,48,43,0.25);}
-.theme-swatch-label{font-size:var(--fs-xs);color:var(--text2);text-align:center;line-height:1.3;}
+.theme-swatch-label{font-size:var(--fs-2xs);color:var(--text2);text-align:center;line-height:1.3;}
 
 /* ══ ล็อกอิน: กรอบ input ปกติ พร้อม focus state ══ */
 #login-page input:focus{border-color:var(--accent-text) !important;}
@@ -891,7 +892,7 @@ applyTheme(getCurrentTheme(), false);
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div>
-      <div style="display:flex;align-items:center;gap:8px;"><img src="data:image/png;base64,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" style="height:30px;width:auto;object-fit:contain;flex-shrink:0;" alt="Onion logo"><span class="s-title" style="margin:0;font-size:var(--fs-xs);opacity:0.8;">Ver.235</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><img src="data:image/png;base64,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" style="height:30px;width:auto;object-fit:contain;flex-shrink:0;" alt="Onion logo"><span class="s-title" style="margin:0;font-size:var(--fs-xs);opacity:0.8;">Ver.237</span></div>
       <div class="s-date" id="sidebar-date"></div>
     </div>
     <button class="sidebar-close" onclick="closeSidebar()" style="display:none;"></button>
@@ -901,7 +902,7 @@ applyTheme(getCurrentTheme(), false);
     <div id="sidebar-avatar-circle" style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:var(--fs-sm);font-weight:500;color:#fff;">W</div>
     <div style="flex:1;min-width:0;overflow:hidden;">
       <div id="sidebar-user-name" style="font-size:var(--fs-xs);font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">weiguya</div>
-      <div id="sidebar-user-email" style="font-size:var(--fs-xs);color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">weiguya@gmail.com</div>
+      <div id="sidebar-user-email" style="font-size:var(--fs-2xs);color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">weiguya@gmail.com</div>
     </div>
   </div>
   <nav class="sidebar-menu">
@@ -954,7 +955,7 @@ applyTheme(getCurrentTheme(), false);
     <button onclick="doLogout()" style="width:100%;display:flex;align-items:center;gap:8px;padding:8px 16px 12px;background:none;border:none;cursor:pointer;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-sm);color:var(--red);font-weight:500;text-align:left;-webkit-tap-highlight-color:transparent;" onmouseenter="this.style.background='var(--card2)'" onmouseleave="this.style.background='none'">
       <span style="display:inline-flex;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D14B36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h4v16h-4M10 17l5-5-5-5M15 12H3"/></svg></span> ออกจากระบบ
     </button>
-    <div style="padding:0 16px 10px;font-size:var(--fs-xs);color:var(--text2);">Ver.235 · localStorage</div>
+    <div style="padding:0 16px 10px;font-size:var(--fs-2xs);color:var(--text2);">Ver.237 · localStorage</div>
   </div>
 </div>
 
@@ -1089,7 +1090,7 @@ applyTheme(getCurrentTheme(), false);
              จงใจไม่หักหนี้เงินกู้ทั้งก้อน เพราะเป็นภาระระยะยาว หักหมดตัวเลขจะติดลบตลอดจนไร้ความหมาย -->
         <div id="home-oblig-wrap" style="display:none;margin-top:9px;padding-top:8px;border-top:1px solid rgba(51,48,43,0.14);">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--text2);">
-            <span>ภาระค้างจ่าย <span id="d-home-oblig-detail" style="font-size:var(--fs-xs);opacity:0.85;"></span></span>
+            <span>ภาระค้างจ่าย <span id="d-home-oblig-detail" style="font-size:var(--fs-2xs);opacity:0.85;"></span></span>
             <span style="font-weight:700;color:var(--red);">−<span id="d-home-oblig">0</span></span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px;">
@@ -1166,7 +1167,7 @@ applyTheme(getCurrentTheme(), false);
       </div>
     </div>
 
-    <div id="dash-period-label" style="font-size:var(--fs-xs);color:var(--text2);margin-top:8px;"></div>
+    <div id="dash-period-label" style="font-size:var(--fs-2xs);color:var(--text2);margin-top:8px;"></div>
   </div>
 
   <!-- ══ ยอดขาย + ค่าเฉลี่ย (อิงช่วงที่เลือกด้านบน: วันนี้/สัปดาห์/เดือน/ทั้งหมด) — แยก 4 กล่อง บาท/Qty โชว์พร้อมกันไม่ต้องสลับ ══ -->
@@ -1193,7 +1194,7 @@ applyTheme(getCurrentTheme(), false);
   <div id="dash-vs-card" style="background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:14px 10px 13px;margin:0 14px 10px;box-shadow:var(--sh-1);">
     <div style="font-family:var(--hand);font-size:var(--fs-sm);font-weight:700;padding:0 8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline;">
       <span>รับ <span style="color:var(--accent-text);">VS</span> จ่าย</span>
-      <span id="dash-vs-period" style="font-size:var(--fs-xs);color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-weight:500;"></span>
+      <span id="dash-vs-period" style="font-size:var(--fs-2xs);color:var(--text2);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-weight:500;"></span>
     </div>
     <div id="dash-vs" class="vs-wrap"></div>
   </div>
@@ -1216,8 +1217,8 @@ applyTheme(getCurrentTheme(), false);
         <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
           <span style="font-size:var(--fs-xs);color:var(--text2);white-space:nowrap;">แสดงกราฟเป็น</span>
           <div style="display:flex;background:var(--card2);border-radius:var(--r-sm);border:1px solid var(--border);overflow:hidden;">
-            <button id="avg-tab-baht" onclick="_setAvgMetric('baht')" style="padding:2px 6px;font-size:var(--fs-xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:500;background:var(--accent);color:#fff;">฿</button>
-            <button id="avg-tab-qty" onclick="_setAvgMetric('qty')" style="padding:2px 6px;font-size:var(--fs-xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:var(--text2);">Qty</button>
+            <button id="avg-tab-baht" onclick="_setAvgMetric('baht')" style="padding:2px 6px;font-size:var(--fs-2xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:500;background:var(--accent);color:#fff;">฿</button>
+            <button id="avg-tab-qty" onclick="_setAvgMetric('qty')" style="padding:2px 6px;font-size:var(--fs-2xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:var(--text2);">Qty</button>
           </div>
         </div>
       </div>
@@ -1241,7 +1242,7 @@ applyTheme(getCurrentTheme(), false);
             style="display:flex;align-items:center;gap:3px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px 7px;font-size:var(--fs-xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
             <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;flex-shrink:0;"></span>
             <span id="chart7-sku-label" style="color:var(--text2);">ทุกสินค้า</span>
-            <span style="font-size:var(--fs-xs);color:var(--text2);">▾</span>
+            <span style="font-size:var(--fs-2xs);color:var(--text2);">▾</span>
           </div>
         </div>
         <div style="position:relative;flex-shrink:0;">
@@ -1249,7 +1250,7 @@ applyTheme(getCurrentTheme(), false);
             style="display:flex;align-items:center;gap:3px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px 7px;font-size:var(--fs-xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;">
             <span style="width:6px;height:6px;border-radius:50%;background:var(--cat-admincom);display:inline-block;flex-shrink:0;"></span>
             <span id="chart7-skuB-label" style="color:var(--text2);max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">เทียบ</span>
-            <span style="font-size:var(--fs-xs);color:var(--text2);">▾</span>
+            <span style="font-size:var(--fs-2xs);color:var(--text2);">▾</span>
           </div>
         </div>
       </div>
@@ -1258,7 +1259,7 @@ applyTheme(getCurrentTheme(), false);
       <div id="chart7day-legend" class="c7-legend" style="display:none;"></div>
       <!-- Ver.208: ยอดเฉลี่ยของช่วงที่ดู มุมล่างขวา -->
       <div id="chart7-avg-wrap" style="display:none;justify-content:flex-end;align-items:baseline;gap:6px;margin-top:7px;padding-top:6px;border-top:1px solid var(--border);">
-        <span id="chart7-avg-label" style="font-size:var(--fs-xs);color:var(--text2);"></span>
+        <span id="chart7-avg-label" style="font-size:var(--fs-2xs);color:var(--text2);"></span>
         <span id="d-avg-val" style="font-size:var(--fs-sm);font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">0</span>
       </div>
     </div>
@@ -1281,11 +1282,11 @@ applyTheme(getCurrentTheme(), false);
           </div>
         </div>
         <div style="display:flex;background:var(--card2);border-radius:var(--r-sm);border:1px solid var(--border);overflow:hidden;flex-shrink:0;">
-          <button id="lc-mode-amount" onclick="setLCMode('amount')" style="padding:2px 6px;font-size:var(--fs-xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:500;background:var(--accent);color:#fff;">฿</button>
-          <button id="lc-mode-qty" onclick="setLCMode('qty')" style="padding:2px 6px;font-size:var(--fs-xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:var(--text2);">Qty</button>
+          <button id="lc-mode-amount" onclick="setLCMode('amount')" style="padding:2px 6px;font-size:var(--fs-2xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:500;background:var(--accent);color:#fff;">฿</button>
+          <button id="lc-mode-qty" onclick="setLCMode('qty')" style="padding:2px 6px;font-size:var(--fs-2xs);font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;border:none;cursor:pointer;font-weight:400;background:transparent;color:var(--text2);">Qty</button>
         </div>
       </div>
-      <div id="lc-legend" style="display:flex;gap:12px;margin-bottom:6px;font-size:var(--fs-xs);"></div>
+      <div id="lc-legend" style="display:flex;gap:12px;margin-bottom:6px;font-size:var(--fs-2xs);"></div>
       <div id="lc-summary" style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;"></div>
       <div style="position:relative;width:100%;">
         <svg id="lc-svg" width="100%" style="overflow:visible;display:block;"></svg>
@@ -1432,7 +1433,7 @@ applyTheme(getCurrentTheme(), false);
     <div id="sale-top-total-box" style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:10px;">
       <div>
         <div style="font-size:var(--fs-sm);font-weight:500;color:var(--accent-text);">ยอดรวมทั้งหมด</div>
-        <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="sale-order-preview" style="font-weight:500;color:var(--accent-text);">SL-...</span></div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="sale-order-preview" style="font-weight:500;color:var(--accent-text);">SL-...</span></div>
       </div>
       <span id="sale-grand-total" style="font-size:var(--fs-lg);font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">฿0</span>
     </div>
@@ -1507,25 +1508,25 @@ applyTheme(getCurrentTheme(), false);
         <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text);margin-bottom:8px;">รายละเอียดสัญญา</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:var(--fs-xs);">
           <div style="background:var(--card);border-radius:var(--r-sm);padding:8px 10px;">
-            <div style="color:var(--text2);font-size:var(--fs-xs);">เงินต้น</div>
+            <div style="color:var(--text2);font-size:var(--fs-2xs);">เงินต้น</div>
             <div style="font-weight:500;color:var(--accent-text);" id="lpci-principal">—</div>
           </div>
           <div style="background:var(--red-soft);border-radius:var(--r-sm);padding:8px 10px;">
-            <div style="color:var(--text2);font-size:var(--fs-xs);">ดอกเบี้ย</div>
+            <div style="color:var(--text2);font-size:var(--fs-2xs);">ดอกเบี้ย</div>
             <div style="font-weight:500;color:var(--red);" id="lpci-interest">—</div>
           </div>
           <div style="background:var(--card);border-radius:var(--r-sm);padding:8px 10px;">
-            <div style="color:var(--text2);font-size:var(--fs-xs);">ชำระแล้ว</div>
+            <div style="color:var(--text2);font-size:var(--fs-2xs);">ชำระแล้ว</div>
             <div style="font-weight:500;color:var(--green);" id="lpci-paid">—</div>
           </div>
           <div style="background:var(--red-soft);border-radius:var(--r-sm);padding:8px 10px;">
-            <div style="color:var(--text2);font-size:var(--fs-xs);">คงเหลือต้องจ่าย</div>
+            <div style="color:var(--text2);font-size:var(--fs-2xs);">คงเหลือต้องจ่าย</div>
             <div style="font-weight:500;color:var(--red);" id="lpci-remain">—</div>
           </div>
         </div>
         <!-- progress bar -->
         <div style="margin-top:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--text2);margin-bottom:3px;">
+          <div style="display:flex;justify-content:space-between;font-size:var(--fs-2xs);color:var(--text2);margin-bottom:3px;">
             <span>ความคืบหน้า</span><span id="lpci-pct" style="font-weight:500;">0%</span>
           </div>
           <div style="background:var(--card);border-radius:var(--r-sm);height:10px;overflow:hidden;">
@@ -1643,7 +1644,7 @@ applyTheme(getCurrentTheme(), false);
   <div style="display:flex;justify-content:space-between;align-items:center;background:var(--blue-soft);border:1.5px solid var(--accent);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:10px;">
     <div>
       <div style="font-size:var(--fs-sm);font-weight:500;color:var(--accent-text);">ยอดรวมบิลนี้</div>
-      <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="buy-order-preview" style="font-weight:500;color:var(--accent-text);">PO-...</span></div>
+      <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:2px;">เลขออเดอร์: <span id="buy-order-preview" style="font-weight:500;color:var(--accent-text);">PO-...</span></div>
     </div>
     <span id="buy-bill-total" style="font-size:var(--fs-md);font-weight:500;color:var(--accent-text);">0</span>
   </div>
@@ -1848,11 +1849,11 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="ri-col-header" style="display:none;border:1px solid var(--border);border-radius:var(--r-sm) 8px 0 0;overflow:hidden;">
     <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--accent-soft);border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 52px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">รายการ</div>
-      <div style="flex:0 0 60px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--yellow);white-space:nowrap;min-width:42px;text-align:right;">Qty</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">ยอด</div>
+      <div style="flex:0 0 52px;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="flex:0 0 60px;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--yellow);white-space:nowrap;min-width:42px;text-align:right;">Qty</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">ยอด</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -1886,7 +1887,7 @@ applyTheme(getCurrentTheme(), false);
     <!-- แถว 2: ซัพพลายเออร์ + ประเภท -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div>
-        <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);margin-bottom:3px;">ซัพพลายเออร์</div>
+        <div style="font-size:var(--fs-2xs);font-weight:500;color:var(--text2);margin-bottom:3px;">ซัพพลายเออร์</div>
         <div id="re-sup-trigger" onclick="toggleReDD('sup',event)"
           style="background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:7px 24px 7px 8px;font-size:var(--fs-xs);color:var(--text);cursor:pointer;user-select:none;min-height:34px;display:flex;align-items:center;position:relative;">
           <span id="re-sup-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ทั้งหมด</span>
@@ -1894,7 +1895,7 @@ applyTheme(getCurrentTheme(), false);
         </div>
       </div>
       <div>
-        <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);margin-bottom:3px;">ประเภท</div>
+        <div style="font-size:var(--fs-2xs);font-weight:500;color:var(--text2);margin-bottom:3px;">ประเภท</div>
         <div id="re-type-trigger" onclick="toggleReDD('type',event)"
           style="background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:7px 24px 7px 8px;font-size:var(--fs-xs);color:var(--text);cursor:pointer;user-select:none;min-height:34px;display:flex;align-items:center;position:relative;">
           <span id="re-type-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ทั้งหมด</span>
@@ -1904,7 +1905,7 @@ applyTheme(getCurrentTheme(), false);
     </div>
     <!-- แถว 3: ชื่อสินค้า -->
     <div>
-      <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);margin-bottom:3px;">ชื่อสินค้า</div>
+      <div style="font-size:var(--fs-2xs);font-weight:500;color:var(--text2);margin-bottom:3px;">ชื่อสินค้า</div>
       <div style="position:relative;">
         <input id="re-name-search" type="text" placeholder="พิมพ์เพื่อกรอง..."
           oninput="filterReNameList()" onkeyup="filterReNameList()" autocomplete="off"
@@ -1916,7 +1917,7 @@ applyTheme(getCurrentTheme(), false);
     </div>
     <!-- แถว 4: สถานที่ (รายจ่ายประจำ) -->
     <div style="margin-top:8px;">
-      <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);margin-bottom:3px;">สถานที่ (รายจ่ายประจำ)</div>
+      <div style="font-size:var(--fs-2xs);font-weight:500;color:var(--text2);margin-bottom:3px;">สถานที่ (รายจ่ายประจำ)</div>
       <div id="re-loc-trigger" onclick="toggleReDD('loc',event)"
         style="background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:7px 24px 7px 8px;font-size:var(--fs-xs);color:var(--text);cursor:pointer;user-select:none;min-height:34px;display:flex;align-items:center;position:relative;">
         <span id="re-loc-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">ทั้งหมด</span>
@@ -1926,10 +1927,10 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="re-col-header" style="display:none;border:1px solid var(--border);border-radius:var(--r-sm) 8px 0 0;overflow:hidden;">
     <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--accent-soft);border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 52px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">รายการ</div>
-      <div style="flex:0 0 60px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">ยอด</div>
+      <div style="flex:0 0 52px;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="flex:0 0 60px;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);text-align:center;">สถานที่</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">ยอด</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -1974,11 +1975,11 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="tl-col-header" style="display:none;border:1px solid var(--border);border-radius:0;overflow:hidden;">
     <div style="background:var(--accent-soft);padding:6px 10px;display:flex;align-items:center;gap:6px;border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 52px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">รายการ</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">รับ</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">จ่าย</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);white-space:nowrap;flex:0 0 52px;text-align:right;">คงเหลือ</div>
+      <div style="flex:0 0 52px;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">รับ</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--red);white-space:nowrap;flex:0 0 52px;text-align:right;">จ่าย</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);white-space:nowrap;flex:0 0 52px;text-align:right;">คงเหลือ</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -2008,9 +2009,9 @@ applyTheme(getCurrentTheme(), false);
   </div>
   <div id="rw-col-header" style="display:none;border:1px solid var(--border);border-radius:var(--r-sm) 8px 0 0;overflow:hidden;">
     <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--accent-soft);border-bottom:2px solid var(--border);">
-      <div style="flex:0 0 66px;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">วันที่</div>
-      <div style="flex:1;font-size:var(--fs-xs);font-weight:700;color:var(--text2);">รายการ</div>
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--red);white-space:nowrap;text-align:right;">จ่าย</div>
+      <div style="flex:0 0 66px;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">วันที่</div>
+      <div style="flex:1;font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">รายการ</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--red);white-space:nowrap;text-align:right;">จ่าย</div>
     </div>
   </div>
   </div><!-- end rep-filter-sticky -->
@@ -2025,9 +2026,9 @@ applyTheme(getCurrentTheme(), false);
      เอาไว้กะว่าควรเตรียมของไปเท่าไหร่ -->
 <div class="page" id="page-rep-dayavg">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:9px 10px;margin-bottom:8px;box-shadow:var(--sh-1);">
-    <div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);margin-bottom:5px;">ตลาด</div>
+    <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);margin-bottom:5px;">ตลาด</div>
     <div class="loc-chips" id="da-loc-chips" style="margin-bottom:8px;gap:5px;"></div>
-    <div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);margin-bottom:5px;">วันในสัปดาห์</div>
+    <div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);margin-bottom:5px;">วันในสัปดาห์</div>
     <div class="loc-chips" id="da-day-chips" style="gap:5px;"></div>
   </div>
   <div id="da-output"></div>
@@ -3352,7 +3353,7 @@ function showToast(msg, type='error') {
     el.style.cssText='position:fixed;bottom:24px;left:50%;z-index:99999;padding:10px 18px;border-radius:var(--r-lg);font-family:\'LINE Seed Sans TH\',\'Noto Sans Thai\',sans-serif;font-size:var(--fs-sm);font-weight:500;max-width:80vw;display:flex;align-items:center;gap:8px;pointer-events:none;transition:transform 0.35s cubic-bezier(.2,.8,.2,1), opacity 0.35s;opacity:0;transform:translateX(-50%) translateY(80px);box-shadow:var(--sh-2);';
     iconEl=document.createElement('span');
     iconEl.id='app-toast-icon';
-    iconEl.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);flex-shrink:0;';
+    iconEl.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:var(--fs-2xs);flex-shrink:0;';
     msgEl=document.createElement('span');
     msgEl.id='app-toast-msg';
     el.appendChild(iconEl); el.appendChild(msgEl);
@@ -3368,7 +3369,7 @@ function showToast(msg, type='error') {
   } else {
     iconEl.innerHTML='';
     iconEl.textContent = type==='info' ? 'i' : '✕';
-    iconEl.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);flex-shrink:0;';
+    iconEl.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:var(--fs-2xs);flex-shrink:0;';
   }
   msgEl.textContent = msg;
   el.style.background=type==='success'?'var(--green)':type==='info'?'var(--accent)':'var(--red)';
@@ -3434,6 +3435,7 @@ function fmtDateFull(s){if(!s||s.length<10)return s||'';return s.slice(8,10)+'/'
 
 // ============ SIDEBAR ============
 let _sidebarScrollY = 0;
+
 function openSidebar() {
   closeFabSheet();
   closeRepPicker();
@@ -3718,7 +3720,7 @@ function renderRepDayAvg(){
   const maxAvg = Math.max(...dayAvg, 1);
   // ชิปวัน — ตัวย่อมาตรฐาน จ. อ. พ. (มีขีดบอกว่ายังไม่มีข้อมูล)
   dayEl.innerHTML = [1,2,3,4,5,6,0].map(d=>
-    `<button type="button" class="loc-chip${_daDay===d?' on':''}" onclick="daSetDay(${d})" style="padding:8px 12px;">${_DA_ABBR[d]}${dayAgg[d].n?'':' <span style="opacity:.4;font-size:var(--fs-xs);">–</span>'}</button>`
+    `<button type="button" class="loc-chip${_daDay===d?' on':''}" onclick="daSetDay(${d})" style="padding:8px 12px;">${_DA_ABBR[d]}${dayAgg[d].n?'':' <span style="opacity:.4;font-size:var(--fs-2xs);">–</span>'}</button>`
   ).join('');
   // ลิสต์เฉพาะวันที่เลือก
   const picked = dates.filter(ds=>_daDow(ds)===_daDay).sort((a,b)=>b.localeCompare(a));
@@ -3736,35 +3738,35 @@ function renderRepDayAvg(){
   // การ์ดสรุป — Ver.211: แยกบาทกับ Qty เป็นคนละก้อนชัดๆ นับเป็น "วัน" ไม่ใช่ "ครั้ง"
   let html = `
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;margin-bottom:10px;box-shadow:var(--sh-1);">
-    <div style="font-family:var(--hand);font-size:var(--fs-sm);font-weight:700;margin-bottom:2px;">${dayLabel} · ${_escHtml(locLabel)} <span style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">(${picked.length} วัน)</span></div>
+    <div style="font-family:var(--hand);font-size:var(--fs-sm);font-weight:700;margin-bottom:2px;">${dayLabel} · ${_escHtml(locLabel)} <span style="font-size:var(--fs-2xs);font-weight:500;color:var(--text2);">(${picked.length} วัน)</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 6px;">
       <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;">
-        <div style="font-size:var(--fs-xs);color:var(--text2);margin-bottom:2px;">เฉลี่ยยอดขาย/วัน</div>
-        <div style="display:flex;align-items:baseline;gap:4px;"><span style="font-size:var(--fs-lg);font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">${fmt(avg)}</span><span style="font-size:var(--fs-xs);color:var(--text2);">บาท</span></div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);margin-bottom:2px;">เฉลี่ยยอดขาย/วัน</div>
+        <div style="display:flex;align-items:baseline;gap:4px;"><span style="font-size:var(--fs-lg);font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">${fmt(avg)}</span><span style="font-size:var(--fs-2xs);color:var(--text2);">บาท</span></div>
       </div>
       <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;">
-        <div style="font-size:var(--fs-xs);color:var(--text2);margin-bottom:2px;">เฉลี่ยจำนวน/วัน</div>
-        <div style="display:flex;align-items:baseline;gap:4px;"><span style="font-size:var(--fs-lg);font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;">${qtyAvg?fmt(qtyAvg):'—'}</span><span style="font-size:var(--fs-xs);color:var(--text2);">ชิ้น</span></div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);margin-bottom:2px;">เฉลี่ยจำนวน/วัน</div>
+        <div style="display:flex;align-items:baseline;gap:4px;"><span style="font-size:var(--fs-lg);font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;">${qtyAvg?fmt(qtyAvg):'—'}</span><span style="font-size:var(--fs-2xs);color:var(--text2);">ชิ้น</span></div>
       </div>
     </div>
     <div style="font-size:var(--fs-xs);color:var(--text2);">ต่ำสุด ${fmt(mn)} บาท · สูงสุด ${fmt(mx)} บาท</div>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 13px;margin-bottom:10px;box-shadow:var(--sh-1);">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px;">
-      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);min-width:0;">เทียบเฉลี่ยแต่ละวัน · ${_escHtml(locLabel)} (แตะแท่งเพื่อสลับวัน)</div>
+      <div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);min-width:0;line-height:1.4;overflow-wrap:anywhere;">เทียบเฉลี่ยแต่ละวัน · ${_escHtml(locLabel)}<br><span style="font-weight:500;font-size:var(--fs-2xs);">แตะแท่งเพื่อสลับวัน</span></div>
       <div style="display:flex;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-lg);padding:2px;flex-shrink:0;">
-        <button type="button" onclick="daSetMetric('baht')" style="border:none;border-radius:var(--r-lg);padding:3px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);cursor:pointer;background:${_daMetric==='baht'?'var(--accent)':'transparent'};color:${_daMetric==='baht'?'#fff':'var(--text2)'};font-weight:${_daMetric==='baht'?'700':'400'};">บาท</button>
-        <button type="button" onclick="daSetMetric('qty')" style="border:none;border-radius:var(--r-lg);padding:3px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);cursor:pointer;background:${_daMetric==='qty'?'var(--accent)':'transparent'};color:${_daMetric==='qty'?'#fff':'var(--text2)'};font-weight:${_daMetric==='qty'?'700':'400'};">ชิ้น</button>
+        <button type="button" onclick="daSetMetric('baht')" style="border:none;border-radius:var(--r-lg);padding:3px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-2xs);cursor:pointer;background:${_daMetric==='baht'?'var(--accent)':'transparent'};color:${_daMetric==='baht'?'#fff':'var(--text2)'};font-weight:${_daMetric==='baht'?'700':'400'};">บาท</button>
+        <button type="button" onclick="daSetMetric('qty')" style="border:none;border-radius:var(--r-lg);padding:3px 10px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-2xs);cursor:pointer;background:${_daMetric==='qty'?'var(--accent)':'transparent'};color:${_daMetric==='qty'?'#fff':'var(--text2)'};font-weight:${_daMetric==='qty'?'700':'400'};">ชิ้น</button>
       </div>
     </div>
-    <div style="display:flex;gap:5px;align-items:flex-end;height:74px;">
+    <div style="display:flex;gap:5px;align-items:flex-end;min-height:92px;margin-top:4px;">
       ${[1,2,3,4,5,6,0].map(d=>{
         const h = Math.max(dayAvg[d]/maxAvg*52, dayAvg[d]>0?4:2);
         const on = d===_daDay;
         return `<div onclick="daSetDay(${d})" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;">
-          ${dayAvg[d]>0?`<div style="font-size:var(--fs-xs);color:${on?'var(--accent-text)':'var(--text2)'};font-weight:${on?'800':'500'};margin-bottom:2px;white-space:nowrap;">${fmt(dayAvg[d])}</div>`:''}
+          <div style="font-size:var(--fs-2xs);color:${on?'var(--accent-text)':'var(--text2)'};font-weight:${on?'800':'500'};margin-bottom:3px;white-space:nowrap;line-height:1.2;min-height:12px;">${dayAvg[d]>0?fmt(dayAvg[d]):''}</div>
           <div style="width:78%;height:${h}px;border-radius:3px 3px 0 0;background:${on?'var(--accent)':'var(--border)'};transition:height .25s;"></div>
-          <div style="font-size:var(--fs-xs);margin-top:3px;color:${on?'var(--accent-text)':'var(--text2)'};font-weight:${on?'800':'500'};">${_DA_ABBR[d]}</div>
+          <div style="font-size:var(--fs-2xs);margin-top:3px;color:${on?'var(--accent-text)':'var(--text2)'};font-weight:${on?'800':'500'};">${_DA_ABBR[d]}</div>
         </div>`;
       }).join('')}
     </div>
@@ -3777,12 +3779,12 @@ function renderRepDayAvg(){
       return `<div class="da-row" style="display:flex;align-items:center;gap:8px;padding:9px 0;">
         <div style="flex:1;min-width:0;">
           <div style="font-size:var(--fs-xs);font-weight:700;">${fmtDateFull(ds)}</div>
-          ${locNames?`<div style="font-size:var(--fs-xs);color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_escHtml(locNames)}</div>`:''}
+          ${locNames?`<div style="font-size:var(--fs-2xs);color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${_escHtml(locNames)}</div>`:''}
         </div>
-        ${b.qty?`<div style="font-size:var(--fs-xs);color:var(--text2);white-space:nowrap;">${fmt(b.qty)} ชิ้น</div>`:''}
+        ${b.qty?`<div style="font-size:var(--fs-2xs);color:var(--text2);white-space:nowrap;">${fmt(b.qty)} ชิ้น</div>`:''}
         <div style="text-align:right;">
           <div style="font-size:var(--fs-sm);font-weight:800;color:var(--accent-text);font-variant-numeric:tabular-nums;">${fmt(b.amt)}</div>
-          <div style="font-size:var(--fs-xs);color:${diff>=0?'var(--green)':'var(--red)'};">${diff>=0?'▲':'▼'} ${fmt(Math.abs(diff))} จากเฉลี่ย</div>
+          <div style="font-size:var(--fs-2xs);color:${diff>=0?'var(--green)':'var(--red)'};">${diff>=0?'▲':'▼'} ${fmt(Math.abs(diff))} จากเฉลี่ย</div>
         </div>
       </div>`;
     }).join('')}
@@ -3914,7 +3916,7 @@ function renderLocationsList() {
       <div style="flex:1;min-width:0;">
         <div class="item-name" style="display:flex;align-items:center;gap:6px;">
           <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${loc.name}</span>
-          ${loc.abbr?`<span style="font-size:var(--fs-xs);font-weight:500;background:var(--blue-soft);color:var(--accent-text);border-radius:var(--r-lg);padding:1px 7px;flex:0 0 auto;">${loc.abbr}</span>`:''}
+          ${loc.abbr?`<span style="font-size:var(--fs-2xs);font-weight:500;background:var(--blue-soft);color:var(--accent-text);border-radius:var(--r-lg);padding:1px 7px;flex:0 0 auto;">${loc.abbr}</span>`:''}
         </div>
         <div class="item-meta">ราคาเริ่มต้น ${fmt(loc.defaultPrice||0)} บาท</div>
       </div>
@@ -4478,12 +4480,12 @@ function renderBuyList() {
         style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
         <div style="flex:0 0 52px;">
           <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div>
-          <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${cat}</div>
+          <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${cat}</div>
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${lbl}</div>
           ${det?`<div style="font-size:var(--fs-xs);color:var(--text2);">${det}</div>`:''}
-          ${orderId?`<div style="font-size:var(--fs-xs);color:var(--accent-text);font-weight:500;">${orderId}</div>`:''}
+          ${orderId?`<div style="font-size:var(--fs-2xs);color:var(--accent-text);font-weight:500;">${orderId}</div>`:''}
         </div>
         <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);white-space:nowrap;">−${fmt(total)}</div>
       </div>`;
@@ -4502,12 +4504,12 @@ function renderBuyList() {
         style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
         <div style="flex:0 0 52px;">
           <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(gi[0].date)}</div>
-          <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${cat}</div>
+          <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${cat}</div>
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${summary}</div>
-          <div style="font-size:var(--fs-xs);color:var(--text2);">${gi.length} รายการ</div>
-          ${orderId?`<div style="font-size:var(--fs-xs);color:var(--accent-text);font-weight:500;">${orderId}</div>`:''}
+          <div style="font-size:var(--fs-2xs);color:var(--text2);">${gi.length} รายการ</div>
+          ${orderId?`<div style="font-size:var(--fs-2xs);color:var(--accent-text);font-weight:500;">${orderId}</div>`:''}
         </div>
         <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);white-space:nowrap;">−${fmt(total)}</div>
       </div>`;
@@ -5126,7 +5128,7 @@ function renderSaleList() {
         style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;">
         <div style="flex:1;min-width:0;">
           <div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.meat||'ยอดขาย'}${i.note?' <span style="font-size:var(--fs-xs);color:var(--text2);">· '+i.note+'</span>':''}</div>
-          ${i.qty?`<div style="font-size:var(--fs-xs);color:var(--text2);">${i.qty} × ${fmt(i.unitPrice)}</div>`:''}
+          ${i.qty?`<div style="font-size:var(--fs-2xs);color:var(--text2);">${i.qty} × ${fmt(i.unitPrice)}</div>`:''}
         </div>
         <span style="font-size:var(--fs-sm);font-weight:500;color:var(--green);white-space:nowrap;margin-left:8px;">+${fmt(i.amount)}</span>
       </div>`).join('');
@@ -5528,10 +5530,10 @@ function renderItemNamesList(page) {
   // แถวสรุปจำนวน + หน้า
   let html=`<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 2px 8px;font-size:var(--fs-xs);color:var(--text2);">
     <span>สินค้าทั้งหมด <strong style="color:var(--accent-text);">${total}</strong> รายการ</span>
-    ${totalPages>1?`<span style="background:var(--blue-soft);border-radius:var(--r-sm);padding:2px 8px;font-size:var(--fs-xs);color:var(--accent-text);font-weight:500;">หน้า ${_itemNamesPage}/${totalPages}</span>`:''}
+    ${totalPages>1?`<span style="background:var(--blue-soft);border-radius:var(--r-sm);padding:2px 8px;font-size:var(--fs-2xs);color:var(--accent-text);font-weight:500;">หน้า ${_itemNamesPage}/${totalPages}</span>`:''}
   </div>`;
   // Header
-  html+=`<div style="display:grid;grid-template-columns:22px 1fr 58px 66px 70px;gap:4px;padding:4px 10px 6px;font-size:var(--fs-xs);font-weight:500;color:var(--text2);letter-spacing:0.4px;">
+  html+=`<div style="display:grid;grid-template-columns:22px 1fr 58px 66px 70px;gap:4px;padding:4px 10px 6px;font-size:var(--fs-2xs);font-weight:500;color:var(--text2);letter-spacing:0.4px;">
     <span style="text-align:center;">#</span><span>ชื่อสินค้า</span><span style="text-align:right;padding-right:4px;">หน่วย</span><span style="text-align:right;">ราคา/หน่วย</span><span style="text-align:center;">ประเภท</span>
   </div>`;
 
@@ -5547,11 +5549,11 @@ function renderItemNamesList(page) {
       ontouchstart="startItemLongPress('${t.id}','${encodeURIComponent(item.name)}',${t.id===SALE_TYPE_ID?item.price||0:0},event)"
       ontouchend="cancelItemLongPress()"
       ontouchmove="cancelItemLongPress()">
-      <span style="font-size:var(--fs-xs);color:var(--text2);text-align:center;font-weight:500;">${globalNum}</span>
+      <span style="font-size:var(--fs-2xs);color:var(--text2);text-align:center;font-weight:500;">${globalNum}</span>
       <span style="font-size:var(--fs-xs);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.name}</span>
       <span style="font-size:var(--fs-xs);color:var(--text2);text-align:right;padding-right:4px;">${u||'—'}</span>
       <span style="font-size:var(--fs-xs);color:${priceColor};text-align:right;font-weight:${t.id===SALE_TYPE_ID&&item.price>0?500:400};">${priceVal}</span>
-      <span style="font-size:var(--fs-xs);background:var(--blue-soft);color:var(--accent-text);border-radius:var(--r-sm);padding:2px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortLabel}</span>
+      <span style="font-size:var(--fs-2xs);background:var(--blue-soft);color:var(--accent-text);border-radius:var(--r-sm);padding:2px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortLabel}</span>
     </div>`;
   });
   el.innerHTML=html;
@@ -6199,7 +6201,7 @@ function renderRecipeTable(recipeId, kg) {
         const adjBg = adjPct>0?'var(--green-soft)':adjPct<0?'var(--red-soft)':'transparent';
         html += `<div class="rcp-cell rcp-col-adj${rowHiCls}">
           <input type="number" value="${adjPct||''}" placeholder="0"
-            style="width:100%;background:${adjBg};color:${adjColor};border:1px solid ${adjPct!==0?(adjPct>0?'var(--green)':'var(--red)'):'var(--border)'};border-radius:var(--r-sm);padding:4px 2px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-xs);font-weight:500;text-align:center;outline:none;box-sizing:border-box;"
+            style="width:100%;background:${adjBg};color:${adjColor};border:1px solid ${adjPct!==0?(adjPct>0?'var(--green)':'var(--red)'):'var(--border)'};border-radius:var(--r-sm);padding:4px 2px;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;font-size:var(--fs-2xs);font-weight:500;text-align:center;outline:none;box-sizing:border-box;"
             onchange="setRecipeRowAdj('${row.id}',this.value)"
             onkeydown="if(event.key==='Enter'){setRecipeRowAdj('${row.id}',this.value);this.blur();}">
         </div>`;
@@ -6253,12 +6255,12 @@ function renderRecipeTable(recipeId, kg) {
     if(hasAnyData) {
       html += '<div class="rcp-row" style="background:var(--blue-soft);border-top:2px solid var(--accent);">';
       if(selMode) html += '<div class="rcp-cell rcp-col-check"></div>';
-      html += '<div class="rcp-cell rcp-col-name"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--accent-text);padding:4px 2px;">รวม ML</div></div>';
+      html += '<div class="rcp-cell rcp-col-name"><div style="font-size:var(--fs-2xs);font-weight:500;color:var(--accent-text);padding:4px 2px;">รวม ML</div></div>';
       html += '<div class="rcp-cell rcp-col-target"></div>';
       html += '<div class="rcp-cell rcp-col-adj"></div>';
       spoons.forEach(sp=>{
         const t = spoonTotals[sp.id];
-        html += `<div class="rcp-cell rcp-col-spoon"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--accent-text);text-align:center;">${t?_fmtNum(t):'-'}</div></div>`;
+        html += `<div class="rcp-cell rcp-col-spoon"><div style="font-size:var(--fs-2xs);font-weight:500;color:var(--accent-text);text-align:center;">${t?_fmtNum(t):'-'}</div></div>`;
       });
       html += '<div class="rcp-add-col-cell"></div>';
       html += `<div class="rcp-cell rcp-col-actual"><div class="rcp-actual-val rcp-match" style="font-weight:500;">${_fmtNum(grandTotalMl)}</div><div class="rcp-actual-sub">รวม ml</div></div>`;
@@ -6883,7 +6885,7 @@ function addSupplierFromSettings() {
 function renderBuyTypesList() {
   const types=getBuyTypes();
   document.getElementById('buy-types-list').innerHTML=types.map((t,i)=>`
-    <div class="tag-chip">${t.label}${t.gross?'<span style="font-size:var(--fs-xs);color:var(--green);margin-left:2px;">GP</span>':''}
+    <div class="tag-chip">${t.label}${t.gross?'<span style="font-size:var(--fs-2xs);color:var(--green);margin-left:2px;">GP</span>':''}
       ${!['material','supply','asset'].includes(t.id)?`<button class="chip-del" onclick="delBuyType(${i})">×</button>`:'<span style="width:6px"></span>'}
     </div>`).join('');
 }
@@ -6935,7 +6937,7 @@ function renderAdminCards() {
         <div>
           <div style="font-size:var(--fs-xs);color:var(--text2);">ค่าคอมเดือนนี้</div>
           <div style="font-size:var(--fs-md);font-weight:500;color:var(--green);">${fmt(com)}</div>
-          <div style="font-size:var(--fs-xs);color:var(--text2);">จากยอดขาย ${fmt(monthSale)} × ${a.pct||0}%</div>
+          <div style="font-size:var(--fs-2xs);color:var(--text2);">จากยอดขาย ${fmt(monthSale)} × ${a.pct||0}%</div>
         </div>
         <button class="payout-btn" onclick="event.stopPropagation();payoutAdmin(${i},${com})" style="background:var(--accent);">→ ไปหน้าการเงิน</button>
       </div>
@@ -7300,7 +7302,7 @@ function drawEmpCal() {
   const selColor=selEmp?.color||'var(--green)';
   let html='';
   ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d=>{
-    html+=`<div style="text-align:center;font-size:var(--fs-xs);font-weight:500;color:var(--text2);padding:3px 0;">${d}</div>`;
+    html+=`<div style="text-align:center;font-size:var(--fs-2xs);font-weight:500;color:var(--text2);padding:3px 0;">${d}</div>`;
   });
   for(let i=0;i<firstDay;i++) html+=`<div></div>`;
   for(let d=1;d<=daysInMonth;d++){
@@ -7326,7 +7328,7 @@ function drawEmpCal() {
     html+=`<div onclick="${clickable?`toggleEmpDay('${ds}')`:''}" style="position:relative;text-align:center;padding:5px 2px;border-radius:var(--r-sm);background:${bg};color:${color};border:${border};cursor:${cursor};font-size:var(--fs-xs);opacity:${opacity};">
       ${dotsHtml}
       <div style="font-weight:${isSel||isPaid?500:400};">${d}</div>
-      ${hasSale?`<div style="font-size:var(--fs-xs);line-height:1.2;margin-top:1px;">${dayQty>0?dayQty+' Qty':''}<br>${amtLbl}฿</div>`:''}
+      ${hasSale?`<div style="font-size:var(--fs-2xs);line-height:1.2;margin-top:1px;">${dayQty>0?dayQty+' Qty':''}<br>${amtLbl}฿</div>`:''}
     </div>`;
   }
   document.getElementById('emp-wage-cal').innerHTML=html;
@@ -7486,7 +7488,7 @@ function drawAdminCal() {
   const todayStr = today();
   let html = '';
   ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d => {
-    html += `<div style="text-align:center;font-size:var(--fs-xs);font-weight:500;color:var(--text2);padding:3px 0;">${d}</div>`;
+    html += `<div style="text-align:center;font-size:var(--fs-2xs);font-weight:500;color:var(--text2);padding:3px 0;">${d}</div>`;
   });
   for(let i=0;i<firstDay;i++) html += '<div></div>';
   for(let d=1;d<=daysInMonth;d++) {
@@ -7524,7 +7526,7 @@ function drawAdminCal() {
     html += `<div onclick="${clickable?`toggleAdminDay('${ds}')`:''}" style="position:relative;text-align:center;padding:5px 2px;border-radius:var(--r-sm);background:${bg};color:${color};border:${border};cursor:${cursor};font-size:var(--fs-xs);opacity:${opacity};">
       ${adminDotsHtml}
       <div style="font-weight:${isSel||isPaid?500:400};">${d}</div>
-      ${hasSale?`<div style="font-size:var(--fs-xs);line-height:1.2;margin-top:1px;">${cellBody}</div>`:''}
+      ${hasSale?`<div style="font-size:var(--fs-2xs);line-height:1.2;margin-top:1px;">${cellBody}</div>`:''}
     </div>`;
   }
   document.getElementById('admin-wage-cal').innerHTML = html;
@@ -7872,18 +7874,18 @@ function renderAuditLog() {
     const dt = new Date(l.ts).toLocaleString('th-TH',{day:'numeric',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});
     const ac = actionColor[l.action]||'var(--accent)';
     const beforeAfter = (l.before||l.after) ?
-      `<div style="font-size:var(--fs-xs);color:var(--text2);margin-top:5px;background:var(--card2);border-radius:var(--r-sm);padding:4px 8px;word-break:break-all;">
+      `<div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:5px;background:var(--card2);border-radius:var(--r-sm);padding:4px 8px;word-break:break-all;">
         ${l.before?'<span style="color:var(--red);">ก่อน: '+l.before+'</span>':''}
         ${l.before&&l.after?' <span style="color:var(--text2);">→</span> ':''}
         ${l.after?'<span style="color:var(--green);">หลัง: '+l.after+'</span>':''}
       </div>` : '';
-    const byHtml = l.by ? `<span style="font-size:var(--fs-xs);color:var(--text2);margin-left:4px;">โดย: ${l.by}</span>` : '';
+    const byHtml = l.by ? `<span style="font-size:var(--fs-2xs);color:var(--text2);margin-left:4px;">โดย: ${l.by}</span>` : '';
     return `<div style="background:#fff;border:1px solid var(--border);border-left:3px solid ${ac};border-radius:var(--r-md);padding:10px 12px;margin-bottom:8px;">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">
-        <span style="font-size:var(--fs-xs);font-weight:500;color:${ac};background:${ac}18;padding:2px 8px;border-radius:var(--r-sm);">${l.action}</span>
+        <span style="font-size:var(--fs-2xs);font-weight:500;color:${ac};background:${ac}18;padding:2px 8px;border-radius:var(--r-sm);">${l.action}</span>
         <span style="font-size:var(--fs-xs);font-weight:500;color:var(--text);">${l.cat}</span>
         ${byHtml}
-        <span style="font-size:var(--fs-xs);color:var(--text2);margin-left:auto;">${dt}</span>
+        <span style="font-size:var(--fs-2xs);color:var(--text2);margin-left:auto;">${dt}</span>
       </div>
       <div style="font-size:var(--fs-xs);color:var(--text2);word-break:break-word;">${l.detail}</div>
       ${beforeAfter}
@@ -8126,14 +8128,14 @@ function renderRepIncome() {
         <div style="font-size:var(--fs-sm);font-weight:500;margin-bottom:10px;">สรุปสถานะเงินกู้ทั้งหมด</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
           <div style="background:var(--card);border-radius:var(--r-sm);padding:8px 10px;">
-            <div style="font-size:var(--fs-xs);color:var(--text2);">ยอดที่ต้องชำระทั้งหมด</div>
+            <div style="font-size:var(--fs-2xs);color:var(--text2);">ยอดที่ต้องชำระทั้งหมด</div>
             <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);">${fmt(totalDue)}</div>
-            <div style="font-size:var(--fs-xs);color:var(--text2);">ต้น ${fmt(totalPrincipal)} + ดอก ${fmt(totalDue-totalPrincipal)}</div>
+            <div style="font-size:var(--fs-2xs);color:var(--text2);">ต้น ${fmt(totalPrincipal)} + ดอก ${fmt(totalDue-totalPrincipal)}</div>
           </div>
           <div style="background:var(--card);border-radius:var(--r-sm);padding:8px 10px;">
-            <div style="font-size:var(--fs-xs);color:var(--text2);">ชำระไปแล้ว</div>
+            <div style="font-size:var(--fs-2xs);color:var(--text2);">ชำระไปแล้ว</div>
             <div style="font-size:var(--fs-sm);font-weight:500;color:var(--green);">${fmt(totalPaid)}</div>
-            <div style="font-size:var(--fs-xs);color:var(--text2);">คงเหลือ ${fmt(remain)}</div>
+            <div style="font-size:var(--fs-2xs);color:var(--text2);">คงเหลือ ${fmt(remain)}</div>
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--text2);margin-bottom:4px;">
@@ -8142,7 +8144,7 @@ function renderRepIncome() {
         </div>
         <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);height:16px;overflow:hidden;">
           <div style="height:100%;border-radius:var(--r-sm);background:${barColor};width:${pct}%;transition:width 1s ease;position:relative;">
-            ${pct>10?`<span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:var(--fs-xs);font-weight:500;color:#fff;">${pctRound}%</span>`:''}
+            ${pct>10?`<span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:var(--fs-2xs);font-weight:500;color:#fff;">${pctRound}%</span>`:''}
           </div>
         </div>
         ${allLoans.length>0?`
@@ -8155,12 +8157,12 @@ function renderRepIncome() {
             return`<div style="display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);padding:4px 0;border-bottom:1px solid var(--border);">
               <div>
                 <span style="font-weight:500;">${ln.source||'เงินกู้'}</span>
-                ${ln.interestRate>0?`<span style="font-size:var(--fs-xs);background:var(--red-soft);color:var(--red);border-radius:4px;padding:1px 5px;margin-left:4px;">${ln.interestRate}%/ปี</span>`:''}
-                <div style="font-size:var(--fs-xs);color:var(--text2);">${fmtDateFull(ln.date)}</div>
+                ${ln.interestRate>0?`<span style="font-size:var(--fs-2xs);background:var(--red-soft);color:var(--red);border-radius:4px;padding:1px 5px;margin-left:4px;">${ln.interestRate}%/ปี</span>`:''}
+                <div style="font-size:var(--fs-2xs);color:var(--text2);">${fmtDateFull(ln.date)}</div>
               </div>
               <div style="text-align:right;">
                 <div style="color:var(--accent-text);font-weight:500;">ต้น ${fmt(ln.amount)}</div>
-                ${ln.interestRate>0?`<div style="font-size:var(--fs-xs);color:var(--red);">รวม ${fmt(due)}</div>`:''}
+                ${ln.interestRate>0?`<div style="font-size:var(--fs-2xs);color:var(--red);">รวม ${fmt(due)}</div>`:''}
               </div>
             </div>`;
           }).join('')}
@@ -8209,9 +8211,9 @@ function renderRepIncome() {
         if(gi.length===1){
           const i=gi[0];
           html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepIncome" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" ontouchstart="startRowLongPress(this,event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()">
-            <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
+            <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
             <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>${i.detail?`<div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}</div>
-            <div style="flex:0 0 60px;font-size:var(--fs-xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.location?_escHtml(row.location):'—'}</div>
+            <div style="flex:0 0 60px;font-size:var(--fs-2xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.location?_escHtml(row.location):'—'}</div>
             <div style="font-size:var(--fs-xs);color:var(--yellow);font-weight:500;white-space:nowrap;min-width:42px;text-align:right;">${i.key===KEY.sale&&i._qty?i._qty:''}</div>
             <div style="font-size:var(--fs-sm);font-weight:500;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">+${fmt(i.amount)}</div>
           </div>`;
@@ -8219,12 +8221,12 @@ function renderRepIncome() {
           const grpId = 'sg_'+row.date.replace(/-/g,'')+'_'+(gi[0]?.orderId||'x').replace(/\s/g,'');
           const summary = gi.map(i=>i.label).join(', ');
           html+=`<div ondblclick="openSaleGroupById('${grpId}')" ontouchstart="startSaleGroupDoubleTap('${grpId}',event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
-            <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(row.date)}</div><div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">ยอดขาย</div></div>
+            <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(row.date)}</div><div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">ยอดขาย</div></div>
             <div style="flex:1;min-width:0;">
               <div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${summary}</div>
-              <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${gi.length} รายการ · แตะ 2 ครั้งดูรายละเอียด</div>
+              <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${gi.length} รายการ · แตะ 2 ครั้งดูรายละเอียด</div>
             </div>
-            <div style="flex:0 0 60px;font-size:var(--fs-xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.location?_escHtml(row.location):'—'}</div>
+            <div style="flex:0 0 60px;font-size:var(--fs-2xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.location?_escHtml(row.location):'—'}</div>
             <div style="font-size:var(--fs-xs);color:var(--yellow);font-weight:500;white-space:nowrap;min-width:42px;text-align:right;">${gi.reduce((s,x)=>s+(x._qty||0),0)||''}</div>
             <div style="font-size:var(--fs-sm);font-weight:500;color:var(--green);white-space:nowrap;min-width:52px;text-align:right;">+${fmt(gt)}</div>
           </div>`;
@@ -8234,9 +8236,9 @@ function renderRepIncome() {
       } else {
         const i=row.item;
         html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepIncome" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" ontouchstart="startRowLongPress(this,event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()">
-          <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
+          <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
           <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-sm);font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>${i.detail?`<div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}</div>
-          <div style="flex:0 0 60px;font-size:var(--fs-xs);color:var(--text2);text-align:center;">—</div>
+          <div style="flex:0 0 60px;font-size:var(--fs-2xs);color:var(--text2);text-align:center;">—</div>
           <div style="min-width:42px;"></div>
           <div style="font-size:var(--fs-sm);font-weight:500;color:var(--${i.color});white-space:nowrap;min-width:52px;text-align:right;">+${fmt(i.amount)}</div>
         </div>`;
@@ -8299,10 +8301,10 @@ function openBuyGroupModal(grpId) {
   // หัวตาราง
   let html = '<div style="border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;">';
   html += '<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;background:var(--accent-soft);border-bottom:2px solid var(--border);padding:7px 12px;">';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);">รายการ</div>';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);text-align:center;min-width:48px;">จำนวน</div>';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);text-align:center;min-width:72px;">ราคา/หน่วย</div>';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--red);text-align:right;min-width:64px;">รวม</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">รายการ</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);text-align:center;min-width:48px;">จำนวน</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);text-align:center;min-width:72px;">ราคา/หน่วย</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--red);text-align:right;min-width:64px;">รวม</div>';
   html += '</div>';
   html += grp.items.map((i,idx)=>{
     const bg = idx%2===0?'var(--card)':'var(--card2)';
@@ -8459,10 +8461,10 @@ function showSaleGroupModal(date, items, location) {
   let html = '<div style="border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;">';
   // หัวคอลัมน์
   html += '<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;background:var(--accent-soft);border-bottom:2px solid var(--border);padding:7px 12px;">';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);">รายการ</div>';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);text-align:center;min-width:48px;">Qty</div>';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);text-align:center;min-width:72px;">ราคา/Qty</div>';
-  html += '<div style="font-size:var(--fs-xs);font-weight:700;color:var(--green);text-align:right;min-width:60px;">ยอด</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">รายการ</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);text-align:center;min-width:48px;">Qty</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);text-align:center;min-width:72px;">ราคา/Qty</div>';
+  html += '<div style="font-size:var(--fs-2xs);font-weight:700;color:var(--green);text-align:right;min-width:60px;">ยอด</div>';
   html += '</div>';
   html += items.map((i,idx)=>{
     const bg = idx%2===0?'var(--card)':'var(--card2)';
@@ -8475,7 +8477,7 @@ function showSaleGroupModal(date, items, location) {
     const note = dotIdx>-1?label.slice(dotIdx+3):'';
     if(dotIdx>-1) label = label.slice(0,dotIdx);
     return '<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;align-items:center;padding:9px 12px;background:'+bg+';'+(idx>0?'border-top:1px solid var(--border);':'')+'display:grid;">'
-      +'<div style="font-size:var(--fs-sm);font-weight:500;">'+label+(note?'<div style="font-size:var(--fs-xs);color:var(--text2);">'+note+'</div>':'')+'</div>'
+      +'<div style="font-size:var(--fs-sm);font-weight:500;">'+label+(note?'<div style="font-size:var(--fs-2xs);color:var(--text2);">'+note+'</div>':'')+'</div>'
       +'<div style="font-size:var(--fs-xs);color:var(--text2);text-align:center;min-width:48px;">'+(qty?qty:'—')+'</div>'
       +'<div style="font-size:var(--fs-xs);color:var(--accent-text);text-align:center;min-width:72px;">'+(unit?fmt(unit)+' ฿':'—')+'</div>'
       +'<div style="font-size:var(--fs-sm);font-weight:500;color:var(--green);text-align:right;min-width:60px;">+'+fmt(i.amount)+'</div>'
@@ -9097,9 +9099,9 @@ function renderRepExpense() {
         const supSfx1=row.supplier?' · '+row.supplier:'';
         if(supSfx1 && lbl1.endsWith(supSfx1)) lbl1=lbl1.slice(0,-supSfx1.length);
         html+=`<div ondblclick="openBuyGroupModal('${grpId1}')" ontouchstart="startBuyGroupDoubleTap('${grpId1}',event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
-          <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
+          <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
           <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${lbl1}</div>${i.detail?`<div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}</div>
-          <div style="flex:0 0 60px;font-size:var(--fs-xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.supplier?_escHtml(row.supplier):'—'}</div>
+          <div style="flex:0 0 60px;font-size:var(--fs-2xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.supplier?_escHtml(row.supplier):'—'}</div>
           <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">−${fmt(i.amount)}</div>
         </div>`;
       } else {
@@ -9111,21 +9113,21 @@ function renderRepExpense() {
         const grpTypes=[...new Set(gi.map(i=>i.cat))].join(', ');
         const summary=gi.map(i=>i.label.split(' · ')[0]).join(', ');
         html+=`<div ondblclick="openBuyGroupModal('${grpId}')" ontouchstart="startBuyGroupDoubleTap('${grpId}',event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
-          <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(row.date)}</div><div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${grpTypes}</div></div>
+          <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(row.date)}</div><div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${grpTypes}</div></div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:var(--fs-sm);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${summary}</div>
-            <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${gi.length} รายการ · ดับเบิลคลิกดูรายละเอียด</div>
+            <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${gi.length} รายการ · ดับเบิลคลิกดูรายละเอียด</div>
           </div>
-          <div style="flex:0 0 60px;font-size:var(--fs-xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.supplier?_escHtml(row.supplier):'—'}</div>
+          <div style="flex:0 0 60px;font-size:var(--fs-2xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${row.supplier?_escHtml(row.supplier):'—'}</div>
           <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">−${fmt(gt)}</div>
         </div>`;
       }
     } else {
       const i=row.item;
       html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepExpense" data-mode="${i.editMode||'edit'}" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;" ontouchstart="startRowLongPress(this,event)" ontouchend="cancelRowLongPress()" ontouchmove="cancelRowLongPress()">
-        <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
+        <div style="flex:0 0 52px;"><div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div><div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${i.cat}</div></div>
         <div style="flex:1;min-width:0;"><div style="font-size:var(--fs-sm);font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>${i.detail?`<div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.detail}</div>`:''}</div>
-        <div style="flex:0 0 60px;font-size:var(--fs-xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.location?_escHtml(i.location):'—'}</div>
+        <div style="flex:0 0 60px;font-size:var(--fs-2xs);color:var(--text2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.location?_escHtml(i.location):'—'}</div>
         <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);white-space:nowrap;min-width:64px;text-align:right;">−${fmt(i.amount)}</div>
       </div>`;
     }
@@ -9239,7 +9241,7 @@ function renderRepWages() {
     html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderRepWages" data-mode="${i.editMode||'edit'}" data-cat="${i.cat}" style="background:${bg};padding:9px 12px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
       <div style="flex:0 0 66px;">
         <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div>
-        <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.cat}</div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:var(--fs-sm);font-weight:500;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
@@ -9556,7 +9558,7 @@ function _metricBarHtml(label, amount, maxVal, color, opts={}) {
 // missing=true ใช้กับ "ของที่ชอบลืม" ที่ยังไม่ได้บันทึกในช่วงเวลานั้น — โชว์ป้ายเตือนแทนตัวเลข
 function _tlLineRow(label, amount, color, missing) {
   const valHtml = missing
-    ? `<span class="tl-miss2" style="font-size:var(--fs-xs);font-weight:700;color:#8A5A08;background:var(--yellow-soft);padding:2px 7px;border-radius:var(--r-lg);white-space:nowrap;">ยังไม่ลง</span>`
+    ? `<span class="tl-miss2" style="font-size:var(--fs-2xs);font-weight:700;color:#8A5A08;background:var(--yellow-soft);padding:2px 7px;border-radius:var(--r-lg);white-space:nowrap;">ยังไม่ลง</span>`
     : `<span class="tl-line-val2" style="font-size:var(--fs-xs);font-weight:700;color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums;">${fmt(amount)}</span>`;
   return `
     <div class="tl-line2" style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 0;border-top:1px solid var(--border);">
@@ -9574,7 +9576,7 @@ function _tlBarRow(label, amount, maxVal, color) {
   const pct = maxVal>0 ? Math.min(100, Math.max(amount>0?4:0, Math.abs(amount)/maxVal*100)) : 0;
   return `
     <div class="tl-bar2" style="margin-bottom:6px;">
-      <div class="tl-bar-top2" style="display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--text2);margin-bottom:2px;">
+      <div class="tl-bar-top2" style="display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-2xs);color:var(--text2);margin-bottom:2px;">
         <span style="display:flex;align-items:center;min-width:0;"><span class="tl-dot2" style="width:6px;height:6px;border-radius:50%;background:${color};display:inline-block;margin-right:5px;flex-shrink:0;"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${label}</span></span>
         <span style="font-weight:600;color:var(--text);white-space:nowrap;margin-left:8px;">${fmt(amount)}</span>
       </div>
@@ -9589,14 +9591,14 @@ function _tlCardKey(period, c) { return period+'_'+c.bucketKey+'_'+(c.locKey||'_
 const _TL_CMP_LABEL = { day:'เทียบเมื่อวาน', week:'เทียบสัปดาห์ก่อน', month:'เทียบเดือนก่อน' };
 function _tlCompareChipHtml(period, curSale, prevSale) {
   if(prevSale===null || prevSale===0) {
-    return `<span style="font-size:var(--fs-xs);color:var(--text2);">ไม่มีข้อมูลเทียบ</span>`;
+    return `<span style="font-size:var(--fs-2xs);color:var(--text2);">ไม่มีข้อมูลเทียบ</span>`;
   }
   const diffPct = Math.round((curSale-prevSale)/prevSale*100);
-  if(diffPct===0) return `<span style="font-size:var(--fs-xs);color:var(--text2);">เท่าเดิม ${_TL_CMP_LABEL[period]}</span>`;
+  if(diffPct===0) return `<span style="font-size:var(--fs-2xs);color:var(--text2);">เท่าเดิม ${_TL_CMP_LABEL[period]}</span>`;
   const up = diffPct>0;
   const color = up ? 'var(--green)' : 'var(--red)';
   const arrow = up ? '▲' : '▼';
-  return `<span style="font-size:var(--fs-xs);font-weight:500;color:${color};">${arrow} ${Math.abs(diffPct)}% ${_TL_CMP_LABEL[period]}</span>`;
+  return `<span style="font-size:var(--fs-2xs);font-weight:500;color:${color};">${arrow} ${Math.abs(diffPct)}% ${_TL_CMP_LABEL[period]}</span>`;
 }
 
 function _tlCardHtml(period, c) {
@@ -9635,23 +9637,23 @@ function _tlCardHtml(period, c) {
   <div class="${scaleClass}" style="position:relative;background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 11px;box-shadow:var(--sh-1);min-width:0;">
     <div onclick="_tlToggleCard('${cardKey}')" style="cursor:pointer;user-select:none;">
       ${headerHtml}
-      <div class="tl-cmp-row2" style="font-size:var(--fs-xs);margin-bottom:4px;">${_tlCompareChipHtml(period, c.bucketSale, c.prevBucketSale)}</div>
+      <div class="tl-cmp-row2" style="font-size:var(--fs-2xs);margin-bottom:4px;">${_tlCompareChipHtml(period, c.bucketSale, c.prevBucketSale)}</div>
       ${bars}
       <div class="tl-net-row2" style="display:flex;justify-content:space-between;align-items:center;padding-top:7px;margin-top:2px;border-top:1.5px solid var(--border);">
         <span class="tl-net-label2" style="font-size:var(--fs-xs);font-weight:700;color:var(--text);">สุทธิ</span>
         <span style="display:flex;align-items:center;gap:7px;">
           <span class="tl-net-val2" style="font-size:var(--fs-sm);font-weight:800;color:${profitColor};font-variant-numeric:tabular-nums;">${fmt(c.net)}</span>
-          <span style="font-size:var(--fs-xs);color:var(--text2);">${expanded?'▲':'▼'}</span>
+          <span style="font-size:var(--fs-2xs);color:var(--text2);">${expanded?'▲':'▼'}</span>
         </span>
       </div>
       <div class="tl-money2" style="margin-top:8px;background:var(--card2);border-radius:var(--r-sm);padding:7px 10px;">
         <div style="display:flex;justify-content:space-between;align-items:baseline;">
-          <span class="tl-money-k2" style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);">เหลือ</span>
+          <span class="tl-money-k2" style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">เหลือ</span>
           <span class="tl-money-v2" style="font-size:var(--fs-sm);font-weight:800;color:${cashColor};font-variant-numeric:tabular-nums;">${fmt(c.cashBalance)}</span>
         </div>
         <div style="height:1px;background:#E7DCC8;margin:6px 0;"></div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;">
-          <span class="tl-money-k2" style="font-size:var(--fs-xs);font-weight:700;color:var(--text2);">เหลือจริง</span>
+          <span class="tl-money-k2" style="font-size:var(--fs-2xs);font-weight:700;color:var(--text2);">เหลือจริง</span>
           <span class="tl-money-v2" style="font-size:var(--fs-sm);font-weight:800;color:${realColor};font-variant-numeric:tabular-nums;">${fmt(realBalance)}</span>
         </div>
       </div>
@@ -9887,7 +9889,7 @@ function renderTimeline() {
     html+=`<div ondblclick="rowAction(this)" data-key="${i.key}" data-id="${i.id}" data-cb="renderTimeline" data-mode="edit" data-cat="${i.cat}" style="background:${bg};padding:8px 10px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);cursor:pointer;user-select:none;">
       <div style="flex:0 0 52px;">
         <div style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);">${fmtDate(i.date)}</div>
-        <div style="font-size:var(--fs-xs);color:var(--text2);margin-top:1px;">${i.cat}</div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);margin-top:1px;">${i.cat}</div>
       </div>
       <div style="flex:1;min-width:0;font-size:var(--fs-xs);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i.label}</div>
       <div style="font-size:var(--fs-xs);font-weight:500;color:var(--green);white-space:nowrap;flex:0 0 52px;text-align:right;">${i.kind==='in'?fmt(i.amount):'—'}</div>
@@ -10184,11 +10186,11 @@ function _animateDonutDraw(container){
 function _dashCapitalDebtStripHtml(){
   return `<div style="display:flex;gap:8px;padding-top:10px;margin-top:9px;border-top:1px solid var(--border);">
     <div onclick="goReportTab('rep-income',document.getElementById('nav-rep-income'));setTimeout(()=>{['ri-c-sale','ri-c-loan'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});const c=document.getElementById('ri-c-capital');if(c)c.checked=true;renderRepIncome();},200);" style="flex:1;cursor:pointer;background:var(--card2);border-radius:var(--r-sm);padding:7px 10px;display:flex;justify-content:space-between;align-items:center;gap:6px;">
-      <span style="font-size:var(--fs-xs);color:var(--text2);">ทุน</span>
+      <span style="font-size:var(--fs-2xs);color:var(--text2);">ทุน</span>
       <span id="d-capital" style="font-size:var(--fs-sm);font-weight:700;color:var(--accent-text);white-space:nowrap;">0</span>
     </div>
     <div onclick="goReportTab('rep-loan',document.getElementById('nav-rep-loan'));" style="flex:1;cursor:pointer;background:var(--card2);border-radius:var(--r-sm);padding:7px 10px;display:flex;justify-content:space-between;align-items:center;gap:6px;">
-      <span style="font-size:var(--fs-xs);color:var(--text2);">หนี้คงเหลือ</span>
+      <span style="font-size:var(--fs-2xs);color:var(--text2);">หนี้คงเหลือ</span>
       <span id="d-loan" style="font-size:var(--fs-sm);font-weight:700;color:var(--red);white-space:nowrap;">0</span>
     </div>
   </div>`;
@@ -10198,14 +10200,14 @@ function _dashNetFooterHtml(){
   return `<div style="padding-top:11px;margin-top:8px;border-top:1px solid var(--border);">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <span style="font-size:var(--fs-xs);font-weight:500;color:var(--text2);display:flex;align-items:center;gap:5px;" id="d-profit-label">กำไรสุทธิ
-        <span id="d-profit-month-tag" onclick="event.stopPropagation();openProfitMonthPicker()" style="font-size:var(--fs-xs);background:var(--accent);color:#fff;padding:2px 6px;border-radius:var(--r-sm);cursor:pointer;font-weight:500;">—</span>
+        <span id="d-profit-month-tag" onclick="event.stopPropagation();openProfitMonthPicker()" style="font-size:var(--fs-2xs);background:var(--accent);color:#fff;padding:2px 6px;border-radius:var(--r-sm);cursor:pointer;font-weight:500;">—</span>
       </span>
       <span style="display:flex;align-items:center;gap:6px;">
         <span id="d-profit" style="font-size:var(--fs-md);font-weight:500;line-height:1;">0</span>
-        <button id="profit-show-btn" onclick="event.stopPropagation();toggleSensitive('profit')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:var(--r-sm);padding:3px 7px;font-size:var(--fs-xs);font-weight:500;cursor:pointer;">ดู</button>
+        <button id="profit-show-btn" onclick="event.stopPropagation();toggleSensitive('profit')" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:var(--r-sm);padding:3px 7px;font-size:var(--fs-2xs);font-weight:500;cursor:pointer;">ดู</button>
       </span>
     </div>
-    <div id="d-profit-formula" style="font-size:var(--fs-xs);color:var(--text2);margin-top:5px;text-align:right;">—</div>
+    <div id="d-profit-formula" style="font-size:var(--fs-2xs);color:var(--text2);margin-top:5px;text-align:right;">—</div>
   </div>`;
 }
 
@@ -10253,7 +10255,7 @@ function _dashRenderDonut(d, metrics, visible, bd, maxVal){
           ${segsHtml}
         </svg>
         <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:70px;">
-          <div style="font-size:var(--fs-xs);color:var(--text2);font-weight:500;">รวมจ่าย</div>
+          <div style="font-size:var(--fs-2xs);color:var(--text2);font-weight:500;">รวมจ่าย</div>
           <div style="font-size:var(--fs-sm);font-weight:500;color:var(--red);">${fmt(total)}</div>
         </div>
       </div>
@@ -10304,7 +10306,7 @@ function _dashRenderCompare(d, metrics, visible, bd, maxVal){
       const amt = Math.max(0,d[k]||0);
       if(amt<=0) return;
       const pct = amt/totalExpense*100;
-      html += `<div onclick="${_dashClickFor(k)}" style="cursor:pointer;height:100%;width:${pct}%;background:${colorMap[k]};display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);font-weight:500;color:#fff;overflow:hidden;white-space:nowrap;">${pct>=14?labelMap[k]:''}</div>`;
+      html += `<div onclick="${_dashClickFor(k)}" style="cursor:pointer;height:100%;width:${pct}%;background:${colorMap[k]};display:flex;align-items:center;justify-content:center;font-size:var(--fs-2xs);font-weight:500;color:#fff;overflow:hidden;white-space:nowrap;">${pct>=14?labelMap[k]:''}</div>`;
     });
     html += `</div>`;
   } else if(expenseKeys.length) {
@@ -10462,7 +10464,7 @@ function renderDashVs(period, from, to) {
         <div class="vs-rt"><span class="n">${x.n}</span><span class="v" style="color:${x.c};">${fmt(x.v)}</span></div>
         <div class="vs-bar"><i style="width:${Math.max(2,x.v/maxV*100)}%;background:${x.c};"></i></div>
       </div>`).join('')
-    : '<div style="font-size:var(--fs-xs);color:var(--text2);padding:6px 0;">— ไม่มีรายการ —</div>';
+    : '<div style="font-size:var(--fs-2xs);color:var(--text2);padding:6px 0;">— ไม่มีรายการ —</div>';
   el.innerHTML=`
     <div class="vs-col">
       <div class="vs-h" style="color:var(--green);">▲ รับ</div>
@@ -10687,9 +10689,9 @@ function renderHomeExtras() {
         const t = f.ts ? new Date(f.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '';
         const d = f.date ? fmtDate(f.date) : '';
         const dayBadge = f.date===todayStr
-          ? '<span style="font-size:var(--fs-xs);font-weight:700;padding:1px 7px;border-radius:var(--r-sm);background:var(--green-soft);color:var(--green);white-space:nowrap;">🟢 วันนี้</span>'
+          ? '<span style="font-size:var(--fs-2xs);font-weight:700;padding:1px 7px;border-radius:var(--r-sm);background:var(--green-soft);color:var(--green);white-space:nowrap;">🟢 วันนี้</span>'
           : f.date===ystStr
-            ? '<span style="font-size:var(--fs-xs);font-weight:700;padding:1px 7px;border-radius:var(--r-sm);background:var(--yellow-soft);color:var(--yellow);white-space:nowrap;">🕒 เมื่อวาน</span>'
+            ? '<span style="font-size:var(--fs-2xs);font-weight:700;padding:1px 7px;border-radius:var(--r-sm);background:var(--yellow-soft);color:var(--yellow);white-space:nowrap;">🕒 เมื่อวาน</span>'
             : '';
         const arrow = isSale
           ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--vivid-sale)" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'
@@ -11016,12 +11018,12 @@ function _renderChart7() {
   // Ver.207: โหมด 7 วันก็มีป้ายใต้แท่งแล้ว — ตัวย่อวัน (ตั้งตรง) + เลขวันที่
   labelsEl.innerHTML = isMonth ? bars.map((d,i)=>{
     const show = landmarks.has(i+1)||i===bars.length-1;
-    return `<div style="flex:1;min-width:0;text-align:center;font-size:var(--fs-xs);color:${d.isToday?'var(--accent-text)':d.v>0?'var(--text)':'var(--text2)'};font-weight:${d.isToday||d.v>0?500:400};overflow:hidden;white-space:nowrap;">${show?d.lbl:''}</div>`;
+    return `<div style="flex:1;min-width:0;text-align:center;font-size:var(--fs-2xs);color:${d.isToday?'var(--accent-text)':d.v>0?'var(--text)':'var(--text2)'};font-weight:${d.isToday||d.v>0?500:400};overflow:hidden;white-space:nowrap;">${show?d.lbl:''}</div>`;
   }).join('') : bars.map(d=>{
     const dayNum = d.ds ? String(parseInt(d.ds.slice(8,10),10)) : '';
     return `<div style="flex:1;min-width:0;text-align:center;overflow:hidden;">
-      <div style="font-size:var(--fs-xs);font-weight:700;color:${d.isToday?'var(--accent-text)':'var(--text)'};line-height:1.2;">${d.lbl}</div>
-      <div style="font-size:var(--fs-xs);color:${d.isToday?'var(--accent-text)':'var(--text2)'};line-height:1.2;">${dayNum}</div>
+      <div style="font-size:var(--fs-2xs);font-weight:700;color:${d.isToday?'var(--accent-text)':'var(--text)'};line-height:1.2;">${d.lbl}</div>
+      <div style="font-size:var(--fs-2xs);color:${d.isToday?'var(--accent-text)':'var(--text2)'};line-height:1.2;">${dayNum}</div>
     </div>`;
   }).join('');
 
@@ -11242,7 +11244,7 @@ function renderLineChart() {
       if(_lcPeriod==='day'){const d=new Date(p.key);lbl=`${d.getDate()}/${d.getMonth()+1}`;}
       else{const pt=p.key.split('-');lbl=_thMonthShort(parseInt(pt[1]))+"'"+pt[0].slice(2);}
     }
-    xHTML+=`<div style="flex:1;min-width:0;text-align:center;font-size:var(--fs-xs);color:var(--text2);white-space:nowrap;overflow:hidden;">${lbl}</div>`;
+    xHTML+=`<div style="flex:1;min-width:0;text-align:center;font-size:var(--fs-2xs);color:var(--text2);white-space:nowrap;overflow:hidden;">${lbl}</div>`;
   });
   if(xlabels) xlabels.innerHTML=xHTML;
 
@@ -11253,9 +11255,9 @@ function renderLineChart() {
   const profitColor = profit>=0?'var(--green)':'var(--red)';
   const periodLbl=_lcPeriod==='day'?'วัน':'เดือน';
   let sumHTML='';
-  if(showIncome) sumHTML+=`<div style="background:var(--green-soft);border-radius:var(--r-sm);padding:5px 10px;font-size:var(--fs-xs);"><div style="color:var(--text2);font-size:var(--fs-xs);">รายรับรวม</div><div style="font-weight:500;color:var(--green);">${_lcMode==='amount'?fmt(totalIncome):Math.round(totalIncome)} ${_lcMode==='amount'?'฿':'Qty'}</div></div>`;
-  if(showExpense) sumHTML+=`<div style="background:var(--red-soft);border-radius:var(--r-sm);padding:5px 10px;font-size:var(--fs-xs);"><div style="color:var(--text2);font-size:var(--fs-xs);">รายจ่ายรวม</div><div style="font-weight:500;color:var(--red);">${fmt(totalExpense)} ฿</div></div>`;
-  if(_lcView==='both'&&_lcMode==='amount') sumHTML+=`<div style="background:${profit>=0?'var(--green-soft)':'var(--red-soft)'};border-radius:var(--r-sm);padding:5px 10px;font-size:var(--fs-xs);"><div style="color:var(--text2);font-size:var(--fs-xs);">กำไรสุทธิ</div><div style="font-weight:500;color:${profitColor};">${profit>=0?'+':''}${fmt(profit)} ฿</div></div>`;
+  if(showIncome) sumHTML+=`<div style="background:var(--green-soft);border-radius:var(--r-sm);padding:5px 10px;font-size:var(--fs-xs);"><div style="color:var(--text2);font-size:var(--fs-2xs);">รายรับรวม</div><div style="font-weight:500;color:var(--green);">${_lcMode==='amount'?fmt(totalIncome):Math.round(totalIncome)} ${_lcMode==='amount'?'฿':'Qty'}</div></div>`;
+  if(showExpense) sumHTML+=`<div style="background:var(--red-soft);border-radius:var(--r-sm);padding:5px 10px;font-size:var(--fs-xs);"><div style="color:var(--text2);font-size:var(--fs-2xs);">รายจ่ายรวม</div><div style="font-weight:500;color:var(--red);">${fmt(totalExpense)} ฿</div></div>`;
+  if(_lcView==='both'&&_lcMode==='amount') sumHTML+=`<div style="background:${profit>=0?'var(--green-soft)':'var(--red-soft)'};border-radius:var(--r-sm);padding:5px 10px;font-size:var(--fs-xs);"><div style="color:var(--text2);font-size:var(--fs-2xs);">กำไรสุทธิ</div><div style="font-weight:500;color:${profitColor};">${profit>=0?'+':''}${fmt(profit)} ฿</div></div>`;
   if(summary) summary.innerHTML=sumHTML;
 }
 
@@ -11278,7 +11280,7 @@ function _lcBuildTooltipHTML(key, incLbl, bills, expLbl, profit) {
     ${showInc&&bills?`<div style="display:flex;justify-content:space-between;gap:14px;"><span style="color:var(--text2);">บิล</span><span style="font-weight:500;">${bills}</span></div>`:''}
     ${showExp?`<div style="display:flex;justify-content:space-between;gap:14px;"><span style="color:var(--text2);">รายจ่าย</span><span style="font-weight:500;color:var(--red);">${expLbl}</span></div>`:''}
     ${_lcView==='both'&&_lcMode==='amount'?`<div style="display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--border);margin-top:4px;padding-top:4px;"><span style="color:var(--text2);">กำไร</span><span style="font-weight:500;color:${profitColor};">${profit>=0?'+':''}${fmt(profit)}฿</span></div>`:''}
-    <div style="text-align:center;margin-top:5px;font-size:var(--fs-xs);color:var(--text2);opacity:0.7;">แตะเพื่อปิด</div>`;
+    <div style="text-align:center;margin-top:5px;font-size:var(--fs-2xs);color:var(--text2);opacity:0.7;">แตะเพื่อปิด</div>`;
 }
 
 let _lcPosToken = 0;
@@ -11560,19 +11562,19 @@ function renderRepLoan() {
     <div style="font-size:var(--fs-sm);font-weight:500;margin-bottom:10px;">สรุปภาพรวม</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
       <div style="background:var(--card);border-radius:var(--r-sm);padding:10px 12px;">
-        <div style="font-size:var(--fs-xs);color:var(--text2);">เงินต้นรวม</div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);">เงินต้นรวม</div>
         <div style="font-size:var(--fs-md);font-weight:500;color:var(--accent-text);">${fmt(totalPrincipal)}</div>
       </div>
       <div style="background:var(--card);border-radius:var(--r-sm);padding:10px 12px;">
-        <div style="font-size:var(--fs-xs);color:var(--text2);">ดอกเบี้ยรวม</div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);">ดอกเบี้ยรวม</div>
         <div style="font-size:var(--fs-md);font-weight:500;color:var(--red);">${fmt(totalInterest)}</div>
       </div>
       <div style="background:var(--card);border-radius:var(--r-sm);padding:10px 12px;">
-        <div style="font-size:var(--fs-xs);color:var(--text2);">ยอดที่ต้องชำระทั้งหมด</div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);">ยอดที่ต้องชำระทั้งหมด</div>
         <div style="font-size:var(--fs-md);font-weight:500;color:var(--red);">${fmt(totalDue)}</div>
       </div>
       <div style="background:var(--card);border-radius:var(--r-sm);padding:10px 12px;">
-        <div style="font-size:var(--fs-xs);color:var(--text2);">ชำระแล้ว</div>
+        <div style="font-size:var(--fs-2xs);color:var(--text2);">ชำระแล้ว</div>
         <div style="font-size:var(--fs-md);font-weight:500;color:var(--green);">${fmt(totalPaid)}</div>
       </div>
     </div>
@@ -11586,7 +11588,7 @@ function renderRepLoan() {
     </div>
     <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);height:18px;overflow:hidden;">
       <div style="height:100%;border-radius:var(--r-sm);background:${barColor};width:${pct}%;transition:width 1s ease;position:relative;">
-        ${pct>12?`<span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:var(--fs-xs);font-weight:500;color:#fff;">${pctR}%</span>`:''}
+        ${pct>12?`<span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:var(--fs-2xs);font-weight:500;color:#fff;">${pctR}%</span>`:''}
       </div>
     </div>
   </div>`;
@@ -11640,7 +11642,7 @@ function renderRepLoan() {
       <div style="background:var(--card2);padding:10px 14px;border-bottom:1px solid var(--border);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
           <div style="font-size:var(--fs-sm);font-weight:500;">${ln.source||'เงินกู้ #'+(li+1)}</div>
-          ${ln.interestRate>0?`<span style="font-size:var(--fs-xs);background:var(--red-soft);color:var(--red);border-radius:var(--r-sm);padding:2px 6px;">${ln.interestRate}%/ปี</span>`:'<span style="font-size:var(--fs-xs);background:var(--green-soft);color:var(--green);border-radius:var(--r-sm);padding:2px 6px;">ไม่มีดอก</span>'}
+          ${ln.interestRate>0?`<span style="font-size:var(--fs-2xs);background:var(--red-soft);color:var(--red);border-radius:var(--r-sm);padding:2px 6px;">${ln.interestRate}%/ปี</span>`:'<span style="font-size:var(--fs-2xs);background:var(--green-soft);color:var(--green);border-radius:var(--r-sm);padding:2px 6px;">ไม่มีดอก</span>'}
         </div>
         <div style="display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--text2);margin-bottom:4px;">
           <span>ชำระแล้ว ${fmt(paidForThis)} / ${fmt(due)}</span>
@@ -11654,7 +11656,7 @@ function renderRepLoan() {
       html+=`<div style="padding:14px;text-align:center;font-size:var(--fs-xs);color:var(--text2);">ยังไม่มีประวัติการจ่ายในสัญญานี้</div>`;
     } else {
       let runR=due;
-      html+=`<div style="background:var(--card2);padding:6px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;font-size:var(--fs-xs);font-weight:500;color:var(--text2);">
+      html+=`<div style="background:var(--card2);padding:6px 12px;display:grid;grid-template-columns:70px 1fr 80px 80px;gap:4px;font-size:var(--fs-2xs);font-weight:500;color:var(--text2);">
         <span>วันที่</span><span>หมายเหตุ</span><span style="text-align:right;">จ่ายคืน</span><span style="text-align:right;">คงเหลือ</span>
       </div>`;
       allLnPays.forEach((p,idx)=>{
