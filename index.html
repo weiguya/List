@@ -203,6 +203,13 @@ body.show-report-tabs .page{padding-top:0;} /* Ver.218: report-tabs-bar มี p
 .home-feed-card{background:var(--card);border-radius:var(--r-md);box-shadow:var(--sh-1);overflow:hidden;margin:0 16px;}
 .home-recent-row{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;font-size:var(--fs-sm);font-weight:600;cursor:pointer;}
 .home-recent-row+.home-recent-row{border-top:1px solid var(--border);margin-top:0;}
+/* Ver.257: แถวรายการล่าสุด — จุดสีนำหน้า / ชื่อ-รายละเอียดซ้าย / ยอด-เวลาขวา */
+.hr-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.hr-name{font-size:var(--fs-sm);font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hr-meta{font-size:var(--fs-2xs);color:var(--text2);margin-top:2px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hr-right{text-align:right;flex-shrink:0;margin-left:10px;}
+.hr-amt{font-size:var(--fs-md);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;}
+.hr-time{font-size:var(--fs-2xs);color:var(--text2);margin-top:2px;font-weight:400;}
 .home-recent-row:active{background:var(--card2);}
 .home-recent-row .fic{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .nb-tile{border:none;border-radius:var(--r-md);padding:16px 17px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh-2);color:#fff;width:100%;text-align:left;cursor:pointer;font-family:'LINE Seed Sans TH','Noto Sans Thai',sans-serif;transition:transform 0.1s,box-shadow 0.1s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;}
@@ -1127,15 +1134,25 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 .bal-split>div{padding:10px 0 12px;}
 
 /* ── 2) ปุ่มหลัก 3 อัน: ไอคอนออก ข้อความเป็นพระเอก ขอบสี + ขอบล่างหนา 3px (นูนกดได้) ── */
+/* ขอบไล่สีรอบปุ่ม: ใช้เทคนิค 2 ชั้น background-clip (padding-box=พื้นขาว, border-box=ไล่สี)
+   เหตุผลที่ไม่ใช้ ::before/::after เหมือนการ์ดเงิน: ปุ่มมี overflow:hidden เพื่อคุมภาพประกอบ
+   pseudo ที่ยื่นออกนอกจะโดนตัด — วิธีนี้ทาที่ "ขอบ" ของตัวเอง ไม่ต้องยุ่งกับ overflow เลย
+   (บทเรียนเดียวกับดรอปดาว Ver.254) ส่วนความนูนใช้ box-shadow แข็งแทน border-bottom
+   เพราะขอบล่างถูกไล่สีกินไปแล้ว ตั้งสีเงาให้เข้มกว่าขอบเพื่อให้เห็นเป็นความหนา */
 .home-menu-row{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;
-  padding:13px 16px;min-height:70px;border-radius:16px;background:var(--card);
-  border:1.5px solid var(--border);border-bottom-width:3px;box-shadow:none;margin-bottom:10px;
-  transition:transform 0.09s ease,border-bottom-width 0.09s ease;}
-.home-menu-row:active{transform:translateY(2px);border-bottom-width:1.5px;margin-bottom:11.5px;
-  background:var(--card);}
-.hm-sale{border-color:#8FD3B4;border-bottom-color:#5FBF8C;}
-.hm-buy{border-color:#9CC3EE;border-bottom-color:#6C9FD8;}
-.hm-fin{border-color:#F0A9C2;border-bottom-color:#DE7FA3;}
+  padding:13px 16px;min-height:70px;border-radius:16px;margin-bottom:11px;
+  border:1.5px solid transparent;
+  background-image:linear-gradient(var(--card),var(--card)),var(--hm-edge);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  transition:transform 0.09s ease,box-shadow 0.09s ease;}
+.home-menu-row:active{transform:translateY(3px);}
+.hm-sale{--hm-edge:linear-gradient(115deg,#AAE4C6,#8FB9FF 45%,#C89CFF);
+  box-shadow:0 4px 10px -6px rgba(95,191,140,.45);}
+.hm-buy{--hm-edge:linear-gradient(115deg,#8FB9FF,#C89CFF 50%,#FF9FC7);
+  box-shadow:0 4px 10px -6px rgba(108,159,216,.45);}
+.hm-fin{--hm-edge:linear-gradient(115deg,#FF9FC7,#FFC985 55%,#FFD9A8);
+  box-shadow:0 4px 10px -6px rgba(222,127,163,.42);}
+.home-menu-row:active{transform:translateY(2px);box-shadow:0 1px 4px -3px rgba(20,20,22,.3);}
 .hm-txt{position:relative;z-index:2;min-width:0;}
 .home-menu-row .t{font-size:21px;font-weight:800;color:var(--text);letter-spacing:-0.035em;line-height:1.12;}
 .home-menu-row .s{font-size:var(--fs-xs);color:var(--text2);margin-top:3px;font-weight:500;line-height:1.35;}
@@ -11128,28 +11145,26 @@ function renderHomeExtras() {
       const rows = feed.map(([k,f])=>{
         const isSale = f.type==='sale';
         const t = f.ts ? new Date(f.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '';
-        const d = f.date ? fmtDate(f.date) : '';
-        const dayBadge = f.date===todayStr
-          ? '<span style="font-size:var(--fs-2xs);font-weight:700;padding:1px 7px;border-radius:var(--r-sm);background:var(--green-soft);color:var(--green);white-space:nowrap;">🟢 วันนี้</span>'
-          : f.date===ystStr
-            ? '<span style="font-size:var(--fs-2xs);font-weight:700;padding:1px 7px;border-radius:var(--r-sm);background:var(--yellow-soft);color:var(--yellow);white-space:nowrap;">🕒 เมื่อวาน</span>'
-            : '';
-        const arrow = isSale
-          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--vivid-sale)" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'
-          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--vivid-buy)" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>';
-        // Ver.230: เพิ่ม ontouchend คู่กับ onclick (แพทเทิร์นเดียวกับดรอปดาวน์ในแอป) กันปัญหาบางเครื่องต้องแตะ 2 ครั้งกว่าจะเปิดบิล
+        // Ver.257: วันนี้/เมื่อวาน เป็นข้อความนำหน้าเวลา (เลิกใช้ป้ายสีอิโมจิ) ให้เข้ากับดีไซน์ใหม่
+        const dayTxt = f.date===todayStr ? 'วันนี้' : (f.date===ystStr ? 'เมื่อวาน' : (f.date?fmtDate(f.date):''));
+        const when = dayTxt && t ? dayTxt+' '+t : (dayTxt || t);
+        // รายละเอียดย่อย: จำนวนรายการในบิล
+        const n = (f.items||[]).length;
+        const meta = n>1 ? n+' รายการ' : ((f.items&&f.items[0]&&(f.items[0].name||f.items[0].meat))||'');
+        const dot = isSale ? '#71C39B' : '#7FAFDF';
+        // Ver.230: ontouchend คู่กับ onclick (แพทเทิร์นเดียวกับดรอปดาวน์) กันบางเครื่องต้องแตะ 2 ครั้ง
         return `<div class="home-recent-row" onclick="homeFeedOpenBill('${k}')" ontouchend="_ddSelect(event,()=>homeFeedOpenBill('${k}'))">
-          <div style="display:flex;align-items:center;gap:11px;min-width:0;">
-            <div class="fic" style="background:${isSale?'var(--income-soft)':'var(--expense-soft)'};">${arrow}</div>
+          <div style="display:flex;align-items:center;gap:11px;min-width:0;flex:1;">
+            <span class="hr-dot" style="background:${dot};"></span>
             <div style="min-width:0;">
-              <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;font-weight:700;">${isSale?'ขาย':'ซื้อของ'} — ${f.label}</div>
-              <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
-                ${dayBadge}
-                <span style="font-size:var(--fs-xs);font-weight:400;color:var(--text2);">${d}${d&&t?' · ':''}${t}</span>
-              </div>
+              <div class="hr-name">${isSale?'ขาย':'ซื้อของ'} — ${f.label}</div>
+              ${meta?`<div class="hr-meta">${meta}</div>`:''}
             </div>
           </div>
-          <div class="amt" style="color:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};flex-shrink:0;font-weight:800;">${isSale?'+':'−'}${fmt(f.amount)}</div>
+          <div class="hr-right">
+            <div class="hr-amt" style="color:${isSale?'var(--vivid-sale)':'var(--vivid-buy)'};">${isSale?'+':'−'}${fmt(f.amount)}</div>
+            ${when?`<div class="hr-time">${when}</div>`:''}
+          </div>
         </div>`;
       }).join('');
       feedEl.innerHTML = `<div class="home-feed-card">${rows}</div>`;
