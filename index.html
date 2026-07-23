@@ -979,6 +979,165 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
   content:"";position:absolute;inset:-5px;border-radius:inherit;
   background:var(--grad);filter:blur(11px);opacity:.35;
   pointer-events:none;z-index:-1;animation:ga249 9s linear infinite;}
+
+/* ═══════════════ Ver.254: ผิวตามเรฟ Corekit + ดรอปดาวทั้งแอป ═══════════════ */
+
+/* ── 1) การ์ดเงินคงเหลือ: แบบเรฟ = ขอบบางเรียบ + แสงรุ้งฟุ้งนุ่มๆ "นอก" การ์ด ──
+   (ไม่ใช่แหวนไล่สีคมๆ ทาบขอบแบบเดิม และไม่ใช่เอาออกทั้งหมด)
+   ::after เดิม = แหวนคม → ปิดทิ้ง
+   ::before เดิม = ฟุ้ง → เก็บไว้ แต่จูนให้นุ่มและกระจายกว้างแบบเรฟ */
+.home-bal-card{
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  background:var(--card);
+  box-shadow:0 1px 2px rgba(20,20,22,0.04);
+}
+.home-bal-card::after{content:none !important;}   /* ปิดแหวนคม */
+.home-bal-card::before{
+  content:"" !important;
+  display:block !important;
+  position:absolute;
+  inset:-10px;
+  border-radius:calc(var(--r-md) + 8px);
+  background:var(--grad);
+  filter:blur(20px);        /* ฟุ้งกว้างกว่าเดิม = นุ่มแบบเรฟ */
+  opacity:.42;
+  pointer-events:none;
+  z-index:-1;
+  animation:ga249 9s linear infinite;
+}
+
+/* ── 2) เอาไอคอน ✦ หน้า "เงินคงเหลือในบัญชีจริง" ออก ── */
+.bal-label::before{content:none !important;}
+.bal-label{padding:5px 14px;}
+
+/* ── 3) บาร์ล่าง: ขีดใต้เมนูกว้างเสมอไอคอน (38px) ── */
+.bn-item.active::after{
+  width:38px;
+  height:3px;
+  border-radius:2px;
+  background:var(--grad-line);
+  margin-top:2px;
+}
+
+/* ── 4) ปุ่ม + : เทาอ่อนลงเยอะ + ฟุ้งบางลง ไม่ล้นออกนอกวง ── */
+.bn-fab{
+  background:#6E6E76;                                  /* เดิม #3A3A40 เข้มไป */
+  color:#fff;
+  box-shadow:0 6px 14px -6px rgba(20,20,22,0.28);
+  --rw:1.5px;
+}
+/* ฟุ้งวางบน .bn-fab-wrap ไม่ใช่ .bn-fab
+   เหตุผล: .bn-fab มี z-index:6 = stacking context ของตัวเอง
+   ::before{z-index:-1} จะจมหลังพื้นปุ่มทึบ = มองไม่เห็น */
+.bn-fab-wrap::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-19px;                 /* -16px (margin-top ของ .bn-fab) − 3px */
+  width:52px;                /* 46px + 3px สองข้าง — รัดวงกว่าเดิมมาก */
+  height:52px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:var(--grad);
+  filter:blur(6px);          /* เดิม 11px ฟุ้งล้นเกิน */
+  opacity:.34;               /* เดิม .55 */
+  pointer-events:none;
+  z-index:0;
+  animation:ga249 9s linear infinite;
+}
+@media (prefers-reduced-motion:reduce){ .bn-fab-wrap::before{animation:none;} }
+
+/* ── 5) ดรอปดาวลอย "ทุกตัวในแอป" — ขอบชมพูทึบ/ดำ → แหวนไล่สี ──
+   ครอบคลุมทั้ง 14 ตัว: ตัวกลางที่ใช้ร่วมกัน (#buyrow-select-dd)
+   + ตัวที่ประกาศ style ไว้ใน HTML แยกกัน (จึงต้องใช้ !important สู้ inline style) */
+#buyrow-select-dd,
+#buy-supplier-dd,#sale-location-dd,#emp-wage-dd,#admin-pay-dd,
+#recurring-location-dd,#set-unit-dd,#edit-item-unit-dd,
+#chart7-sku-dd,#ri-loc-dd,#re-sup-dd,#re-type-dd,#re-loc-dd,#rcp-adj-dd{
+  border:1px solid transparent !important;
+  border-radius:var(--r-sm) !important;
+  background:transparent !important;   /* พื้นย้ายไปที่ลูก ไม่ให้ทับฟุ้งตัวเอง */
+  box-shadow:0 12px 28px -10px rgba(20,20,22,0.28) !important;
+  overflow:visible !important;         /* ไม่ให้ตัดแหวน/ฟุ้งทิ้ง */
+}
+#buyrow-select-dd::after,
+#buy-supplier-dd::after,#sale-location-dd::after,#emp-wage-dd::after,#admin-pay-dd::after,
+#recurring-location-dd::after,#set-unit-dd::after,#edit-item-unit-dd::after,
+#chart7-sku-dd::after,#ri-loc-dd::after,#re-sup-dd::after,#re-type-dd::after,#re-loc-dd::after,
+#rcp-adj-dd::after{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;
+  background:var(--grad);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;z-index:3;animation:ga249 9s linear infinite;
+}
+/* ฟุ้ง: ตัว dd มี z-index สูง = stacking context ของตัวเอง
+   z-index:-1 จะจมหลังพื้นตัวเอง จึงใช้ z-index:0 แล้วดันเนื้อหาขึ้นเป็น z-index:1 */
+#buyrow-select-dd::before,
+#buy-supplier-dd::before,#sale-location-dd::before,#emp-wage-dd::before,#admin-pay-dd::before,
+#recurring-location-dd::before,#set-unit-dd::before,#edit-item-unit-dd::before,
+#chart7-sku-dd::before,#ri-loc-dd::before,#re-sup-dd::before,#re-type-dd::before,#re-loc-dd::before,
+#rcp-adj-dd::before{
+  content:"";position:absolute;inset:-6px;border-radius:calc(var(--r-sm) + 4px);
+  background:var(--grad);filter:blur(12px);opacity:.30;
+  pointer-events:none;z-index:0;animation:ga249 9s linear infinite;
+}
+/* พื้นขาวจริงอยู่ที่ "ลูก" ของ dd ทุกตัว — ลอยเหนือชั้นฟุ้ง */
+#buyrow-select-list,
+#buy-supplier-dd > *,#sale-location-dd > *,#emp-wage-dd > *,#admin-pay-dd > *,
+#recurring-location-dd > *,#set-unit-dd > *,#edit-item-unit-dd > *,
+#chart7-sku-dd > *,#ri-loc-dd > *,#re-sup-dd > *,#re-type-dd > *,#re-loc-dd > *,
+#rcp-adj-dd > *{
+  position:relative;z-index:1;background:var(--card);
+}
+/* ตัวที่ลิสต์เป็นลูกตรงๆ ต้องมีพื้น+มุมโค้งครบ ไม่งั้นฟุ้งทะลุขึ้นมาระหว่างแถว */
+#buy-supplier-dd,#sale-location-dd,#emp-wage-dd,#admin-pay-dd,
+#recurring-location-dd,#set-unit-dd,#edit-item-unit-dd,
+#ri-loc-dd,#re-sup-dd,#re-type-dd,#re-loc-dd,#rcp-adj-dd{
+  background-clip:padding-box;
+}
+#buy-supplier-dd > *:first-child,#sale-location-dd > *:first-child,#emp-wage-dd > *:first-child,
+#admin-pay-dd > *:first-child,#recurring-location-dd > *:first-child,#set-unit-dd > *:first-child,
+#edit-item-unit-dd > *:first-child,#ri-loc-dd > *:first-child,#re-sup-dd > *:first-child,
+#re-type-dd > *:first-child,#re-loc-dd > *:first-child,#rcp-adj-dd > *:first-child{
+  border-top-left-radius:var(--r-sm);border-top-right-radius:var(--r-sm);
+}
+#buy-supplier-dd > *:last-child,#sale-location-dd > *:last-child,#emp-wage-dd > *:last-child,
+#admin-pay-dd > *:last-child,#recurring-location-dd > *:last-child,#set-unit-dd > *:last-child,
+#edit-item-unit-dd > *:last-child,#ri-loc-dd > *:last-child,#re-sup-dd > *:last-child,
+#re-type-dd > *:last-child,#re-loc-dd > *:last-child,#rcp-adj-dd > *:last-child{
+  border-bottom-left-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm);
+}
+/* ตัวที่เลื่อนได้: ย้าย scroll จากตัวนอก (ที่ต้อง overflow:visible) มาไว้ที่ลูก */
+#buyrow-select-list{max-height:252px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#buyrow-select-search-wrap{position:relative;z-index:1;background:var(--card);
+  border-radius:var(--r-sm) var(--r-sm) 0 0;}
+@media (prefers-reduced-motion:reduce){
+  #buyrow-select-dd::before,#buyrow-select-dd::after,
+  #buy-supplier-dd::before,#buy-supplier-dd::after,
+  #sale-location-dd::before,#sale-location-dd::after,
+  #emp-wage-dd::before,#emp-wage-dd::after,
+  #admin-pay-dd::before,#admin-pay-dd::after,
+  #recurring-location-dd::before,#recurring-location-dd::after,
+  #set-unit-dd::before,#set-unit-dd::after,
+  #edit-item-unit-dd::before,#edit-item-unit-dd::after,
+  #chart7-sku-dd::before,#chart7-sku-dd::after,
+  #ri-loc-dd::before,#ri-loc-dd::after,
+  #re-sup-dd::before,#re-sup-dd::after,
+  #re-type-dd::before,#re-type-dd::after,
+  #re-loc-dd::before,#re-loc-dd::after,
+  #rcp-adj-dd::before,#rcp-adj-dd::after{animation:none;}
+}
+
+/* ── 6) ตัวกระตุ้นดรอปดาวทุกตัว: รัศมี/ขอบชุดเดียวกัน ให้กรอบกับลิ้นชักตรงกัน ── */
+.fld-dd,
+.income-cat-display,
+.br-field{
+  border-radius:var(--r-sm) !important;
+  border-width:1px !important;
+  box-sizing:border-box;
+}
 </style>
 <script>
 // ══ ธีมสีของแอป: ใช้ตัวแปร CSS (--accent, --blue-soft) เป็นระบบสีหลัก ทำให้สลับได้ทันที ══
@@ -8939,7 +9098,16 @@ function positionBuyRowDD(anchor) {
   const dd = document.getElementById('buyrow-select-dd');
   if(!dd || !anchor) return;
   const rect = anchor.getBoundingClientRect();
-  const ddWidth = dd.offsetWidth || 210;
+  // Ver.253: ลิ้นชักดรอปดาวกว้างเท่ากรอบตัวกระตุ้นเสมอ (เดิม fix 210px ทำให้ไม่ตรงกันทั้งแอป)
+  // ตั้งกว้างก่อนวัด offsetHeight เพราะความกว้างมีผลต่อการตัดบรรทัด → ความสูงจริง
+  // Ver.254: กว้างเท่าตัวกระตุ้นเสมอ ไม่มีขั้นต่ำมาดันให้บาน
+  // (เดิมมี guard >=120px + min-width:160px ทำให้ชิปแคบอย่าง "หน่วย" กางออกมากว้างเกินจริง)
+  // มีช่องค้นหาถึงจะบังคับขั้นต่ำ 190px เพราะช่องพิมพ์แคบกว่านั้นใช้ไม่ได้จริง
+  const _swrap = document.getElementById('buyrow-select-search-wrap');
+  const _hasSearch = _swrap && _swrap.style.display !== 'none';
+  const anchorW = Math.round(rect.width);
+  dd.style.width = Math.max(anchorW, _hasSearch ? 190 : 0) + 'px';
+  const ddWidth = dd.offsetWidth || anchorW || 210;
   let left = rect.left;
   if(left + ddWidth > window.innerWidth - 8) left = window.innerWidth - ddWidth - 8;
   if(left < 8) left = 8;
