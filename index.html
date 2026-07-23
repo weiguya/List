@@ -993,18 +993,35 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
   box-shadow:0 1px 2px rgba(20,20,22,0.04);
 }
 .home-bal-card::after{content:none !important;}   /* ปิดแหวนคม */
+/* สำคัญ: ห้ามใช้ z-index:-1 — #page-home มีพื้นทึบ (#FBFBF9) ลูกที่ z ติดลบ
+   จะถูกวาด "หลัง" พื้นของบรรพบุรุษ = หายสนิท (บั๊ก Ver.254 การ์ดโล่ง)
+   วิธีที่ถูก: ให้ ::before อยู่ z-index:0 (ใต้เนื้อหาการ์ด) แล้วยกพื้นขาว
+   ไปไว้ที่ .bal-in แทน เพื่อไม่ให้พื้นการ์ดทับแสงฟุ้งของตัวเอง */
+.home-bal-card{background:transparent;}
 .home-bal-card::before{
   content:"" !important;
   display:block !important;
   position:absolute;
-  inset:-10px;
-  border-radius:calc(var(--r-md) + 8px);
+  inset:-3px;
+  border-radius:calc(var(--r-md) + 3px);
   background:var(--grad);
-  filter:blur(20px);        /* ฟุ้งกว้างกว่าเดิม = นุ่มแบบเรฟ */
-  opacity:.42;
+  /* Ver.256: จูนให้ตรงเรฟด้วยการวัดค่าความอิ่มสีจริงทีละพิกเซล
+     เดิม blur:18px/inset:-9px = ฟุ้งกว้างเกิน แสงจางลากยาวไม่ยอมจบ
+     เรฟจริงฟุ้งแค่ ~2.7% ของความกว้างการ์ด (25px บนการ์ด 938px)
+     = ~10px บนการ์ด 380px ของเรา จึงต้องรัดขอบและเข้มขึ้นแทน */
+  filter:blur(5px);
+  opacity:.65;
   pointer-events:none;
-  z-index:-1;
+  z-index:0;
   animation:ga249 9s linear infinite;
+}
+/* พื้นขาวจริงของการ์ด — ลอยเหนือชั้นแสงฟุ้ง */
+.home-bal-card > .bal-in{
+  position:relative;
+  z-index:1;
+  background:var(--card);
+  border-radius:inherit;
+  padding-bottom:2px;
 }
 
 /* ── 2) เอาไอคอน ✦ หน้า "เงินคงเหลือในบัญชีจริง" ออก ── */
@@ -1048,86 +1065,27 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 }
 @media (prefers-reduced-motion:reduce){ .bn-fab-wrap::before{animation:none;} }
 
-/* ── 5) ดรอปดาวลอย "ทุกตัวในแอป" — ขอบชมพูทึบ/ดำ → แหวนไล่สี ──
-   ครอบคลุมทั้ง 14 ตัว: ตัวกลางที่ใช้ร่วมกัน (#buyrow-select-dd)
-   + ตัวที่ประกาศ style ไว้ใน HTML แยกกัน (จึงต้องใช้ !important สู้ inline style) */
-#buyrow-select-dd,
+/* ── 5) ดรอปดาวลอยทุกตัวในแอป: ขอบชมพูทึบ/ดำ → ขอบไล่สี ──
+   บทเรียนจาก Ver.254 ที่พัง: ดรอปดาว 13 ตัวนี้ประกาศ style ไว้ใน HTML และ
+   "วางรายการเป็นลูกโดยตรง" โดยให้กล่องนอกเป็นตัว scroll (overflow-y:auto + max-height)
+   ห้ามไปตั้ง overflow:visible เพื่อโชว์เงาฟุ้ง เพราะ scroll จะพังทันที
+   → ลิสต์ยาวทะลุจอ (บั๊กที่เจอ) และห้ามตั้ง background บนลูกทุกตัว เพราะลูก = แต่ละแถว
+   วิธีที่ปลอดภัย: ใช้ border-image ทาที่ "ขอบ" ของกล่องเอง ไม่ต้องใช้ pseudo-element
+   ไม่ต้องยุ่งกับ overflow, ไม่ต้องยุ่งกับพื้นหลัง, ไม่กระทบ scroll เลย */
 #buy-supplier-dd,#sale-location-dd,#emp-wage-dd,#admin-pay-dd,
 #recurring-location-dd,#set-unit-dd,#edit-item-unit-dd,
-#chart7-sku-dd,#ri-loc-dd,#re-sup-dd,#re-type-dd,#re-loc-dd,#rcp-adj-dd{
-  border:1px solid transparent !important;
+#chart7-sku-dd,#ri-loc-dd,#re-sup-dd,#re-type-dd,#re-loc-dd,#rcp-adj-dd,
+#buyrow-select-dd{
+  border:1.5px solid transparent !important;
   border-radius:var(--r-sm) !important;
-  background:transparent !important;   /* พื้นย้ายไปที่ลูก ไม่ให้ทับฟุ้งตัวเอง */
-  box-shadow:0 12px 28px -10px rgba(20,20,22,0.28) !important;
-  overflow:visible !important;         /* ไม่ให้ตัดแหวน/ฟุ้งทิ้ง */
-}
-#buyrow-select-dd::after,
-#buy-supplier-dd::after,#sale-location-dd::after,#emp-wage-dd::after,#admin-pay-dd::after,
-#recurring-location-dd::after,#set-unit-dd::after,#edit-item-unit-dd::after,
-#chart7-sku-dd::after,#ri-loc-dd::after,#re-sup-dd::after,#re-type-dd::after,#re-loc-dd::after,
-#rcp-adj-dd::after{
-  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;
-  background:var(--grad);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;z-index:3;animation:ga249 9s linear infinite;
-}
-/* ฟุ้ง: ตัว dd มี z-index สูง = stacking context ของตัวเอง
-   z-index:-1 จะจมหลังพื้นตัวเอง จึงใช้ z-index:0 แล้วดันเนื้อหาขึ้นเป็น z-index:1 */
-#buyrow-select-dd::before,
-#buy-supplier-dd::before,#sale-location-dd::before,#emp-wage-dd::before,#admin-pay-dd::before,
-#recurring-location-dd::before,#set-unit-dd::before,#edit-item-unit-dd::before,
-#chart7-sku-dd::before,#ri-loc-dd::before,#re-sup-dd::before,#re-type-dd::before,#re-loc-dd::before,
-#rcp-adj-dd::before{
-  content:"";position:absolute;inset:-6px;border-radius:calc(var(--r-sm) + 4px);
-  background:var(--grad);filter:blur(12px);opacity:.30;
-  pointer-events:none;z-index:0;animation:ga249 9s linear infinite;
-}
-/* พื้นขาวจริงอยู่ที่ "ลูก" ของ dd ทุกตัว — ลอยเหนือชั้นฟุ้ง */
-#buyrow-select-list,
-#buy-supplier-dd > *,#sale-location-dd > *,#emp-wage-dd > *,#admin-pay-dd > *,
-#recurring-location-dd > *,#set-unit-dd > *,#edit-item-unit-dd > *,
-#chart7-sku-dd > *,#ri-loc-dd > *,#re-sup-dd > *,#re-type-dd > *,#re-loc-dd > *,
-#rcp-adj-dd > *{
-  position:relative;z-index:1;background:var(--card);
-}
-/* ตัวที่ลิสต์เป็นลูกตรงๆ ต้องมีพื้น+มุมโค้งครบ ไม่งั้นฟุ้งทะลุขึ้นมาระหว่างแถว */
-#buy-supplier-dd,#sale-location-dd,#emp-wage-dd,#admin-pay-dd,
-#recurring-location-dd,#set-unit-dd,#edit-item-unit-dd,
-#ri-loc-dd,#re-sup-dd,#re-type-dd,#re-loc-dd,#rcp-adj-dd{
-  background-clip:padding-box;
-}
-#buy-supplier-dd > *:first-child,#sale-location-dd > *:first-child,#emp-wage-dd > *:first-child,
-#admin-pay-dd > *:first-child,#recurring-location-dd > *:first-child,#set-unit-dd > *:first-child,
-#edit-item-unit-dd > *:first-child,#ri-loc-dd > *:first-child,#re-sup-dd > *:first-child,
-#re-type-dd > *:first-child,#re-loc-dd > *:first-child,#rcp-adj-dd > *:first-child{
-  border-top-left-radius:var(--r-sm);border-top-right-radius:var(--r-sm);
-}
-#buy-supplier-dd > *:last-child,#sale-location-dd > *:last-child,#emp-wage-dd > *:last-child,
-#admin-pay-dd > *:last-child,#recurring-location-dd > *:last-child,#set-unit-dd > *:last-child,
-#edit-item-unit-dd > *:last-child,#ri-loc-dd > *:last-child,#re-sup-dd > *:last-child,
-#re-type-dd > *:last-child,#re-loc-dd > *:last-child,#rcp-adj-dd > *:last-child{
-  border-bottom-left-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm);
-}
-/* ตัวที่เลื่อนได้: ย้าย scroll จากตัวนอก (ที่ต้อง overflow:visible) มาไว้ที่ลูก */
-#buyrow-select-list{max-height:252px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-#buyrow-select-search-wrap{position:relative;z-index:1;background:var(--card);
-  border-radius:var(--r-sm) var(--r-sm) 0 0;}
-@media (prefers-reduced-motion:reduce){
-  #buyrow-select-dd::before,#buyrow-select-dd::after,
-  #buy-supplier-dd::before,#buy-supplier-dd::after,
-  #sale-location-dd::before,#sale-location-dd::after,
-  #emp-wage-dd::before,#emp-wage-dd::after,
-  #admin-pay-dd::before,#admin-pay-dd::after,
-  #recurring-location-dd::before,#recurring-location-dd::after,
-  #set-unit-dd::before,#set-unit-dd::after,
-  #edit-item-unit-dd::before,#edit-item-unit-dd::after,
-  #chart7-sku-dd::before,#chart7-sku-dd::after,
-  #ri-loc-dd::before,#ri-loc-dd::after,
-  #re-sup-dd::before,#re-sup-dd::after,
-  #re-type-dd::before,#re-type-dd::after,
-  #re-loc-dd::before,#re-loc-dd::after,
-  #rcp-adj-dd::before,#rcp-adj-dd::after{animation:none;}
+  /* ขอบไล่สีที่ยังโค้งมนได้ + ไม่แตะ overflow/background เลย:
+     ชั้นแรกทาสีพื้นการ์ดกิน padding-box, ชั้นสองไล่สีกิน border-box
+     ขอบจึงเห็นเป็นไล่สี ส่วนพื้นในยังขาวปกติ (border-image ใช้ไม่ได้เพราะมันฆ่า border-radius) */
+  background-image:linear-gradient(var(--card),var(--card)),
+                   linear-gradient(135deg,#FFC985,#FF9FC7 30%,#C89CFF 60%,#8FB9FF 85%,#AAE4C6) !important;
+  background-origin:border-box !important;
+  background-clip:padding-box,border-box !important;
+  box-shadow:0 12px 28px -10px rgba(20,20,22,0.30) !important;
 }
 
 /* ── 6) ตัวกระตุ้นดรอปดาวทุกตัว: รัศมี/ขอบชุดเดียวกัน ให้กรอบกับลิ้นชักตรงกัน ── */
@@ -9103,11 +9061,20 @@ function positionBuyRowDD(anchor) {
   // Ver.254: กว้างเท่าตัวกระตุ้นเสมอ ไม่มีขั้นต่ำมาดันให้บาน
   // (เดิมมี guard >=120px + min-width:160px ทำให้ชิปแคบอย่าง "หน่วย" กางออกมากว้างเกินจริง)
   // มีช่องค้นหาถึงจะบังคับขั้นต่ำ 190px เพราะช่องพิมพ์แคบกว่านั้นใช้ไม่ได้จริง
+  // Ver.255: ฐาน = กว้างเท่าตัวกระตุ้น แต่ "ขยายได้ถ้าข้อความยาวเกิน" (ตามที่สั่ง)
+  // วิธีวัด: ปล่อย width:auto ชั่วคราวเพื่ออ่านความกว้างธรรมชาติของเนื้อหา (scrollWidth)
+  // แล้วเลือกค่ามากสุดระหว่าง ตัวกระตุ้น กับ เนื้อหา โดยไม่เกินขอบจอ
   const _swrap = document.getElementById('buyrow-select-search-wrap');
   const _hasSearch = _swrap && _swrap.style.display !== 'none';
   const anchorW = Math.round(rect.width);
-  dd.style.width = Math.max(anchorW, _hasSearch ? 190 : 0) + 'px';
-  const ddWidth = dd.offsetWidth || anchorW || 210;
+  const maxW = window.innerWidth - 16;
+  dd.style.width = 'auto';
+  dd.style.maxWidth = maxW + 'px';
+  const natural = Math.ceil(dd.scrollWidth) + 2;   // +2 กันเศษทศนิยมทำให้ตัดคำ
+  let want = Math.max(anchorW, natural, _hasSearch ? 190 : 0);
+  if(want > maxW) want = maxW;
+  dd.style.width = want + 'px';
+  const ddWidth = dd.offsetWidth || want;
   let left = rect.left;
   if(left + ddWidth > window.innerWidth - 8) left = window.innerWidth - ddWidth - 8;
   if(left < 8) left = 8;
