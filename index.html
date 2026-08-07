@@ -4,22 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <title>มุ่ยเฟย</title>
-<meta name="theme-color" content="#3D6FE8">
+<meta name="theme-color" content="#3FA7E8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================
-   มุ่ยเฟย  Ver.4   (เดิมชื่อ กระปุก Ver.3)
+   มุ่ยเฟย  Ver.5   ชุดสีอ่อน (ฟ้าใส) + กราฟมีตัวเลข
    โทนฟ้า-ม่วง ลดความจัดลง / ไม่มีมาสคอต / เลือกธีมได้ 12 สี + โหมดกลางคืน
    เขียว = เงินเข้า, แดง = เงินออก  (จองไว้ ห้ามเอาไปใช้เป็นสีปุ่ม)
    ทุกสีอยู่ในตัวแปร --xxx เท่านั้น เพื่อให้เปลี่ยนธีมทั้งแอปได้จากที่เดียว
    ========================================================== */
 :root{
-  --brand:#3D6FE8;
-  --brand2:#7A5CE6;
-  --brand-soft:#E7EDFD;
-  --bg:#F1F4FB;
+  --brand:#3FA7E8;
+  --brand2:#78CBF2;
+  --brand-soft:#E4F3FC;
+  --bg:#EFF7FD;
   --card:#FFFFFF;
   --card2:#F7F8FD;
   --ink:#1E2340;
@@ -106,12 +106,12 @@ body.dark .bk.old{color:#FFD98A;border-color:#6A5510;background:#332A08}
   background:rgba(255,255,255,.10);pointer-events:none}
 .hero::before{content:"";position:absolute;right:-30px;bottom:-110px;width:180px;height:180px;border-radius:50%;
   background:rgba(255,255,255,.07);pointer-events:none}
-.hero .lb{font-size:12.5px;color:rgba(255,255,255,.85);position:relative}
+.hero .lb{font-size:12.5px;color:rgba(255,255,255,.94);position:relative}
 .hero .amt{font-family:"Kanit",sans-serif;font-weight:600;font-size:42px;line-height:1.12;color:#fff;letter-spacing:-.02em;font-variant-numeric:tabular-nums;position:relative}
 .hero .amt .bt{font-size:20px;font-weight:400;opacity:.7;margin-right:3px}
 .hpills{display:flex;gap:9px;margin-top:15px;position:relative}
-.hpill{flex:1;background:rgba(255,255,255,.17);border-radius:14px;padding:9px 12px}
-.hpill .k{font-size:11px;color:rgba(255,255,255,.82)}
+.hpill{flex:1;background:rgba(255,255,255,.22);border-radius:14px;padding:9px 12px}
+.hpill .k{font-size:11px;color:rgba(255,255,255,.92)}
 .hpill .v{font-family:"Kanit",sans-serif;font-size:17px;font-weight:500;color:#fff;font-variant-numeric:tabular-nums;margin-top:1px}
 .streak{display:flex;align-items:center;gap:6px;margin:-4px 2px 12px;font-size:12px;color:var(--ink2)}
 .streak b{color:var(--brand);font-weight:600}
@@ -131,10 +131,14 @@ body.dark .bk.old{color:#FFD98A;border-color:#6A5510;background:#332A08}
 .chip.on .dot{box-shadow:0 0 0 2px rgba(255,255,255,.6)}
 
 /* ---------- กราฟ ---------- */
-.bars{display:flex;align-items:flex-end;height:134px;margin-top:8px}
-.bcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;min-width:0}
+.bars{display:flex;align-items:flex-end;height:152px;margin-top:8px}
+.numwrap{height:13px;display:flex;align-items:flex-end;justify-content:center}
+.bnum{font-family:"Kanit",sans-serif;font-size:9px;line-height:1;color:var(--ink3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bcol.sel .bnum{color:var(--brand);font-weight:600}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:5px;min-width:0}
 .bpair{display:flex;align-items:flex-end;gap:3px;height:104px;width:100%;justify-content:center}
-.bar{width:11px;border-radius:6px;height:0;transition:height .6s var(--ez)}
+.bar{flex:0 0 11px;width:11px;border-radius:6px;height:0;transition:height .6s var(--ez)}
+.bar.bmark{flex:0 0 6px;width:6px;opacity:.85}
 .bar.i{background:linear-gradient(180deg,var(--in2),var(--in))}
 .bar.o{background:linear-gradient(180deg,var(--out2),var(--out))}
 .bar.z{background:var(--line);height:4px !important}
@@ -559,18 +563,18 @@ var DEF_IN=[
 /* ================= ธีมสี (ข้อ 7) ================= */
 /* เขียว = เงินเข้า, แดง = เงินออก จองไว้แล้ว ธีมจึงเลี่ยงเขียวสดกับแดงสด */
 var THEMES=[
- {id:'azure', n:'ฟ้า-ม่วง',   b1:'#3D6FE8',b2:'#7A5CE6',bg:'#F1F4FB',soft:'#E7EDFD'},
- {id:'indigo',n:'คราม',       b1:'#2E4BA8',b2:'#5A6FE0',bg:'#EFF1FB',soft:'#E4E8FA'},
- {id:'sky',   n:'ฟ้าใส',      b1:'#1E88D6',b2:'#37B6E0',bg:'#EEF6FC',soft:'#E0F0FB'},
- {id:'teal',  n:'เขียวทะเล',  b1:'#0E8C93',b2:'#26B7B0',bg:'#EDF7F7',soft:'#DEF2F2'},
- {id:'grape', n:'ม่วงองุ่น',  b1:'#6B45C9',b2:'#9B5BD6',bg:'#F4F0FC',soft:'#EBE3FB'},
- {id:'orchid',n:'ชมพูม่วง',   b1:'#A63FA8',b2:'#D45BA8',bg:'#FBF0F8',soft:'#F7E3F2'},
- {id:'rose',  n:'กุหลาบ',     b1:'#C43F6E',b2:'#E06A8A',bg:'#FCF0F3',soft:'#F9E2E8'},
- {id:'amber', n:'ส้มอบอุ่น',  b1:'#C9631F',b2:'#EE9A3C',bg:'#FDF4EC',soft:'#FBE8D5'},
- {id:'gold',  n:'ทองเข้ม',    b1:'#A17612',b2:'#D3A62E',bg:'#FBF6E9',soft:'#F7EDD2'},
- {id:'forest',n:'เขียวใบไม้', b1:'#2F7D4F',b2:'#5FA86B',bg:'#F0F7F1',soft:'#E1F0E4'},
- {id:'slate', n:'เทาหิน',     b1:'#48546E',b2:'#6E7C99',bg:'#F2F4F7',soft:'#E5E9F0'},
- {id:'onyx',  n:'ดำนิล',      b1:'#2B2F42',b2:'#4A5068',bg:'#F3F4F6',soft:'#E6E7EC'}];
+ {id:'sky',      n:'ฟ้าใส',       b1:'#3FA7E8',b2:'#78CBF2',bg:'#EFF7FD',soft:'#E4F3FC'},
+ {id:'haze',     n:'ฟ้าหม่น',     b1:'#5B8DEF',b2:'#8AA9F5',bg:'#F3F6FD',soft:'#EAF0FE'},
+ {id:'periw',    n:'ฟ้า-ม่วงนุ่ม',b1:'#6E86EE',b2:'#9B8CF2',bg:'#F4F5FD',soft:'#EDEEFD'},
+ {id:'lavender', n:'ลาเวนเดอร์',  b1:'#8B93EE',b2:'#B79CF2',bg:'#F6F5FD',soft:'#F0EEFD'},
+ {id:'aqua',     n:'ฟ้าอมเขียว',  b1:'#3FA9BF',b2:'#79CFD4',bg:'#EFF8F9',soft:'#E2F4F6'},
+ {id:'steel',    n:'ฟ้าเทา',      b1:'#6A87B5',b2:'#94ABCF',bg:'#F3F5F9',soft:'#EAEFF6'},
+ {id:'indigo',   n:'คราม',        b1:'#6C7FD8',b2:'#97A5EC',bg:'#F2F4FD',soft:'#E8ECFB'},
+ {id:'orchid',   n:'ชมพูม่วง',    b1:'#B06BC9',b2:'#D093DE',bg:'#F9F2FC',soft:'#F3E8F8'},
+ {id:'rose',     n:'กุหลาบ',      b1:'#DE7391',b2:'#F0A0B2',bg:'#FDF3F5',soft:'#FAE7EC'},
+ {id:'peach',    n:'ส้มพีช',      b1:'#E8944F',b2:'#F6BC81',bg:'#FDF6EF',soft:'#FBEBDB'},
+ {id:'sand',     n:'ทองอ่อน',     b1:'#C9A63F',b2:'#E3C978',bg:'#FBF8EC',soft:'#F6F0D8'},
+ {id:'graphite', n:'เทาหิน',      b1:'#8790A8',b2:'#AEB6C9',bg:'#F5F6F9',soft:'#ECEEF4'}];
 function themeOf(id){for(var i=0;i<THEMES.length;i++)if(THEMES[i].id===id)return THEMES[i];return THEMES[0];}
 function applyTheme(){
   var t=themeOf(D.theme),r=document.documentElement.style;
@@ -600,7 +604,8 @@ function load(){
   if(!d.learned)d.learned={};
   if(!d.setup)d.setup=false;
   if(!d.backupAt)d.backupAt=0;
-  if(!d.theme)d.theme='azure';
+  if(!d.theme)d.theme='sky';
+  if(d.themeV!==5){d.theme='sky';d.themeV=5;}   /* Ver.5: ย้ายทุกเครื่องมาชุดสีอ่อนชุดใหม่ครั้งเดียว */
   if(typeof d.dark!=='boolean')d.dark=false;
   if(!Array.isArray(d.basket))d.basket=[];   /* ของที่พูดไว้แล้วแต่ยังไม่กดบันทึก */
   return d;
@@ -769,20 +774,30 @@ function buildChart(){
   return out;
 }
 function renderChart(){
-  var data=buildChart(),mx=0;
-  data.forEach(function(d){if(chShow!=='out')mx=Math.max(mx,d['in']);if(chShow!=='in')mx=Math.max(mx,d.out);});
-  if(!mx)mx=1;
+  var data=buildChart();
   var rc=[['day14','รายวัน'],['wk8','รายสัปดาห์'],['mo6','รายเดือน']];
   document.getElementById('chRange').innerHTML=rc.map(function(r){
     return '<button class="chip sm'+(chRange===r[0]?' on':'')+'" onclick="setRange(\''+r[0]+'\')">'+r[1]+'</button>';}).join('');
   var sc=[['both','รับ-จ่าย'],['in','เฉพาะรับ'],['out','เฉพาะจ่าย']];
   document.getElementById('chShow').innerHTML=sc.map(function(r){
     return '<button class="chip sm'+(chShow===r[0]?' on':'')+'" onclick="setShow(\''+r[0]+'\')">'+r[1]+'</button>';}).join('');
+  /* รายจ่ายคือสิ่งที่ดูทุกวัน จึงให้เต็มสเกลเสมอ ส่วนวันที่มีเงินเข้าใช้แท่งเขียวเตี้ยกำกับ
+     ไม่งั้นเงินเดือนก้อนเดียวจะกดแท่งจ่ายให้แบนติดพื้นทั้งแถว */
+  var mxI=1,mxO=1;
+  data.forEach(function(d){mxI=Math.max(mxI,d['in']);mxO=Math.max(mxO,d.out);});
   var h='';
   data.forEach(function(d,i){
-    var bi=Math.max(3,Math.round(d['in']/mx*100)),bo=Math.max(3,Math.round(d.out/mx*100));
-    h+='<div class="bcol'+(chSel===i?' sel':'')+'" onclick="pickBar('+i+')"><div class="bpair">';
-    if(chShow!=='out')h+='<div class="bar i'+(d['in']?'':' z')+'" data-h="'+bi+'"></div>';
+    var bi,bo,num='';
+    if(chShow==='in'){bi=d['in']?Math.max(4,Math.round(d['in']/mxI*100)):0;bo=0;}
+    else if(chShow==='out'){bo=d.out?Math.max(4,Math.round(d.out/mxO*100)):0;bi=0;}
+    else{bo=d.out?Math.max(4,Math.round(d.out/mxO*100)):0;
+         bi=d['in']?Math.max(6,Math.round(d['in']/mxI*26)):0;}
+    if(chShow==='in')num=d['in']?'+'+fmtK(d['in']):'';
+    else if(chShow==='out')num=d.out?fmtK(d.out):'';
+    else num=d.out?fmtK(d.out):(d['in']?'+'+fmtK(d['in']):'');
+    h+='<div class="bcol'+(chSel===i?' sel':'')+'" onclick="pickBar('+i+')">'
+     +'<div class="numwrap"><span class="bnum">'+num+'</span></div><div class="bpair">';
+    if(chShow!=='out')h+='<div class="bar i'+(d['in']?'':' z')+(chShow==='both'?' bmark':'')+'" data-h="'+bi+'"></div>';
     if(chShow!=='in')h+='<div class="bar o'+(d.out?'':' z')+'" data-h="'+bo+'"></div>';
     h+='</div><div class="blab">'+esc(d.lab)+'</div></div>';});
   var bx=document.getElementById('bars');bx.innerHTML=h;
@@ -796,9 +811,9 @@ function renderChart(){
 function drawReadout(){
   var el=document.getElementById('readout'),d=chSel>=0?window._chData[chSel]:null;
   if(!d){
-    el.innerHTML='<div class="legend"><span><i style="background:var(--in)"></i>รับ</span>'
-     +'<span><i style="background:var(--out)"></i>จ่าย</span>'
-     +'<span style="color:var(--ink3)">แตะแท่งเพื่อดูตัวเลข</span></div>';return;}
+    el.innerHTML='<div class="legend"><span><i style="background:var(--out)"></i>จ่าย</span>'
+     +'<span><i style="background:var(--in)"></i>รับ</span>'
+     +'<span style="color:var(--ink3)">'+(chShow==='both'?'แท่งเขียวเตี้ย = วันที่มีเงินเข้า แตะดูตัวเลขเต็ม':'แตะแท่งเพื่อดูตัวเลขเต็ม')+'</span></div>';return;}
   el.innerHTML='<span class="rl">'+esc(d.full)+'</span>'
    +'<span class="rv" style="color:var(--in)">+'+fmt(d['in'])+'</span>'
    +'<span class="rv" style="color:var(--out)">−'+fmt(d.out)+'</span>';
@@ -1420,7 +1435,7 @@ function renderSet(){
      +srow('🗑️','#E05548','ลบรายการทั้งหมด','เอากลับไม่ได้ สำรองไฟล์ก่อนดีกว่า','','wipeAll()')
    :'')
    +'</div></div>';
-  h+='<div class="hintline" style="text-align:center;padding:4px 0 26px;color:var(--ink3)">มุ่ยเฟย Ver.4 · ข้อมูลเก็บอยู่ในเครื่องนี้เครื่องเดียว</div>';
+  h+='<div class="hintline" style="text-align:center;padding:4px 0 26px;color:var(--ink3)">มุ่ยเฟย Ver.5 · ข้อมูลเก็บอยู่ในเครื่องนี้เครื่องเดียว</div>';
   document.getElementById('setBody').innerHTML=h;
 }
 function toggleAdv(){advOpen=!advOpen;buzz(8);renderSet();}
